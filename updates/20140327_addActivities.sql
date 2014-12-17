@@ -1,0 +1,2 @@
+INSERT INTO TEKSTEN (TEKSTEN_ID,CODE,NAV,NL,FR,EN) VALUES (1776,'activities_c','all','Omschrijving activiteiten','Description activités','Description of activities');
+ALTER TABLE CLIENTS$CLIENTS ADD ACTIVITIES DOM_REFERENCE;

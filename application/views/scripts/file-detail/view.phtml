@@ -1,0 +1,224 @@
+<div id="general"  style="position: relative; width: 100%">
+    <table width="100%">
+        <tr>
+            <td width="33%" class="windowPart">
+                <span class="title"><?php $this->T("file_c") ?></span>
+                <?php
+                if ($this->generalFormSaved) {
+                    print $this->Ok($this->G("saved_c"));
+                }
+                ?>
+                <?php
+                if ($this->generalFormError) {
+                    print $this->Error($this->G("not_all_fields_c"));
+                }
+                ?>
+
+                <?php print $this->fileForm ?>
+                <script>
+                    $(function() {
+                        $("#VERJARING").datepicker({dateFormat: 'dd/mm/yy'});
+                    });
+                </script></td>
+            <td width="33%" class="windowPart">
+                <span class="title"><?php $this->T("debtor_c") ?></span>
+        <dt>&nbsp;</dt>
+        <dd>&nbsp;</dd>
+        <dt><?php $this->T("name_c") ?> </dt>
+        <dd><table><tr><td><?php echo $this->file->DEBTOR_NAME ?></td><td><a class="ui-icon ui-icon-zoomin" href="<?php echo $this->location() ?>/debtor-detail/view/debtorId/<?php echo $this->file->DEBTOR_ID ?>"></a></td></tr></table></dd>
+        <dt><?php $this->T("address_c") ?></dt>
+        <dd><?php echo $this->file->DEBTOR_ADDRESS ?><br><?php echo $this->file->DEBTOR_COUNTRY_CODE ?> - <?php echo $this->file->DEBTOR_ZIP_CODE ?> <?php echo $this->file->DEBTOR_CITY ?></dd>
+        <dt><?php $this->T("vat_c") ?></dt>
+        <dd><?php echo $this->file->DEBTOR_VAT_NR ?></dd>
+        <?php if (!empty($this->file->DEBTOR_TELEPHONE)) { ?>
+            <dt><?php $this->T("telephone_c") ?></dt>
+            <dd><?php echo $this->file->DEBTOR_TELEPHONE ?></dd>
+        <?php } ?>
+        <?php if (!empty($this->file->DEBTOR_TELEFAX)) { ?>
+            <dt><?php $this->T("fax_c") ?></dt>
+            <dd><?php echo $this->file->DEBTOR_TELEFAX ?></dd>
+        <?php } ?>
+        <?php if (!empty($this->file->DEBTOR_GSM)) { ?>
+            <dt><?php $this->T("gsm_c") ?></dt>
+            <dd><?php echo $this->file->DEBTOR_GSM ?></dd>
+        <?php } ?>
+        <?php if (!empty($this->file->DEBTOR_E_MAIL)) { ?>
+            <dt><?php $this->T("email_c") ?></dt>
+            <dd><table><tr><td><?php echo $this->file->DEBTOR_E_MAIL ?></td><td><a class="ui-icon ui-icon-mail-closed" href="mailto:<?php echo $this->file->DEBTOR_E_MAIL ?>"></a></td></tr></table></dd>
+        <?php } ?>
+        <dt><?php $this->T("language_c") ?></dt>
+        <dd><?php echo $this->file->DEBTOR_LANGUAGE_CODE ?></dd>
+        <?php if (!empty($this->file->DEBTOR_BIRTH_DAY)) { ?>
+            <dt><?php $this->T("birthday_c") ?></dt>
+            <dd><?php echo $this->Date($this->file->DEBTOR_BIRTH_DAY) ?></dd>
+        <?php } ?>
+        <?php if ($this->showUseAddress) { ?>
+            <br>
+            <span  class="title2"><?php $this->T("send_letters_to_c") ?></span>
+            <?php
+            if ($this->debtorFormSaved) {
+                print $this->Ok($this->G("saved_c"));
+            }
+            ?>
+            <?php
+            if ($this->debtorFormError) {
+                print $this->Error($this->G("not_all_fields_c"));
+            }
+            ?>
+
+            <?php print $this->debtorForm ?>
+        <?php } ?>
+
+        </td>
+        <td width="33%" class="windowPart">
+            <span class="title"><?php $this->T("amounts_c") ?></span>
+        <table>
+            <thead>
+                <tr>
+                    <th>&nbsp;</th>
+                    <th align="right"><?php $this->T("amount_c") ?></th>
+                    <th align="right"><?php $this->T("payed_c") ?></th>
+                    <th align="right"><?php $this->T("saldo_c") ?></th>
+                </tr>
+            </thead>
+            <tr>
+                <td class="label"><?php $this->T("amount_c") ?></td>
+                <td align="right"><?php echo $this->Amount($this->file->AMOUNT) ?></td>
+                <td align="right"><?php echo $this->Amount($this->file->PAYED_AMOUNT) ?></td>
+                <td align="right"><?php echo $this->Amount($this->file->SALDO_AMOUNT) ?></td>
+            </tr>
+            <?php if ($this->showIntrestCosts) {  ?>
+            <tr>
+                <td class="label"><?php $this->T("costs_c") ?></td>
+                <td align="right"><?php echo $this->Amount($this->file->COSTS) ?></td>
+                <td align="right"><?php echo $this->Amount($this->file->PAYED_COSTS) ?></td>
+                <td align="right"><?php echo $this->Amount($this->file->SALDO_COSTS) ?></td>
+            </tr>
+            <tr>
+                <td class="label"><?php $this->T("intrests_c") ?></td>
+                <td align="right"><?php echo $this->Amount($this->file->INTEREST) ?></td>
+                <td align="right"><?php echo $this->Amount($this->file->PAYED_INTEREST) ?></td>
+                <td align="right"><?php echo $this->Amount($this->file->SALDO_INTEREST) ?></td>
+            </tr>
+            <?php } ?>
+            <tr>
+                <td class="label"><?php $this->T("incasso_kost_c") ?></td>
+                <td align="right"><?php echo $this->Amount($this->file->INCASSOKOST) ?></td>
+                <td align="right"><?php echo $this->Amount($this->file->PAYED_UNKNOWN) ?></td>
+                <td align="right"><?php echo $this->Amount($this->file->INCASSOKOST - $this->file->PAYED_UNKNOWN) ?></td>
+            </tr>
+            <tfoot>
+                <tr>
+                    <td class="footer"><?php $this->T("total_c") ?></td>
+                    <td align="right"><?php echo $this->Amount($this->file->TOTAL + $this->file->INCASSOKOST) ?></td>
+                    <td align="right"><?php echo $this->Amount($this->file->PAYED_TOTAL) ?></td>
+                    <td align="right"><?php echo $this->Amount($this->file->PAYABLE + $this->file->INCASSOKOST - $this->file->PAYED_UNKNOWN) ?></td>
+                </tr>
+            </tfoot>
+        </table>
+            <!--
+            <br>
+            <span class="title"><?php $this->T("credit_rating_c") ?></span>
+            <dt><label><?php $this->T("credit_rating_c") ?></label></dt>
+            <dd>A</dd>
+            <dt><label><?php $this->T("credit_score_c") ?></label></dt>
+            <dd>19,5/20</dd>
+            <dt><label><?php $this->T("credit_limit_c") ?></label></dt>
+            <dd>&euro; 9338</dd>
+            <br>
+            <span class="title"><?php echo $this->T('credit_incident_overview_c'); ?></span>
+            <br><br><?php echo $this->Message($this->G("no_credit_incidents_found_c")); ?>
+            -->
+        </td>
+        </tr>
+        <tr>
+            <td class="windowPart">
+                <span class="title"><?php $this->T("actions_c") ?></span>
+                <table id="data" class="tablesorter ws_data_table" width="100%">
+                    <thead>
+                        <tr>
+                            <th><?php $this->T("action_date_c"); ?></th>
+                            <th><?php $this->T("code_c"); ?></th>
+                            <th><?php $this->T("description_c"); ?></th>
+                            <th>&nbsp;</th>
+                        </tr>
+                    </thead>
+                    <?php if (!empty($this->actions)) { ?>
+                        <?php foreach ($this->actions as $row) { ?>
+                            <tr>
+                                <td><?php echo $this->Date($row->ACTION_DATE) ?></td>
+                                <td><?php echo $row->ACTION_CODE ?></td>
+                                <td><?php echo $row->ACTION_DESCRIPTION ?></td>
+                                <td><?php if (!empty($row->TEMPLATE_CONTENT) && !empty($this->viewActionContent)) { ?>
+                                    <a href="<?php echo $this->location() ?>/print/template/fileActionId/<?php echo $row->FILE_ACTION_ID ?>"
+                                       target="_blank"><span title="<?php $this->T("view_c") ?>" class="ui-icon ui-icon-disk"></span>
+                                    <?php } ?></td>
+                            </tr>
+                        <?php } ?>
+                    <?php } else { ?>
+                        <tr>
+                            <td colspan="4" class="no_results">
+                                <?php $this->T("no_results_c"); ?>
+                            </td>
+                        </tr>
+                    <?php } ?>
+                </table>
+            </td>
+            <td class="windowPart">
+                <span class="title"><?php $this->T("remarks_c") ?></span>
+
+                <table id="data" class="tablesorter ws_data_table" width="100%">
+                    <thead>
+                        <tr>
+                            <th><?php $this->T("date_c"); ?></th>
+                            <th><?php $this->T("remark_c"); ?></th>
+                            <th><?php $this->T("by_c"); ?></th>
+                        </tr>
+                    </thead>
+                    <?php if (!empty($this->remarks)) { ?>
+                        <?php foreach ($this->remarks as $row) { ?>
+                            <tr>
+                                <td><?php echo $this->Date($row->CREATION_DATE) ?></td>
+                                <td><?php echo substr($row->REMARK, 0, 50) ?></td>
+                                <td><?php echo $row->CREATION_USER ?></td>
+                            </tr>
+                        <?php } ?>
+                    <?php } else { ?>
+                        <tr>
+                            <td colspan="3" class="no_results">
+                                <?php $this->T("no_results_c"); ?>
+                            </td>
+                        </tr>
+                    <?php } ?>
+                </table>
+            </td>
+            <td class="windowPart">
+                <span class="title"><?php $this->T("payments_c") ?></span>
+                <table id="data" class="tablesorter ws_data_table" width="100%">
+                    <thead>
+                        <tr>
+                            <th><?php $this->T("date_c"); ?></th>
+                            <th><?php $this->T("amount_c"); ?></th>
+                            <th><?php $this->T("account_c"); ?></th>
+                        </tr>
+                    </thead>
+                    <?php if (!empty($this->payments)) { ?>
+                        <?php foreach ($this->payments as $row) { ?>
+                            <tr>
+                                <td><?php echo $this->Date($row->PAYMENT_DATE) ?></td>
+                                <td align="right"><?php echo $this->Amount($row->AMOUNT) ?></td>
+                                <td><?php echo $row->ACCOUNT_CODE ?></td>
+                            </tr>
+                        <?php } ?>
+                    <?php } else { ?>
+                        <tr>
+                            <td colspan="3" class="no_results">
+                                <?php $this->T("no_results_c"); ?>
+                            </td>
+                        </tr>
+                    <?php } ?>
+                </table>
+            </td>
+        </tr>
+    </table>
+</div>

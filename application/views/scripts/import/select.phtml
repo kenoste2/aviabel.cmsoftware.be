@@ -1,0 +1,150 @@
+<?php if ($this->imported): ?>
+    <p><?php echo $this->Message($this->G('files_processed_c')); // $this->imported; ?></p>
+<?php endif; ?>
+
+<?php if ($this->showForm): ?>
+<?php echo $this->importFilesForm; ?>
+
+<br><h1>formaat</h1>
+<div>
+<pre>
+<?php print_r($this->columns); ?>
+</pre>
+</div>
+<?php endif; ?>
+<?php if ($this->showList): ?>
+
+<?php if(count($this->tempImports) || count($this->tempImportsNieuw)): ?>
+<div>
+    <table class="ws_data_table" style="width: 100%">
+        <thead>
+        <tr>
+                <th><?php $this->T('reference_c') ?></th>
+                <th><?php $this->T('debtor_c') ?></th>
+                <th><?php $this->T('amount_c') ?></th>
+                <th><?php $this->T('Email_c') ?></th>
+                <th><?php $this->T('references_c') ?></th>
+            </tr>
+        </thead>
+        <tbody>
+        <?php if(count($this->tempImports)): ?>
+            <?php foreach ($this->tempImports as $row):
+                $sum_amount += $row->TOTAL_AMOUNT;
+                $sum_costs += $row->COSTS;
+                $sum_intrests += $row->INTRESTS;?>
+                <tr>
+                    <td><?php echo $row->REFERENCE ?></td>
+                    <td>
+                        <?php echo "$row->DEBTOR_NAME</a><br>$row->DEBTOR_ADDRESS<br>$row->DEBTOR_ZIP_CODE $row->DEBTOR_PLACE" ?>
+                        <?php echo (!empty($row->TEL)) ? '<br />' . $row->TEL : '' ?>
+                        <?php echo (!empty($row->DEBTOR_VAT)) ? '<br />' . $row->DEBTOR_VAT : '' ?>
+                    </td>
+                    <td><?php echo $this->amount($row->TOTAL_AMOUNT); ?></td>
+                    <td><?php echo $row->E_MAIL ?></td>
+                    <td>
+                        <?php
+                        $ref = "";
+                        if ($row->INVOICE_REFERENCES != "") {
+                            $references = substr($row->INVOICE_REFERENCES, 0, strlen($row->INVOICE_REFERENCES) - 1);
+                            $references = explode(";", $references);
+                            if (count($references) >= 1) {
+                                foreach ($references as $reference) {
+                                    list($ref1, $date, $date2, $solde) = explode("!", $reference, 4);
+                                    $ref .= "$ref1(&euro;" . number_format($solde, '2', ',', '.') . ") + ";
+                                }
+                            }
+                        }
+                        $ref = substr($ref, 0, strlen($ref) - 2);
+                        $ref = str_replace("<br>", "\n", $ref);
+                        if (strlen($ref) > 40)
+                            echo "<a href=# title='$ref' class=body>" . substr($ref, 0, 40) . " ...</a>";
+                        else
+                            echo $ref;?>
+                    </td>
+                </tr>
+            <?php endforeach ?>
+        <?php endif; ?>
+        <?php if(count($this->tempImportsNieuw)): ?>
+            <?php foreach ($this->tempImportsNieuw as $row):
+                $sum_amount += $row->TOTAL_AMOUNT;
+                $sum_costs += $row->COSTS;
+                $sum_intrests += $row->INTRESTS;?>
+                <tr>
+                    <td><?php echo $row->REFERENCE ?></td>
+                    <td>
+                        <?php echo "$row->DEBTOR_NAME</a><br>$row->DEBTOR_ADDRESS<br>$row->DEBTOR_ZIP_CODE $row->DEBTOR_PLACE" ?>
+                        <?php echo (!empty($row->TEL)) ? '<br />' . $row->TEL : '' ?>
+                        <?php echo (!empty($row->DEBTOR_VAT)) ? '<br />' . $row->DEBTOR_VAT : '' ?>
+                    </td>
+                    <td><?php echo $this->amount($row->TOTAL_AMOUNT) ?></td>
+                    <td><?php echo $row->E_MAIL ?></td>
+                    <td>
+                        <?php
+                        $ref = "";
+                        if ($row->INVOICE_REFERENCES != "") {
+                            $references = substr($row->INVOICE_REFERENCES, 0, strlen($row->INVOICE_REFERENCES) - 1);
+                            $references = explode(";", $references);
+                            if (count($references) >= 1) {
+                                foreach ($references as $reference) {
+                                    list($ref1, $date, $date2, $solde) = explode("!", $reference, 4);
+                                    $ref .= "$ref1(&euro;" . number_format($solde, '2', ',', '.') . ") + ";
+                                }
+                            }
+                        }
+                        $ref = substr($ref, 0, strlen($ref) - 2);
+                        $ref = str_replace("<br>", "\n", $ref);
+                        if (strlen($ref) > 40)
+                            echo "<a href=# title='$ref' class=body>" . substr($ref, 0, 40) . " ...</a>";
+                        else
+                            echo $ref;?>
+                    </td>
+                </tr>
+            <?php endforeach ?>
+        <?php endif; ?>
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="2"></td>
+                <td><?php  echo $this->amount($sum_amount); ?></td>
+                <td colspan="2"></td>
+            </tr>
+        </tfoot>
+    </table>
+    <form method="post" action="<?php echo $this->location() ?>/import/process">
+        <input type="submit" name="submit"  class="submit" value="<?php $this->T('bestanden_importeren_c') ?>" />
+    </form>
+</div>
+<?php endif; ?>
+<?php endif; ?>
+<script>
+    $(function() {
+        var cache = {},
+            lastXhr;
+        $("#client_name").autocomplete({
+            minLength: 2,
+            autoFocus: true,
+            source: function(request, response) {
+                var term = request.term;
+                if (term in cache) {
+                    response(cache[ term ]);
+                    return;
+                }
+                lastXhr = $.getJSON("<?php echo $this->Location() ?>/ajax/clients", request, function(data, status, xhr) {
+                    cache[ term ] = data;
+                    if (xhr === lastXhr) {
+                        response(data);
+                    }
+                });
+            },
+            select: function(evt, ui)
+            {
+                var CurrentValue = ui.item.value;
+                var ArrayValues = CurrentValue.split("|");
+                $('#client_name').val(ArrayValues[0]);
+                $('#client_id').val(ArrayValues[1]);
+                return false;
+            }
+            , minLength: 2
+        });
+    });
+</script>

@@ -1,0 +1,53 @@
+<?php
+if ($this->deleted) {
+    print $this->Ok($this->G("deleted_c"));
+} else if ($this->deleted === false) {
+    print $this->Error($this->G("cant_be_deleted_c"));
+}
+?>
+<h3><?php echo count($this->results) ?> resultaten gevonden</h3>
+<table id="data" class="tablesorter ws_data_table" width="100%">
+    <thead>
+    <tr>
+        <th><?php $this->T('Code_c') ?></th>
+        <th><?php $this->T('train_type_c') ?></th>
+        <th><?php $this->T('order_c') ?></th>
+        <th><?php $this->T('description_c') ?></th>
+        <th><?php $this->T('Open_files_c') ?></th>
+        <th><?php $this->T('days_c') ?></th>
+        <th><?php $this->T('payments_c') ?></th>
+        <th><?php $this->T('other_actions_c') ?></th>
+        <th><?php $this->T('set_action_c') ?></th>
+        <th><?php $this->T('actief_c') ?></th>
+        <th></th>
+        <th></th>
+    </tr>
+    </thead>
+    <?php if (!empty($this->results)) { ?>
+        <?php foreach ($this->results as $row) { ?>
+            <tr>
+                <td><?php echo $row->CODE ?></td>
+                <td><?php echo $row->TRAIN_TYPE ?></td>
+                <td><?php echo $row->ORDER_CYCLE ?></td>
+                <td><?php echo $row->DESCRIPTION ?></td>
+                <td><?php echo $row->OPEN_FILES ?></td>
+                <td><?php echo $row->DAYS ?></td>
+                <td><?php echo $row->PAYMENTS ?></td>
+                <td><?php echo $row->OTHER_ACTIONS ?></td>
+                <td><?php echo $row->ACTION_CODE ?></td>
+                <td><?php echo $row->ACTIEF ?></td>
+                <td><a href="<?php echo $this->location() ?>/settings-traject/edit/id/<?php echo $row->ID ?>" ><span title ="<?php $this->T("edit_c") ?>"  class="ui-icon ui-icon-zoomin"></span></td>
+                <td>
+                    <?php echo $this->Delete($this->location()."/settings-traject/view/delete/" . $row->ID , $row->CODE) ?>
+                </td>
+
+            </tr>
+        <?php } ?>
+    <?php } else { ?>
+        <tr>
+            <td colspan="5" class="no_results">
+                <?php $this->T("no_results_c"); ?>
+            </td>
+        </tr>
+    <?php } ?>
+</table>

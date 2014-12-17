@@ -1,0 +1,52 @@
+<?php
+if ($this->deleted) {
+    print $this->Ok($this->G("deleted_c"));
+}
+?>
+<?php
+if ($this->added) {
+    print $this->Ok($this->G("saved_c"));
+}
+if ($this->pdf > 0) { ?>
+<script language="javascript">
+    newscreen('', '<?php echo $this->location() ?>/print/template/fileActionId/<?php echo $this->pdf ?>');
+    </script>
+<?php } ?>
+<table id="data" class="tablesorter ws_data_table" width="100%">
+    <thead>
+    <tr>
+        <th><?php $this->T("action_date_c"); ?></th>
+        <th><?php $this->T("code_c"); ?></th>
+        <th><?php $this->T("description_c"); ?></th>
+        <th><?php $this->T("remarks_c"); ?></th>
+        <th><?php $this->T("user_c"); ?></th>
+        <th></th>
+        <th></th>
+    </tr>
+    </thead>
+    <?php if (!empty($this->results)) { ?>
+        <?php foreach ($this->results as $row) { ?>
+            <tr>
+                <td><?php echo $this->Date($row->ACTION_DATE) ?></td>
+                <td><?php echo $row->ACTION_CODE ?></td>
+                <td><?php echo $row->ACTION_DESCRIPTION ?></td>
+                <td><?php echo $row->REMARKS ?></td>
+                <td><?php echo $row->ACTION_USER ?></td>
+                <td><?php if (!empty($row->TEMPLATE_CONTENT) && $this->viewActionContent) { ?>
+                    <a href="<?php echo $this->location() ?>/print/template/fileActionId/<?php echo $row->FILE_ACTION_ID ?>"
+                       target="_blank"><span title="<?php $this->T("view_c") ?>" class="ui-icon ui-icon-disk"></span>
+                        <?php } ?>
+                </td>
+                <td><?php if (!empty($this->mayDelete)) { echo $this->Delete($this->location() . "/file-actions/view/delete/" . $row->FILE_ACTION_ID . "/index/" . $this->index, $row->ACTION_DESCRIPTION); } ?></td>
+
+            </tr>
+        <?php } ?>
+    <?php } else { ?>
+        <tr>
+            <td colspan="7" class="no_results">
+                <?php $this->T("no_results_c"); ?>
+            </td>
+        </tr>
+    <?php } ?>
+</table>
+

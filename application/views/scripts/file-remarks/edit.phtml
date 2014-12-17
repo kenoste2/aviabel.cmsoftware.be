@@ -1,0 +1,18 @@
+<span  class="title2"><?php $this->T("Edit_pay_c") ?></span>
+<?php
+if ($this->formSaved) {
+    print $this->Ok($this->G("saved_c"));
+}
+?>
+<?php
+if ($this->formError) {
+    print $this->Error($this->G("not_all_fields_c"));
+}
+?>
+
+<?php print $this->form ?>
+<script>
+    $(function() {
+        $("#PAYMENT_DATE").datepicker({dateFormat: 'dd/mm/yy', defaultDate: "-30"});
+    });
+</script>    

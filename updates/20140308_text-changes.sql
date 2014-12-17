@@ -1,0 +1,1 @@
+INSERT INTO TEKSTEN (TEKSTEN_ID,CODE,NAV,NL,FR,EN) VALUES ('1705','end_value_c','all','Eind waarde','Valeur finale','End value')

@@ -1,0 +1,45 @@
+<?php
+if ($this->deleted) {
+    print $this->Ok($this->G("deleted_c"));
+} else if ($this->deleted === false) {
+    print $this->Error($this->G("cant_be_deleted_c"));
+}
+?>
+<?php if (count($this->conditions)): ?>
+    <h3><?php echo count($this->conditions) ?> resultaten gevonden</h3>
+<?php endif; ?>
+<table id="data" class="tablesorter ws_data_table" width="100%">
+    <thead>
+    <tr>
+        <th><?php $this->T("from_date_c"); ?></th>
+        <th><?php $this->T("condition_type_c"); ?></th>
+        <th><?php $this->T("end_value_c"); ?></th>
+        <th><?php $this->T("percent_c"); ?></th>
+        <th><?php $this->T("min_cost_c"); ?></th>
+        <th></th>
+    </tr>
+    </thead>
+    <?php if (!empty($this->conditions)) { ?>
+        <?php foreach ($this->conditions as $row) { ?>
+            <tr>
+                <td><?php echo $this->date($row->FROM_DATE) ?></td>
+                <td><?php echo $row->CONDITION_TYPE ?></td>
+                <td><?php echo number_format($row->END_VALUE, 2, ',', '.') ?></td>
+                <td><?php echo number_format($row->INVOICE_PERCENT, 2, ',', '.') ?></td>
+                <td><?php echo number_format($row->INVOICE_MINIMUM, 2, ',', '.') ?></td>
+                <td>
+                    <?php if($this->canDelete): ?>
+                        <?php echo $this->Delete($this->location()."/client-invoice-params/view/delete/" . $row->RECORD_ID , $row->CONDITION_TYPE) ?>
+                    <?php endif; ?>
+                </td>
+
+            </tr>
+        <?php } ?>
+    <?php } else { ?>
+        <tr>
+            <td colspan="5" class="no_results">
+                <?php $this->T("no_results_c"); ?>
+            </td>
+        </tr>
+    <?php } ?>
+</table>

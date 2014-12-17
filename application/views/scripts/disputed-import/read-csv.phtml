@@ -1,0 +1,23 @@
+<div>
+    <?php if($this->success) { ?>
+        <div><?php print $this->Ok('Het bestand werd correct ingelezen.') ?></div>
+    <?php } ?>
+    <?php
+    foreach($this->messages as $message) {
+        ?>
+        <div><?php print $this->error($message) ?></div>
+    <?php
+    }
+    foreach($this->warnings as $warning) {
+        ?>
+        <div><?php print $this->warning($warning) ?></div>
+    <?php
+    }
+    ?>
+</div>
+
+<?php print $this->form ?>
+
+<div>
+    <?php print $this->explanation ?>
+</div>

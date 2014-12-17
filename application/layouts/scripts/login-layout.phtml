@@ -1,0 +1,15 @@
+<!-- application/layouts/scripts/layout.phtml -->
+<?php echo $this->doctype() ?>
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title><?php echo $this->headerTitle ?></title>
+        <?php echo $this->headLink()->appendStylesheet(BASE_URL . 'css/global.css') ?>
+        <?php echo $this->headLink()->appendStylesheet(BASE_URL . 'css/south-street/jquery-ui-1.10.4.custom.css') ?>
+        <?php echo $this->headScript()->appendFile(BASE_URL . 'js/jquery-1.10.2.js') ?>
+        <?php echo $this->headScript()->appendFile(BASE_URL . 'js/jquery-ui-1.10.4.custom.js') ?>
+    </head>
+    <body>
+        <?php echo $this->layout()->content ?> 
+    </body>
+</html>

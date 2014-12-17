@@ -1,0 +1,943 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:bi="iig.b-information.be" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="iig" targetNamespace="iig.b-information.be">
+	<wsdl:types>
+		<xsd:schema targetNamespace="iig.b-information.be" elementFormDefault="qualified">
+			
+<!-- IIG FAULT ELEMENT -->
+			<xsd:element name="IIGFault">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element minOccurs="1" maxOccurs="1" name="Type" type="xsd:string" />
+						<xsd:element minOccurs="1" maxOccurs="1" name="Code" type="xsd:long" />
+						<xsd:element minOccurs="1" maxOccurs="1" name="Description" type="xsd:string" />
+					</xsd:sequence>
+				</xsd:complexType>			
+			</xsd:element>
+
+			
+<!-- COMMON TYPES -->
+<!-- CountryCode -->
+			<xsd:simpleType name="CountryCodeType">
+				<xsd:restriction base="xsd:string">
+					<xsd:minLength value="2" />
+					<xsd:maxLength value="3" />
+				</xsd:restriction>
+			</xsd:simpleType>
+<!-- References -->
+			<xsd:simpleType name="ReferenceType">
+				<xsd:restriction base="xsd:string">
+					<xsd:minLength value="0" />
+					<xsd:maxLength value="20" />
+				</xsd:restriction>
+			</xsd:simpleType>
+<!-- CompanyId -->
+			<xsd:simpleType name="CompanyIdType">
+				<xsd:restriction base="xsd:string">
+					<xsd:maxLength value="15" />
+				</xsd:restriction>
+			</xsd:simpleType>
+<!-- ReportLanguage -->
+			<xsd:simpleType name="ReportLanguageType">
+				<xsd:restriction base="xsd:string">
+					<xsd:length value="2"></xsd:length>
+				</xsd:restriction>
+			</xsd:simpleType>
+<!-- Active -->
+			<xsd:simpleType name="ActiveType">
+				<xsd:restriction base="xsd:string">
+					<xsd:length value="1"></xsd:length>
+				</xsd:restriction>
+			</xsd:simpleType>
+<!-- Status -->
+			<xsd:simpleType name="StatusType">
+				<xsd:restriction base="xsd:string">
+					<xsd:length value="1"></xsd:length> 
+				</xsd:restriction>
+			</xsd:simpleType>
+<!-- ReportContent -->
+			<xsd:simpleType name="ReportContentType">
+				<xsd:restriction base="xsd:string">
+					<xsd:whiteSpace value="collapse">
+					</xsd:whiteSpace>
+				</xsd:restriction>
+			</xsd:simpleType>
+<!-- AddressElements -->
+			<xsd:complexType name="AddressElements">
+				<xsd:sequence>
+					<xsd:element minOccurs="0" maxOccurs="1" name="Street" type="xsd:string" />
+					<xsd:element minOccurs="0" maxOccurs="1" name="Number" type="xsd:string" />
+					<xsd:element minOccurs="0" maxOccurs="1" name="PostalCode" type="xsd:string" />
+					<xsd:element minOccurs="0" maxOccurs="1" name="Locality" type="xsd:string" />
+					<xsd:element minOccurs="0" maxOccurs="1" name="Region" type="xsd:string" />
+					<xsd:element minOccurs="0" maxOccurs="1" name="Raw" type="xsd:string" />
+				</xsd:sequence>
+			</xsd:complexType>		
+<!-- CompanyElements -->
+			<xsd:complexType name="CompanyElements">
+				<xsd:sequence>
+					<xsd:element minOccurs="1" maxOccurs="1" name="CompanyId" type="bi:CompanyIdType" />
+					<xsd:element minOccurs="1" maxOccurs="1" name="CountryCode" type="bi:CountryCodeType" />
+					<xsd:element minOccurs="0" maxOccurs="1" name="Name" type="xsd:string" />
+					<xsd:element minOccurs="0" maxOccurs="1" name="NationalNumber" type="xsd:string" />
+					<xsd:element minOccurs="0" maxOccurs="1" name="TradeRegisterNumber" type="xsd:string" />
+					<xsd:element minOccurs="0" maxOccurs="1" name="Address" type="bi:AddressElements" />
+					<xsd:element minOccurs="0" maxOccurs="1" name="Active" type="bi:ActiveType" />
+				</xsd:sequence>
+			</xsd:complexType>
+<!-- ReportElements -->
+			<xsd:complexType name="ReportElements">
+				<xsd:sequence>
+					<xsd:element minOccurs="1" maxOccurs="1" name="ReportName" type="xsd:string" />
+					<xsd:element minOccurs="1" maxOccurs="1" name="ReportLanguage" type="bi:ReportLanguageType" />
+					<xsd:element minOccurs="1" maxOccurs="1" name="ReportVersion" type="xsd:string" />
+					<xsd:element minOccurs="1" maxOccurs="1" name="ReportType" type="xsd:string" />
+				</xsd:sequence>
+			</xsd:complexType>			
+<!-- UpdateRequestElements -->
+			<xsd:complexType name="UpdateRequestElements">
+				<xsd:sequence>
+					<xsd:element minOccurs="0" maxOccurs="1" name="Reference1" type="bi:ReferenceType" />
+					<xsd:element minOccurs="0" maxOccurs="1" name="Reference2" type="bi:ReferenceType" />
+					<xsd:element minOccurs="1" maxOccurs="1" name="CompanyId" type="bi:CompanyIdType" />
+					<xsd:element minOccurs="1" maxOccurs="1" name="Report" type="bi:ReportElements" />
+					<xsd:element minOccurs="1" maxOccurs="1" name="UpdateStatus" type="bi:StatusType" />
+					<xsd:element minOccurs="1" maxOccurs="1" name="UpdateId" type="xsd:integer" />
+				</xsd:sequence>
+			</xsd:complexType>
+			
+<!-- MonitoringReportElements -->
+			<xsd:complexType name="MonitoringReportElements">
+				<xsd:sequence>
+					<xsd:element minOccurs="0" maxOccurs="1" name="Reference1" type="bi:ReferenceType" />
+					<xsd:element minOccurs="0" maxOccurs="1" name="Reference2" type="bi:ReferenceType" />
+					<xsd:element minOccurs="1" maxOccurs="1" name="CompanyId" type="bi:CompanyIdType" />
+					<xsd:element minOccurs="1" maxOccurs="1" name="Report" type="bi:ReportElements" />
+					<xsd:element minOccurs="1" maxOccurs="1" name="MonitoringReportStatus" type="bi:StatusType" />
+					<xsd:element minOccurs="1" maxOccurs="1" name="MonitoringId" type="xsd:integer" />
+					<xsd:element minOccurs="1" maxOccurs="1" name="MonitoringStartDate" type="xsd:date" />
+					<xsd:element minOccurs="0" maxOccurs="1" name="ChangeCriterias" type="bi:ChangeCriteriasElements" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="ChangeCriteriasElements">
+				<xsd:sequence>
+					<xsd:element minOccurs="1" maxOccurs="unbounded" name="ChangeCriteria" type="bi:ChangeCriteriaElements" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="ChangeCriteriaElements">
+				<xsd:sequence>
+					<xsd:element minOccurs="0" maxOccurs="1" name="ChangeDescription" type="xsd:string" />
+					<xsd:element minOccurs="0" maxOccurs="1" name="ChangeDate" type="xsd:date" />
+				</xsd:sequence>
+			</xsd:complexType>
+<!-- OfflineRequestElements -->
+			<xsd:complexType name="OfflineRequestElements">
+				<xsd:sequence>
+					<xsd:element minOccurs="0" maxOccurs="1" name="Reference1" type="bi:ReferenceType" />
+					<xsd:element minOccurs="0" maxOccurs="1" name="Reference2" type="bi:ReferenceType" />
+					<xsd:element minOccurs="1" maxOccurs="1" name="CountryCode" type="bi:CountryCodeType" />
+					<xsd:element minOccurs="0" maxOccurs="1" name="Name" type="xsd:string" />
+					<xsd:element minOccurs="0" maxOccurs="1" name="NationalNumber" type="xsd:string" />
+					<xsd:element minOccurs="0" maxOccurs="1" name="TradeRegisterNumber" type="xsd:string" />
+					<xsd:element minOccurs="0" maxOccurs="1" name="Address" type="bi:AddressElements" />
+					<xsd:element minOccurs="0" maxOccurs="1" name="Phone" type="xsd:string" />
+					<xsd:element minOccurs="0" maxOccurs="1" name="MobilePhone" type="xsd:string" />
+					<xsd:element minOccurs="0" maxOccurs="1" name="Fax" type="xsd:string" />
+					<xsd:element minOccurs="0" maxOccurs="1" name="Email" type="xsd:string" />
+					<xsd:element minOccurs="1" maxOccurs="1" name="ReportType" type="xsd:string" />
+					<xsd:element minOccurs="1" maxOccurs="1" name="Urgency" type="xsd:string" />
+					<xsd:element minOccurs="1" maxOccurs="1" name="OfflineRequestStatus" type="bi:StatusType" />
+					<xsd:element minOccurs="1" maxOccurs="1" name="OfflineRequestId" type="xsd:integer" />
+				</xsd:sequence>
+			</xsd:complexType>
+<!-- CompaniesElements -->
+			<xsd:complexType name="CompaniesElements">
+				<xsd:sequence>
+					<xsd:element minOccurs="1" maxOccurs="unbounded" name="Company" type="bi:CompanyElements" />
+				</xsd:sequence>
+			</xsd:complexType>
+			
+<!-- REQUEST/RESPONSE ELEMENTS & TYPES -->
+<!-- GetDemoCompanies -->
+			<xsd:element name="GetDemoCompaniesRequest">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element minOccurs="1" maxOccurs="1" name="CountryCode" type="bi:CountryCodeType" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="GetDemoCompaniesResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element minOccurs="0" maxOccurs="1" name="Warning" type="xsd:string" />
+						<xsd:element minOccurs="1" maxOccurs="1" name="NbResults" type="xsd:integer" />
+						<xsd:element minOccurs="0" maxOccurs="1" name="Companies" type="bi:CompaniesElements" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+<!-- Search -->
+			<xsd:element name="SearchRequest">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element minOccurs="0" maxOccurs="1" name="Reference1" type="bi:ReferenceType" />
+						<xsd:element minOccurs="0" maxOccurs="1" name="Reference2" type="bi:ReferenceType" />
+						<xsd:element minOccurs="1" maxOccurs="1" name="CountryCode" type="bi:CountryCodeType" />
+						<xsd:element minOccurs="0" maxOccurs="1" name="Name" type="xsd:string" />
+						<xsd:element minOccurs="0" maxOccurs="1" name="NationalNumber" type="xsd:string" />
+						<xsd:element minOccurs="0" maxOccurs="1" name="TradeRegisterNumber" type="xsd:string" />
+						<xsd:element minOccurs="0" maxOccurs="1" name="Address" type="bi:AddressElements" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="SearchResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element minOccurs="0" maxOccurs="1" name="Warning" type="xsd:string" />
+						<xsd:element minOccurs="0" maxOccurs="1" name="Reference1" type="bi:ReferenceType" />
+						<xsd:element minOccurs="0" maxOccurs="1" name="Reference2" type="bi:ReferenceType" />
+						<xsd:element minOccurs="1" maxOccurs="1" name="NbResults" type="xsd:integer" />
+						<xsd:element minOccurs="0" maxOccurs="1" name="NbMaxResults" type="xsd:integer" />
+						<xsd:element minOccurs="1" maxOccurs="1" name="TruncatedResults" type="xsd:boolean" />
+						<xsd:element minOccurs="0" maxOccurs="1" name="Companies" type="bi:CompaniesElements" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+<!-- GetAvailableProducts -->
+			<xsd:element name="GetAvailableProductsRequest">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element minOccurs="0" maxOccurs="1" name="Reference1" type="bi:ReferenceType" />
+						<xsd:element minOccurs="0" maxOccurs="1" name="Reference2" type="bi:ReferenceType" />
+						<xsd:element minOccurs="1" maxOccurs="1" name="CompanyId" type="bi:CompanyIdType" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="GetAvailableProductsResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element minOccurs="0" maxOccurs="1" name="Warning" type="xsd:string" />
+						<xsd:element minOccurs="0" maxOccurs="1" name="Reference1" type="bi:ReferenceType" />
+						<xsd:element minOccurs="0" maxOccurs="1" name="Reference2" type="bi:ReferenceType" />
+						<xsd:element minOccurs="1" maxOccurs="1" name="Company" type="bi:CompanyElements" />
+						<xsd:element minOccurs="0" maxOccurs="1" name="Products" type="bi:ProductsElements" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:complexType name="ProductsElements">
+				<xsd:sequence>
+					<xsd:element minOccurs="1" maxOccurs="unbounded" name="ProductReport" type="bi:ProductReportElements" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="ProductReportElements">
+				<xsd:sequence>
+					<xsd:element minOccurs="1" maxOccurs="1" name="ReportName" type="xsd:string" />
+					<xsd:element minOccurs="0" maxOccurs="1" name="ReportDescription" type="xsd:string" />
+					<xsd:element minOccurs="0" maxOccurs="1" name="ReportLanguages" type="bi:ReportLanguagesElements" />
+					<xsd:element minOccurs="0" maxOccurs="1" name="ReportVersions" type="bi:ReportVersionsElements" />
+					<xsd:element minOccurs="0" maxOccurs="1" name="ReportTypes" type="bi:ReportTypesElements" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="ReportLanguagesElements">
+				<xsd:sequence>
+					<xsd:element minOccurs="1" maxOccurs="unbounded" name="ReportLanguage" type="bi:ReportLanguageType" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="ReportVersionsElements">
+				<xsd:sequence>
+					<xsd:element minOccurs="1" maxOccurs="unbounded" name="ReportVersion" type="xsd:string" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="ReportTypesElements">
+				<xsd:sequence>
+					<xsd:element minOccurs="1" maxOccurs="unbounded" name="ReportType" type="xsd:string" />
+				</xsd:sequence>
+			</xsd:complexType>
+<!-- OrderReport -->
+			<xsd:element name="OrderReportRequest">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element minOccurs="0" maxOccurs="1" name="Reference1" type="bi:ReferenceType" />
+						<xsd:element minOccurs="0" maxOccurs="1" name="Reference2" type="bi:ReferenceType" />
+						<xsd:element minOccurs="1" maxOccurs="1" name="CompanyId" type="bi:CompanyIdType" />
+						<xsd:element minOccurs="1" maxOccurs="1" name="ReportName" type="xsd:string" />
+						<xsd:element minOccurs="0" maxOccurs="1" name="ReportLanguage" type="bi:ReportLanguageType" />
+						<xsd:element minOccurs="0" maxOccurs="1" name="ReportVersion" type="xsd:string" />
+						<xsd:element minOccurs="0" maxOccurs="1" name="ReportType" type="xsd:string" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="OrderReportResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element minOccurs="0" maxOccurs="1" name="Warning" type="xsd:string" />
+						<xsd:element minOccurs="0" maxOccurs="1" name="Reference1" type="bi:ReferenceType" />
+						<xsd:element minOccurs="0" maxOccurs="1" name="Reference2" type="bi:ReferenceType" />
+						<xsd:element minOccurs="1" maxOccurs="1" name="CompanyId" type="bi:CompanyIdType" />
+						<xsd:element minOccurs="1" maxOccurs="1" name="Report" type="bi:ReportElements"  />
+						<xsd:element minOccurs="0" maxOccurs="1" name="UpdateId" type="xsd:integer" />
+						<xsd:element minOccurs="1" maxOccurs="1" name="UpdateFlag" type="bi:UpdateFlagType" />
+						<xsd:element minOccurs="0" maxOccurs="1" name="LastUpdateDate" type="xsd:date" />
+						<xsd:element minOccurs="1" maxOccurs="1" name="ReportContent" type="bi:ReportContentType" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:simpleType name="UpdateFlagType">
+				<xsd:restriction base="xsd:string">
+					<xsd:length value="1"></xsd:length>
+				</xsd:restriction>
+			</xsd:simpleType>
+<!-- GetAdditionalReportContents -->
+			<xsd:element name="GetAdditionalReportContentsRequest">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element minOccurs="0" maxOccurs="1" name="Reference1" type="bi:ReferenceType" />
+						<xsd:element minOccurs="0" maxOccurs="1" name="Reference2" type="bi:ReferenceType" />
+						<xsd:element minOccurs="1" maxOccurs="1" name="ReportContentIds" type="bi:ReportContentIdsElements" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="GetAdditionalReportContentsResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element minOccurs="0" maxOccurs="1" name="Warning" type="xsd:string" />
+						<xsd:element minOccurs="0" maxOccurs="1" name="Reference1" type="bi:ReferenceType" />
+						<xsd:element minOccurs="0" maxOccurs="1" name="Reference2" type="bi:ReferenceType" />
+						<xsd:element minOccurs="1" maxOccurs="1" name="ReportContents" type="bi:ReportContentsElements" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:complexType name="ReportContentIdsElements">
+				<xsd:sequence>
+					<xsd:element minOccurs="1" maxOccurs="unbounded" name="ReportContentId" type="xsd:integer" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="ReportContentsElements">
+				<xsd:sequence>
+					<xsd:element minOccurs="1" maxOccurs="unbounded" name="ReportContent" type="bi:ReportContentElements" />
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="ReportContentElements">
+				<xsd:sequence>
+					<xsd:element minOccurs="1" maxOccurs="1" name="ReportContentId" type="xsd:integer" />
+					<xsd:element minOccurs="0" maxOccurs="1" name="ContentName" type="xsd:string" />
+					<xsd:element minOccurs="0" maxOccurs="1" name="ContenDescription" type="xsd:string" />
+				</xsd:sequence>
+			</xsd:complexType>
+<!-- RequestUpdate -->
+			<xsd:element name="RequestUpdateRequest">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element minOccurs="0" maxOccurs="1" name="Reference1" type="bi:ReferenceType" />
+						<xsd:element minOccurs="0" maxOccurs="1" name="Reference2" type="bi:ReferenceType" />
+						<xsd:element minOccurs="1" maxOccurs="1" name="CompanyId" type="bi:CompanyIdType" />
+						<xsd:element minOccurs="1" maxOccurs="1" name="ReportName" type="xsd:string" />
+						<xsd:element minOccurs="0" maxOccurs="1" name="ReportLanguage" type="bi:ReportLanguageType" />
+						<xsd:element minOccurs="0" maxOccurs="1" name="ReportVersion" type="xsd:string" />
+						<xsd:element minOccurs="0" maxOccurs="1" name="ReportType" type="xsd:string" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="RequestUpdateResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element minOccurs="0" maxOccurs="1" name="Warning" type="xsd:string" />
+						<xsd:element minOccurs="1" maxOccurs="1" name="UpdateRequest" type="bi:UpdateRequestElements" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+<!-- CheckUpdates -->
+			<xsd:element name="CheckUpdatesRequest">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element minOccurs="0" maxOccurs="1" name="UpdateStatus" type="bi:StatusType" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="CheckUpdatesResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element minOccurs="0" maxOccurs="1" name="Warning" type="xsd:string" />
+						<xsd:element minOccurs="0" maxOccurs="1" name="UpdateRequests" type="bi:UpdateRequestsElements" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:complexType name="UpdateRequestsElements">
+				<xsd:sequence>
+					<xsd:element minOccurs="1" maxOccurs="unbounded" name="UpdateRequest" type="bi:UpdateRequestElements" />
+				</xsd:sequence>
+			</xsd:complexType>
+<!-- GetUpdatedReport -->
+			<xsd:element name="GetUpdatedReportRequest">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element minOccurs="1" maxOccurs="1" name="UpdateId" type="xsd:integer" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="GetUpdatedReportResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element minOccurs="0" maxOccurs="1" name="Warning" type="xsd:string" />
+						<xsd:element minOccurs="1" maxOccurs="1" name="UpdateRequest" type="bi:UpdateRequestElements" />
+						<xsd:element minOccurs="1" maxOccurs="1" name="ReportContent" type="bi:ReportContentType" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+<!-- AddMonitoringReport -->
+			<xsd:element name="AddMonitoringReportRequest">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element minOccurs="0" maxOccurs="1" name="Reference1" type="bi:ReferenceType" />
+						<xsd:element minOccurs="0" maxOccurs="1" name="Reference2" type="bi:ReferenceType" />
+						<xsd:element minOccurs="1" maxOccurs="1" name="CompanyId" type="bi:CompanyIdType" />
+						<xsd:element minOccurs="1" maxOccurs="1" name="ReportName" type="xsd:string" />
+						<xsd:element minOccurs="0" maxOccurs="1" name="ReportLanguage" type="bi:ReportLanguageType" />
+						<xsd:element minOccurs="0" maxOccurs="1" name="ReportVersion" type="xsd:string" />
+						<xsd:element minOccurs="0" maxOccurs="1" name="ReportType" type="xsd:string" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="AddMonitoringReportResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element minOccurs="0" maxOccurs="1" name="Warning" type="xsd:string" />
+						<xsd:element minOccurs="1" maxOccurs="1" name="MonitoringReport" type="xsd:string" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+<!-- RemoveMonitoringReport -->
+			<xsd:element name="RemoveMonitoringReportRequest">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element minOccurs="1" maxOccurs="1" name="MonitoringId" type="xsd:integer" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="RemoveMonitoringReportResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element minOccurs="0" maxOccurs="1" name="Warning" type="xsd:string" />
+						<xsd:element minOccurs="1" maxOccurs="1" name="MonitoringReport" type="xsd:string" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+<!-- CheckMonitoringReports -->
+			<xsd:element name="CheckMonitoringReportsRequest">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element minOccurs="0" maxOccurs="1" name="FromDate" type="xsd:date" />
+						<xsd:element minOccurs="0" maxOccurs="1" name="MonitoringReportStatus" type="bi:StatusType" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="CheckMonitoringReportsResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element minOccurs="0" maxOccurs="1" name="Warning" type="xsd:string" />
+						<xsd:element minOccurs="0" maxOccurs="1" name="MonitoringReports" type="bi:MonitoringReportsElements" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:complexType name="MonitoringReportsElements">
+				<xsd:sequence>
+					<xsd:element minOccurs="1" maxOccurs="unbounded" name="MonitoringReport" type="xsd:string" />
+				</xsd:sequence>
+			</xsd:complexType>	
+<!-- GetChangedReport -->
+			<xsd:element name="GetChangedReportRequest">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element minOccurs="1" maxOccurs="1" name="MonitoringId" type="xsd:integer" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="GetChangedReportResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element minOccurs="0" maxOccurs="1" name="Warning" type="xsd:string" />
+						<xsd:element minOccurs="1" maxOccurs="1" name="MonitoringReport" type="xsd:string" />
+						<xsd:element minOccurs="1" maxOccurs="1" name="ReportContent" type="bi:ReportContentType" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+<!-- RequestOfflineReport -->
+			<xsd:element name="RequestOfflineReportRequest">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element minOccurs="0" maxOccurs="1" name="Reference1" type="bi:ReferenceType" />
+						<xsd:element minOccurs="0" maxOccurs="1" name="Reference2" type="bi:ReferenceType" />
+						<xsd:element minOccurs="1" maxOccurs="1" name="CountryCode" type="bi:CountryCodeType" />
+						<xsd:element minOccurs="0" maxOccurs="1" name="Name" type="xsd:string" />
+						<xsd:element minOccurs="0" maxOccurs="1" name="NationalNumber" type="xsd:string" />
+						<xsd:element minOccurs="0" maxOccurs="1" name="TradeRegisterNumber" type="xsd:string" />
+						<xsd:element minOccurs="0" maxOccurs="1" name="Address" type="bi:AddressElements" />
+						<xsd:element minOccurs="0" maxOccurs="1" name="Phone" type="xsd:string" />
+						<xsd:element minOccurs="0" maxOccurs="1" name="MobilePhone" type="xsd:string" />
+						<xsd:element minOccurs="0" maxOccurs="1" name="Fax" type="xsd:string" />
+						<xsd:element minOccurs="0" maxOccurs="1" name="Email" type="xsd:string" />
+						<xsd:element minOccurs="0" maxOccurs="1" name="ReportType" type="xsd:string" />
+						<xsd:element minOccurs="0" maxOccurs="1" name="Urgency" type="xsd:string" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="RequestOfflineReportResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element minOccurs="0" maxOccurs="1" name="Warning" type="xsd:string" />
+						<xsd:element minOccurs="0" maxOccurs="1" name="OfflineRequest" type="bi:OfflineRequestElements" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+<!-- CheckOfflineReportRequests -->
+			<xsd:element name="CheckOfflineReportRequestsRequest">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element minOccurs="0" maxOccurs="1" name="OfflineRequestStatus" type="bi:StatusType" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="CheckOfflineReportRequestsResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element minOccurs="0" maxOccurs="1" name="Warning" type="xsd:string" />
+						<xsd:element minOccurs="0" maxOccurs="1" name="OfflineRequests" type="bi:OfflineRequestsElements" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:complexType name="OfflineRequestsElements">
+				<xsd:sequence>
+					<xsd:element minOccurs="1" maxOccurs="unbounded" name="OfflineRequest" type="bi:OfflineRequestElements" />
+				</xsd:sequence>
+			</xsd:complexType>
+			
+<!-- GetRequestedOfflineReport -->
+			<xsd:element name="GetRequestedOfflineReportRequest">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element minOccurs="1" maxOccurs="1" name="OfflineRequestId" type="xsd:integer" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="GetRequestedOfflineReportResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element minOccurs="0" maxOccurs="1" name="Warning" type="xsd:string" />
+						<xsd:element  minOccurs="1" maxOccurs="1" name="OfflineRequest" type="bi:OfflineRequestElements" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+		</xsd:schema>
+	</wsdl:types>
+	
+<!-- REQUEST/RESPONSE MESSAGES -->
+	<wsdl:message name="GetDemoCompaniesRequest">
+		<wsdl:part name="request" element="bi:GetDemoCompaniesRequest" />
+	</wsdl:message>
+	<wsdl:message name="GetDemoCompaniesResponse">
+		<wsdl:part name="response" element="bi:GetDemoCompaniesResponse" />
+	</wsdl:message>
+	<wsdl:message name="SearchRequest">
+		<wsdl:part name="request" element="bi:SearchRequest" />
+	</wsdl:message>
+	<wsdl:message name="SearchResponse">
+		<wsdl:part name="response" element="bi:SearchResponse" />
+	</wsdl:message>
+	<wsdl:message name="GetAvailableProductsRequest">
+		<wsdl:part name="request" element="bi:GetAvailableProductsRequest" />
+	</wsdl:message>
+	<wsdl:message name="GetAvailableProductsResponse">
+		<wsdl:part name="response" element="bi:GetAvailableProductsResponse" />
+	</wsdl:message>
+	<wsdl:message name="OrderReportRequest">
+		<wsdl:part name="request" element="bi:OrderReportRequest" />
+	</wsdl:message>
+	<wsdl:message name="OrderReportResponse">
+		<wsdl:part name="response" element="bi:OrderReportResponse" />
+	</wsdl:message>
+	<wsdl:message name="GetAdditionalReportContentsRequest">
+		<wsdl:part name="request" element="bi:GetAdditionalReportContentsRequest" />
+	</wsdl:message>
+	<wsdl:message name="GetAdditionalReportContentsResponse">
+		<wsdl:part name="response" element="bi:GetAdditionalReportContentsResponse" />
+	</wsdl:message>
+	<wsdl:message name="RequestUpdateRequest">
+		<wsdl:part name="request" element="bi:RequestUpdateRequest" />
+	</wsdl:message>
+	<wsdl:message name="RequestUpdateResponse">
+		<wsdl:part name="response" element="bi:RequestUpdateResponse" />
+	</wsdl:message>
+	<wsdl:message name="CheckUpdatesRequest">
+		<wsdl:part name="request" element="bi:CheckUpdatesRequest" />
+	</wsdl:message>
+	<wsdl:message name="CheckUpdatesResponse">
+		<wsdl:part name="response" element="bi:CheckUpdatesResponse" />
+	</wsdl:message>
+	<wsdl:message name="GetUpdatedReportRequest">
+		<wsdl:part name="request" element="bi:GetUpdatedReportRequest" />
+	</wsdl:message>
+	<wsdl:message name="GetUpdatedReportResponse">
+		<wsdl:part name="response" element="bi:GetUpdatedReportResponse" />
+	</wsdl:message>
+	<wsdl:message name="AddMonitoringReportRequest">
+		<wsdl:part name="request" element="bi:AddMonitoringReportRequest" />
+	</wsdl:message>
+	<wsdl:message name="AddMonitoringReportResponse">
+		<wsdl:part name="response" element="bi:AddMonitoringReportResponse" />
+	</wsdl:message>
+	<wsdl:message name="RemoveMonitoringReportRequest">
+		<wsdl:part name="request" element="bi:RemoveMonitoringReportRequest" />
+	</wsdl:message>
+	<wsdl:message name="RemoveMonitoringReportResponse">
+		<wsdl:part name="response" element="bi:RemoveMonitoringReportResponse" />
+	</wsdl:message>
+	<wsdl:message name="CheckMonitoringReportsRequest">
+		<wsdl:part name="request" element="bi:CheckMonitoringReportsRequest" />
+	</wsdl:message>
+	<wsdl:message name="CheckMonitoringReportsResponse">
+		<wsdl:part name="response" element="bi:CheckMonitoringReportsResponse" />
+	</wsdl:message>
+	<wsdl:message name="GetChangedReportRequest">
+		<wsdl:part name="request" element="bi:GetChangedReportRequest" />
+	</wsdl:message>
+	<wsdl:message name="GetChangedReportResponse">
+		<wsdl:part name="response" element="bi:GetChangedReportResponse" />
+	</wsdl:message>
+	<wsdl:message name="RequestOfflineReportRequest">
+		<wsdl:part name="request" element="bi:RequestOfflineReportRequest" />
+	</wsdl:message>
+	<wsdl:message name="RequestOfflineReportResponse">
+		<wsdl:part name="response" element="bi:RequestOfflineReportResponse" />
+	</wsdl:message>
+	<wsdl:message name="CheckOfflineReportRequestsRequest">
+		<wsdl:part name="request" element="bi:CheckOfflineReportRequestsRequest" />
+	</wsdl:message>
+	<wsdl:message name="CheckOfflineReportRequestsResponse">
+		<wsdl:part name="response" element="bi:CheckOfflineReportRequestsResponse" />
+	</wsdl:message>
+	<wsdl:message name="GetRequestedOfflineReportRequest">
+		<wsdl:part name="request" element="bi:GetRequestedOfflineReportRequest" />
+	</wsdl:message>
+	<wsdl:message name="GetRequestedOfflineReportResponse">
+		<wsdl:part name="response" element="bi:GetRequestedOfflineReportResponse" />
+	</wsdl:message>
+	
+<!-- FAULT MESSAGES -->
+	<wsdl:message name="IIG_faultMsg">
+		<wsdl:part name="iigFault" element="bi:IIGFault" />
+	</wsdl:message>
+
+<!-- PORT TYPES DESCRIPTION -->
+	<wsdl:portType name="iigPortType">
+		<wsdl:operation name="GetDemoCompanies">
+			<wsdl:documentation>
+				This method allows getting a list of demos companies which are free of charges.
+			</wsdl:documentation>
+			<wsdl:input message="bi:GetDemoCompaniesRequest" />
+			<wsdl:output message="bi:GetDemoCompaniesResponse" />
+			<wsdl:fault name="fault" message="bi:IIG_faultMsg" />
+		</wsdl:operation>
+		<wsdl:operation name="Search">
+			<wsdl:documentation>
+				This method allows to search the companies matching some criteria.
+			</wsdl:documentation>
+			<wsdl:input message="bi:SearchRequest" />
+			<wsdl:output message="bi:SearchResponse" />
+			<wsdl:fault name="fault" message="bi:IIG_faultMsg" />
+		</wsdl:operation>
+		<wsdl:operation name="GetAvailableProducts">
+			<wsdl:documentation>
+				This method allows getting a list of available products for a company. A product could be a report or other contents linked to the company.
+			</wsdl:documentation>
+			<wsdl:input message="bi:GetAvailableProductsRequest" />
+			<wsdl:output message="bi:GetAvailableProductsResponse" />
+			<wsdl:fault name="fault" message="bi:IIG_faultMsg" />
+		</wsdl:operation>
+		<wsdl:operation name="OrderReport">
+			<wsdl:documentation>
+				This method allows ordering a report on a company, previously found by the search method.
+			</wsdl:documentation>
+			<wsdl:input message="bi:OrderReportRequest" />
+			<wsdl:output message="bi:OrderReportResponse" />
+			<wsdl:fault name="fault" message="bi:IIG_faultMsg" />
+		</wsdl:operation>
+		<wsdl:operation name="GetAdditionalReportContents">
+			<wsdl:documentation>
+				This method allows getting additional contents for report (documents, ...)
+			</wsdl:documentation>
+			<wsdl:input message="bi:GetAdditionalReportContentsRequest" />
+			<wsdl:output message="bi:GetAdditionalReportContentsResponse" />
+			<wsdl:fault name="fault" message="bi:IIG_faultMsg" />
+		</wsdl:operation>
+		<wsdl:operation name="RequestUpdate">
+			<wsdl:documentation>
+				This method allows to order an update of the report if the response of "Order report" returned an UpdateFlag=M (update available on demand).
+			</wsdl:documentation>
+			<wsdl:input message="bi:RequestUpdateRequest" />
+			<wsdl:output message="bi:RequestUpdateResponse" />
+			<wsdl:fault name="fault" message="bi:IIG_faultMsg" />
+		</wsdl:operation>
+		<wsdl:operation name="CheckUpdates">
+			<wsdl:documentation>
+				This method allows to get the list of the companies which have been updated after a specific request or an automatic update. 
+			</wsdl:documentation>
+			<wsdl:input message="bi:CheckUpdatesRequest" />
+			<wsdl:output message="bi:CheckUpdatesResponse" />
+			<wsdl:fault name="fault" message="bi:IIG_faultMsg" />
+		</wsdl:operation>
+		<wsdl:operation name="GetUpdatedReport">
+			<wsdl:documentation>
+				This method allows to download the updated report for companies flagged as ready (R) by the "CheckUpdates" method.
+			</wsdl:documentation>
+			<wsdl:input message="bi:GetUpdatedReportRequest" />
+			<wsdl:output message="bi:GetUpdatedReportResponse" />
+			<wsdl:fault name="fault" message="bi:IIG_faultMsg" />
+		</wsdl:operation>
+		<wsdl:operation name="AddMonitoringReport">
+			<wsdl:documentation>
+				Request a monitoring on a specified company.
+			</wsdl:documentation>
+			<wsdl:input message="bi:AddMonitoringReportRequest" />
+			<wsdl:output message="bi:AddMonitoringReportResponse" />
+			<wsdl:fault name="fault" message="bi:IIG_faultMsg" />
+		</wsdl:operation>
+		<wsdl:operation name="RemoveMonitoringReport">
+			<wsdl:documentation>
+				Stop a monitoring on a specified company.
+			</wsdl:documentation>
+			<wsdl:input message="bi:RemoveMonitoringReportRequest" />
+			<wsdl:output message="bi:RemoveMonitoringReportResponse" />
+			<wsdl:fault name="fault" message="bi:IIG_faultMsg" />
+		</wsdl:operation>
+		<wsdl:operation name="CheckMonitoringReports">
+			<wsdl:documentation>
+				Get the list of all companies added to the monitoring which were updated based on specific dates.
+			</wsdl:documentation>
+			<wsdl:input message="bi:CheckMonitoringReportsRequest" />
+			<wsdl:output message="bi:CheckMonitoringReportsResponse" />
+			<wsdl:fault name="fault" message="bi:IIG_faultMsg" />
+		</wsdl:operation>
+		<wsdl:operation name="GetChangedReport">
+			<wsdl:documentation>
+				Get the report of the monitored company which has been changed.
+			</wsdl:documentation>
+			<wsdl:input message="bi:GetChangedReportRequest" />
+			<wsdl:output message="bi:GetChangedReportResponse" />
+			<wsdl:fault name="fault" message="bi:IIG_faultMsg" />
+		</wsdl:operation>
+		<wsdl:operation name="RequestOfflineReport">
+			<wsdl:documentation>
+				Request an offline report by specifying the IIG key of the company name/address/country of the company and the desired product. You will get an offlineID.
+			</wsdl:documentation>
+			<wsdl:input message="bi:RequestOfflineReportRequest" />
+			<wsdl:output message="bi:RequestOfflineReportResponse" />
+			<wsdl:fault name="fault" message="bi:IIG_faultMsg" />
+		</wsdl:operation>
+		<wsdl:operation name="CheckOfflineReportRequests">
+			<wsdl:documentation>
+				Check the status of your offline requests. 
+			</wsdl:documentation>
+			<wsdl:input message="bi:CheckOfflineReportRequestsRequest" />
+			<wsdl:output message="bi:CheckOfflineReportRequestsResponse" />
+			<wsdl:fault name="fault" message="bi:IIG_faultMsg" />
+		</wsdl:operation>
+		<wsdl:operation name="GetRequestedOfflineReport">
+			<wsdl:documentation>
+				This method allows to download the offline report for companies flagged as ready (R) by the "CheckOfflineReportRequests" method.
+			</wsdl:documentation>
+			<wsdl:input message="bi:GetRequestedOfflineReportRequest" />
+			<wsdl:output message="bi:GetRequestedOfflineReportResponse" />
+			<wsdl:fault name="fault" message="bi:IIG_faultMsg" />
+		</wsdl:operation>
+	</wsdl:portType>
+	
+<!-- BINDINGS DESCRIPTION -->
+	<wsdl:binding name="iigSOAP" type="bi:iigPortType">
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http" />
+		<wsdl:operation name="GetDemoCompanies">
+			<soap:operation soapAction="iig.b-information.be/GetDemoCompanies" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="fault">
+				<soap:fault use="literal" name="fault" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="Search">
+			<soap:operation soapAction="iig.b-information.be/Search" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="fault">
+				<soap:fault use="literal" name="fault" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="GetAvailableProducts">
+			<soap:operation soapAction="iig.b-information.be/GetAvailableProducts" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="fault">
+				<soap:fault use="literal" name="fault" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="OrderReport">
+			<soap:operation soapAction="iig.b-information.be/OrderReport" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="fault">
+				<soap:fault use="literal" name="fault" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="GetAdditionalReportContents">
+			<soap:operation soapAction="iig.b-information.be/GetAdditionalReportContents" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="fault">
+				<soap:fault use="literal" name="fault" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="RequestUpdate">
+			<soap:operation soapAction="iig.b-information.be/RequestUpdate" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="fault">
+				<soap:fault use="literal" name="fault" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="CheckUpdates">
+			<soap:operation soapAction="iig.b-information.be/CheckUpdates" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="fault">
+				<soap:fault use="literal" name="fault" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="GetUpdatedReport">
+			<soap:operation soapAction="iig.b-information.be/GetUpdatedReport" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="fault">
+				<soap:fault use="literal" name="fault" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="AddMonitoringReport">
+			<soap:operation soapAction="iig.b-information.be/AddMonitoringReport" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="fault">
+				<soap:fault use="literal" name="fault" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="RemoveMonitoringReport">
+			<soap:operation soapAction="iig.b-information.be/RemoveMonitoringReport" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="fault">
+				<soap:fault use="literal" name="fault" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="CheckMonitoringReports">
+			<soap:operation soapAction="iig.b-information.be/CheckMonitoringReports" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="fault">
+				<soap:fault use="literal" name="fault" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="GetChangedReport">
+			<soap:operation soapAction="iig.b-information.be/GetChangedReport" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="fault">
+				<soap:fault use="literal" name="fault" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="RequestOfflineReport">
+			<soap:operation soapAction="iig.b-information.be/RequestOfflineReport" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="fault">
+				<soap:fault use="literal" name="fault" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="CheckOfflineReportRequests">
+			<soap:operation soapAction="iig.b-information.be/CheckOfflineReportRequests" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="fault">
+				<soap:fault use="literal" name="fault" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="GetRequestedOfflineReport">
+			<soap:operation soapAction="iig.b-information.be/GetRequestedOfflineReport" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="fault">
+				<soap:fault use="literal" name="fault" />
+			</wsdl:fault>
+		</wsdl:operation>
+	</wsdl:binding>
+	
+<!-- SERVICES DESCRIPTION -->
+	<wsdl:service name="iig">
+		<wsdl:port binding="bi:iigSOAP" name="iigSOAP">
+			<soap:address location="https://iig-ws.eurodb.be/bravo" />
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>

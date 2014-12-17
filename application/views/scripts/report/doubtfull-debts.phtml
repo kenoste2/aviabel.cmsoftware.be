@@ -1,0 +1,37 @@
+<br><br>
+<?php if (!empty($this->results)) {
+    $index = 0;
+    ?>
+    <table id="data" class="ws_data_table" width="100%">
+        <thead>
+        <tr>
+            <th><?php print $this->T("referenceclient_c") ?></th>
+            <th><?php print $this->T("debtor_c") ?></th>
+            <th><?php print $this->T("payable_c") ?></th>
+            <th>90 - 180 <?php print $this->T("days_c") ?></th>
+            <th>180 - 365 <?php print $this->T("days_c") ?></th>
+            <th>+ 365 <?php print $this->T("days_c") ?></th>
+            <th>15% <?php print $this->T("provision_c") ?></th>
+            <th>50% <?php print $this->T("provision_c") ?></th>
+            <th>100% <?php print $this->T("provision_c") ?></th>
+            <th>&nbsp;</th>
+        </tr>
+        </thead>
+        <?php foreach ($this->results as $row) { ?>
+            <tr>
+                <td><?php echo $row->REFERENCE ?></td>
+                <td><?php echo $row->DEBTOR_NAME ?></td>
+                <td align="right"><?php echo $this->amount($row->SALDO) ?></td>
+                <td align="right"><?php echo $this->amount($row->KLASSE1) ?></td>
+                <td align="right"><?php echo $this->amount($row->KLASSE2) ?></td>
+                <td align="right"><?php echo $this->amount($row->KLASSE3) ?></td>
+                <td align="right"><?php echo $this->amount($row->PROVISION1) ?></td>
+                <td align="right"><?php echo $this->amount($row->PROVISION2) ?></td>
+                <td align="right"><?php echo $this->amount($row->PROVISION3) ?></td>
+                <td><span title ="<?php $this->T("view_file_c") ?>" onClick="newscreen('<?php echo $row->DEBTOR_NAME ?>', '<?php echo $this->location() ?>/file-detail/view/fileId/<?php echo $row->FILE_ID ?>')" class="ui-icon ui-icon-zoomin"></span></td>
+            </tr>
+            <?php $index++;
+        }
+        ?>
+    </table>
+<?php } ?>

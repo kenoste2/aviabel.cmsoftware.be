@@ -1,0 +1,47 @@
+<div class="toggler noprint">
+    <div id="searchbox" class="ui-widget-content" style="width: 600px;">
+        <span class="title"><?php print $this->T("search_client_c") ?></span>
+        <?php echo $this->SearchBox ?>
+    </div>
+</div>
+<br>
+<?php if (!empty($this->results)) {  $index=0;?>
+    <div class=noprint>
+        <h3>
+            <?php echo $this->totals->COUNTER ?> <?php $this->T("results_found_c") ?>
+            <?php if ($this->onlyFirst) { ?>
+                <?php $this->T("only_first_c", $this->onlyFirst) ?>
+            <?php } ?>
+        </h3>
+    </div>
+    <table id="data" class="tablesorter ws_data_table" width="100%">
+        <thead>
+            <tr>
+                <th><?php $this->T("code_c"); ?></th>
+                <th><?php $this->T("name_c"); ?></th>
+                <th><?php $this->T("address_c"); ?></th>
+                <th><?php $this->T("zipcode_c"); ?></th>
+                <th><?php $this->T("city_c"); ?></th>
+                <th><?php $this->T("country_c"); ?></th>
+                <th><?php $this->T("files_c"); ?></th>
+                <th><?php $this->T("open_files_c"); ?></th>
+                <th>&nbsp;</th>
+                <th>&nbsp;</th>
+            </tr>
+        </thead>
+        <?php foreach ($this->results as $row) { ?>
+            <tr>
+                <td><?php echo $row->CODE ?></td>
+                <td><?php echo $row->NAME ?></td>
+                <td><?php echo $row->ADDRESS ?></td>
+                <td><?php echo $row->ZIP_CODE ?></td>
+                <td><?php echo $row->CITY ?></td>
+                <td><?php echo $row->COUNTRY_CODE ?></td>
+                <td><?php echo $row->FILE_COUNT ?></td>
+                <td><?php echo $row->OPEN_FILES ?></td>
+               <td><span title ="<?php $this->T("view_c") ?>" onClick="newscreen('<?php echo $row->NAME ?>', '<?php echo $this->location() ?>/client-detail/view/clientId/<?php echo $row->CLIENT_ID ?>')" class="ui-icon ui-icon-zoomin"></span></td>
+               <td><?php echo $this->Delete($this->location() . "/clients/search/hide/" . $row->CLIENT_ID, $row->NAME) ?></td>
+            </tr>
+        <?php $index++; } ?>
+    </table>
+<?php } ?>

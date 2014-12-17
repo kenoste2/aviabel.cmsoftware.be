@@ -1,0 +1,1 @@
+INSERT INTO TEKSTEN (CODE,NAV,NL,FR,EN,SETTINGS) VALUES ('provision_c','all','Provisie','Provision','Provision',0)#

@@ -1,0 +1,19 @@
+<script>
+    $(function() {
+        $("#tabs").tabs();
+    });
+</script>
+<div id="tabs" class="tabs">
+    <ul>
+        <li><a href="#createTab"><?php print $this->T("file_created_c") ?></a></li>
+    </ul>
+    <div id="createTab">
+        
+    </div>
+</div>
+<script>
+    $(function() {
+        $("#tabs").tabs({active: 0});
+    });
+</script>
+

@@ -1,0 +1,102 @@
+<div id="general" style="position: relative; width: 100%">
+    <table width="100%">
+        <tr>
+            <td width="33%" class="windowPart">
+                <span class="title"><?php $this->T("debtor_c") ?></span>
+                <?php
+                if ($this->generalFormSaved) {
+                    print $this->Ok($this->G("saved_c"));
+                }
+                ?>
+                <?php
+                if ($this->generalFormError) {
+                    print $this->Error($this->G("not_all_fields_c"));
+                }
+                ?>
+                <?php
+                if ($this->generalPassError) {
+                    print $this->Error($this->G("confirm_pass_c"));
+                }
+                ?>
+
+                <?php print $this->generalForm ?>
+                <script>
+                    $(function () {
+                        $("#BIRTH_DAY").datepicker({dateFormat: 'dd/mm/yy'});
+                    });
+                </script>
+            </td>
+            <td width="33%" class="windowPart">
+                <span class="title"><?php $this->T("info_c") ?></span>
+                <dt>&nbsp;</dt>
+                <dd>&nbsp;</dd>
+                <dt><?php $this->T("Created_c") ?> </dt>
+                <dd><?php echo $this->date($this->debtor->CREATION_DATE) ?></dd>
+                <dt><?php $this->T("total_files_c") ?></dt>
+                <dd><?php echo $this->debtor->FILE_COUNT ?>
+                    (<?php $this->T("voor_c") ?> <?php echo $this->amount($this->totalAmount) ?>)
+                </dd>
+                <dt><?php $this->T("open_files_c") ?></dt>
+                <dd><?php echo $this->debtor->OPEN_FILES ?>
+                    (<?php $this->T("voor_c") ?> <?php echo $this->amount($this->openAmount) ?>)
+                </dd>
+                <dt><?php $this->T("gem_betalingstermijn_c") ?></dt>
+                <dd><?php echo $this->paymentDelay ?></dd>
+                <br><br>
+                <?php if ($this->report && !empty($this->report->financial_data->fiscal_year)) {  ?>
+                <span class="title"><?php echo $this->T('credit_ratios_c'); ?></span>
+                <table class="dataTable">
+                    <tr>
+                        <th><?php echo $this->T('credit_nrs_and_ratios') ?></th>
+                        <th align="right"><?php echo (string) $this->report->financial_data->fiscal_year['year'] ?></th>
+                    </tr>
+                    <?php if (!empty($this->ratios)) { foreach ($this->ratios as $ratio) {  $ratio = $this->report->financial_data->fiscal_year->$ratio;?>
+                        <tr>
+                            <th><?php echo (string) $ratio['label'] ?></th>
+                            <td align="right"> <?php  if ($ratio['currency'] == 'EUR') { ?> <?php   echo $this->amount((string) $ratio['amount']) ?> <?php } else { ?>
+                            <?php  ?> <?php   echo (string) $ratio['amount']; ?> <?php  } ?></td>
+                        </tr>
+                    <?php } ?>
+                    <?php } ?>
+                </table>
+                <?php } ?>
+
+            </td>
+            <?php if ($this->report) {
+                $maxIndex = sizeof($this->report->credit_advice->delay_payment_risk->risk)-1;
+                $riskIndex = (int) $this->report->credit_advice->delay_payment_risk->risk[$maxIndex]->risk_index;
+            ?>
+            <td width="33%" class="windowPart">
+                <span class="title"><?php $this->T("general_c") ?></span>
+                <dt><label><?php $this->T("address_c") ?></label></dt>
+                <dd><?php echo (string) $this->report->descriptive->name; ?><br>
+                    <?php echo (string) $this->report->descriptive->address->raw_street; ?>
+                    <br><?php echo (string) $this->report->descriptive->address->zip; ?> <?php echo (string) $this->report->descriptive->address->locality; ?>
+                    <br><?php echo (string) $this->report->descriptive->address->country; ?>
+                    <br><?php echo (string) $this->report->descriptive->national_identification; ?>
+                </dd>
+
+                <span class="title"><?php $this->T("credit_rating_c") ?></span>
+                <dt><label><?php $this->T("credit_score_c") ?></label></dt>
+                <dd><?php echo (string) $this->report->credit_advice->score ?>/<?php echo (string) $this->report->credit_advice->score_scale ?></dd>
+                <dt><label><?php $this->T("credit_limit_c") ?></label></dt>
+                <dd><?php echo $this->amount((string) $this->report->credit_advice->credit_opinion) ?></dd>
+                <dt><label><?php echo (string) $this->report->credit_advice->type_of_risks['label']; ?></label></dt>
+                <dd><?php echo (string) $this->report->credit_advice->type_of_risks->risk[$riskIndex]; ?></dd>
+                <br>
+                <span class="title"><?php echo $this->T('credit_incident_overview_c'); ?></span>
+                <br><br><?php if (!empty($this->report->incidents->incident)) { ?>
+                    <?php foreach ($this->report->incidents->incident as $incident) { ?>
+                        <br></bre><b><?php echo $this->date((string) $incident->date) ?> : <?php echo (string) $incident->type ?></b>
+                        <?php if (!empty($incident->jurisdiction)) { ?> <br><?php echo (string) $incident->jurisdiction; ?> <?php } ?>
+                    <?php } ?>
+                <?php } else { ?>
+                <?php echo $this->Message($this->G("no_credit_incidents_found_c")); ?>
+                <?php } ?>
+                <br><br><i><?php $this->T("gegevens_by_eurodb_c") ?></i>
+
+        </td>
+            <?php } ?>
+        </tr>
+    </table>
+</div>

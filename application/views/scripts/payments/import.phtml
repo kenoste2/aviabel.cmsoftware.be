@@ -1,0 +1,90 @@
+<?php
+if ($this->deleted) {
+    print $this->Ok($this->G("deleted_c"));
+} else if ($this->deleted === false) {
+    print $this->Error($this->G("cant_be_deleted_c"));
+}
+?>
+<?php if($this->rowCount > 0): ?>
+    <?php echo $this->Ok($this->G('betalingen_ingevoegd_c')) ?>
+<?php endif; ?>
+
+<?php if(count($this->tempPayments)): ?>
+<div>
+    <p class=title2><?php $this->T('not_found_payments_c') ?></p>
+    <form action="<?php echo $this->location() ?>/payments/process-imported" method="post">
+        <table class="ws_data_table">
+            <thead>
+                <tr>
+                    <th><?php $this->T('reference_c') ?></th>
+                    <th><?php $this->T('invoice_reference_c') ?></th>
+                    <th><?php $this->T('amount_c') ?></th>
+                    <th><?php $this->T('date_c') ?></th>
+                    <th><?php $this->T('search_c') ?></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+            <?php foreach ($this->tempPayments as $row): ?>
+                <tr>
+                    <td><?php echo $row->REFERENCE ?></td>
+                    <td><?php echo $row->INVOICE_REFERENCE ?></td>
+                    <td><?php echo number_format($row->AMOUNT, 2, ',', '.') ?></td>
+                    <td><?php echo $this->date($row->PAYMENT_DATE); ?></td>
+                    <td>
+                        <input type="text" size="15" name="FILE_NR[<?php echo $row->PAYMENT_ID ?>]" value="" id="FILE_NR" />
+                        <input type="text" size="15" name="DEBTOR_NAME[<?php echo $row->PAYMENT_ID ?>]" value="" id="DEBTOR_NAME" />
+                    </td>
+                    <td>
+                        <?php echo $this->Delete($this->location()."/payments/import/delete/" . $row->PAYMENT_ID , $row->REFERENCE) ?>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+            </tbody>
+        </table>
+        <input type="submit" name="verzenden" value="<?php echo $this->T("save_c") ?>" class="submit">
+    </form>
+</div>
+<?php else: ?>
+<div>
+    <p>
+    <pre><?php $this->T('selectPaymentFile_c'); ?></pre>
+    </p>
+    <?php echo $this->importForm; ?>
+</div>
+<?php endif; ?>
+
+
+<script>
+    $(function() {
+        var cache = {},
+            lastXhr;
+        $("#FILE_NR").autocomplete({
+            minLength: 2,
+            autoFocus: true,
+            source: function(request, response) {
+                var term = request.term;
+                if (term in cache) {
+                    response(cache[ term ]);
+                    return;
+                }
+                lastXhr = $.getJSON("<?php echo $this->Location() ?>/ajax/files", request, function(data, status, xhr) {
+                    cache[ term ] = data;
+                    if (xhr === lastXhr) {
+                        response(data);
+                    }
+                });
+            },
+            select: function(evt, ui)
+            {
+                var CurrentValue = ui.item.value;
+                var ArrayValues = CurrentValue.split(" | ");
+
+                $('#FILE_NR').val(ArrayValues[0]);
+                $('#DEBTOR_NAME').val(ArrayValues[1]);
+
+                return false;
+            }
+        });
+    });
+</script>

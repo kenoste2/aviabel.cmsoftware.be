@@ -1,0 +1,38 @@
+<span  class="title2"><?php $this->T("add_cost_c") ?></span>
+<?php
+if ($this->formSaved) {
+    print $this->Ok($this->G("saved_c"));
+}
+?>
+<?php
+if ($this->formError) {
+    print $this->Error($this->G("not_all_fields_c"));
+}
+?>
+
+<?php print $this->form ?>
+
+
+<script language="javascript">
+    function autoCalculate() {
+        var value = $('#AUTO_CALCULATE').val();
+        if (value == 1) {
+            $('#INTEREST-label').hide();
+            $('#INTEREST-element').hide();
+            $('#COSTS-label').hide();
+            $('#COSTS-element').hide();
+        } else {
+            $('#INTEREST-label').show();
+            $('#INTEREST-element').show();
+            $('#COSTS-label').show();
+            $('#COSTS-element').show();
+        }
+
+    }
+    autoCalculate();
+</script>
+<script>
+    $(function() {
+        $("#VALUTA_DATE").datepicker({dateFormat: 'dd/mm/yy'});
+    });
+</script>    

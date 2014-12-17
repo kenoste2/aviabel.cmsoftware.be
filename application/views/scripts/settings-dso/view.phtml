@@ -1,0 +1,33 @@
+<?php
+if ($this->deleted) {
+    print $this->Ok($this->G("deleted_c"));
+}
+?>
+<table id="data" class="tablesorter ws_data_table" width="100%">
+    <thead>
+    <tr>
+        <th><?php $this->T("year_c"); ?></th>
+        <th><?php $this->T("month_c"); ?></th>
+        <th><?php $this->T("turnover_c"); ?></th>
+        <th><?php $this->T("dso_c"); ?></th>
+        <th></th>
+    </tr>
+    </thead>
+    <?php if (!empty($this->results)) { ?>
+        <?php foreach ($this->results as $row) { ?>
+            <tr>
+                <td><?php echo $row->DSO_YEAR ?></td>
+                <td><?php echo $row->DSO_MONTH ?></td>
+                <td><?php echo $row->SALES ?></td>
+                <td><?php echo $row->DSO ?></td>
+                <td><?php echo $this->Delete($this->location()."/settings-dso/view/delete/" . $row->DSO_ID , "$row->DSO_YEAR $row->DSO_MONTH" ) ?></td>
+            </tr>
+        <?php } ?>
+    <?php } else { ?>
+        <tr>
+            <td colspan="5" class="no_results">
+                <?php $this->T("no_results_c"); ?>
+            </td>
+        </tr>
+    <?php } ?>
+</table>

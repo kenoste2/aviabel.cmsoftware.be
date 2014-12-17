@@ -1,0 +1,46 @@
+<?php
+if ($this->formSaved) {
+    print $this->Ok($this->G("saved_c"));
+}
+?>
+<?php
+if ($this->formError) {
+    print $this->Error($this->G("not_all_fields_c"));
+}
+?>
+
+<?php print $this->form ?>
+
+<script>
+    $(function() {
+        var cache = {},
+            lastXhr;
+        $("#FILE_NR").autocomplete({
+            minLength: 3,
+            autoFocus: true,
+            source: function(request, response) {
+                var term = request.term;
+                if (term in cache) {
+                    response(cache[ term ]);
+                    return;
+                }
+                lastXhr = $.getJSON("<?php echo $this->Location() ?>/ajax/files", request, function(data, status, xhr) {
+                    cache[ term ] = data;
+                    if (xhr === lastXhr) {
+                        response(data);
+                    }
+                });
+            },
+            select: function(evt, ui)
+            {
+                var CurrentValue = ui.item.value;
+                var ArrayValues = CurrentValue.split(" | ");
+
+                $('#FILE_NR').val(ArrayValues[0]);
+                $('#DEBTOR_NAME').val(ArrayValues[1]);
+
+                return false;
+            }
+        });
+    });
+</script>

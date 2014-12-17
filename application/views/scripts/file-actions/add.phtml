@@ -1,0 +1,265 @@
+<form enctype="application/x-www-form-urlencoded" action="" method="post">
+    <input type="hidden" name="index" value="<?php echo $this->index ?>">
+    <?php
+    if ($this->formError) {
+        print $this->Error($this->G("not_all_fields_c"));
+    }
+    ?>
+    <?php
+    if ($this->actionCodeError) {
+        print $this->Error($this->G("unknown_actioncode_c"));
+    }
+    ?>
+
+    <table width="100%">
+        <tr>
+            <td class="windowPart" width="50%">
+                <?php echo $this->form->ACTION_DATE ?>
+                <?php echo $this->form->ACTION_CODE ?>
+                <?php echo $this->form->BP_STARTDATE ?>
+                <?php echo $this->form->BP_NR_PAYMENTS ?>
+                <?php echo $this->form->REMARKS ?>
+            </td>
+            <td class="windowPart" width="50%">
+                <?php echo $this->form->TEMPLATE_ID ?>
+                <?php echo $this->form->VIA ?>
+                <?php echo $this->form->ADDRESS ?>
+                <?php echo $this->form->E_MAIL ?>
+                <?php echo $this->form->PRINTED ?>
+                <?php echo $this->form->CONTENT ?>
+                <?php echo $this->form->submit ?>
+            </td>
+        </tr>
+    </table>
+</form>
+
+
+<script>
+    $(function () {
+        var cache = {},
+            lastXhr;
+        $("#ACTION_CODE").autocomplete({
+            minLength: 1,
+            autoFocus: true,
+            source: function (request, response) {
+                var term = request.term;
+                if (term in cache) {
+                    response(cache[ term ]);
+                    return;
+                }
+                lastXhr = $.getJSON("<?php echo $this->Location() ?>/ajax/file-actions", request, function (data, status, xhr) {
+                    cache[ term ] = data;
+                    if (xhr === lastXhr) {
+                        response(data);
+                    }
+                });
+            },
+            select: function (evt, ui) {
+                var CurrentValue = ui.item.value;
+                var ArrayValues = CurrentValue.split("|");
+                $('#ACTION_CODE').val(ArrayValues[0]);
+
+                return false;
+            }, minLength: 2
+        });
+    });
+</script>
+
+<script>
+    $(function () {
+        $("#ACTION_DATE").datepicker({dateFormat: 'dd/mm/yy'});
+    });
+    $(function () {
+        $("#BP_FIRST_PAYMENT").datepicker({dateFormat: 'dd/mm/yy'});
+    });
+</script>
+
+<script language="javascript">
+    function bp() {
+        var value = $('#ACTION_CODE').val();
+        if (value == '<?php echo $this->paymentPlanCode ?>') {
+            $('#BP_NR_PAYMENTS-label').show();
+            $('#BP_NR_PAYMENTS-element').show();
+            $('#BP_STARTDATE-label').show();
+            $('#BP_STARTDATE-element').show();
+            $("#BP_STARTDATE").val('<?php echo date("d/m/Y") ?>');
+            $("#BP_NR_PAYMENTS").val('4');
+        } else {
+            $('#BP_NR_PAYMENTS-label').hide();
+            $('#BP_NR_PAYMENTS-element').hide();
+            $('#BP_STARTDATE-label').hide();
+            $('#BP_STARTDATE-element').hide();
+            $("#BP_STARTDATE").val('');
+            $("#BP_NR_PAYMENTS").val('');
+        }
+    }
+    bp();
+</script>
+
+<script language="javascript">
+    function via() {
+        var value = $("input[name=VIA]:checked").val();
+        if (value == 'EMAIL') {
+            $('#PRINTED-label').hide();
+            $('#PRINTED-element').hide();
+            $('#ADDRESS-label').hide();
+            $('#ADDRESS-element').hide();
+            $('#E_MAIL-label').show();
+            $('#E_MAIL-element').show();
+        } else {
+            $('#PRINTED-label').show();
+            $('#PRINTED-element').show();
+            $('#ADDRESS-label').show();
+            $('#ADDRESS-element').show();
+            $('#E_MAIL-label').hide();
+            $('#E_MAIL-element').hide();
+        }
+    }
+    via();
+</script>
+
+
+<script type="text/javascript" charset="utf-8">
+
+    $(function () {
+        $("#ACTION_CODE").focusout(function () {
+            var value = $('#ACTION_CODE').val();
+            $.getJSON("<?php echo $this->Location() ?>/ajax/templates/term/" + value, {id: $(this).val(), ajax: 'true'}, function (j) {
+                var options = '';
+                for (var i = 0; i < j.length; i++) {
+                    options += '<option value="' + j[i].ID + '">' + j[i].CODE + '</option>';
+                }
+                $("select#TEMPLATE_ID").html(options);
+                $("#CONTENT-label").hide();
+                $("#CONTENT-element").hide();
+                $('#E_MAIL-label').hide();
+                $('#E_MAIL-element').hide();
+                $('#ADDRESS-label').hide();
+                $('#ADDRESS-element').hide();
+                $('#VIA-label').hide();
+                $('#VIA-element').hide();
+                $('#PRINTED-element').hide();
+                $('#PRINTED-label').hide();
+                if (i == 1) {
+                    $("#TEMPLATE_ID-label").hide();
+                    $("#TEMPLATE_ID-element").hide();
+                    $("#CONTENT-label").hide();
+                    $("#CONTENT-element").hide();
+                    $('#E_MAIL-label').hide();
+                    $('#E_MAIL-element').hide();
+                    $('#ADDRESS-label').hide();
+                    $('#ADDRESS-element').hide();
+                    $('#VIA-label').hide();
+                    $('#VIA-element').hide();
+                    $('#PRINTED-element').hide();
+                    $('#PRINTED-label').hide();
+                } else {
+                    $('#TEMPLATE_ID-label').show();
+                    $('#TEMPLATE_ID-element').show();
+                }
+
+            })
+            bp();
+        })
+    })
+
+</script>
+
+<script type="text/javascript" charset="utf-8">
+
+    $(function () {
+        $("#TEMPLATE_ID").change(function () {
+            var value = $('#TEMPLATE_ID').val();
+            if (value > 0) {
+                $.getJSON("<?php echo $this->Location() ?>/ajax/templatedata/term/" + value + "/fileId/<?php echo $this->fileId ?>", {id: $(this).val(), ajax: 'true'}, function (j) {
+                    var options = '';
+                    for (var i = 0; i < j.length; i++) {
+                        $("#E_MAIL").val(j[i].EMAIL);
+                        $("#ADDRESS").val(j[i].ADDRESS);
+                        if (j[i].EMAIL) {
+                            $('input:radio[name=VIA][value=EMAIL]').click();
+                        }
+                    }
+                });
+                $('#VIA-label').show();
+                $('#VIA-element').show();
+                via();
+            } else {
+                $('#VIA-label').hide();
+                $('#VIA-element').hide();
+                $('#CONTENT-label').hide();
+                $('#CONTENT-element').hide();
+                $('#PRINTED-label').hide();
+                $('#PRINTED-element').hide();
+                $('#E_MAIL-label').hide();
+                $('#E_MAIL-element').hide();
+                $('#ADDRSS-label').hide();
+                $('#ADDRESS-element').hide();
+            }
+        })
+    })
+
+</script>
+
+
+<script type="text/javascript" charset="utf-8">
+    $("#TEMPLATE_ID-label").hide();
+    $("#TEMPLATE_ID-element").hide();
+    $("#CONTENT-label").hide();
+    $("#CONTENT-element").hide();
+    $('#E_MAIL-label').hide();
+    $('#E_MAIL-element').hide();
+    $('#ADDRESS-label').hide();
+    $('#ADDRESS-element').hide();
+    $('#VIA-label').hide();
+    $('#VIA-element').hide();
+    $('#PRINTED-element').hide();
+    $('#PRINTED-label').hide();
+</script>
+
+
+<script type="text/javascript" charset="utf-8">
+    function templateContent() {
+        savePaymentPlan();
+        var value = $('#TEMPLATE_ID').val();
+        $.getJSON("<?php echo $this->Location() ?>/print/get-template-content/templateId/" + value + "/fileId/<?php echo $this->fileId ?>", {ajax: 'true'}, function (j) {
+            $("#CONTENT").val(j.CONTENT);
+            if (value > 0) {
+                $("#CONTENT-label").show();
+                $("#CONTENT-element").show();
+            }
+        })
+    }
+</script>
+
+<script type="text/javascript" charset="utf-8">
+    function savePaymentPlan() {
+        var startdate = $('#BP_STARTDATE').val();
+        var payments = $('#BP_NR_PAYMENTS').val();
+        $.getJSON("<?php echo $this->Location() ?>/file-actions/save-payment-plan", {ajax: 'true', STARTDATE: startdate, NRPAYMENTS: payments}, function (j) {
+        })
+    }
+    savePaymentPlan();
+</script>
+
+<script type="text/javascript" charset="utf-8">
+    function saveActionDate() {
+        var actionDate = $('#ACTION_DATE').val();
+        $.getJSON("<?php echo $this->Location() ?>/file-actions/save-action-date", {ajax: 'true', ACTION_DATE: actionDate}, function (j) {
+        })
+    }
+    saveActionDate();
+</script>
+
+
+<script>
+    $(function() {
+        $("#ACTION_DATE").datepicker({dateFormat: 'dd/mm/yy'});
+    });
+</script>
+<script>
+    $(function() {
+        $("#BP_STARTDATE").datepicker({dateFormat: 'dd/mm/yy'});
+    });
+</script>
+

@@ -1,0 +1,87 @@
+<?php $historyNamespace = new Zend_Session_Namespace('history'); ?>
+<?php if (!$this->isClient): ?>
+<script>
+    $(function() {
+        $('#clientId').change(function() {
+            $(this).closest('form').submit();
+        });
+    })
+</script>
+<form method="get">
+    <select name="clientId" id="clientId">
+        <?php foreach ($this->clients as $client): ?>
+            <option value="<?php echo $client->CLIENT_ID ?>" <?php echo $this->clientId == $client->CLIENT_ID ? 'selected="selected"' :'' ?>>
+                <?php echo $client->NAME ?>
+            </option>
+        <?php endforeach ?>
+    </select>
+</form>
+<?php endif; ?>
+<?php if (!empty($this->stats)): ?>
+<table class="ws_data_table" width="100%">
+    <thead>
+        <tr>
+            <th colspan="2"><?php echo $this->T('Period_c') ?></th>
+            <th colspan="5"><?php echo $this->T('Created_c') ?></th>
+            <th colspan="4"><?php echo $this->T('Payed_amounts_c') ?></th>
+        </tr>
+        <tr>
+            <th><?php echo $this->T('year_c') ?></th>
+            <th><?php echo $this->T('month_c') ?></th>
+            <th><?php echo $this->T('files_c') ?></th>
+            <th><?php echo $this->T('amount_c') ?></th>
+            <th><?php echo $this->T('costs_c') ?></th>
+            <th><?php echo $this->T('interest_c') ?></th>
+            <th><?php echo $this->T('total_c') ?></th>
+            <th><?php echo $this->T('payed_amount_c') ?></th>
+            <th><?php echo $this->T('payed_costs_c') ?></th>
+            <th><?php echo $this->T('payed_interest_c') ?></th>
+            <th><?php echo $this->T('total_c') ?></th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php $historyNamespace->amounts = array() ?>
+        <?php $historyNamespace->date = array() ?>
+        <?php $historyNamespace->counter = array() ?>
+        <?php foreach ($this->stats as $stat): ?>
+            <tr>
+                <td><?php echo $stat->CREATION_YEAR ?></td>
+                <td><?php echo $stat->CREATION_MONTH ?></td>
+                <td><?php echo $stat->NUMBER_OF_FILES ?></td>
+                <td><?php echo number_format($stat->AMOUNT, 2, ',', '.') ?></td>
+                <td><?php echo number_format($stat->COSTS, 2, ',', '.') ?></td>
+                <td><?php echo number_format($stat->INTERESTS, 2, ',', '.') ?></td>
+                <td><?php echo number_format($stat->INTERESTS + $stat->AMOUNT + $stat->COSTS, 2, ',', '.') ?></td>
+                <td><?php echo number_format($stat->PAYED_AMOUNT, 2, ',', '.') ?></td>
+                <td><?php echo number_format($stat->PAYED_COSTS, 2, ',', '.') ?></td>
+                <td><?php echo number_format($stat->PAYED_INTERESTS, 2, ',', '.') ?></td>
+                <td><?php echo number_format($stat->PAYED_INTERESTS + $stat->PAYED_AMOUNT + $stat->PAYED_COSTS, 2, ',', '.') ?></td>
+            </tr>
+            <?php $historyNamespace->amounts[] = $stat->INTERESTS + $stat->AMOUNT + $stat->COSTS ?>
+            <?php $historyNamespace->date[] = $stat->CREATION_YEAR - $stat->CREATION_MONTH ?>
+            <?php $historyNamespace->counter[] = $stat->NUMBER_OF_FILES ?>
+        <?php endforeach; ?>
+    </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="2"><?php echo $this->T('Total_c') ?></td>
+            <td><?php echo $this->statsTotal->NUMBER_OF_FILES ?></td>
+            <td><?php echo $this->statsTotal->AMOUNT ?></td>
+            <td><?php echo $this->statsTotal->COSTS ?></td>
+            <td><?php echo $this->statsTotal->INTERESTS ?></td>
+            <td><?php echo $this->statsTotal->INTERESTS + $this->statsTotal->AMOUNT + $this->statsTotal->COSTS ?></td>
+            <td><?php echo $this->statsTotal->PAYED_AMOUNT ?></td>
+            <td><?php echo $this->statsTotal->PAYED_COSTS ?></td>
+            <td><?php echo $this->statsTotal->PAYED_INTERESTS ?></td>
+            <td><?php echo $this->statsTotal->PAYED_INTERESTS + $this->statsTotal->PAYED_COSTS + $this->statsTotal->PAYED_AMOUNT ?></td>
+        </tr>
+    </tfoot>
+</table>
+<?php
+    $historyNamespace->amounts = array_reverse($historyNamespace->amounts);
+    $historyNamespace->counter = array_reverse($historyNamespace->counter);
+    $historyNamespace->date = array_reverse($historyNamespace->date);
+?>
+<?php else: ?>
+    <?php echo $this->Message($this->G("no_results_c")); ?>
+<?php endif; ?>

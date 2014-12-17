@@ -1,0 +1,20 @@
+UPDATE TEKSTEN SET TEKSTEN_ID='1336',CODE='menu_settings-states_view',NAV='all',NL='Statussen',FR='Statuts',EN='States' where TEKSTEN_ID='1336';
+INSERT INTO TEKSTEN (TEKSTEN_ID,CODE,NAV,NL,FR,EN) VALUES ('1360','cant_be_deleted_c','all','U kan dit niet verwijderen omdat er dossiers of acties aan deze status zijn gekoppeld.','Vous ne pouvez pas supprimer ce status parce qu`il ya des fichiers ou des actions qui sont lies.','You can`t remove this state because there are documents or actions linked to it.');
+UPDATE TEKSTEN SET TEKSTEN_ID='1337',CODE='menu_settings-actions_view',NAV='all',NL='Acties',FR='Actions',EN='Actions' where TEKSTEN_ID='1337';
+UPDATE TEKSTEN SET TEKSTEN_ID='1340',CODE='menu_settings-countries_view',NAV='all',NL='Landen',FR='Pays',EN='Countries' where TEKSTEN_ID='1340';
+INSERT INTO TEKSTEN (TEKSTEN_ID,CODE,NAV,NL,FR,EN) VALUES ('1361','commission_delta_c','all','Commissie meerkost bij facturatie (%)','Commission supplémentaires (%)','Incremental costs at invoicing (%)');
+UPDATE TEKSTEN SET TEKSTEN_ID='1341',CODE='menu_settings-accounts_view',NAV='all',NL='Rekeningen',FR='Comptes',EN='Accounts' where TEKSTEN_ID='1341';
+INSERT INTO TEKSTEN (TEKSTEN_ID,CODE,NAV,NL,FR,EN) VALUES ('1362','code_exists_c','all','Code bestaat reeds in actieve of niet-actieve rekening','Le code existe deja dans un compte actif ou non actif','Code already exists in active or non-active account');
+UPDATE TEKSTEN SET TEKSTEN_ID='1346',CODE='menu_settings-filecosts_view',NAV='all',NL='Dossier kosten',FR='Coûts dossiers',EN='File costs' where TEKSTEN_ID='1346';
+UPDATE TEKSTEN SET TEKSTEN_ID='1347',CODE='menu_settings-closestates_view',NAV='all',NL='Afsluit codes',FR='Codes de clôtures',EN='Close states' where TEKSTEN_ID='1347';
+UPDATE TEKSTEN SET TEKSTEN_ID='1343',CODE='menu_settings-populations_view',NAV='all',NL='Populaties',FR='Populations',EN='Populations' where TEKSTEN_ID='1343';
+INSERT INTO TEKSTEN (TEKSTEN_ID,CODE,NAV,NL,FR,EN) VALUES ('1363','amount_population_c','all','bedrag populatie','montant de la population','amount population');
+INSERT INTO TEKSTEN (TEKSTEN_ID,CODE,NAV,NL,FR,EN) VALUES ('1365','account_population_c','all','Rekening populatie','Population de la compte','Account population');
+UPDATE TEKSTEN SET TEKSTEN_ID='1342',CODE='menu_settings-zipcodes_view',NAV='all',NL='Postcodes',FR='Code postal',EN='Zipcodes' where TEKSTEN_ID='1342';
+UPDATE TEKSTEN SET TEKSTEN_ID='1344',CODE='menu_settings-collectors_view',NAV='all',NL='Inspecteurs',FR='Gestionnaires',EN='Inspectors' where TEKSTEN_ID='1344';
+INSERT INTO TEKSTEN (TEKSTEN_ID,CODE,NAV,NL,FR,EN) VALUES ('1366','system_standard_c','all','Systeem standaard','Defaut du systeme','System default');
+INSERT INTO TEKSTEN (TEKSTEN_ID,CODE,NAV,NL,FR,EN) VALUES ('1366','system_standard_c','all','Systeem standaard','Defaut du systeme','System default');
+UPDATE TEKSTEN SET TEKSTEN_ID='1348',CODE='menu_settings-users_view',NAV='all',NL='Gebruikers',FR='Utilisateurs',EN='Users' where TEKSTEN_ID='1348';
+UPDATE TEKSTEN SET TEKSTEN_ID='1339',CODE='menu_settings-templates_view',NAV='all',NL='Templates',FR='Templates',EN='Templates' where TEKSTEN_ID='1339';
+UPDATE TEKSTEN SET TEKSTEN_ID='1338',CODE='menu_settings-traject_view',NAV='all',NL='Traject',FR='Trajet',EN='Train' where TEKSTEN_ID='1338';
+UPDATE TEKSTEN SET TEKSTEN_ID='1345',CODE='menu_settings-texts_view',NAV='all',NL='Tekst settings',FR='Preferences textes',EN='Text settings' where TEKSTEN_ID='1345';>>>>>>> .r214

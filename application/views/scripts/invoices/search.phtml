@@ -1,0 +1,142 @@
+<style>
+    #chartdiv {
+        width: 450px;
+        height: 200px;
+        position: absolute;
+        float: right;
+    }
+</style>
+<script type="text/javascript" src="<?php echo $this->location() ?>/public/amcharts/amcharts.js"></script>
+<script type="text/javascript" src="<?php echo $this->location() ?>/public/amcharts/pie.js"></script>
+
+
+<div class="toggler noprint">
+    <div id="searchbox" class="ui-widget-content" style="width: 90%;">
+        <form action="<?php echo $this->location() ?>/invoices/search" method="post">
+            <input type="hidden" name='formSubmit' value='1'>
+            <table><tr><td>
+            <table width="100%">
+                <thead>
+                    <tr>
+                        <th colspan="2"><?php print $this->T("search_invoices_c") ?></th>
+                    </tr>
+                </thead>
+                    <tr>
+                        <?php if (!empty($this->showClient)) { ?>
+                        <td class="label"><?php print $this->T("client_c") ?> </td><td><?php echo $this->SearchBox->client->renderViewHelper(); ?></td>
+                        <?php } ?>
+                        <?php if (!empty($this->showCollector)) { ?>
+                        <td class="label"><?php print $this->T("collector_c") ?> </td><td><?php echo $this->SearchBox->collector->renderViewHelper(); ?></td>
+                        <?php } ?>
+                    </tr>
+
+                <tr>
+                    <td class="label"><?php print $this->T("referenceclient_c") ?> </td><td><?php echo $this->SearchBox->client_reference->renderViewHelper(); ?></td>
+                    <td class="label"><?php print $this->T("invoice_c") ?> </td><td><?php echo $this->SearchBox->invoice->renderViewHelper(); ?></td>
+                </tr>
+                <tr>
+                    <td class="label"><?php print $this->T("debtor_c") ?> </td><td><?php echo $this->SearchBox->debtor->renderViewHelper(); ?></td>
+                    <td class="label"><?php print $this->T("state_code_c") ?> </td><td><?php echo $this->SearchBox->state_id->renderViewHelper(); ?></td>
+                </tr>
+                <tr>
+                    <td class="label"><?php print $this->T("dispute_c") ?> </td><td><?php echo $this->SearchBox->dispute->renderViewHelper(); ?></td>
+                    <td class="label"><?php print $this->T("industrie_c") ?></td><td><?php echo $this->SearchBox->invoice_type->renderViewHelper(); ?></td>
+                </tr>
+                <tr>
+                    <td colspan ="4"><?php echo $this->SearchBox->extra_field->renderViewHelper(); ?>
+                        <?php echo $this->SearchBox->extra_compare->renderViewHelper(); ?>
+                        <?php echo $this->SearchBox->extra_text->renderViewHelper(); ?>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="3">&nbsp;</td>
+                    <td align="right"><?php echo $this->SearchBox->submit->renderViewHelper(); ?> </td>
+                </tr>
+            </table>
+        </form>
+        </td><td>
+        <div id="chartdiv"></div>
+        </td></tr></table>
+    </div>
+</div>
+<br>
+<?php if (!empty($this->results)) {
+    $index = 0;
+    ?>
+    <div class=noprint>
+        <h3>
+            <?php echo $this->totals->COUNTER ?> <?php $this->T("results_found_c") ?>
+            <?php if ($this->onlyFirst) { ?>
+                <?php $this->T("only_first_c", $this->onlyFirst) ?>
+    <?php } ?>
+        </h3>
+    </div>
+    <table id="data" class="ws_data_table" width="100%">
+        <thead>
+            <tr>
+                <th><a  class="orderby" href="<?php echo $this->location() ?>/invoices/search/orderby/CLIENT_REFERENCE"><?php print $this->T("referenceclient_c") ?></a></th>
+                <th><a  class="orderby" href="<?php echo $this->location() ?>/invoices/search/orderby/DEBTOR_NAME"><?php print $this->T("debtor_c") ?></a></th>
+                <th><a  class="orderby" href="<?php echo $this->location() ?>/invoices/search/orderby/INVOICE_REFERENCE"><?php print $this->T("invoice_reference_c") ?></a></th>
+                <th><a  class="orderby" href="<?php echo $this->location() ?>/invoices/search/orderby/REFERENCE_TYPE"><?php print $this->T("industrie_c") ?></a></th>
+                <th><a  class="orderby" href="<?php echo $this->location() ?>/invoices/search/orderby/INVOICE_DATE"><?php print $this->T("factuurdatum_c") ?></a></th>
+                <th><a  class="orderby" href="<?php echo $this->location() ?>/invoices/search/orderby/START_DATE"><?php print $this->T("due_date_c") ?></a></th>
+                <th><a  class="orderby" href="<?php echo $this->location() ?>/invoices/search/orderby/CLIENT_NAME"><?php print $this->T("client_c") ?></a></th>
+                <th><a  class="orderby" href="<?php echo $this->location() ?>/invoices/search/orderby/STATE_CODE"><?php print $this->T("State_code_c") ?></a></th>
+                <th align="right"><a  class="orderby" href="<?php echo $this->location() ?>/invoices/search/orderby/TOTAL"><?php print $this->T("total_c") ?></a></th>
+                <th align="right"><a  class="orderby" href="<?php echo $this->location() ?>/invoices/search/orderby/PAYABLE"><?php print $this->T("payable_c") ?></a></th>
+                <th align="right"><a  class="orderby" href="<?php echo $this->location() ?>/invoices/search/orderby/DISPUTE"><?php print $this->T("dispute_c") ?></a></th>
+                <th>&nbsp;</th>
+            </tr>
+        </thead>
+    <?php foreach ($this->results as $row) { ?>
+            <tr>
+                <td><?php echo $row->CLIENT_REFERENCE ?></td>
+                <td><?php echo $row->DEBTOR_NAME ?></td>
+                <td><?php echo $row->INVOICE_REFERENCE ?></td>
+                <td><?php echo $row->REFERENCE_TYPE ?></td>
+                <td><?php echo $this->date($row->INVOICE_DATE) ?></td>
+                <td><?php echo $this->date($row->START_DATE) ?></td>
+                <td><?php echo $row->CLIENT_NAME ?></td>
+                <td><?php echo $row->STATE_CODE ?></td>
+                <td align="right"><?php echo $this->amount($row->TOTAL) ?></td>
+                <td align="right"><?php echo $this->amount($row->PAYABLE) ?></td>
+                <td align="center"><?php echo $this->Selection($row->DISPUTE) ?></td>
+                <td><span title ="<?php $this->T("view_fiche_c") ?>" onClick="newscreen('<?php echo $row->DEBTOR_NAME ?>', '<?php echo $this->location() ?>/file-detail/view/fileId/<?php echo $row->FILE_ID ?>')" class="ui-icon ui-icon-zoomin"></span></td>
+            </tr>
+            <?php $index++;
+        }
+        ?>
+        <tfoot>
+            <tr>
+                <td colspan="8">&nbsp;</td>
+                <td align="right"><?php echo $this->amount($this->totals->TOTAL) ?></td>
+                <td align="right"><?php echo $this->amount($this->totals->PAYABLE) ?></td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+            </tr>
+        </tfoot>
+    </table>
+
+    <script>
+        var chart = AmCharts.makeChart("chartdiv", {
+            "type": "pie",
+            "theme": "none",
+            "dataProvider": [
+                {
+                    "titel": "<?php echo $this->T("past_due_c") ?>",
+                    "waarde": <?php echo $this->totalPastDue ?>
+                },
+                {
+                    "titel": "<?php echo $this->T("not_due_c") ?>",
+                    "waarde": <?php echo $this->totalNotDue ?>
+                }],
+            "valueField": "waarde",
+            "titleField": "titel",
+        });
+    </script>
+
+
+<?php } ?>
+
+
+

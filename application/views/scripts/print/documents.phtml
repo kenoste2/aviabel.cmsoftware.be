@@ -1,0 +1,29 @@
+<p class="title"><?php echo $this->T("documents_to_be_printed_c") ?></p>
+
+<table id="data" class="tablesorter ws_data_table" width="100%">
+    <thead>
+    <tr>
+        <th><?php $this->T("description_c"); ?></th>
+        <th><?php $this->T("number_c"); ?></th>
+        <th></th>
+        <th></th>
+    </tr>
+    </thead>
+
+<?php if (!empty($this->toBePrinted)) { ?>
+    <?php foreach ($this->toBePrinted as $template) { ?>
+        <tr>
+        <td><?php echo $template->DESCRIPTION ?></td>
+        <td><?php echo $template->COUNTER ?></td>
+        <td><a href="<?php echo $this->location() ?>/print/to-be-printed/templateId/<?php echo $template->TEMPLATE_ID ?>"
+               target="_blank"><span title="<?php $this->T("view_c") ?>" class="ui-icon ui-icon-disk"></span></td>
+            <td><?php echo $this->Delete($this->location() . "/print/documents/setPrinted/1/templateId/" . $template->TEMPLATE_ID, $template->DESCRIPTION) ?></td>
+        </tr>
+    <?php } } else { ?>
+    <tr>
+        <td colspan="7" class="no_results">
+            <?php $this->T("no_results_c"); ?>
+        </td>
+    </tr>
+<?php } ?>
+</table>

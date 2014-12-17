@@ -1,0 +1,37 @@
+<?php
+if ($this->deleted) {
+    print $this->Ok($this->G("deleted_c"));
+}
+?>
+<table id="data" class="tablesorter ws_data_table" width="100%">
+    <thead>
+        <tr>
+            <th><?php $this->T("date_c"); ?></th>
+            <th><?php $this->T("code_c"); ?></th>
+            <th><?php $this->T("description_c"); ?></th>
+            <th><?php $this->T("amount_c"); ?></th>
+            <th><?php $this->T("invoice_c"); ?></th>
+            <th><?php $this->T("invoiceable_c"); ?></th>
+            <th></th>
+        </tr>
+    </thead>
+    <?php if (!empty($this->results)) { ?>
+        <?php foreach ($this->results as $row) { ?>
+            <tr>
+                <td><?php echo $this->Date($row->CREATION_DATE) ?></td>
+                <td><?php echo $row->CODE ?></td>
+                <td><?php echo $row->DESCRIPTION ?></td>
+                <td><?php echo $this->Amount($row->AMOUNT) ?></td>
+                <td><?php echo $row->INVOICE_NR ?></td>
+                <td><?php echo $this->Selection($row->INVOICEABLE) ?></td>
+                <td><?php echo $this->Delete($this->location()."/file-costs/view/delete/".$row->RECORD_ID."/index/".$this->index, $row->DESCRIPTION) ?></td>
+            </tr>
+        <?php } ?>
+    <?php } else { ?>
+        <tr>
+            <td colspan="7" class="no_results">
+                <?php $this->T("no_results_c"); ?>
+            </td>
+        </tr>
+    <?php } ?>
+</table>

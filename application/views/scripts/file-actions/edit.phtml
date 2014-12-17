@@ -1,0 +1,62 @@
+<span  class="title2"><?php $this->T("edit_ref_c") ?></span>
+<?php
+if ($this->formSaved) {
+    print $this->Ok($this->G("saved_c"));
+}
+?>
+<?php
+if ($this->formError) {
+    print $this->Error($this->G("not_all_fields_c"));
+}
+?>
+
+<?php print $this->form ?>
+
+
+<script language="javascript">
+    function autoCalculate() {
+        var value = $('#AUTO_CALCULATE').val();
+        if (value == 1) {
+            $('#INTEREST-label').hide();
+            $('#INTEREST-element').hide();
+            $('#COSTS-label').hide();
+            $('#COSTS-element').hide();
+            $('#COST_PERCENT-label').show();
+            $('#COST_PERCENT-element').show();
+            $('#INTEREST_PERCENT-label').show();
+            $('#INTEREST_PERCENT-element').show();
+            $('#COST_MINIMUM-label').show();
+            $('#COST_MINIMUM-element').show();
+            $('#INTEREST_MINIMUM-label').show();
+            $('#INTEREST_MINIMUM-element').show();
+
+
+        } else {
+            $('#INTEREST-label').show();
+            $('#INTEREST-element').show();
+            $('#COSTS-label').show();
+            $('#COSTS-element').show();
+            $('#COST_PERCENT-label').hide();
+            $('#COST_PERCENT-element').hide();
+            $('#INTEREST_PERCENT-label').hide();
+            $('#INTEREST_PERCENT-element').hide();
+            $('#COST_MINIMUM-label').hide();
+            $('#COST_MINIMUM-element').hide();
+            $('#INTEREST_MINIMUM-label').hide();
+            $('#INTEREST_MINIMUM-element').hide();
+        }
+
+    }
+    autoCalculate();
+</script>
+<script>
+    $(function() {
+        $("#INVOICE_DATE").datepicker({dateFormat: 'dd/mm/yy', defaultDate: "-30"});
+    });
+    $(function() {
+        $("#START_DATE").datepicker({dateFormat: 'dd/mm/yy', defaultDate: "-30"});
+    });
+   $(function() {
+        $("#END_DATE").datepicker({dateFormat: 'dd/mm/yy'});
+    });    
+</script>    

@@ -1,0 +1,31 @@
+<?php if (count($this->invoices)): ?>
+    <h3><?php echo count($this->invoices) ?> resultaten gevonden</h3>
+<?php endif; ?>
+<table id="data" class="tablesorter ws_data_table" width="100%">
+    <thead>
+    <tr>
+        <th><?php $this->T("file_nr_c"); ?></th>
+        <th><?php $this->T("Date_c"); ?></th>
+        <th><?php $this->T("Filetype_c"); ?></th>
+        <th><?php $this->T("Amount_c"); ?></th>
+        <th><?php $this->T("Compensated_c"); ?></th>
+    </tr>
+    </thead>
+    <?php if (!empty($this->invoices)) { ?>
+        <?php foreach ($this->invoices as $row) { ?>
+            <tr>
+                <td><?php echo $row->INVOICE_NR ?></td>
+                <td><?php echo $row->INVOICE_DATE ?></td>
+                <td><?php echo $row->CODE ?></td>
+                <td><?php echo $row->TOTAL ?></td>
+                <td><?php echo $row->COMPENSATED ?></td>
+            </tr>
+        <?php } ?>
+    <?php } else { ?>
+        <tr>
+            <td colspan="5" class="no_results">
+                <?php $this->T("no_results_c"); ?>
+            </td>
+        </tr>
+    <?php } ?>
+</table>

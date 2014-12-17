@@ -1,0 +1,37 @@
+<?php
+if ($this->deleted) {
+    print $this->Ok($this->G("deleted_c"));
+}
+?>
+<table id="data" class="tablesorter ws_data_table" width="100%">
+    <thead>
+        <tr>
+            <th><?php $this->T("filename_c"); ?></th>
+            <th><?php $this->T("description_c"); ?></th>
+            <th><?php $this->T("visible_c"); ?></th>
+            <th><?php $this->T("date_c"); ?></th>
+            <th><?php $this->T("user_c"); ?></th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <?php if (!empty($this->results)) { ?>
+        <?php foreach ($this->results as $row) { ?>
+            <tr>
+                <td><?php echo $row->FILENAME ?></td>
+                <td><?php echo $row->DESCRIPTION ?></td>
+                <td><?php echo $this->Selection($row->VISIBLE) ?></td>
+                <td><?php echo $row->CREATED ?></td>
+                <td><?php echo $row->CREATEDBY ?></td>
+                <td><a href="<?php echo $this->locationFiles?>/<?php echo $row->FILENAME ?>" target="_blank" ><span title ="<?php $this->T("view_c") ?>"  class="ui-icon ui-icon-disk"></span></td>
+                <td><?php if ($this->online_user == $row->CREATEDBY or isset($this->MayDelete)) { echo $this->Delete($this->location()."/file-documents/view/delete/".$row->FILE_DOCUMENTS_ID."/index/".$this->index, $row->DESCRIPTION); } ?></td>
+            </tr>
+        <?php } ?>
+    <?php } else { ?>
+        <tr>
+            <td colspan="7" class="no_results">
+                <?php $this->T("no_results_c"); ?>
+            </td>
+        </tr>
+    <?php } ?>
+</table>

@@ -1,0 +1,47 @@
+<?php
+if ($this->deleted) {
+    print $this->Ok($this->G("deleted_c"));
+} else if ($this->deleted === false) {
+    print $this->Error($this->G("cant_be_deleted_c"));
+}
+?>
+<h3><?php echo count($this->results) ?> resultaten gevonden</h3>
+<table id="data" class="tablesorter ws_data_table" width="100%">
+    <thead>
+    <tr>
+        <th><?php $this->T("Name_c"); ?></th>
+        <th><?php $this->T("address_c"); ?></th>
+        <th><?php $this->T("fax_c"); ?></th>
+        <th><?php $this->T("zip_code_c"); ?></th>
+        <th><?php $this->T("city_c"); ?></th>
+        <th><?php $this->T("amount_population_c"); ?></th>
+        <th><?php $this->T("account_population_c"); ?></th>
+        <th></th>
+        <th></th>
+    </tr>
+    </thead>
+    <?php if (!empty($this->results)) { ?>
+        <?php foreach ($this->results as $row) { ?>
+            <tr>
+                <td><?php echo $row->NAME ?></td>
+                <td><?php echo $row->ADDRESS ?></td>
+                <td><?php echo $row->FAX ?></td>
+                <td><?php echo $row->ZIP_CODE ?></td>
+                <td><?php echo $row->CITY ?></td>
+                <td><?php echo number_format($row->AMOUNT, 2, ',', '.'); ?></td>
+                <td><?php echo $row->ACCOUNT_NO ?></td>
+                <td><a href="<?php echo $this->location() ?>/settings-populations/edit/id/<?php echo $row->POPULATION_PLACE_ID ?>" ><span title ="<?php $this->T("edit_c") ?>"  class="ui-icon ui-icon-zoomin"></span></td>
+                <td>
+                    <?php echo $this->Delete($this->location()."/settings-populations/view/delete/" . $row->POPULATION_PLACE_ID , $row->NAME) ?>
+                </td>
+
+            </tr>
+        <?php } ?>
+    <?php } else { ?>
+        <tr>
+            <td colspan="5" class="no_results">
+                <?php $this->T("no_results_c"); ?>
+            </td>
+        </tr>
+    <?php } ?>
+</table>

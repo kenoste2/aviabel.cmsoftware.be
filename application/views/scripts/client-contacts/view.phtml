@@ -1,0 +1,38 @@
+<?php
+if ($this->deleted) {
+    print $this->Ok($this->G("deleted_c"));
+}
+?>
+<table id="data" class="tablesorter ws_data_table" width="100%">
+    <thead>
+    <tr>
+        <th><?php $this->T("function_c"); ?></th>
+        <th><?php $this->T("name_c"); ?></th>
+        <th><?php $this->T("email_c"); ?></th>
+        <th><?php $this->T("tel_c"); ?></th>
+        <th><?php $this->T("language_c"); ?></th>
+        <th></th>
+        <th></th>
+    </tr>
+    </thead>
+    <?php if (!empty($this->results)) { ?>
+        <?php foreach ($this->results as $row) { ?>
+            <tr>
+                <td><?php echo $row->FUNCTION_DESCRIPTION ?></td>
+                <td><?php echo $row->NAME ?></td>
+                <td><?php echo $row->EMAIL ?></td>
+                <td><?php echo $row->TEL ?></td>
+                <td><?php echo $row->LANGUAGE?></td>
+                <td><a href="<?php echo $this->location() ?>/client-contacts/edit/id/<?php echo $row->CONTACT_ID . "/index/".$this->index ?>" ><span title ="<?php $this->T("edit_c") ?>"  class="ui-icon ui-icon-zoomin"></span></td>
+                <td><?php echo $this->Delete($this->location()."/client-contacts/view/delete/" . $row->CONTACT_ID . "/index/".$this->index, $row->NAME) ?></td>
+
+            </tr>
+        <?php } ?>
+    <?php } else { ?>
+        <tr>
+            <td colspan="8" class="no_results">
+                <?php $this->T("no_results_c"); ?>
+            </td>
+        </tr>
+    <?php } ?>
+</table>

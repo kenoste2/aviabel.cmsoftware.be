@@ -1,0 +1,325 @@
+<script>
+    $(function () {
+        $("#tabs").tabs();
+    });
+</script>
+<div id="tabs" class="tabs">
+<ul>
+    <li><a href="#debtorTab"><?php print $this->T("select_debtor_c") ?></a></li>
+    <li><a href="#clientTab"><?php print $this->T("select_client_c") ?></a></li>
+    <li><a href="#invoicesTab"><?php print $this->T("input_invoices_c") ?></a></li>
+    <li><a href="#createTab"><?php print $this->T("confirm_create_file_c") ?></a></li>
+</ul>
+<div id="debtorTab">
+    <?php
+    if ($this->showDebtorError) {
+        print $this->Error($this->G("not_all_fields_c"));
+    }
+    ?>
+    <?php
+    if ($this->showDebtorSaved) {
+        print $this->Ok($this->G("saved_c"));
+    }
+    ?>
+    <?php
+    if ($this->showBinfoNoReport) {
+        print $this->Ok($this->G("report_not_available"));
+    }
+    ?>
+    <table width="100%">
+        <tr>
+            <td class="windowPart" width="50%">
+                <form method=post action='<?php echo $this->Location(); ?>/files/add'>
+                    <input type="hidden" name="sessionId" value="<?php echo $this->sessionId ?>">
+                    <input type="hidden" name="debtorForm" value="1">
+                    <span class="title"><?php print $this->T("select_debtor_c") ?></span>
+                    <?php echo $this->debtorForm->DEBTOR_ID ?>
+                    <?php echo $this->debtorForm->NAME ?>
+                    <?php echo $this->debtorForm->VATNR ?>
+                    <dt id="ADDRESS-label"><label for="ADDRESS"
+                                                  class="required"><?php print $this->T("address_c") ?></label></dt>
+                    <dd id="ADDRESS-element">
+                        <?php echo $this->debtorForm->ADDRESS->renderViewHelper(); ?>
+                        <br><?php echo $this->debtorForm->ZIP_CODE->renderViewHelper(); ?><?php echo $this->debtorForm->CITY->renderViewHelper(); ?>
+                        <br><?php echo $this->debtorForm->COUNTRY_ID->renderViewHelper(); ?></dd>
+                    <?php echo $this->debtorForm->TELEPHONE ?>
+                    <?php echo $this->debtorForm->GSM ?>
+                    <?php echo $this->debtorForm->TELEFAX ?>
+                    <?php echo $this->debtorForm->E_MAIL ?>
+                    <?php echo $this->debtorForm->LANGUAGE_ID ?>
+                    <?php echo $this->debtorForm->BIRTH_DAY ?>
+                    <?php echo $this->debtorForm->submit ?>
+
+                </form>
+            </td>
+            <?php if (!empty($this->binfo)) { ?>
+                <td class="windowPart" width="50%" id="binfoPart" name="binfoPart">
+                    <span class='title'><?php print $this->T("search_on_binformation") ?></span>
+                        <?php echo $this->bInfoForm ?>
+                        <table id="binfoContent">
+                            <binfoPart>
+                            </binfoPart>
+                        </table>
+                </td>
+            <?php } ?>
+        </tr>
+    </table>
+    <script>
+        function SearchBinformation() {
+
+                var name = $('#BNAME').val();
+                var vat = $('#BVATNR').val();
+                var country = $('#BCOUNTRY_ID').val();
+                $.getJSON("<?php echo $this->Location() ?>/ajax/binfo/",{name : name, vat : vat, country : country }, function (data) {
+                var items = [];
+                $('binfoPart').html('');
+                    items.push("<thead><tr><td><?php print $this->T("vatnr_c") ?></td><td><?php print $this->T("name_c") ?></td><td><?php print $this->T("address_c") ?></td></tr></thead>");
+                    $.each(data, function (key, val) {
+                    items.push("<tr><td>" + val['NationalNumber'] + "</td><td>" + val['Name'] + "</td><td>" + val['Street'] + "<br>" + val['PostalCode'] + " " + val['Locality'] + "</td><td><div onClick=location.href='<?php echo $this->Location() ?>/files/add/binfo/" + val['CompanyId'] + "'  class='ui-state-default ui-corner-all' title='<?php $this->T("select_c") ?>'><span class='ui-icon ui-icon-link'></span></div></td></tr>");
+                });
+                $("<tr/>", {
+                    "class": "my-new-list",
+                    html: items.join("")
+                }).appendTo("binfoPart");
+            });
+        }
+
+        $(function () {
+            var cache = {},
+                lastXhr;
+            $("#NAME").autocomplete({
+                minLength: 3,
+                autoFocus: true,
+                source: function (request, response) {
+                    var term = request.term;
+                    if (term in cache) {
+                        response(cache[ term ]);
+                        return;
+                    }
+                    lastXhr = $.getJSON("<?php echo $this->Location() ?>/ajax/debtors", request, function (data, status, xhr) {
+                        cache[ term ] = data;
+                        if (xhr === lastXhr) {
+                            response(data);
+                        }
+                    });
+                },
+                select: function (evt, ui) {
+                    var CurrentValue = ui.item.value;
+                    var ArrayValues = CurrentValue.split("|");
+                    $('#NAME').val(ArrayValues[0]);
+                    $('#ADDRESS').val(ArrayValues[1]);
+                    $('#ZIP_CODE').val(ArrayValues[2]);
+                    $('#CITY').val(ArrayValues[3]);
+                    $('#COUNTRY_ID').val(ArrayValues[4]);
+                    $('#VATNR').val(ArrayValues[5]);
+                    $('#TELEPHONE').val(ArrayValues[6]);
+                    $('#TELEFAX').val(ArrayValues[7]);
+                    $('#GSM').val(ArrayValues[8]);
+                    $('#E_MAIL').val(ArrayValues[9]);
+                    $('#LANGUAGE_ID').val(ArrayValues[10]);
+                    $('#DEBTOR_ID').val(ArrayValues[11]);
+                    getCreditInfo();
+                    response(ArrayValues[0]);
+                }, minLength: 2
+            });
+        });
+    </script>
+
+    <script>
+        $(function () {
+            $("#BIRTH_DAY").datepicker({dateFormat: 'dd/mm/yy', defaultDate: "-30y"});
+        });
+    </script>
+</div>
+<div id="clientTab">
+    <?php
+    if ($this->showIncorrectClientError) {
+        print $this->Error($this->G("incorrect_client_c"));
+    }
+    if ($this->showClientError) {
+        print $this->Error($this->G("not_all_fields_c"));
+    }
+    ?>
+    <?php
+    if ($this->showClientSaved) {
+        print $this->Ok($this->G("saved_c"));
+    }
+    ?>
+
+    <form method=post action='<?php echo $this->Location(); ?>/files/add'>
+        <input type="hidden" name="sessionId" value="<?php echo $this->sessionId ?>">
+        <input type="hidden" name="clientForm" value="1">
+        <span class="title"><?php print $this->T("select_client_c") ?></span>
+        <?php echo $this->clientForm->client_id ?>
+        <?php echo $this->clientForm->client_name ?>
+        <?php echo $this->clientForm->client_reference ?>
+        <?php echo $this->clientForm->submit ?>
+    </form>
+
+    <script>
+        $(function () {
+            var cache = {},
+                lastXhr;
+            $("#client_name").autocomplete({
+                minLength: 2,
+                autoFocus: true,
+                source: function (request, response) {
+                    var term = request.term;
+                    if (term in cache) {
+                        response(cache[ term ]);
+                        return;
+                    }
+                    lastXhr = $.getJSON("<?php echo $this->Location() ?>/ajax/clients", request, function (data, status, xhr) {
+                        cache[ term ] = data;
+                        if (xhr === lastXhr) {
+                            response(data);
+                        }
+                    });
+                },
+                select: function (evt, ui) {
+                    var CurrentValue = ui.item.value;
+                    var ArrayValues = CurrentValue.split("|");
+                    $('#client_name').val(ArrayValues[0]);
+                    $('#client_id').val(ArrayValues[1]);
+                    response(ArrayValues[0]);
+                }, minLength: 2
+            });
+        });
+    </script>
+</div>
+<div id="invoicesTab">
+    <?php
+    if ($this->showInvoiceError) {
+        print $this->Error($this->G("not_all_fields_c"));
+    }
+    ?>
+    <?php
+    if ($this->showInvoicesSaved) {
+        print $this->Ok($this->G("saved_c"));
+    }
+    ?>
+    <?php
+    if ($this->showInvoicesDeleted) {
+        print $this->Ok($this->G("ref_del_c"));
+    }
+    ?>
+
+    <form method=post action='<?php echo $this->Location(); ?>/files/add'>
+        <input type="hidden" name="invoiceForm" value="1">
+        <input type="hidden" name="sessionId" value="<?php echo $this->sessionId ?>">
+        <input type="hidden" name="invoiceForm" value="1">
+        <table id="Invoices">
+            <tr>
+                <td>
+                    <span class="title"><?php print $this->T("input_invoices_c") ?></span>
+                    <table>
+                        <tr>
+                            <td>
+                                <?php echo $this->invoiceForm->reference ?>
+                                <?php echo $this->invoiceForm->invoice_date ?>
+                            </td>
+                            <td>
+                                <?php echo $this->invoiceForm->amount ?>
+                                <?php echo $this->invoiceForm->start_date ?>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan=2
+                                align="right"><?php echo $this->invoiceForm->submit->renderViewHelper(); ?></td>
+                        </tr>
+                    </table>
+                </td>
+            <tr>
+                <td>
+
+                    <?php if (!empty($this->invoices)) { ?>
+                        <table id="data" class="tablesorter ws_data_table" width="100%">
+                            <thead>
+                            <tr>
+                                <th><?php $this->T("factuurnummer_c"); ?></th>
+                                <th><?php $this->T("factuurdatum_c"); ?></th>
+                                <th><?php $this->T("vervaldatum_c"); ?></th>
+                                <th><?php $this->T("saldo_c"); ?></th>
+                                <th>&nbsp;</th>
+                            </tr>
+                            </thead>
+                            <?php foreach ($this->invoices as $key => $invoice) { ?>
+                                <tr>
+                                    <td><?php echo $invoice['reference'] ?></td>
+                                    <td><?php echo $this->Date($invoice['invoice_date']) ?></td>
+                                    <td><?php echo $this->Date($invoice['start_date']) ?></td>
+                                    <td><?php echo $this->Amount($invoice['amount']) ?></td>
+                                    <td>
+                                        <a href="<?php echo $this->Location(); ?>/files/add/deleteInvoice/<?php echo $key; ?>/sessionId/<?php echo $this->sessionId ?>/deleteForm/1"><span
+                                                title="<?php $this->T("delete_c") ?>"
+                                                class="ui-icon ui-icon-trash"></span></a></td>
+                                </tr>
+                            <?php } ?>
+                        </table>
+                    <?php } ?>
+                </td>
+            </tr>
+        </table>
+    </form>
+    <script>
+        $(function () {
+            $("#invoice_date").datepicker({dateFormat: 'dd/mm/yy', defaultDate: "-30"});
+        });
+        $(function () {
+            $("#start_date").datepicker({dateFormat: 'dd/mm/yy', defaultDate: "-30"});
+        });
+    </script>
+</div>
+<div id="createTab">
+    <form method=post action='<?php echo $this->Location(); ?>/files/create'>
+        <input type="hidden" name="sessionId" value="<?php echo $this->sessionId ?>">
+        <?php $this->T("file_will_be_created_c"); ?>
+        <br><br>
+        <table>
+            <tr>
+                <td class="label"><?php $this->T("client_c"); ?></td>
+                <td><?php echo $this->session->client['client_name'] ?></td>
+            </tr>
+            <tr>
+                <td class="label"><?php $this->T("debtor_c"); ?></td>
+                <td><?php echo $this->session->debtor['NAME'] ?>
+                    <br><?php echo $this->session->debtor['ADDRESS'] ?>
+                    <br><?php echo $this->session->debtor['ZIP_CODE'] ?> <?php echo $this->session->debtor['CITY'] ?>
+                </td>
+            </tr>
+            <tr>
+                <td class="label"><?php $this->T("total_c"); ?></td>
+                <td><?php echo $this->Amount($this->session->totalAmount) ?></td>
+            </tr>
+            <tr>
+                <td colspan="2" align="right"><input type="submit" name="submit" id="submit"
+                                                     value='<?php $this->T("confirm_create_c"); ?>'></td>
+            </tr>
+        </table>
+</div>
+</div>
+<script>
+    $(function () {
+        $("#tabs").tabs({active: <?php echo $this->activeTab ?> <?php echo $this->disabledTab; ?> });
+    });
+</script>
+<script>
+    function getCreditInfo() {
+        var vatnr = $('#VATNR').val();
+        if (vatnr == '0809178750') {
+            $('#creditInfo').show('1000');
+        } else {
+            $('#creditInfo').hide();
+        }
+        if (vatnr != '') {
+            $('#BIRTH_DAY-label').hide();
+            $('#BIRTH_DAY-element').hide();
+        } else {
+            $('#BIRTH_DAY-label').show();
+            $('#BIRTH_DAY-element').show();
+
+        }
+    }
+    $('#creditInfo').hide();
+    getCreditInfo();
+</script>

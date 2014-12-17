@@ -1,0 +1,128 @@
+<!-- application/layouts/scripts/layout.phtml -->
+<?php echo $this->doctype() ?>
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title><?php echo $this->headerTitle?></title>
+        <?php echo $this->headLink()->appendStylesheet(BASE_URL . 'css/global.css') ?>
+        <?php echo $this->headLink()->appendStylesheet(BASE_URL . 'css/start/jquery-ui-1.10.4.custom.css') ?>
+        <?php echo $this->headScript()->appendFile(BASE_URL . 'js/jquery-1.10.2.js') ?>
+        <?php echo $this->headScript()->appendFile(BASE_URL . 'js/jquery-ui-1.10.4.custom.js') ?>
+        <?php //echo $this->headScript()->appendFile(BASE_URL . 'js/jquery.tablesorter.js') ?>
+        <?php echo $this->headScript()->appendFile(BASE_URL . 'js/app.js') ?>
+        <script>
+            $(function() {
+                $(".menu").menu({position: {my: "left top", at: "left top+35"}});
+            });
+        </script>
+        <style>
+            .ui-menu { }
+            div#topContainer{
+                margin-left:0;
+                margin-right:auto;
+                top: 0px;
+                width:100%;
+                height:50px;
+                position:relative;
+                border-bottom: 2px solid #ccc;
+
+            }
+            div#menu{
+                position:absolute;
+                width: 60%;
+                z-index: 100;
+            }         
+            div#welcome{
+                position:absolute;
+                right: 30px;
+                z-index: 100;
+            }
+            div#addButton{
+                position:absolute;
+                right: 0px;
+                z-index: 100;
+                top : 70px;
+            }      
+            div#logoutButton{
+                position:absolute;
+                right: 0px;
+                z-index: 100;
+            }      
+        </style>
+        <style type="text/css">
+            @media print {
+                .noprint { display: none; }
+            }
+        </style>
+        <style>
+            .ui-autocomplete-loading { background: white url('images/ui-anim_basic_16x16.gif') right center no-repeat; }
+        </style>
+    </head>
+    <body>
+        <?php if (!$this->hideTop) { ?>
+        <div id="topContainer" class="noprint">
+            <div id="menu">
+                <table width="100%" align="left">
+                    <tr>
+                        <td width = "100">
+                            <img src="<?php echo $this->location() ?>/public/images/logo.jpg" height="30">
+                        </td>
+                        <?php
+                        if (!empty($this->menu)) {
+                            foreach ($this->menu as $id => $menu) { if (!empty($menu['SUBMENU'])) {
+                                ?>
+
+                                <td>
+                                    <ul id="menu<?php echo $id ?>" class="menu">
+                                        <li>
+                                            <a href="#"><?php echo $menu['TITEL'] ?></a>
+                                            <?php if (!empty($menu['SUBMENU'])) { ?> <ul> <?php foreach ($menu['SUBMENU'] as $sub) { ?>
+                                                        <li><a href="<?php echo $this->location() ?>/<?php echo $sub['NAV'] ?>"><?php echo $sub['TITEL'] ?></a></li>
+                                                    <?php } ?> </ul> <?php } ?>
+                                        </li>
+                                    </ul>
+                                </td>
+                                <?php
+                            }}
+                        }
+                        ?>
+                    </tr>
+                </table>
+            </div>
+            <div id="welcome">
+                <?php echo $this->T("welcome_c") ?> <?php echo $this->Welcome(); ?>
+                <br><br>
+                <a class = 'body' href="<?php echo $this->location() ?>/index/index/selectlang/NL">NL</a> - <a href="<?php echo $this->location() ?>/index/index/selectlang/FR">FR</a> - <a href="<?php echo $this->location() ?>/index/index/selectlang/EN">EN</a>
+            </div>
+            <div id="logoutButton">
+                <div onClick=location.href="<?php echo $this->Location() ?>/Auth/Logout" class="ui-state-default ui-corner-all" title="<?php $this->T("logout_c") ?>"><span class="ui-icon ui-icon-power"></span></div>
+            </div>
+        <div id="addButton"  class="noprint">
+            <?php if ($this->addButton) { ?><div onClick="newscreen('<?php $this->T("add_c") ?>','<?php echo $this->Location() ?><?php echo $this->addButton ?>')"  class="ui-state-default ui-corner-all" title="<?php $this->T("add_c") ?>"><span class="ui-icon ui-icon-plus"></span></div><?php } ?>
+            <?php if ($this->addButtonParent) { ?><div class="ui-state-default ui-corner-all"><a href="<?php echo $this->Location() ?><?php echo $this->addButtonParent ?>" title="<?php $this->T("add_c") ?>"><span class="ui-icon ui-icon-plus"></span></a></div><?php } ?>
+            <?php if ($this->exportButton) { ?><div onClick=location.href="<?php echo $this->Location() ?>/export/csv" class="ui-state-default ui-corner-all" title="<?php $this->T("export_csv_c") ?>"><span class="ui-icon ui-icon-disk"></span></div><?php } ?>
+            <?php if ($this->printButton) { ?><div onClick="window.print()" class="ui-state-default ui-corner-all" title="<?php $this->T("print_content_c") ?>"><span class="ui-icon ui-icon-print"></span></div><?php } ?>
+        </div>        
+        </div>
+        <br>
+            <?php } ?>
+
+            <div id="content">
+                <?php if (!empty($this->bread)) { ?>
+                <i><?php echo $this->bread ?></i><br><br>
+                <?php } ?>
+                <?php echo $this->layout()->content ?>
+                <script>
+<?php if (!empty($this->errors)) {
+    foreach ($this->errors as $key => $error) {
+        if (!empty($error)) {
+            ?>
+                        $("#<?php echo $key; ?>").addClass("errorfield");
+        <?php }
+    }
+}
+?>
+                </script>
+            </div>
+    </body>
+</html>

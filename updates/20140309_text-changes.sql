@@ -1,0 +1,1 @@
+INSERT INTO TEKSTEN (CODE,NAV,NL,FR,EN) VALUES ('extra_header_c','all','Extra','Extra','Extra');

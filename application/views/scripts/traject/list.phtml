@@ -1,0 +1,41 @@
+<table class="ws_data_table" width="100%">
+    <thead>
+        <tr>
+            <th colspan="4"></th>
+            <th colspan="4"><?php $this->T('Original_c') ?></th>
+            <th colspan="4"><?php $this->T('Saldo_c') ?></th>
+        </tr>
+        <tr>
+            <th><?php $this->T('Invoice_Nr_c') ?></th>
+            <th><?php $this->T('creation_date_c') ?></th>
+            <th><?php $this->T('name_c') ?></th>
+            <th><?php $this->T('state_code_c') ?></th>
+            <th><?php $this->T('amount_c') ?></th>
+            <th><?php $this->T('interest_c') ?></th>
+            <th><?php $this->T('costs_c') ?></th>
+            <th><?php $this->T('total_c') ?></th>
+            <th><?php $this->T('total_c') ?></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php foreach ($this->results as $index => $file): ?>
+            <tr>
+                <td><?php echo $file->FILE_NR ?></td>
+                <td><?php echo $this->date($file->CREATION_DATE) ?></td>
+                <td><?php echo $file->DEBTOR_NAME ?><br><?php echo $file->DEBTOR_ADDRESS ?><br><?php echo $file->DEBTOR_ZIP_CODE . ' ' . $file->DEBTOR_CITY ?>
+                    <?php echo ($file->DEBTOR_TELEPHONE) ? '<br>Tel.: ' . $file->DEBTOR_TELEPHONE : ''; ?>
+                    <?php echo ($file->DEBTOR_GSM) ? '<br>Mob.: ' . $file->DEBTOR_GSM : '' ?></td>
+                <td><?php echo $file->STATE_CODE ?></td>
+                <td class="right"><?php echo number_format($file->AMOUNT, 2, ',', '.') ?></td>
+                <td class="right"><?php echo number_format($file->INTEREST, 2, ',', '.') ?></td>
+                <td class="right"><?php echo number_format($file->COSTS, 2, ',', '.') ?></td>
+                <td class="right"><?php echo number_format($file->TOTAL, 2, ',', '.') ?></td>
+                <td class="right"><?php echo number_format($file->PAYABLE, 2, ',', '.') ?></td>
+                <td>
+                    <span title ="<?php $this->T("view_c") ?>" onclick="newscreen('<?php echo $file->DEBTOR_NAME ?>', '<?php echo $this->location() ?>/file-detail/view/index/<?php echo $index; ?>')" class="ui-icon ui-icon-zoomin"></span>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+    </tbody>
+</table>

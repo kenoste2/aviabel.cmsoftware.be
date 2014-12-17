@@ -1,0 +1,39 @@
+<STYLE>
+    .contentbox {
+        padding: 10px;
+        text-align: center;
+        margin-top: 30px;
+        background-color: #FFFFFF;
+        border: solid 1px #CCC;
+        border-radius: 25px;
+    }
+    .creator {
+        color: #CCC;
+        text-align: center;
+    }
+    .logo {
+        vertical-align: bottom;
+    }
+</STYLE>
+<?php if ($this->showError) {
+    print "<table align=center><tr><td>".$this->Error($this->G('incorrect_login_c'))."</td></tr></table>";
+} ?>
+<table align="center" class="contentbox" width="700px">
+    <tr>
+        <td class="logo">
+            <img src="<?php echo $this->location() ?>/public/images/logo.jpg" height="120">
+        </td>
+    <td>
+        <form action="<?php echo $this->url() ?>" method="post">
+            <?php echo $this->loginForm->username ?>
+            <?php echo $this->loginForm->password ?>
+            <?php echo $this->loginForm->submit ?>
+        </form>
+    </td>
+    </tr>
+    <tr>
+        <td class="creator" colspan="2">
+            <?php echo $this->headerTitle?>
+        </td>
+    </tr>
+</table>

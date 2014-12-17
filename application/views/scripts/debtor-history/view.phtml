@@ -1,0 +1,37 @@
+<table id="data" class="tablesorter ws_data_table" width="100%">
+    <thead>
+        <tr>
+            <th><?php $this->T("creation_date_c"); ?></th>
+            <th><?php $this->T("who_c"); ?></th>
+            <th><?php $this->T("name_c"); ?></th>
+            <th><?php $this->T("address_c"); ?></th>
+            <th><?php $this->T("zipcode_c"); ?></th>
+            <th><?php $this->T("city_c"); ?></th>
+            <th><?php $this->T("mail_c"); ?></th>
+            <th><?php $this->T("telephone_c"); ?></th>
+            <th><?php $this->T("telefax_c"); ?></th>
+        </tr>
+    </thead>
+    <?php if (!empty($this->results)) {?>
+        <?php foreach ($this->results as $row) {  ?>
+            <tr>
+                <td><?php echo $this->date($row->CREATION_DATE) ?></td>
+                <td><?php echo $row->CREATION_USER ?></td>
+                <td><?php echo $row->NAME ?></td>
+                <td><?php echo $row->ADDRESS ?></td>
+                <td><?php echo $row->CODE ?></td>
+                <td><?php echo $row->CITY ?></td>
+                <td><?php echo $row->E_MAIL ?></td>
+                <td><?php echo $row->TELEPHONE ?></td>
+                <td><?php echo $row->TELEFAX ?></td>
+            </tr>
+        <?php } ?>
+    <?php } else { ?>
+        <tr>
+            <td colspan="5" class="no_results">
+                <?php $this->T("no_results_c"); ?>
+            </td>
+        </tr>
+    <?php } ?>
+</table>
+

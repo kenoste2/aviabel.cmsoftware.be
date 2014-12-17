@@ -1,0 +1,39 @@
+<?php
+if ($this->deleted) {
+    print $this->Ok($this->G("deleted_c"));
+} else if ($this->deleted === false) {
+    print $this->Error($this->G("cant_be_deleted_c"));
+}
+?>
+<?php if (count($this->results)): ?>
+    <h3><?php echo count($this->results) ?> resultaten gevonden</h3>
+<?php endif; ?>
+<table id="data" class="tablesorter ws_data_table" width="100%">
+    <thead>
+    <tr>
+        <th><?php $this->T("Code_c"); ?></th>
+        <th><?php $this->T("Description_c"); ?></th>
+        <th></th>
+        <th></th>
+    </tr>
+    </thead>
+    <?php if (!empty($this->results)) { ?>
+        <?php foreach ($this->results as $row) { ?>
+            <tr>
+                <td><?php echo $row->CODE ?></td>
+                <td><?php echo $row->DESCRIPTION ?></td>
+                <td><a href="<?php echo $this->location() ?>/settings-closestates/edit/id/<?php echo $row->CLOSE_STATE_ID ?>" ><span title ="<?php $this->T("edit_c") ?>"  class="ui-icon ui-icon-zoomin"></span></td>
+                <td>
+                    <?php echo $this->Delete($this->location()."/settings-closestates/view/delete/" . $row->CLOSE_STATE_ID , $row->CODE) ?>
+                </td>
+
+            </tr>
+        <?php } ?>
+    <?php } else { ?>
+        <tr>
+            <td colspan="5" class="no_results">
+                <?php $this->T("no_results_c"); ?>
+            </td>
+        </tr>
+    <?php } ?>
+</table>

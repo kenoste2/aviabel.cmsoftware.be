@@ -1,0 +1,71 @@
+<div id="general"  style="position: relative; width: 100%">
+    <table width="100%">
+        <tr>
+            <td width="50%" class="windowPart">
+                <?php
+                if ($this->generalFormSaved) {
+                    print $this->Ok($this->G("saved_c"));
+                }
+                ?>
+                <?php
+                if ($this->generalPassError) {
+                    print $this->Error($this->G("password_incorrect_c"));
+                }
+                ?>
+                <?php
+                if ($this->generalClientCodeError) {
+                    print $this->Error($this->G("code_exists_c"));
+                }
+                ?>                <?php
+                if ($this->generalFormError) {
+                    print $this->Error($this->G("not_all_fields_c"));
+                }
+                ?>
+                <form enctype="application/x-www-form-urlencoded" method="post" action="">
+                    <table width="100%">
+                        <tr>
+                            <td width="33%" class="windowPart">
+                                <span class="title"><?php $this->T("general_c") ?></span>
+                                <?php print $this->generalForm->CODE ?>
+                                <?php print $this->generalForm->PASSWORD ?>
+                                <?php print $this->generalForm->PASSWORD2 ?>
+                                <?php print $this->generalForm->NAME ?>
+                                <?php print $this->generalForm->ADDRESS ?>
+                                <?php print $this->generalForm->ZIP_CODE ?>
+                                <?php print $this->generalForm->CITY ?>
+                                <?php print $this->generalForm->COUNTRY_ID ?>
+                                <?php print $this->generalForm->LANGUAGE_ID ?>
+                                <?php print $this->generalForm->MAINCLIENT ?>
+                                <?php print $this->generalForm->E_MAIL ?>
+                                <?php print $this->generalForm->TELEPHONE ?>
+                                <?php print $this->generalForm->TELEFAX ?>
+                                <?php print $this->generalForm->TRAIN_TYPE ?>
+                                <?php print $this->generalForm->REMARKS ?>
+                                <?php print $this->generalForm->SUBMIT ?>
+                            </td>
+                            <td width="33%" class="windowPart">
+                                <span class="title"><?php $this->T("invoice_settings_c") ?></span>
+                                <?php print $this->generalForm->VAT_NO ?>
+                                <?php print $this->generalForm->INVOICE_CONTACT ?>
+                                <?php print $this->generalForm->INVOICE_ADDRESS ?>
+                                <?php print $this->generalForm->INVOICE_ZIP_CODE ?>
+                                <?php print $this->generalForm->INVOICE_CITY ?>
+                                <?php print $this->generalForm->INVOICE_COUNTRY_ID ?>
+                                <?php print $this->generalForm->COMPENSATED ?>
+                                <?php print $this->generalForm->BANK_ACCOUNT_NR ?>
+                                <?php print $this->generalForm->SUBMIT ?>
+                            </td>
+                            <td width="33%" class="windowPart">
+                                <span class="title"><?php $this->T("Client_Conditions_c") ?></span>
+                                <?php print $this->generalForm->CURRENT_INTREST_PERCENT ?>
+                                <?php print $this->generalForm->CURRENT_INTREST_MINIMUM ?>
+                                <?php print $this->generalForm->CURRENT_COST_PERCENT ?>
+                                <?php print $this->generalForm->CURRENT_COST_MINIMUM ?>
+                                <?php print $this->generalForm->SUBMIT ?>
+                            </td>
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+    </table>
+</div>

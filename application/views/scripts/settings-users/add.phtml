@@ -1,0 +1,44 @@
+<?php
+if ($this->formSaved) {
+    print $this->Ok($this->G("saved_c"));
+}
+?>
+<?php
+if ($this->formError) {
+    print $this->Error($this->G("not_all_fields_c"));
+}
+if ($this->codeExistsError) {
+    print $this->Error($this->G("code_exists_error_c"));
+}
+
+?>
+
+<?php print $this->form ?>
+
+<script type="text/javascript" charset="utf-8">
+
+    $(function () {
+        $("#RIGHTS").change(function () {
+            selectClientCollector();
+        })
+    })
+
+    function selectClientCollector() {
+        var value = $('#RIGHTS').val();
+        if (value == '5') {
+            $('#CLIENT_ID-label').show();
+            $('#CLIENT_ID-element').show();
+        } else {
+            $('#CLIENT_ID-label').hide();
+            $('#CLIENT_ID-element').hide();
+        }
+        if (value == '6') {
+            $('#COLLECTOR_ID-label').show();
+            $('#COLLECTOR_ID-element').show();
+        } else {
+            $('#COLLECTOR_ID-label').hide();
+            $('#COLLECTOR_ID-element').hide();
+        }
+    }
+    selectClientCollector();
+</script>

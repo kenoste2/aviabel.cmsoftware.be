@@ -1,0 +1,2 @@
+INSERT INTO TEKSTEN (TEKSTEN_ID,CODE,NAV,NL,FR,EN) VALUES (1773,'article_c','all','Artikel factuurvoorwaarden','Article','Article');
+INSERT INTO TEKSTEN (TEKSTEN_ID,CODE,NAV,NL,FR,EN) VALUES (1774,'court_c','all','Bevoegde rechtbank','Tribunal','Court');

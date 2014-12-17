@@ -1,0 +1,1 @@
+INSERT INTO TEKSTEN (TEKSTEN_ID,CODE,NAV,NL,FR,EN) VALUES ('1367','closed_train_c','all','Gesloten','Ferme','Closed');

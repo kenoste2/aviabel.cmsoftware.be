@@ -1,0 +1,31 @@
+<?php
+if ($this->formSaved) {
+    print $this->Ok($this->G("saved_c"));
+}
+?>
+<?php
+if ($this->formError) {
+    print $this->Error($this->G("not_all_fields_c"));
+}
+if ($this->codeExistsError) {
+    print $this->Error($this->G("code_exists_error_c"));
+}
+?>
+
+<?php print $this->form ?>
+<table class="ws_data_table">
+    <thead>
+    <tr>
+        <th><?php $this->T('Field_c') ?></th>
+        <th><?php $this->T('example_value_c') ?></th>
+    </tr>
+    </thead>
+    <tbody>
+    <?php foreach($this->filesAllInfo as $field => $value): ?>
+        <tr>
+            <td><?php echo $field; ?></td>
+            <td><?php echo $value ?></td>
+        </tr>
+    <?php endforeach; ?>
+    </tbody>
+</table>

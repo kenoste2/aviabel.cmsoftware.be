@@ -1,0 +1,64 @@
+<div class="toggler noprint">
+    <div id="searchbox" class="ui-widget-content" style="width: 600px;">
+        <span class="title"><?php print $this->T("todos_c") ?></span>
+        <?php echo $this->searchTaskForm; ?>
+    </div>
+</div>
+<br>
+<?php
+if ($this->deleted) {
+    print $this->Ok($this->G("deleted_c"));
+} else if ($this->deleted === false) {
+    print $this->Error($this->G("cant_be_deleted_c"));
+}
+?>
+<table class="ws_data_table" style="width: 100%">
+    <thead>
+        <tr>
+            <th><?php $this->T('date_c') ?></th>
+            <th><?php $this->T('file_c') ?></th>
+            <th><?php $this->T('debtor_c') ?></th>
+            <th><?php $this->T('todo_type_c') ?></th>
+            <th><?php $this->T('remark_c') ?></th>
+            <th><?php $this->T('assigned_to_c') ?></th>
+            <th><?php $this->T('who_c') ?></th>
+            <th><?php $this->T('done_c') ?></th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php foreach ($this->tasks as $result):
+                $remark = str_replace("\n","<br>",$result->REMARK);
+                $todo_type = $result->TODO_TYPE;
+                $todo_type = $remark_types[$result->TODO_TYPE] ? $todo_types[$result->TODO_TYPE] : $todo_type;
+                $todo_type = !$todo_type ? '-' : $todo_type;?>
+            <tr>
+                <td><?php echo $this->date($result->CREATION_DATE) ?></td>
+                <td><a href=# onClick="newscreen('<?php echo $row->DEBTOR_NAME ?>', '<?php echo $this->location() ?>/file-detail/view/index/0/fileId/<?php echo $result->FILE_ID ?>')"><?php echo $result->FILE_NR ?></a></td>
+                <td><?php echo $result->DEBTOR_NAME ?></td>
+                <td><?php echo $todo_type ?></td>
+                <td><?php echo $remark ?></td>
+                <td><?php echo !empty($result->ASSIGNED_TO) ? $result->ASSIGNED_TO : '<span class="ui-icon ui-icon-close"></span>' ?></td>
+                <td><?php echo $result->CREATION_USER ?></td>
+                <td><?php echo $result->DONE ? '<span class="ui-icon ui-icon-check"></span>' : '<span class="ui-icon ui-icon-close"></span>' ?></td>
+                <td>
+                    <?php if(!$result->DONE || $this->canChange): ?>
+                    <a href="<?php echo $this->location() ?>/tasks/edit/id/<?php echo $result->TODO_ID ?>" ><span title ="<?php $this->T("edit_c") ?>"  class="ui-icon ui-icon-zoomin"></span>
+                    <?php endif; ?>
+                </td>
+                <td>
+                    <?php if((!$result->DONE && !$this->canChange) || $this->canChange): ?>
+                        <?php echo $this->Delete($this->location()."/tasks/search/delete/" . $result->TODO_ID , $result->REMARK) ?>
+                    <?php endif; ?>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+    </tbody>
+</table>
+<script>
+    $(function() {
+        $("#STARTDATE").datepicker({dateFormat: 'dd/mm/yy'});
+        $("#ENDDATE").datepicker({dateFormat: 'dd/mm/yy'});
+    });
+</script>

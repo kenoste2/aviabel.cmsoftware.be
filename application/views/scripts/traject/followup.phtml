@@ -1,0 +1,31 @@
+<table class="ws_data_table" width="100%">
+    <thead>
+        <tr>
+            <th></th>
+            <?php for ($i=0; $i<=$this->numberOfDays; $i++) : ?>
+                <?php $displayDate = date("d/m/Y",strtotime ("+$i day")); ?>
+                <th title="<?php echo $displayDate ?>"><?php echo $i; ?></th>
+            <?php endfor; ?>
+            <th><?php $this->T('total_c'); ?></th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php foreach ($this->followUp as $followUp): ?>
+            <tr>
+                <?php $rowTotal = 0; ?>
+                <td><?php echo $followUp->DESCRIPTION ?></td>
+                <?php foreach ($this->counters[$followUp->CODE] as $j => $counter): ?>
+                    <td>
+                        <?php if ($counter > 0) : ?>
+                            <a href="<?php echo $this->location() ?>/traject/list/i/<?php echo $j ?>/serie/1/type/<?php echo $followUp->CODE ?>"><?php echo $counter; ?></a>
+                        <?php else: ?>
+                            <?php echo $counter; ?>
+                        <?php endif; ?>
+                    </td>
+                    <?php $rowTotal += $counter; ?>
+                <?php endforeach; ?>
+                <td><strong><?php echo $rowTotal; ?></strong></td>
+            </tr>
+        <?php endforeach; ?>
+    </tbody>
+</table>

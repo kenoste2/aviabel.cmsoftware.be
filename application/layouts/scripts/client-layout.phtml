@@ -1,0 +1,109 @@
+<!-- application/layouts/scripts/layout.phtml -->
+<?php echo $this->doctype() ?>
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title><?php echo $this->headerTitle ?></title>
+        <?php echo $this->headLink()->appendStylesheet(BASE_URL . 'css/global.css') ?>
+        <?php echo $this->headLink()->appendStylesheet(BASE_URL . 'css/start/jquery-ui-1.10.4.custom.css') ?>
+        <?php echo $this->headScript()->appendFile(BASE_URL . 'js/jquery-1.10.2.js') ?>
+        <?php echo $this->headScript()->appendFile(BASE_URL . 'js/jquery-ui-1.10.4.custom.js') ?>
+        <?php //echo $this->headScript()->appendFile(BASE_URL . 'js/jquery.tablesorter.js') ?>
+        <?php echo $this->headScript()->appendFile(BASE_URL . 'js/app.js') ?>
+        <style>
+            div#addButton{
+                position:absolute;
+                right: 5px;
+                z-index: 100;
+                top : 40px;
+            }     
+        </style>
+        <style type="text/css">
+            @media print {
+                .noprint { display: none; }
+            }
+        </style>
+        <style>
+            .ui-autocomplete-loading { background: white url('images/ui-anim_basic_16x16.gif') right center no-repeat; }
+        </style>
+    </head>
+    <body>
+        <div id="addButton"  class="noprint">
+            <?php if ($this->addButton) { ?><div onClick=location.href="<?php echo $this->Location() ?><?php echo $this->addButton ?>"  class="ui-state-default ui-corner-all" title="<?php $this->T("add_c") ?>"><span class="ui-icon ui-icon-plus"></span></div><?php } ?>
+            <?php if ($this->exportButton) { ?><div onClick=location.href="<?php echo $this->Location() ?>/export/csv" class="ui-state-default ui-corner-all" title="<?php $this->T("export_csv_c") ?>"><span class="ui-icon ui-icon-disk"></span></div><?php } ?>
+            <?php if ($this->printButton) { ?><div onClick="window.print()" class="ui-state-default ui-corner-all" title="<?php $this->T("print_content_c") ?>"><span class="ui-icon ui-icon-print"></span></div><?php } ?>
+        </div>        
+
+        <div id="content">
+            <script>
+                $(function() {
+                    $(".menu").menu({position: {my: "left top", at: "left-2"}});
+                });
+            </script>
+            <div class="title" style="text-align:center; width: 100%">
+                <?php if (!empty($this->client->NAME)) { ?>
+                <?php echo $this->client->NAME ?>
+                <?php } else { ?>
+                    <?php echo $this->T("new_client_c"); ?>
+                <?php } ?>
+            </div>
+
+
+            <div id="header" style="position: relative; width: 100%;" >
+                <div id="menu">
+                    <table>
+                        <tr>
+                            <td>
+                                <ul id="menu1" class="menu">
+                                    <li><a  href="<?php echo $this->location() ?>/client-detail/view/clientId/<?php echo $this->clientId ?>"><?php print $this->T("general_c") ?></a></li>
+                                </ul>
+                            </td>
+                            <?php if (!empty($this->showAllMenu)) { ?>
+                            <td>
+                                <ul id="menu2" class="menu">
+                                    <li><a href="<?php echo $this->location() ?>/client-invoice-params/view/clientId/<?php echo $this->clientId ?>"><?php print $this->T("invoice_parameters_c") ?></a></li>
+                                </ul>
+                            </td>
+                            <td>
+                                <ul id="menu4" class="menu">
+                                    <li><a href="<?php echo $this->location() ?>/client-costs/view/clientId/<?php echo $this->clientId ?>"><?php print $this->T("invoiceable_costs_c") ?></a></li>
+                                </ul>
+                            </td>
+                            <?php if ($this->viewInvoices) { ?>
+                            <td>
+                                <ul id="menu5" class="menu">
+                                    <li><a href="<?php echo $this->location() ?>/client-invoices/view/clientId/<?php echo $this->clientId ?>"><?php print $this->T("menu_invoices_c") ?></a></li>
+                                </ul>
+                            </td>
+                            <?php } ?>
+                            <td>
+                                <ul id="menu6" class="menu">
+                                    <li><a href="<?php echo $this->location() ?>/client-contacts/view/clientId/<?php echo $this->clientId ?>"><?php print $this->T("contacts_c") ?></a></li>
+                                </ul>
+                            </td>
+                            <?php } ?>
+                        </tr>
+                    </table>
+                </div>
+
+            </div>
+            <br><br>
+                    <div id="actioncontent">
+                        <?php echo $this->layout()->content ?>
+                    </div>
+                    <script>
+<?php
+if (!empty($this->errors)) {
+    foreach ($this->errors as $key => $error) {
+        if (!empty($error)) {
+            ?>
+                                    $("#<?php echo $key; ?>").addClass("errorfield");
+            <?php
+        }
+    }
+}
+?>
+                    </script>
+                    </div>
+                    </body>
+                    </html>

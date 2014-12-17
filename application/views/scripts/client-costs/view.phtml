@@ -1,0 +1,53 @@
+<div class="toggler noprint">
+    <div id="searchbox" class="ui-widget-content" style="width: 600px;">
+        <?php echo $this->costForm; ?>
+    </div>
+</div>
+<?php if (count($this->costs)): ?>
+    <h3><?php echo count($this->costs) ?> resultaten gevonden</h3>
+<?php endif; ?>
+<table id="data" class="tablesorter ws_data_table" width="100%">
+    <thead>
+    <tr>
+        <th><?php $this->T("created_c"); ?></th>
+        <th><?php $this->T("file_c"); ?></th>
+        <th><?php $this->T("Code_c"); ?></th>
+        <th><?php $this->T("Description_c"); ?></th>
+        <th><?php $this->T("amount_c"); ?></th>
+        <th><?php $this->T("Invoiceable_c"); ?></th>
+    </tr>
+    </thead>
+    <?php if (!empty($this->costs)) { ?>
+        <?php foreach ($this->costs as $row) { ?>
+            <?php
+            $description = str_replace(PHP_EOL, "<br>", $row->DESCRIPTION);
+            // voor speciale kosten(manuele) staat de beschrijving in het veld extra_info
+            if ($row->EXTRA_INFO != "") {
+                $description = str_replace(PHP_EOL, "<br>", $row->EXTRA_INFO);
+            }
+            ?>
+            <tr>
+                <td><?php echo $this->date($row->CREATION_DATE) ?></td>
+                <td><?php echo $row->FILE_NR ?></td>
+                <td><?php echo $row->CODE ?></td>
+                <td><?php echo $description ?></td>
+                <td><?php echo number_format($row->AMOUNT, '2', ',', '.') ?></td>
+                <td><input type="checkbox" <?php echo $row->INVOICEABLE == "1" ? 'checked="checked"' : '' ?> disabled="disabled"></td>
+
+            </tr>
+        <?php } ?>
+    <?php } else { ?>
+        <tr>
+            <td colspan="10" class="no_results">
+                <?php $this->T("no_results_c"); ?>
+            </td>
+        </tr>
+    <?php } ?>
+</table>
+
+<script>
+    $(function() {
+        $("#FROM_DATE").datepicker({dateFormat: 'dd/mm/yy'});
+        $("#UNTIL_DATE").datepicker({dateFormat: 'dd/mm/yy'});
+    });
+</script>

@@ -1,0 +1,75 @@
+<?php
+
+class Application_Form_SearchPayments extends Zend_Form
+{
+
+    public function init()
+    {
+
+        global $db;
+        $this->setMethod('post');
+        $functions = new Application_Model_CommonFunctions();
+
+        $this->addElement('text', 'STARTDATE', array('label' => $functions->T('aanmaakdatum_c'), 'size' => 20));
+        $this->addElement('text', 'ENDDATE', array('label' => $functions->T('tot_c'), 'size' => 20));
+        $this->addElement('text', 'CLIENT', array('label' => $functions->T('client_code_c'), 'size' => 20));
+        $this->addElement('radio', 'FOR', array('label' => $functions->T('voor_c'), 'MultiOptions' => $this->getFor($functions)));
+        $this->addElement('radio', 'COMMISSION', array('label' => $functions->T('with_commission_c'), 'MultiOptions' => $this->getCommissions($functions)));
+        $this->addElement('select', 'ACCOUNT_ID', array('label' => $functions->T('rekening_c'), 'MultiOptions' => $this->getAccounts($functions)));
+
+        $this->addElement('hidden', 'search_payment', array('value' => 1));
+
+
+        $this->addDisplayGroup(array('STARTDATE', 'CLIENT', 'COMMISSION', 'ACCOUNT_ID'), 'group1');
+        $this->getDisplayGroup('group1')->setDecorators(array(
+            'FormElements',
+            'Fieldset',
+            array('HtmlTag', array('tag' => 'div', 'style' => 'width:50%;float:left;'))
+        ));
+
+        $this->addDisplayGroup(array('ENDDATE', 'FOR'), 'group2');
+        $this->getDisplayGroup('group2')->setDecorators(array(
+            'FormElements',
+            'Fieldset',
+            array('HtmlTag', array('tag' => 'div', 'style' => 'width:50%;float:right;'))
+        ));
+
+        $this->addElement('submit', 'submit', array(
+            'ignore' => true,
+            'label' => $functions->T('search_c'),
+        ));
+
+        $this->getElement('STARTDATE')->setValue(date('01/m/Y'));
+        $this->getElement('ENDDATE')->setValue(date('d/m/Y'));
+        $this->getElement('COMMISSION')->setValue('-1');
+        $this->getElement('FOR')->setValue('-1');
+    }
+
+    protected function getFor(Application_Model_CommonFunctions $functions)
+    {
+        return array(
+            '-1'  => $functions->T('all_c'),
+            'A' => $functions->T('amounts_c'),
+            'C' => $functions->T('costs_c'),
+            'I' => $functions->T('intrests_c'),
+            '?' => $functions->T('unknown_c'),
+        );
+    }
+
+    protected function getCommissions(Application_Model_CommonFunctions $functions)
+    {
+        return array(
+            '-1'  => $functions->T('all_c'),
+            '1' => $functions->T('yes_c'),
+            '0' => $functions->T('no_c'),
+        );
+    }
+
+    protected function getAccounts(Application_Model_CommonFunctions $functions)
+    {
+        $accountModel = new Application_Model_Accounts();
+        return $functions->db2array($accountModel->getAccountsForSelect());
+    }
+
+}
+
