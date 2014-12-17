@@ -10,165 +10,32 @@ class PrintController extends BaseController
     public $extraSmall = 7;
     public $letterSettings = array();
 
-    public $pdf;
-
-
-    protected function _initPdf()
-    {
-        define('FPDF_FONTPATH', 'library/FPDF/font/');
-        require_once("library/MultiCellTag/class.multicelltag.php");
-        define('EURO', chr(128));
-
-        $printObj = new Application_Model_Print();
-
-        $this->pdf = new fpdf_multicelltag('P', 'mm', array(210, 304));
-        $this->pdf->AliasNbPages();
-        $this->pdf->Open();
-
-        $letterSettings = $printObj->getSettings();
-        $this->lettertype = $letterSettings['LETTERTYPE'];
-        $this->size = $letterSettings['SIZE'];
-        $this->sizeSmall = $letterSettings['SIZESMALL'];
-        $this->extraSmall = $letterSettings['SIZEEXTRASMALL'];
-
-        $this->pdf->SetTitle("CMS");
-        $this->pdf->SetMargins($letterSettings['MARGIN_LEFT'], $letterSettings['MARGIN_TOP'], $letterSettings['MARGIN_RIGHT']);
-        $this->pdf->SetTextColor(0, 0, 0);
-
-        $this->pdf->SetStyle("b", $this->lettertype, "B", $this->size, "0,0,0");
-        $this->pdf->SetStyle("B", $this->lettertype, "B", $this->size, "0,0,0");
-        $this->pdf->SetFont($this->lettertype, '', '10');
-    }
-
-    protected function _loadContentToPdf($fileActionId)
-    {
-        global $config;
-        $fileActionsObj = new Application_Model_FilesActions();
-        $templatesObj = new Application_Model_Templates();
-        $printObj = new Application_Model_Print();
-        $filesSObj = new Application_Model_File();
-
-        $letterSettings = $printObj->getSettings();
-
-        $fileId = $fileActionsObj->getActionField($fileActionId,'FILE_ID');
-        $templateId = $fileActionsObj->getActionField($fileActionId,'TEMPLATE_ID');
-        $clientId = $filesSObj->getClientId($fileId);
-
-        $lang = $printObj->getLang($fileId,$templateId);
-
-
-        $this->pdf->AddPage();
-        $this->pdf->SetTextColor(0, 0, 0);
-
-
-        $logoUrl = '././public/images/'.$letterSettings['LOGOFILE'].'_' . $clientId . '.jpg';
-        if (!file_exists($logoUrl)) {
-            $logoUrl = '././public/images/'.$letterSettings['LOGOFILE'].'_' . $lang . '.jpg';
-        }
-        if (!file_exists($logoUrl)) {
-            $logoUrl = '././public/images/'.$letterSettings['LOGOFILE'] . '.jpg';
-            if (!file_exists($logoUrl)) {
-                $logoUrl = "";
-            }
-        }
-
-
-        if (!empty($logoUrl)) {
-            $this->pdf->Image($logoUrl, $letterSettings['LOGO_X'], $letterSettings['LOGO_Y'], $letterSettings['LOGO_H']);
-        }
-
-        $imageUrl = '././public/images/'.$letterSettings['IMAGEFILE'].'_' . $lang . '.jpg';
-        if (!file_exists($imageUrl)) {
-            $imageUrl = '././public/images/'.$letterSettings['IMAGEFILE'] . '.jpg';
-            if (!file_exists($imageUrl)) {
-                $imageUrl = "";
-            }
-        }
-        if (!empty($imageUrl)) {
-            $this->pdf->Image($imageUrl, $letterSettings['IMAGE_X'], $letterSettings['IMAGE_Y'], $letterSettings['IMAGE_H']);
-        }
-
-        $destination = $fileActionsObj->getDestination($fileActionId);
-        if ($destination['VIA'] == "POST") {
-            $this->pdf->SetXY($letterSettings['ADDRESS_X'], $letterSettings['ADDRESS_Y']);
-            $this->pdf->MultiCellTag(90, $letterSettings['LINE_HEIGHT'], utf8_decode($destination['ADDRESS']), 0, 'L');
-        }
-
-        if ($destination['VIA'] == "EMAIL") {
-            $this->pdf->SetXY($letterSettings['ADDRESS_X'], $letterSettings['ADDRESS_Y']);
-            $date = $fileActionsObj->getActionField($fileActionId, 'ACTION_DATE');
-            $string = "<b>To: " . $destination['EMAIL'] . " \nOn: " . $this->functions->dateformat($date) . "</b>";
-            $this->pdf->MultiCellTag(90, $letterSettings['LINE_HEIGHT'], utf8_decode($string), 0, 'L');
-        }
-
-        $this->pdf->SetXY($letterSettings['MARGIN_LEFT'], $config->templateTextPosition);
-        $templateContent = $fileActionsObj->getTemplateContent($fileActionId);
-        $templateContent = str_replace("€", "EUR", $templateContent);
-        if ($config->decodeInPdf == 'Y') {
-            $templateContent = utf8_decode($templateContent);
-        }
-
-        $first = true;
-
-        if (stripos($templateContent, '<newpage>') !== false) {
-            $pieces = explode('<newpage>', $templateContent);
-            foreach ($pieces as $piece) {
-                if (!$first) {
-                    $this->pdf->AddPage();
-                    $this->pdf->SetTextColor(0, 0, 0);
-                    $this->pdf->SetXY($letterSettings['MARGIN_LEFT'], $config->templateTextPosition2nd);
-                }
-                $this->pdf->MultiCellTag(0, $letterSettings['LINE_HEIGHT'], $piece, 0, "J", 0, 0, 0, 0, 0);
-                if ($first) {
-                    $this->setSign();
-                    $this->setFooter($lang, $clientId);
-                    $first = false;
-                }
-            }
-        } else {
-            $this->pdf->MultiCellTag(0, $letterSettings['LINE_HEIGHT'], $templateContent, 0, "J", 0, 0, 0, 0, 0);
-            $this->setSign();
-            $this->setFooter($lang, $clientId);
-        }
-
-        $templateId = $fileActionsObj->getActionField($fileActionId, 'TEMPLATE_ID');
-        $templateModules = $templatesObj->getTemplateModules($templateId);
-
-        if (in_array('PaymentForm',$templateModules)) {
-            $this->loadPaymentForm($fileActionId);
-        }
-        if (in_array('Invoices',$templateModules)) {
-            $this->loadInvoices($fileActionId);
-        }
-
-
-    }
-
     public function templateAction()
     {
         global $config;
 
-        $this->_initPdf();
+        $interestCostsAccess = $this->moduleAccess('intrestCosts');
+        $pdfDoc = new Application_Model_PdfDocument($interestCostsAccess);
+        $pdfDoc->_initPdf();
 
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender();
 
         $fileActionId = $this->getParam('fileActionId');
-        $this->_loadContentToPdf($fileActionId);
+        $pdfDoc->_loadContentToPdf($fileActionId);
 
         $fileName = $config->rootFileActionDocuments . "/{$fileActionId}.pdf";
 
 
         if (!file_exists($fileName)) {
-            $this->pdf->Output($fileName);
-            $this->pdf->Output();
+            $pdfDoc->pdf->Output($fileName);
+            $pdfDoc->pdf->Output();
         } else {
             $this->getResponse()
-                ->setHeader('Content-Disposition', 'inline; filename='.$fileActionId.'.pdf')
+                ->setHeader('Content-Disposition', 'inline; filename=' . $fileActionId . '.pdf')
                 ->setHeader('Content-type', 'application/x-pdf');
             print file_get_contents($fileName);
         }
-
 
     }
 
@@ -183,10 +50,12 @@ class PrintController extends BaseController
 
         $toBePrinted = $fileActionsObj->getToBePrinted($templateId);
 
+        $interestCostsAccess = $this->moduleAccess('intrestCosts');
+        $pdfDoc = new Application_Model_PdfDocument($interestCostsAccess);
         if (!empty($toBePrinted)) {
-            $this->_initPdf();
+            $pdfDoc->_initPdf();
             foreach ($toBePrinted as $action) {
-                $this->_loadContentToPdf($action->FILE_ACTION_ID);
+                $pdfDoc->_loadContentToPdf($action->FILE_ACTION_ID);
                 /*
                  *  TODO This does not work
                  $url = "{$config->rootLocation}/print/template/fileActionId/{$action->FILE_ACTION_ID}";
@@ -195,10 +64,9 @@ class PrintController extends BaseController
                 */
             }
 
-            $this->pdf->Output();
+            $pdfDoc->pdf->Output();
         }
     }
-
 
     public function documentsAction()
     {
@@ -444,7 +312,4 @@ class PrintController extends BaseController
         }
         print $print->getTemplateContent($fileId, $templateId, $startDate, $nrOfPayments, $actionDate);
     }
-
-
 }
-

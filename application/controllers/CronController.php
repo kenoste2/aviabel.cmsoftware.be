@@ -7,6 +7,8 @@ class CronController extends BaseController
 
     public function trainAction()
     {
+        global $config;
+
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender();
 
@@ -42,7 +44,16 @@ class CronController extends BaseController
                 'CONTENT' => $content
             );
             /* 3. model Application_Model_FilesActions -> add */
-            $filesActions->add($action);
+            $fileActionId = $filesActions->add($action);
+
+            $interestCostsAccess = $this->moduleAccess('intrestCosts');
+            $pdfDoc = new Application_Model_PdfDocument($interestCostsAccess);
+            $pdfDoc->_initPdf();
+            $pdfDoc->_loadContentToPdf($fileActionId);
+            $fileName = $config->rootFileActionDocuments . "/{$fileActionId}.pdf";
+            if (!file_exists($fileName)) {
+                $pdfDoc->pdf->Output($fileName);
+            }
         }
 
         die("train has run");
