@@ -112,5 +112,5 @@ ADD CONSTRAINT FK_DSO_CLIENT
 FOREIGN KEY (CLIENT_ID) REFERENCES CLIENTS$CLIENTS;
 INSERT INTO TEKSTEN (CODE,NAV,NL,FR,EN,SETTINGS) VALUES ('not_due_c', 'all', 'Niet vervallen', 'Non-échu', 'Not due', 0);
 INSERT INTO TEKSTEN (CODE,NAV,NL,FR,EN,SETTINGS) VALUES ('past_due_c', 'all', 'Vervallen', 'Échu', 'Due', 0);
-ALTER TABLE FILES$DEBTORS ADD CREDIT_LIMIT DOM_MONEY#
-create index ix_debtor_credit_limit on FILES$DEBTORS computed by (CREDIT_LIMIT)#
+ALTER TABLE FILES$DEBTORS ADD CREDIT_LIMIT DOM_MONEY;
+create index ix_debtor_credit_limit on FILES$DEBTORS computed by (CREDIT_LIMIT);
