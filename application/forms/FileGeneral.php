@@ -68,9 +68,10 @@ class Application_Form_FileGeneral extends Zend_Form
             'label' => $functions->T('close_state_c'),
             'MultiOptions' => $functions->db2array($closeStates, false),
         ));
+        $helper = new Application_Form_FormHelper();
         $this->addElement('note', 'CLIENT_NAME', array('label' => $functions->T('client_c'), 'size' => 15, 'disabled' => true));
         $this->addElement('text', 'VERJARING', array('label' => $functions->T('verjaring_c'), 'size' => 15));
-        $this->addElement('text', 'INCASSOKOST', array('label' => $functions->T('incasso_kost_c'), 'size' => 15, 'required' => true, 'validators' => array('float')));
+        $this->addElement('text', 'INCASSOKOST', array('label' => $functions->T('incasso_kost_c'), 'size' => 15, 'required' => true, 'validators' => array($helper->getFloatValidator())));
 
         $collectorObj = new Application_Model_Collectors();
         $this->addElement('radio', 'COLLECTOR_ID', array(
