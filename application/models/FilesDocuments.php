@@ -11,7 +11,7 @@ class Application_Model_FilesDocuments extends Application_Model_Base {
 
         $file_nr = $this->db->get_var("SELECT FILE_NR FROM FILES\$FILES WHERE FILE_ID={$document->FILE_ID}");
 
-        $filelink = $config->rootFileDocuments . '/' . $file_nr . '_' . $document->FILE_DOCUMENTS_ID . '_' . $document->FILENAME;
+        $filelink = $config->rootFileDocuments . '/' . $document->FILENAME;
 
         if (file_exists($filelink)) {
             unlink($filelink);
@@ -49,8 +49,11 @@ class Application_Model_FilesDocuments extends Application_Model_Base {
                 $extension = $matches[2];
             }
 
-            $filename = $config->rootFileDocuments . '/' . $file_nr . '_' . $last_id . '.' . $extension;
-            $filenameUrl = $file_nr . '_' . $last_id . '.' . $extension;
+
+            $rand = rand(0,99999);
+
+            $filename = $config->rootFileDocuments . '/' . $file_nr . '_' . $last_id . $rand . '.' . $extension;
+            $filenameUrl = $file_nr . '_' . $last_id . $rand . '.' . $extension;
 
             if (copy($info[$userfile]['tmp_name'], $filename)) {
                 unlink($info[$userfile]['tmp_name']);
@@ -73,6 +76,13 @@ class Application_Model_FilesDocuments extends Application_Model_Base {
             }
         }
     }
+
+    public function getDocumentsFromFile($fileId) {
+        $sql = "SELECT * FROM FILE_DOCUMENTS WHERE FILE_ID={$fileId} ORDER BY FILENAME";
+        $results = $this->db->get_results($sql);
+        return $results;
+    }
+
 
 }
 

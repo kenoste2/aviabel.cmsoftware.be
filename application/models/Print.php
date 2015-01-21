@@ -29,6 +29,7 @@ class Application_Model_Print extends Application_Model_Base
         $prevActions = $templateContentObj->getPrevActionsDates($text, $fileId);
         $invoices = $templateContentObj->getInvoices($fileId,$lang);
         $invoicesDetailed = $templateContentObj->getInvoicesDetail($fileId,$lang);
+        $fileDocuments = $templateContentObj->getDocuments($fileId);
         $rpv = $templateContentObj->getRPV($fileId);
 
 
@@ -51,7 +52,7 @@ class Application_Model_Print extends Application_Model_Base
 
         $fields = array_merge($fileFields,$clientFields,$dateFields
             ,$ppFields,$actionDateField,$prevActions,$inlineFooter
-            ,$invoices,$invoicesDetailed,$rpv);
+            ,$invoices,$invoicesDetailed,$rpv,$fileDocuments);
         $newText = $this->replaceFields($fields, $text);
 
         $result['CONTENT'] = $newText;

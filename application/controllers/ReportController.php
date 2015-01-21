@@ -94,14 +94,33 @@ class ReportController extends BaseController
     public function doubtfullDebtsAction()
     {
         $this->view->exportButton = true;
+        $this->view->addButton = "/report/doubtfull-debts-detail";
+
 
         $obj = new Application_Model_DoubtfullDebts();
         $results  = $obj->getDueClientFileList();
         $this->view->results = $results;
 
-        $this->export->sql = $obj->getDueClientInvoicesSql();
+        $this->export->sql = $obj->getDueClientFileSql();
 
     }
+
+    public function doubtfullDebtsDetailAction()
+    {
+        $this->_helper->layout->disableLayout();
+        $fileName = "export_doubtfullDebts".rand(0,999999).".xls";
+
+        header('Content-type: application/octet-stream');
+        header('Content-Disposition: attachment; filename="' . $fileName . '"');
+
+
+        $obj = new Application_Model_DoubtfullDebts();
+
+        $sql = $obj->getDueClientInvoicesSql();
+        $results = $this->db->get_results($sql);
+        $this->view->results = $results;
+    }
+
 
     public function clientHistoryAction()
     {

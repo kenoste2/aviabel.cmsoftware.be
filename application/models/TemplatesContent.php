@@ -71,6 +71,25 @@ class Application_Model_TemplatesContent extends Application_Model_Base
         );
     }
 
+    public function getDocuments($fileId)
+    {
+
+        global $config;
+
+        $fileDocumentsObj = new Application_Model_FilesDocuments();
+        $documents = $fileDocumentsObj->getDocumentsFromFile($fileId);
+        if (!empty($documents)) {
+            $text = "";
+            foreach ($documents as $document) {
+                $text .= "\n". $document->DESCRIPTION . ": " . $config->rootLocation . $config->MapFileDocuments."/". $document->FILENAME;
+            }
+        }
+        return array(
+            'DOCUMENTS' => $text,
+        );
+    }
+
+
     public function getInvoicesDetail($fileId,$lang)
     {
         $costs_c = $this->functions->T("costs_c",$lang);

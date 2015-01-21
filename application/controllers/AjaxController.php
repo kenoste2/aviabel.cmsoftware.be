@@ -67,7 +67,7 @@ class AjaxController extends BaseController
         $term = trim(strtoupper($this->getParam('term')));
         $sql = "SELECT FIRST 100 ACTION_ID,CODE,DESCRIPTION
             FROM FILES\$ACTIONS
-            WHERE CODE CONTAINING '{$term}' OR DESCRIPTION CONTAINING '{$term}' ORDER BY DESCRIPTION";
+            WHERE (CODE CONTAINING '{$term}' OR DESCRIPTION CONTAINING '{$term}') AND ACTIEF = 1 ORDER BY DESCRIPTION";
         $array = array();
         $results = $this->db->get_results($sql);
         if ($results) {
