@@ -139,9 +139,6 @@ class CronController extends BaseController
         die ("imported");
     }
 
-
-
-
     public function commissionAction()
     {
         $this->_helper->layout->disableLayout();
@@ -150,6 +147,66 @@ class CronController extends BaseController
         $obj = new Application_Model_CalculateCommission();
         $obj->getList();
         die("commissions");
+    }
+
+    public function fetchMailsAction()
+    {
+        $this->_helper->layout->disableLayout();
+        $this->_helper->viewRenderer->setNoRender();
+        $this->saveMailsFromMailbox();
+        die("mails fetched");
+    }
+
+    private function saveMailsFromMailbox()
+    {
+        $obj = new Application_Model_MailFetch();
+        $mails = $obj->getInbox();
+
+        $remarksObj = new Application_Model_FilesRemarks();
+        $filesObj = new Application_Model_File();
+
+        if (!empty($mails)) {
+            foreach ($mails as $mail) {
+                $this->handleMail($mail, $remarksObj);
+            }
+        }
+    }
+
+    /**
+     * @param $mail
+     * @param $remarksObj
+     */
+    private function handleMail($mail, $remarksObj)
+    {
+        $importedMails = new Application_Model_ImportedMails();
+        $matches = array();
+        $match = preg_match("/#.*#/", $mail['subject'], $matches);
+        if ($match) {
+            var_dump($mail);
+            $filenr = substr($matches[0], 1, -1);
+            $fileId = $this->db->get_var("SELECT FILE_ID FROM FILES\$FILES WHERE FILE_NR = '{$filenr}'");
+            if ($fileId) {
+
+                $mail['from'] = str_replace("<", "(", $mail['from']);
+                $mail['from'] = str_replace(">", ")", $mail['from']);
+                $mail['subject'] = str_replace("#", " ", $mail['subject']);
+                $remark = "{$mail['subject']} --- From : {$mail['from']}";
+                $remark = str_replace("\"", "`", $remark);
+
+                $remark = utf8_encode($remark);
+
+                $data = array(
+                    'FILE_ID' => $fileId,
+                    'CREATION_DATE' => $mail['date'],
+                    'FROM_EMAIL' => $mail['from'],
+                    'TO_EMAIL' => $mail['to'],
+                    'MAIL_BODY' => $mail['plainContent'],
+                    'MAIL_SUBJECT' => $mail['subject'],
+                );
+                var_dump($mail);
+                $importedMails->add($data);
+            }
+        }
     }
 }
 
