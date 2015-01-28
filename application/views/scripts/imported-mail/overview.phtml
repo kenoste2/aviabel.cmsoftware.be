@@ -1,9 +1,11 @@
 <?php  echo $this->form ?>
 
 <?php if(count($this->mails) > 0) { ?>
-<table class="ws_data_table">
+<table class="ws_data_table" width="100%">
     <thead>
         <tr>
+            <th><?php echo $this->T('referenceclient_c') ?></th>
+            <th><?php echo $this->T('debtor_c') ?></th>
             <th><?php echo $this->T('mail_from_c') ?></th>
             <th><?php echo $this->T('mail_to_c') ?></th>
             <th><?php echo $this->T('creation_date_c') ?></th>
@@ -14,11 +16,13 @@
     <tbody>
         <?php foreach($this->mails as $mail) { ?>
         <tr>
+            <td><?php echo $mail->REFERENCE ?></td>
+            <td><?php echo $mail->CLIENT_NAME ?></td>
             <td><?php echo $mail->FROM_EMAIL ?></td>
             <td><?php echo $mail->TO_EMAIL ?></td>
             <td><?php echo $mail->CREATION_DATE ?></td>
             <td><?php echo $mail->MAIL_SUBJECT ?></td>
-            <td><span title="<?php $this->T("view_file_c") ?>" onclick="newscreen('<?php echo $mail->FILE_NR ?>', '<?php echo $this->pageRootUrl ?>/file-detail/view/fileId/<?php echo $mail->FILE_ID ?>')" class="ui-icon ui-icon-zoomin"></span> </td>
+            <td><span title="<?php $this->T("view_file_c") ?>" onclick="newscreen('<?php echo $mail->FILE_NR ?>', '<?php echo $this->pageRootUrl ?>/file-imported-mails/view/fileId/<?php echo $mail->FILE_ID ?>')" class="ui-icon ui-icon-zoomin"></span> </td>
         </tr>
         <?php } ?>
     </tbody>
