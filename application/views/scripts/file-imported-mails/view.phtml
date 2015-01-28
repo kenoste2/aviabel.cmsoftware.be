@@ -1,0 +1,53 @@
+<?php
+function formatDate($dateStr) {
+    if($dateStr) {
+        $dateTime = DateTime::createFromFormat('Y-m-d H:i:s', $dateStr);
+        if($dateTime) {
+            return $dateTime->format('d-m-Y H:i');
+        }
+    }
+    return '';
+}
+
+if(count($this->importedMails) > 0) {
+    foreach($this->importedMails as $importedMail) {
+        ?>
+        <div data-item="mail" class="collapsablePanel">
+            <div class="header">
+                <table>
+                    <tbody>
+                    <tr>
+                        <th colspan="4"><?php echo formatDate($importedMail->CREATION_DATE) ?> : <?php echo $importedMail->MAIL_SUBJECT ?></th>
+                    </tr>
+                    <tr>
+                        <th><?php $this->T('mail_from_c') ?>:</th><td><?php echo $importedMail->FROM_EMAIL ?></td>
+                        <th><?php $this->T('mail_to_c') ?>:</th><td><?php echo $importedMail->TO_EMAIL ?></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="body">
+                <?php echo preg_replace("/\n/",'</br>', $importedMail->MAIL_BODY) ?>
+            </div>
+        </div>
+    <?php
+    }
+} else { ?>
+    <div><?php $this->T('no_mails_found_c') ?></div>
+<?php }
+?>
+<script type="text/javascript">
+    var ImportedMail = {
+        MailItem : function(element) {
+            var mailContent = element.find('> div.body');
+            mailContent.hide();
+            element.find('> div.header').click(function() {
+                mailContent.slideToggle();
+            });
+        },
+        init : function() {
+            $("[data-item=mail]").each(function() { new ImportedMail.MailItem($(this)); })
+        }
+    };
+    $(document).ready(ImportedMail.init);
+</script>

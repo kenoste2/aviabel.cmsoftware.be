@@ -168,8 +168,11 @@ class Application_Model_FilesActions extends Application_Model_Base
             if (empty($subject)) {
                 $subject = "";
             }
-            $mail = new Application_Model_Mail();
+            $fileObj = new Application_Model_File();
+            $fileNr = $fileObj->getFileField($data['FILE_ID'], 'FILE_NR');
+            $subject .= " #{$fileNr}#";
 
+            $mail = new Application_Model_Mail();
             $mail->sendMail($data['E_MAIL'],$subject,$data['CONTENT'],false,false);
         }
 

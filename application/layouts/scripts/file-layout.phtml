@@ -44,7 +44,7 @@
                 <table width="100%" align="center">
                     <tr>
                         <td align="left"><?php if ($this->indexes['prevIndex'] != '') { ?><a href="<?php echo $this->location() ?>/file-detail/view/index/<?php echo $this->indexes['prevIndex'] ?>"> <span title ="<?php $this->T("view_file_c") ?>" class="ui-icon ui-icon-seek-prev"></span></a> <?php } ?></td>
-                        <td align="center" class="title"><?php echo $this->file->REFERENCE ?> - <?php echo $this->file->DEBTOR_NAME ?></td>
+                        <td align="center" class="title"><?php print $this->T("file_c") ?> : <?php echo $this->file->FILE_NR ?> - <?php echo $this->file->DEBTOR_NAME ?></td>
                         <td align="right"><?php if ($this->indexes['nextIndex'] != '') { ?><a href="<?php echo $this->location() ?>/file-detail/view/index/<?php echo $this->indexes['nextIndex'] ?>"> <span title ="<?php $this->T("view_file_c") ?>" class="ui-icon ui-icon-seek-next"></span></a><?php } ?></td>
                     </tr>
                 </table>
@@ -82,17 +82,22 @@
                                         <li><a href="<?php echo $this->location() ?>/file-remarks/view/index/<?php echo $this->index ?>"><?php print $this->T("remarks_c") ?></a></li>
                                     </ul>
                                 </td>
+                                <td>
+                                    <ul id="menu8" class="menu">
+                                        <li><a href="<?php echo $this->location() ?>/file-imported-mails/view/index/<?php echo $this->index ?>"><?php print $this->T("imported_mails_c") ?></a></li>
+                                    </ul>
+                                </td>
                             <?php } ?>
                             <?php if ($this->showFileTodos === true) { ?> 
                                 <td>
-                                    <ul id="menu8" class="menu">
+                                    <ul id="menu9" class="menu">
                                         <li><a href="<?php echo $this->location() ?>/file-todos/view/index/<?php echo $this->index ?>"><?php print $this->T("todos_c") ?></a></li>
                                     </ul>
                                 </td>
                             <?php } ?>
                             <?php if ($this->showFileCosts === true) { ?> 
                                 <td>
-                                    <ul id="menu9" class="menu">
+                                    <ul id="menu10" class="menu">
                                         <li><a href="<?php echo $this->location() ?>/file-costs/view/index/<?php echo $this->index ?>"><?php print $this->T("costs_c") ?></a></li>
                                     </ul>
                                 </td>
