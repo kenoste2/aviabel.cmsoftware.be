@@ -14,8 +14,8 @@ class Application_Model_Base {
         $this->online_user = $authNamespace->online_user;
     }
 
-    public function addData($tableName, $data, $returnField = false) {
-        return $this->functions->saveData($tableName, $data, false , $returnField);
+    public function addData($tableName, $data, $returnField = false, $escapeSql = false) {
+        return $this->functions->saveData($tableName, $data, false , $returnField, $escapeSql);
     }
 
     public function saveData($tableName, $data, $where = false) {

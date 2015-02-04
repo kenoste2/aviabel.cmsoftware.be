@@ -271,6 +271,10 @@ input {
     border-radius: 5px;
 }
 
+.collapsablePanel > div.header th {
+    text-align: left;
+}
+
 .collapsablePanel td {
     padding: 5px 10px;
 }

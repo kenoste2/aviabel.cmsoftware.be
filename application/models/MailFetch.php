@@ -112,11 +112,11 @@ class Application_Model_MailFetch extends Application_Model_Base
 
                 $references = (preg_match('|< (.*?)>|', $references, $regs)) ? $regs[1] : $references;
 
-                $from = $message->from;
+                $from = utf8_encode($message->from);
 
-                $subject = $message->subject;
+                $subject = utf8_encode($message->subject);
 
-                $to = $message->to;
+                $to = utf8_encode($message->to);
 
                 $plainContent = null;
 
@@ -159,19 +159,24 @@ class Application_Model_MailFetch extends Application_Model_Base
 
                                 default: //attachment handle
 
-                                    /*$type = strtok($part->contentType, ';');
+                                    $type = strtok($part->contentType, ';');
 
-                                    $fileName = $part->getHeader('content-description');
+                                    $fileNameHeader = $part->getHeader('content-disposition');
+                                    $fileNameMatches = array();
+                                    preg_match("/filename=\"?(.+?)\"?$/", $fileNameHeader, $fileNameMatches);
 
+                                    $fileName = $fileNameHeader;
+                                    if(count($fileNameMatches) > 1) {
+                                        $fileName = $fileNameMatches[1];
+                                    }
                                     $attachment = $this->_contentDecoder($part->getHeader('content-transfer-encoding'), $part->getContent());
 
                                     $attachments[] = array(
-                                        'file_name' => $fileName,
-                                        'type' => $type,
-                                        'content' => $attachment);
-                                    */
+                                         'file_name' => $fileName,
+                                         'type' => $type,
+                                         'content' => $attachment);
 
-                                    break;
+                                     break;
                             }
                         } catch (Zend_Mail_Exception $e) {
 

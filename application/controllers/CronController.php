@@ -163,7 +163,6 @@ class CronController extends BaseController
         $mails = $obj->getInbox();
 
         $remarksObj = new Application_Model_FilesRemarks();
-        $filesObj = new Application_Model_File();
 
         if (!empty($mails)) {
             foreach ($mails as $mail) {
@@ -178,13 +177,16 @@ class CronController extends BaseController
      */
     private function handleMail($mail, $remarksObj)
     {
+        global $config;
         $importedMails = new Application_Model_ImportedMails();
         $matches = array();
-        $match = preg_match("/#.*#/", $mail['subject'], $matches);
+        $match = preg_match("/#(.+?)-(.+?)#/", $mail['subject'], $matches);
         if ($match) {
-            var_dump($mail);
-            $filenr = substr($matches[0], 1, -1);
-            $fileId = $this->db->get_var("SELECT FILE_ID FROM FILES\$FILES WHERE FILE_NR = '{$filenr}'");
+            $clientCode = $matches[1];
+            $reference = $matches[2];
+            $escClientCode = $this->db->escape($clientCode);
+            $escReference = $this->db->escape($reference);
+            $fileId = $this->db->get_var("SELECT FILE_ID FROM FILES\$FILES_ALL_INFO WHERE CLIENT_CODE = '{$escClientCode}' AND REFERENCE = '{$escReference}'");
             if ($fileId) {
 
                 $mail['from'] = str_replace("<", "(", $mail['from']);
@@ -201,10 +203,35 @@ class CronController extends BaseController
                     'FROM_EMAIL' => $mail['from'],
                     'TO_EMAIL' => $mail['to'],
                     'MAIL_BODY' => $mail['plainContent'],
-                    'MAIL_SUBJECT' => $mail['subject'],
+                    'MAIL_SUBJECT' => $mail['subject']
                 );
-                var_dump($mail);
-                $importedMails->add($data);
+
+
+                $importedMailId = $importedMails->add($data);
+
+                if(count($mail['attachments']) > 0) {
+
+                    foreach($mail['attachments'] as $attachment) {
+
+                        $splitName = pathinfo($attachment['file_name']);
+                        $now = new DateTime();
+                        $nowStr = $now->format('Y-m-d-H-i-s');
+
+                        $serverFileName = "{$splitName['filename']}_{$nowStr}.{$splitName['extension']}";
+                        $filePath = "{$config->rootMailAttachmentsDocuments}/{$serverFileName}";
+                        $fileSystem = new Application_Model_FileSystem();
+                        $fileSystem->createFileFromContent($filePath, $attachment['content']);
+
+                        $attachmentData = array(
+                                'IMPORTED_MAIL_ID' => $importedMailId,
+                                'ORIGINAL_FILENAME' => $attachment['file_name'],
+                                'SERVER_FILENAME' => $serverFileName,
+                                'MIME_TYPE' => $attachment['type'],
+                                'CREATION_DATE' => $mail['date']
+                                );
+                        $importedMails->addAttachment($attachmentData);
+                    }
+                }
             }
         }
     }

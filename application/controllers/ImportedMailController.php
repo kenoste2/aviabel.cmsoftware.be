@@ -19,8 +19,26 @@ class ImportedMailController extends BaseController {
 
         $this->view->pageRootUrl = $config->rootLocation;
         $this->view->form = $form;
+    }
 
+    public function downloadAttachmentAction() {
+        global $config;
 
+        $id = $this->getParam('index');
+        $importedMails = new Application_Model_ImportedMails();
+        $attachment = $importedMails->retrieveAttachmentById($id);
+        if($attachment) {
+            header("Content-Type: {$attachment->MIME_TYPE}");
+            header("Content-Disposition: attachment; filename=\"{$attachment->ORIGINAL_FILENAME}\"");
+            $filePath = "{$config->rootMailAttachmentsDocuments}/{$attachment->SERVER_FILENAME}";
+            readfile($filePath);
+        } else {
+            die('No file found');
+        }
+
+        // disable layout and view
+        $this->view->layout()->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
     }
 
     /**

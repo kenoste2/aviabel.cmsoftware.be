@@ -17,17 +17,32 @@ if(count($this->importedMails) > 0) {
                 <table>
                     <tbody>
                     <tr>
-                        <th colspan="4"><?php echo formatDate($importedMail->CREATION_DATE) ?> : <?php echo $importedMail->MAIL_SUBJECT ?></th>
+                        <th colspan="4"><?php echo formatDate($importedMail['CREATION_DATE']) ?> : <?php echo $importedMail['MAIL_SUBJECT'] ?></th>
                     </tr>
                     <tr>
-                        <th><?php $this->T('mail_from_c') ?>:</th><td><?php echo $importedMail->FROM_EMAIL ?></td>
-                        <th><?php $this->T('mail_to_c') ?>:</th><td><?php echo $importedMail->TO_EMAIL ?></td>
+                        <th><?php $this->T('mail_from_c') ?>:</th><td><?php echo $importedMail['FROM_EMAIL'] ?></td>
+                        <th><?php $this->T('mail_to_c') ?>:</th><td><?php echo $importedMail['TO_EMAIL'] ?></td>
                     </tr>
                     </tbody>
                 </table>
             </div>
             <div class="body">
-                <?php echo preg_replace("/\n/",'</br>', $importedMail->MAIL_BODY) ?>
+                <table width="100%">
+                    <tbody>
+                        <tr>
+                            <td width="70%"><?php echo preg_replace("/\n/",'</br>', $importedMail['MAIL_BODY']) ?></td>
+                            <td width="30%">
+                                <h3><? echo $this->T('attachments_c') ?></h3>
+                                <?php if(count($importedMail['attachments']) > 0) {
+                                    foreach($importedMail['attachments'] as $attachment) { ?>
+                                        <div><a href="<?php echo $this->pageRootUrl ?>/imported-mail/download-attachment/index/<?php echo $attachment->IMPORTED_MAIL_ATTACHMENT_ID ?>"><?php echo $attachment->ORIGINAL_FILENAME ?></a></div>
+                                    <?php }
+                                } ?>
+                            </td>
+                        </tr>
+
+                    </tbody>
+                </table>
             </div>
         </div>
     <?php

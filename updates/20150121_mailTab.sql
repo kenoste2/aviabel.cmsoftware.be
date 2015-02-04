@@ -8,6 +8,14 @@ CREATE TABLE IMPORTED_MAILS (
   MAIL_SUBJECT varchar(3000)
 );
 
+CREATE TABLE IMPORTED_MAIL_ATTACHMENTS (
+   IMPORTED_MAIL_ATTACHMENT_ID int not null primary key,
+   IMPORTED_MAIL_ID int not null references IMPORTED_MAILS,
+   ORIGINAL_FILENAME varchar(300),
+   SERVER_FILENAME varchar(300),
+   MIME_TYPE varchar(100),
+   CREATION_DATE timestamp
+);
 
 INSERT INTO TEKSTEN (CODE,NAV,NL,FR,EN,SETTINGS) VALUES ('mail_from_c','all','Van','De','From',0);
 INSERT INTO TEKSTEN (CODE,NAV,NL,FR,EN,SETTINGS) VALUES ('mail_to_c','all','Aan','À','To',0);
@@ -17,3 +25,4 @@ INSERT INTO TEKSTEN (CODE,NAV,NL,FR,EN,SETTINGS) VALUES ('mail_subject_c','all',
 INSERT INTO TEKSTEN (CODE,NAV,NL,FR,EN,SETTINGS) VALUES ('menu_imported-mail_overview','all','E-mails','Emails','Emails',0);
 INSERT INTO TEKSTEN (CODE,NAV,NL,FR,EN,SETTINGS) VALUES ('date_from_c','all','van','de','from',0);
 INSERT INTO TEKSTEN (CODE,NAV,NL,FR,EN,SETTINGS) VALUES ('date_till_c','all','tot', 'à','until',0);
+INSERT INTO TEKSTEN (CODE,NAV,NL,FR,EN,SETTINGS) VALUES ('attachments_c','all','Bijlagen', 'Fichiers joints','Attachments',0);
