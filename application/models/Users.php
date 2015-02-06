@@ -58,6 +58,8 @@ class Application_Model_Users extends Application_Model_Base {
             $data['PASS'] = sha1($data['PASS']);
         }
 
+
+
         $userRights = array();
         if (isset($data['USER_RIGHTS'])) {
             $userRights = $data['USER_RIGHTS'];
@@ -71,6 +73,8 @@ class Application_Model_Users extends Application_Model_Base {
             unset($data['COLLECTOR_ID']);
         }
 
+        print "<pre>";
+        print_r($data);
 
         unset($data['USER_RIGHTS']);
         $this->saveData("SYSTEM\$USERS", $data, 'USER_ID = ' . $id);

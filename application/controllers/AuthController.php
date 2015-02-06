@@ -25,7 +25,7 @@ class AuthController extends Zend_Controller_Action {
             $adapter = new Application_Model_AuthAdapterDbTable();
 
             $adapter->setIdentity($loginForm->getValue('username'));
-            $adapter->setCredential(md5($loginForm->getValue('password')));
+            $adapter->setCredential(sha1($loginForm->getValue('password')));
 
             $result = $adapter->authenticate();
 

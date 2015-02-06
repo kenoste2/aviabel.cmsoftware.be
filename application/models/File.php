@@ -127,7 +127,6 @@ class Application_Model_File extends Application_Model_Base {
                     $sql = str_replace("and F.ACTION_DATE=CURRENT_DATE-{$train_modules->DAYS}", "",$sql);
                     $sql = str_replace("and CREATION_DATE>CURRENT_DATE-{$train_modules->DAYS}", "",$sql);
                     $sql = str_replace("I.LAST_ACTION_DATE=CURRENT_DATE-{$train_modules->DAYS}", "1=1",$sql);
-                    $sql .= " AND CLIENT_ID IN (SELECT CLIENT_ID FROM CLIENTS\$CLIENTS WHERE TRAIN_TYPE = '{$train_modules->TRAIN_TYPE}')";
 
                     if ($this->db->get_var($sql)  AND empty($result)) {
                         $nextDate = date("Y-m-d", strtotime($lastActionDate . " 00:00:00") + (86400 * $train_modules->DAYS));
