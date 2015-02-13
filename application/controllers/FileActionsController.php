@@ -78,7 +78,7 @@ class FileActionsController extends BaseFileController
 
 
 
-                $update['CONTENT'] = utf8_decode($update['CONTENT']);
+                //$update['CONTENT'] = utf8_decode($update['CONTENT']);
 
                 $actionId = $obj->add($update);
 

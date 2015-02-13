@@ -75,6 +75,7 @@ class Application_Model_Train extends Application_Model_Base
 
         $rootSql = str_replace("`","'",$rootSql);
 
+            print "<br>".$rootSql;
 
         return $rootSql;
     }
@@ -90,6 +91,8 @@ class Application_Model_Train extends Application_Model_Base
 
         $sql = str_replace("-$row->DAYS", $days, $sql);
         $sql = str_replace("`","'",$sql);
+
+        print $sql;
 
 
         return $this->db->get_results($sql);

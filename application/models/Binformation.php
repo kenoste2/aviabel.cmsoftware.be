@@ -16,28 +16,28 @@ class Application_Model_Binformation extends Application_Model_Base
         $vat = str_replace(" ", "", $vat);
         $vat = str_replace(".", "", $vat);
         $vat = str_replace("BE", "", $vat);
+        $vat = str_replace("NL", "", $vat);
 
         //print "<pre>";
         //print_r($client->GetDemoCompanies(array('CountryCode' => 'BE')));
         //die();
-
-        $result = $client->Search(array('NationalNumber' => $vat, 'CountryCode' => 'BE'));
-        if (!empty($result)) {
-            try {
-                $report = $client->OrderReport(array('ReportName' => 'C-ONLINE', 'ReportLanguage' => $lang, 'CompanyId' => $result->Companies->Company->CompanyId));
-            } catch (Exception $e) {
-                return false;
+        try {
+            $result = $client->Search(array('NationalNumber' => $vat, 'CountryCode' => 'BE'));
+            if (!empty($result)) {
+                    $report = $client->OrderReport(array('ReportName' => 'C-ONLINE', 'ReportLanguage' => $lang, 'CompanyId' => $result->Companies->Company->CompanyId));
+                $xml = $report->ReportContent;
+                $data = array(
+                    'COMPANYID' => $result->Companies->Company->CompanyId,
+                    'NAME' => $result->Companies->Company->Name,
+                    'STREET' => $result->Companies->Company->Address->Street,
+                    'ZIPCODE' => $result->Companies->Company->Address->PostalCode,
+                    'CITY' => $result->Companies->Company->Address->Locality,
+                    'ACTIVE' => $result->Companies->Company->Active,
+                    'XML' => $xml,
+                );
             }
-            $xml = $report->ReportContent;
-            $data = array(
-                'COMPANYID' => $result->Companies->Company->CompanyId,
-                'NAME' => $result->Companies->Company->Name,
-                'STREET' => $result->Companies->Company->Address->Street,
-                'ZIPCODE' => $result->Companies->Company->Address->PostalCode,
-                'CITY' => $result->Companies->Company->Address->Locality,
-                'ACTIVE' => $result->Companies->Company->Active,
-                'XML' => $xml,
-            );
+        } catch (Exception $e) {
+            return false;
         }
             return $data;
     }

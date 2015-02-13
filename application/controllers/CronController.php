@@ -42,6 +42,8 @@ class CronController extends BaseController
                 'CONTENT' => $content
             );
             /* 3. model Application_Model_FilesActions -> add */
+            print "<pre>";
+            print_r($action);
             $filesActions->add($action);
         }
 

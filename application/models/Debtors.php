@@ -9,18 +9,26 @@ class Application_Model_Debtors extends Application_Model_Base {
 
         $zipCodeId = $zipCodesModel->CheckOrCreate($data);
 
-        $birthDay = (!empty($data['BIRTH_DAY'])) ? "'{$data['BIRTH_DAY']}'" : 'null';
+        $createData = array(
+            'NAME' => $data['NAME'],
+            'ADDRESS' => $data['ADDRESS'],
+            'ZIP_CODE_ID' => $zipCodeId,
+            'LANGUAGE_ID' => $data['LANGUAGE_ID'],
+            'E_MAIL' => $data['E_MAIL'],
+            'TELEPHONE' => $data['TELEPHONE'],
+            'TELEFAX' => $data['TELEFAX'],
+            'VATNR' => $data['VATNR'],
+            'CREATION_DATE' => date("Y-m-d"),
+            'CREATION_USER' => $this->online_user,
+            'PASS' => '',
+        );
 
+        if (!empty($data['BIRTH_DAY'])) {
+            $createData['BIRTH_DAY'] = $data['BIRTH_DAY'];
+        }
 
-        $sql = "insert into FILES\$DEBTORS 
-            (NAME,ADDRESS,ZIP_CODE_ID,LANGUAGE_ID,E_MAIL,TELEPHONE,TELEFAX,VATNR,CREATION_DATE,CREATION_USER,TRAIN_TYPE,PASS)
-            values ('{$data['NAME']}','{$data['ADDRESS']}',{$zipCodeId},'{$data['LANGUAGE_ID']}'
-                ,'{$data['E_MAIL']}','{$data['TELEPHONE']}','{$data['TELEFAX']}'
-                ,'{$data['VATNR']}',CURRENT_DATE,'{$this->online_user}','{$data['TRAIN_TYPE']}','')
-            RETURNING DEBTOR_ID";
-        $debtorId = $this->db->get_var($sql);
-        return $debtorId;
-    }
+        $debtorId = $this->addData('FILES$DEBTORS',$createData,'DEBTOR_ID');
+        return $debtorId;    }
 
     public function add($data)
     {
@@ -54,6 +62,7 @@ class Application_Model_Debtors extends Application_Model_Base {
                 TELEFAX =  '{$data['TELEFAX']}',
                 GSM =  '{$data['GSM']}',    
                 VATNR= '{$data['VATNR']}',
+                EXTRA_FIELD = '{$data['EXTRA_FIELD']}',
                 TRAIN_TYPE = '{$data['TRAIN_TYPE']}',
                 CREDIT_LIMIT = '{$data['CREDIT_LIMIT']}',
                 $birthDay
