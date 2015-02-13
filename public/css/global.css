@@ -1,6 +1,6 @@
 body {
     font-family: "Verdana", Arial, Helvetica, sans-serif;
-    font-size: 10px;
+    font-size: 11px;
     color: #555;
     text-align: left;
     background: #fff;
@@ -8,19 +8,19 @@ body {
 
 @media (max-width: 1600px) {
     body {
-         font-size: 11px;
+        font-size: 11px;
     }
 }
 
 @media (max-width: 1280px) {
     body {
-         font-size: 9px;
+        font-size: 9px;
     }
 }
 
 @media (max-width: 1024px) {
     body {
-         font-size: 7px;
+        font-size: 7px;
     }
 }
 
@@ -119,6 +119,21 @@ input#submit {
 .ws_data_table tr:nth-child(even) {
     background-color: #E6E6E6;
 }
+
+.ws_data_table tr:hover {
+    background-color: #8B9DBE;
+    color : #fff;
+}
+
+.due
+{
+    color: #900000 ;
+}
+.dispute
+{
+    color: #915608;
+}
+
 
 .header {
     cursor: pointer;

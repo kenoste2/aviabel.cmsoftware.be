@@ -88,8 +88,19 @@
                 <th>&nbsp;</th>
             </tr>
         </thead>
-    <?php foreach ($this->results as $row) { ?>
-            <tr>
+    <?php foreach ($this->results as $row) {
+        if(!empty($row->DISPUTE)) {
+            $class = " class='dispute' ";
+        }
+        elseif ($row->START_DATE <= date("Y-m-d")) {
+            $class = " class='due' ";
+        } else {
+            $class = "";
+        }
+
+
+            ?>
+            <tr <?php echo $class ?> >
                 <td><?php echo $row->CLIENT_REFERENCE ?></td>
                 <td><?php echo $row->DEBTOR_NAME ?></td>
                 <td><?php echo $row->INVOICE_REFERENCE ?></td>

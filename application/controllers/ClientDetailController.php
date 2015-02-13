@@ -5,6 +5,10 @@ require_once 'application/controllers/BaseClientController.php';
 class ClientDetailController extends BaseClientController {
 
     public function viewAction() {
+        global $config;
+
+        $this->view->printButton = true;
+
         $obj = new Application_Model_Clients();
         $clientData = $obj->getArrayData($this->clientId);
 
