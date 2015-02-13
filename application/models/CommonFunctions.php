@@ -150,16 +150,16 @@ class Application_Model_CommonFunctions
     }
 
 
-    function saveData($tableName, $data, $where = false, $returnField = false)
+    function saveData($tableName, $data, $where = false, $returnField = false, $escapeSql = false)
     {
         global $db;
         $dataSql = "";
         $fields = array_keys($data);
         if (empty($where)) {
             $fieldSql = implode(",", $fields);
-            $dataSql .= "#" . implode("#,#", $data) . "#";
+            $dataSql .= "#|" . implode("#|,#|", $data) . "#|";
             $dataSql = str_replace("'", "`", $dataSql);
-            $dataSql = str_replace("#", "'", $dataSql);
+            $dataSql = str_replace("#|", "'", $dataSql);
             $sql = "INSERT INTO {$tableName} ({$fieldSql}) VALUES ({$dataSql})";
             if (!empty($returnField)) {
                 $sql .= " RETURNING {$returnField}";

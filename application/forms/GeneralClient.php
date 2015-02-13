@@ -51,10 +51,11 @@ class Application_Form_GeneralClient extends Zend_Form {
             'MultiOptions' => $confirm,
         ));
 
-        $this->addElement('text', 'CURRENT_INTREST_PERCENT', array('label' => $functions->T('Interest_percent_c'), 'size' => 15, 'validators' => array('float')));
-        $this->addElement('text', 'CURRENT_INTREST_MINIMUM', array('label' => $functions->T('Interest_minimum_c'), 'size' => 15, 'validators' => array('float')));
-        $this->addElement('text', 'CURRENT_COST_PERCENT', array('label' => $functions->T('cost_percent_c'), 'size' => 15, 'validators' => array('float')));
-        $this->addElement('text', 'CURRENT_COST_MINIMUM', array('label' => $functions->T('cost_minimum_c'), 'size' => 15, 'validators' => array('float')));
+        $helper = new Application_Form_FormHelper();
+        $this->addElement('text', 'CURRENT_INTREST_PERCENT', array('label' => $functions->T('Interest_percent_c'), 'size' => 15, 'validators' => array($helper->getFloatValidator())));
+        $this->addElement('text', 'CURRENT_INTREST_MINIMUM', array('label' => $functions->T('Interest_minimum_c'), 'size' => 15, 'validators' => array($helper->getFloatValidator())));
+        $this->addElement('text', 'CURRENT_COST_PERCENT', array('label' => $functions->T('cost_percent_c'), 'size' => 15, 'validators' => array($helper->getFloatValidator())));
+        $this->addElement('text', 'CURRENT_COST_MINIMUM', array('label' => $functions->T('cost_minimum_c'), 'size' => 15, 'validators' => array($helper->getFloatValidator())));
         $this->addElement('text', 'ARTICLE', array('label' => $functions->T('article_c'), 'size' => 50));
         $this->addElement('text', 'COURT', array('label' => $functions->T('court_c'), 'size' => 50));
         $this->addElement('text', 'ACTIVITIES', array('label' => $functions->T('activities_c'), 'size' => 50));

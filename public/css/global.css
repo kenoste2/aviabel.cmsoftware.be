@@ -8,20 +8,21 @@ body {
 
 @media (max-width: 1600px) {
     body {
-        font-size: 11px;
-    }
-}
-@media (max-width: 1280px) {
-    body {
-        font-size: 9px;
-    }
-}
-@media (max-width: 1024px) {
-    body {
-        font-size: 7px;
+         font-size: 11px;
     }
 }
 
+@media (max-width: 1280px) {
+    body {
+         font-size: 9px;
+    }
+}
+
+@media (max-width: 1024px) {
+    body {
+         font-size: 7px;
+    }
+}
 
 table td {
     vertical-align: top;
@@ -253,4 +254,31 @@ a {
 input {
     border-radius: 5px;
     border: solid 1px #999;
+}
+
+.collapsablePanel {
+    border: 1px solid #a6c9e2;
+    background: #fcfdfd;
+    color: #222222;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+.collapsablePanel > div.header {
+    padding: 10px;
+    cursor: pointer;
+    background: #eee;
+    border-radius: 5px;
+}
+
+.collapsablePanel > div.header th {
+    text-align: left;
+}
+
+.collapsablePanel td {
+    padding: 5px 10px;
+}
+
+.collapsablePanel > div.body {
+    padding: 20px;
 }
