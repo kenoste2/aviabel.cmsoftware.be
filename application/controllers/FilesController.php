@@ -163,8 +163,15 @@ class FilesController extends BaseController
         $results = $this->db->get_results($sql);
         if (!empty($results)) {
             $this->export->sql = $sql;
-            $sql = "SELECT FILE_ID,FILE_NR,DEBTOR_NAME FROM FILES\$FILES_ALL_INFO A WHERE 1=1 {$query_extra} order by {$session->orderby} {$session->order}";
-            $session->fileList = $this->db->get_results($sql, ARRAY_A);
+            $fileList = array();
+            foreach ($results as $row) {
+                $fileList[] = array(
+                    "FILE_ID" => $row->FILE_ID,
+                    "FILE_NR" => $row->FILE_NR,
+                    "DEBTOR_NAME" => $row->DEBTOR_NAME,
+                );
+            }
+            $session->fileList = $fileList;
             $this->view->results = $results;
         } else {
             $this->export->sql = "";
