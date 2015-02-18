@@ -29,7 +29,7 @@ class PaymentsController extends BaseController {
             $searchForm->getValue('ENDDATE'),
             $searchForm->getValue('CLIENT'),
             $searchForm->getValue('FOR'),
-            $searchForm->getValue('COMMISSION'),
+            -1,
             $searchForm->getValue('ACCOUNT_ID')
         );
         $paymentsAllInfoTotal = $paymentsAllInfoModel->searchCountPaymentsAllInfo(
@@ -37,7 +37,7 @@ class PaymentsController extends BaseController {
             $searchForm->getValue('ENDDATE'),
             $searchForm->getValue('CLIENT'),
             $searchForm->getValue('FOR'),
-            $searchForm->getValue('COMMISSION'),
+            -1,
             $searchForm->getValue('ACCOUNT_ID'));
 
         $this->view->searchForm = $searchForm;

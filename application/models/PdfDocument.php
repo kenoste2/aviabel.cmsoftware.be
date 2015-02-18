@@ -133,6 +133,8 @@ class Application_Model_PdfDocument extends Application_Model_Base {
         if (in_array('Invoices', $templateModules)) {
             $this->loadInvoices($fileActionId);
         }
+
+        return true;
     }
 
     public function setFooter($lang = 'NL')

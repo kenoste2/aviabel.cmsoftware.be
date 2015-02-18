@@ -72,6 +72,7 @@
         </td>
         <td width="33%" class="windowPart">
             <span class="title"><?php $this->T("amounts_c") ?></span>
+            <dd>&nbsp;</dd>
         <table>
             <thead>
                 <tr>
@@ -100,7 +101,6 @@
                 <td align="right"><?php echo $this->Amount($this->file->PAYED_INTEREST) ?></td>
                 <td align="right"><?php echo $this->Amount($this->file->SALDO_INTEREST) ?></td>
             </tr>
-            <?php } ?>
             <tr>
                 <td class="label"><?php $this->T("incasso_kost_c") ?></td>
                 <td align="right"><?php echo $this->Amount($this->file->INCASSOKOST) ?></td>
@@ -115,7 +115,13 @@
                     <td align="right"><?php echo $this->Amount($this->file->PAYABLE + $this->file->INCASSOKOST - $this->file->PAYED_UNKNOWN) ?></td>
                 </tr>
             </tfoot>
+            <?php } ?>
         </table>
+            <dd>&nbsp;</dd>
+            <span class="title"><?php $this->T("info_c") ?></span>
+            <dd>&nbsp;</dd>
+            <dt><?php $this->T("gem_betalingstermijn_c") ?></dt>
+            <dd><?php echo $this->paymentDelay ?></dd>
             <!--
             <br>
             <span class="title"><?php $this->T("credit_rating_c") ?></span>
@@ -133,7 +139,7 @@
         </tr>
         <tr>
             <td class="windowPart">
-                <span class="title"><?php $this->T("actions_c") ?></span>
+                <span class="title"><?php $this->T("laatste_c") ?> <?php $this->T("actions_c") ?></span>
                 <table id="data" class="tablesorter ws_data_table" width="100%">
                     <thead>
                         <tr>
@@ -165,7 +171,7 @@
                 </table>
             </td>
             <td class="windowPart">
-                <span class="title"><?php $this->T("remarks_c") ?></span>
+                <span class="title"><?php $this->T("laatste_c") ?> <?php $this->T("remarks_c") ?></span>
 
                 <table id="data" class="tablesorter ws_data_table" width="100%">
                     <thead>
@@ -193,7 +199,7 @@
                 </table>
             </td>
             <td class="windowPart">
-                <span class="title"><?php $this->T("payments_c") ?></span>
+                <span class="title"><?php $this->T("laatste_c") ?> <?php $this->T("payments_c") ?></span>
                 <table id="data" class="tablesorter ws_data_table" width="100%">
                     <thead>
                         <tr>

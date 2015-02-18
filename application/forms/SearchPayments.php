@@ -12,9 +12,8 @@ class Application_Form_SearchPayments extends Zend_Form
 
         $this->addElement('text', 'STARTDATE', array('label' => $functions->T('aanmaakdatum_c'), 'size' => 20));
         $this->addElement('text', 'ENDDATE', array('label' => $functions->T('tot_c'), 'size' => 20));
-        $this->addElement('text', 'CLIENT', array('label' => $functions->T('client_code_c'), 'size' => 20));
+        $this->addElement('text', 'CLIENT', array('label' => $functions->T('client_c'), 'size' => 20));
         $this->addElement('radio', 'FOR', array('label' => $functions->T('voor_c'), 'MultiOptions' => $this->getFor($functions)));
-        $this->addElement('radio', 'COMMISSION', array('label' => $functions->T('with_commission_c'), 'MultiOptions' => $this->getCommissions($functions)));
         $this->addElement('select', 'ACCOUNT_ID', array('label' => $functions->T('rekening_c'), 'MultiOptions' => $this->getAccounts($functions)));
 
         $this->addElement('hidden', 'search_payment', array('value' => 1));
@@ -41,7 +40,6 @@ class Application_Form_SearchPayments extends Zend_Form
 
         $this->getElement('STARTDATE')->setValue(date('01/m/Y'));
         $this->getElement('ENDDATE')->setValue(date('d/m/Y'));
-        $this->getElement('COMMISSION')->setValue('-1');
         $this->getElement('FOR')->setValue('-1');
     }
 

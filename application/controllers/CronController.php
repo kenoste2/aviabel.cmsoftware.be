@@ -44,11 +44,13 @@ class CronController extends BaseController
                 'CONTENT' => $content
             );
             /* 3. model Application_Model_FilesActions -> add */
-            $filesActions->add($action);
             $fileActionId = $filesActions->add($action);
 
+
             $interestCostsAccess = $this->moduleAccess('intrestCosts');
+
             $pdfDoc = new Application_Model_PdfDocument($interestCostsAccess);
+
             $pdfDoc->_initPdf();
             $pdfDoc->_loadContentToPdf($fileActionId);
             $fileName = $config->rootFileActionDocuments . "/{$fileActionId}.pdf";
@@ -133,12 +135,6 @@ class CronController extends BaseController
     }
 
 
-    public function importFileAction()
-    {
-        $importObj = new Application_Model_Import();
-        $importObj->importFileCsv("/var/www/vhosts/3as.be/subdomains/aaacollector/httpdocs/v4/public/documents/imported_files/OI 261114.csv");
-        die ("imported");
-    }
 
     public function commissionAction()
     {
@@ -162,6 +158,7 @@ class CronController extends BaseController
     {
         $obj = new Application_Model_MailFetch();
         $mails = $obj->getInbox();
+
 
         $remarksObj = new Application_Model_FilesRemarks();
 
@@ -187,6 +184,7 @@ class CronController extends BaseController
             $reference = $matches[2];
             $escClientCode = $this->db->escape($clientCode);
             $escReference = $this->db->escape($reference);
+
             $fileId = $this->db->get_var("SELECT FILE_ID FROM FILES\$FILES_ALL_INFO WHERE CLIENT_CODE = '{$escClientCode}' AND REFERENCE = '{$escReference}'");
             if ($fileId) {
 
@@ -198,6 +196,9 @@ class CronController extends BaseController
 
                 $remark = utf8_encode($remark);
 
+
+
+
                 $data = array(
                     'FILE_ID' => $fileId,
                     'CREATION_DATE' => $mail['date'],
@@ -206,7 +207,6 @@ class CronController extends BaseController
                     'MAIL_BODY' => $mail['plainContent'],
                     'MAIL_SUBJECT' => $mail['subject']
                 );
-
 
                 $importedMailId = $importedMails->add($data);
 
@@ -224,12 +224,12 @@ class CronController extends BaseController
                         $fileSystem->createFileFromContent($filePath, $attachment['content']);
 
                         $attachmentData = array(
-                                'IMPORTED_MAIL_ID' => $importedMailId,
-                                'ORIGINAL_FILENAME' => $attachment['file_name'],
-                                'SERVER_FILENAME' => $serverFileName,
-                                'MIME_TYPE' => $attachment['type'],
-                                'CREATION_DATE' => $mail['date']
-                                );
+                            'IMPORTED_MAIL_ID' => $importedMailId,
+                            'ORIGINAL_FILENAME' => $attachment['file_name'],
+                            'SERVER_FILENAME' => $serverFileName,
+                            'MIME_TYPE' => $attachment['type'],
+                            'CREATION_DATE' => $mail['date']
+                        );
                         $importedMails->addAttachment($attachmentData);
                     }
                 }

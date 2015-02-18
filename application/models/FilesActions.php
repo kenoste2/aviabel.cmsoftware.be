@@ -168,12 +168,28 @@ class Application_Model_FilesActions extends Application_Model_Base
             if (empty($subject)) {
                 $subject = "";
             }
-            $fileObj = new Application_Model_File();
-            $fileNr = $fileObj->getFileField($data['FILE_ID'], 'FILE_NR');
-            $subject .= " #{$fileNr}#";
-
             $mail = new Application_Model_Mail();
-            $mail->sendMail($data['E_MAIL'],$subject,$data['CONTENT'],false,false);
+            $fileObj = new Application_Model_File();
+            $reference = $fileObj->getFileField($data['FILE_ID'], 'REFERENCE');
+            $clientCode = $fileObj->getFileField($data['FILE_ID'], 'CLIENT_CODE');
+            $subject .= " #{$clientCode}-{$reference}#";
+
+            $clientId = $fileObj->getClientId($data['FILE_ID']);
+            $clientObj = new Application_Model_Clients();
+            $client = $clientObj->getClientViewData($clientId);
+
+
+            if ($config->sendMailsAsClient == 'Y') {
+                $from = array (
+                    'name' => $client->NAME,
+                    'email' => $client->E_MAIL,
+                );
+            } else {
+                $from = false;
+            }
+
+
+            $mail->sendMail($data['E_MAIL'],$subject,$data['CONTENT'],false,false, $from);
         }
 
 

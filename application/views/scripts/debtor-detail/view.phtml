@@ -28,23 +28,15 @@
             </td>
             <td width="33%" class="windowPart">
                 <span class="title"><?php $this->T("info_c") ?></span>
-                <dt>&nbsp;</dt>
                 <dd>&nbsp;</dd>
                 <dt><?php $this->T("Created_c") ?> </dt>
                 <dd><?php echo $this->date($this->debtor->CREATION_DATE) ?></dd>
-                <dt><?php $this->T("total_files_c") ?></dt>
-                <dd><?php echo $this->debtor->FILE_COUNT ?>
-                    (<?php $this->T("voor_c") ?> <?php echo $this->amount($this->totalAmount) ?>)
-                </dd>
-                <dt><?php $this->T("open_files_c") ?></dt>
-                <dd><?php echo $this->debtor->OPEN_FILES ?>
-                    (<?php $this->T("voor_c") ?> <?php echo $this->amount($this->openAmount) ?>)
-                </dd>
                 <dt><?php $this->T("gem_betalingstermijn_c") ?></dt>
                 <dd><?php echo $this->paymentDelay ?></dd>
                 <br><br>
                 <?php if ($this->report && !empty($this->report->financial_data->fiscal_year)) {  ?>
                 <span class="title"><?php echo $this->T('credit_ratios_c'); ?></span>
+                <dd>&nbsp;</dd>
                 <table class="dataTable">
                     <tr>
                         <th><?php echo $this->T('credit_nrs_and_ratios') ?></th>
@@ -68,6 +60,7 @@
             ?>
             <td width="33%" class="windowPart">
                 <span class="title"><?php $this->T("general_c") ?></span>
+                <dd>&nbsp;</dd>
                 <dt><label><?php $this->T("address_c") ?></label></dt>
                 <dd><?php echo (string) $this->report->descriptive->name; ?><br>
                     <?php echo (string) $this->report->descriptive->address->raw_street; ?>
@@ -75,8 +68,9 @@
                     <br><?php echo (string) $this->report->descriptive->address->country; ?>
                     <br><?php echo (string) $this->report->descriptive->national_identification; ?>
                 </dd>
-
+                <dd>&nbsp;</dd>
                 <span class="title"><?php $this->T("credit_rating_c") ?></span>
+                <dd>&nbsp;</dd>
                 <dt><label><?php $this->T("credit_score_c") ?></label></dt>
                 <dd><?php echo (string) $this->report->credit_advice->score ?>/<?php echo (string) $this->report->credit_advice->score_scale ?></dd>
                 <dt><label><?php $this->T("credit_limit_c") ?></label></dt>
@@ -85,7 +79,8 @@
                 <dd><?php echo (string) $this->report->credit_advice->type_of_risks->risk[$riskIndex]; ?></dd>
                 <br>
                 <span class="title"><?php echo $this->T('credit_incident_overview_c'); ?></span>
-                <br><br><?php if (!empty($this->report->incidents->incident)) { ?>
+                <dd>&nbsp;</dd>
+                <?php if (!empty($this->report->incidents->incident)) { ?>
                     <?php foreach ($this->report->incidents->incident as $incident) { ?>
                         <br></bre><b><?php echo $this->date((string) $incident->date) ?> : <?php echo (string) $incident->type ?></b>
                         <?php if (!empty($incident->jurisdiction)) { ?> <br><?php echo (string) $incident->jurisdiction; ?> <?php } ?>

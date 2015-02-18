@@ -4,7 +4,6 @@ require_once 'application/models/Base.php';
 
 class Application_Model_MailFetch extends Application_Model_Base
 {
-
     private $_emailHost = 'mail.cmsoftware.be';
     private $_emailUser = 'inbox_manager@cmsoftware.be';
     private $_emailPass = 'voordewind2013';
@@ -164,19 +163,19 @@ class Application_Model_MailFetch extends Application_Model_Base
                                     $fileNameHeader = $part->getHeader('content-disposition');
                                     $fileNameMatches = array();
                                     preg_match("/filename=\"?(.+?)\"?$/", $fileNameHeader, $fileNameMatches);
-
                                     $fileName = $fileNameHeader;
                                     if(count($fileNameMatches) > 1) {
                                         $fileName = $fileNameMatches[1];
                                     }
+
                                     $attachment = $this->_contentDecoder($part->getHeader('content-transfer-encoding'), $part->getContent());
 
                                     $attachments[] = array(
-                                         'file_name' => $fileName,
-                                         'type' => $type,
-                                         'content' => $attachment);
+                                        'file_name' => $fileName,
+                                        'type' => $type,
+                                        'content' => $attachment);
 
-                                     break;
+                                    break;
                             }
                         } catch (Zend_Mail_Exception $e) {
 

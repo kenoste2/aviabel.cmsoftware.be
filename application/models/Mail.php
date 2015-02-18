@@ -7,6 +7,7 @@ class Application_Model_Mail extends Application_Model_Base {
 
     private $smtpServer = "";
     private $tr;
+    private $cc = "";
     private $bcc = "";
     private $fromName = '';
     private $fromEmail = '';
@@ -24,6 +25,10 @@ class Application_Model_Mail extends Application_Model_Base {
         if (!empty($config->addBcc)) {
             $this->bcc = $config->addBcc;
         }
+        if (!empty($config->addcc)) {
+            $this->cc = $config->addcc;
+        }
+
     }
 
     /**
@@ -33,9 +38,15 @@ class Application_Model_Mail extends Application_Model_Base {
      * @param Text $content
      * @param array Binary $attachment
      */
-    public function sendMail($to, $subject, $content,$contentText = false, $attachments = false) {
+    public function sendMail($to, $subject, $content,$contentText = false, $attachments = false, $from = false) {
         $mail = new Zend_Mail();
-        $mail->setFrom($this->fromEmail, $this->fromName);
+
+        if (!empty($from)) {
+            $mail->setFrom($from['email'], $from['name']);
+        } else {
+            $mail->setFrom($this->fromEmail, $this->fromName);
+        }
+
         //$mail->setFrom("info@c-online.be", "Maarten");
         // @todo remove this testEmail after launch.
         //$to = "dequanter4web@gmail.com";
@@ -53,10 +64,13 @@ class Application_Model_Mail extends Application_Model_Base {
         if (!empty($this->bcc)) {
             $mail->addBcc($this->bcc);
         }
+        if (!empty($this->cc)) {
+            $mail->addCc($this->cc);
+        }
         $mail->setSubject($subject);
-        $mail->setBodyText($contentText);
-        $content = nl2br($content);
-        $mail->setBodyHtml($content);
+        $mail->setBodyText($content);
+        $contentHtml = nl2br($content);
+        $mail->setBodyHtml($contentHtml);
         //$mail->setDefaultTransport($this->tr);
         if (!empty($attachments)) {
             if (array_key_exists('content', $attachments)){

@@ -26,6 +26,7 @@ class Application_Form_AddDebtor extends Zend_Form {
         $languages = $db->get_results("select LANGUAGE_ID,DESCRIPTION from SUPPORT\$LANGUAGES  order by DESCRIPTION", ARRAY_N);
         $this->addElement('select', 'LANGUAGE_ID', array('label'=> $functions->T('language_c'),'MultiOptions' => $functions->db2array($languages,false)));
         $this->addElement('textarea', 'EXTRA_FIELD', array('label'=> $functions->T('remarks_c'),'rows' => 5, 'cols' => 45));
+        $this->addElement('select', 'TRAIN_TYPE', array('label' => $functions->T('train_type_c'), 'MultiOptions' => $functions->db2array($train->getTrainTypes(), false)));
         $this->addElement('hidden', 'DEBTOR_ID');
 
         $this->addElement('submit', 'submit', array(

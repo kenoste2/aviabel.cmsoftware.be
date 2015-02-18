@@ -75,14 +75,13 @@ class Application_Model_Train extends Application_Model_Base
 
         $rootSql = str_replace("`","'",$rootSql);
 
-            print "<br>".$rootSql;
 
         return $rootSql;
     }
 
     public function performTrainSql($row, $i)
     {
-        $sql = "select DISTINCT I.FILE_ID,I.DEBTOR_TELEPHONE,I.DEBTOR_GSM,I.FILE_NR,I.CREATION_DATE,I.DEBTOR_NAME,I.DEBTOR_ADDRESS,I.DEBTOR_ZIP_CODE,I.DEBTOR_CITY,I.STATE_CODE,I.AMOUNT,I.INTEREST,I.COSTS,I.TOTAL,I.PAYABLE $row->SQL";
+        $sql = "select DISTINCT I.FILE_ID,I.REFERENCE,I.DEBTOR_TELEPHONE,I.DEBTOR_GSM,I.FILE_NR,I.CREATION_DATE,I.DEBTOR_NAME,I.DEBTOR_ADDRESS,I.DEBTOR_ZIP_CODE,I.DEBTOR_CITY,I.STATE_CODE,I.AMOUNT,I.INTEREST,I.COSTS,I.TOTAL,I.PAYABLE $row->SQL";
         if ($row->DAYS > $i) {
             $days = "-" . $row->DAYS + $i;
         } else {
@@ -91,8 +90,6 @@ class Application_Model_Train extends Application_Model_Base
 
         $sql = str_replace("-$row->DAYS", $days, $sql);
         $sql = str_replace("`","'",$sql);
-
-        print $sql;
 
 
         return $this->db->get_results($sql);

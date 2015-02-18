@@ -8,23 +8,20 @@
 <table class="ws_data_table" style="width: 100%">
     <thead>
         <tr>
-            <th><?php $this->T('factuur_c') ?></th>
             <th><?php $this->T('reference_c') ?></th>
-            <th><?php $this->T('client_code_c') ?></th>
+            <th><?php $this->T('client_c') ?></th>
             <th><?php $this->T('debtor_c') ?></th>
             <th><?php $this->T('aanmaakdatum_c') ?></th>
             <th><?php $this->T('betaaldatum_c') ?></th>
-            <th><?php $this->T('bedrag_c') ?></th>
+            <th><?php $this->T('amount_c') ?></th>
             <th><?php $this->T('voor_c') ?></th>
-            <th><?php $this->T('with_commission_c') ?></th>
             <th><?php $this->T('rekening_c') ?></th>
             <th><?php $this->T('beschrijving_c') ?></th>
         </tr>
     </thead>
     <tbody>
         <?php foreach ($this->paymentsAllInfo as $file): ?>
-            <tr>
-                <td><?php echo $file->FILE_NR ?></td>
+            <tr  onClick="newscreen('<?php echo $file->DEBTOR_NAME ?>', '<?php echo $this->location() ?>/file-detail/view/fileId/<?php echo $file->FILE_ID ?>')">
                 <td class="center"><?php echo $file->REFERENCE ? $file->REFERENCE : '-' ?></td>
                 <td><?php echo $file->CLIENT_CODE ?></td>
                 <td><?php echo $file->DEBTOR_NAME ?></td>
@@ -32,7 +29,6 @@
                 <td><?php echo $this->date($file->PAYMENT_DATE) ?></td>
                 <td class="right"><?php echo number_format($file->AMOUNT, 2, ',', '.') ?></td>
                 <td><?php echo $file->PAYMENT_FOR ?></td>
-                <td><?php echo ($file->WITH_COMMISSION==1) ? "<span class='ui-icon ui-icon-check'></span>" : "<span class='ui-icon ui-icon-close'></span>"; ?></td>
                 <td><?php echo $file->ACCOUNT_CODE ?></td>
                 <td class="center"><?php echo $file->JOURNAL_DESCRIPTION ? $file->JOURNAL_DESCRIPTION : '-' ?></td>
             </tr>

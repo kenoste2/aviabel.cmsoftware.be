@@ -18,19 +18,17 @@ class Application_Model_ImportedMails extends Application_Model_Base
     }
 
     public function retrieveAttachmentById($attachmentId) {
-         if(!$attachmentId) {
+        if(!$attachmentId) {
             $attachmentId = '0';
-         }
-         $escAttachmentId = $this->db->escape($attachmentId);
-         return $this->db->get_row("SELECT * FROM IMPORTED_MAIL_ATTACHMENTS WHERE IMPORTED_MAIL_ATTACHMENT_ID = {$escAttachmentId}");
+        }
+        $escAttachmentId = $this->db->escape($attachmentId);
+        return $this->db->get_row("SELECT * FROM IMPORTED_MAIL_ATTACHMENTS WHERE IMPORTED_MAIL_ATTACHMENT_ID = {$escAttachmentId}");
     }
 
     public function retrieveAttachmentsByMailId($mailId) {
-
         if(!$mailId) {
             $mailId = '0';
         }
-
         $escMailId = $this->db->escape($mailId);
         return $this->db->get_results("SELECT * FROM IMPORTED_MAIL_ATTACHMENTS WHERE IMPORTED_MAIL_ID = {$escMailId}");
     }

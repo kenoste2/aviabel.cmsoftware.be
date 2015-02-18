@@ -44,7 +44,7 @@
                 <table width="100%" align="center">
                     <tr>
                         <td align="left"><?php if ($this->indexes['prevIndex'] != '') { ?><a href="<?php echo $this->location() ?>/file-detail/view/index/<?php echo $this->indexes['prevIndex'] ?>"> <span title ="<?php $this->T("view_file_c") ?>" class="ui-icon ui-icon-seek-prev"></span></a> <?php } ?></td>
-                        <td align="center" class="title"><?php print $this->T("file_c") ?> : <?php echo $this->file->FILE_NR ?> - <?php echo $this->file->DEBTOR_NAME ?></td>
+                        <td align="center" class="title"><?php print $this->T("file_c") ?> : <?php echo $this->file->DEBTOR_NAME ?></td>
                         <td align="right"><?php if ($this->indexes['nextIndex'] != '') { ?><a href="<?php echo $this->location() ?>/file-detail/view/index/<?php echo $this->indexes['nextIndex'] ?>"> <span title ="<?php $this->T("view_file_c") ?>" class="ui-icon ui-icon-seek-next"></span></a><?php } ?></td>
                     </tr>
                 </table>
