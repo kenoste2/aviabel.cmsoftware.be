@@ -40,6 +40,10 @@ class QueryController extends BaseController
         }
         $content = "";
 
+        $this->export->sql = $sqlStr;
+        $this->view->exportButton = true;
+
+
         if (is_array($queries)) {
 
             foreach ($queries as $query) {
