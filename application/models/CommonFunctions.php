@@ -71,6 +71,10 @@ class Application_Model_CommonFunctions
             $lang = $otherLang;
         }
 
+        if ($lang == "DE") {
+            $lang = "GE";
+        }
+
         $tekst = $db->get_var("SELECT {$lang} FROM TEKSTEN WHERE CODE = '{$code}'");
 
 
@@ -144,6 +148,11 @@ class Application_Model_CommonFunctions
         if (!empty($otherLang)) {
             $lang = $otherLang;
         }
+
+        if ($lang == "DE") {
+            $lang = "GE";
+        }
+
 
         $tekst = $db->get_var("SELECT {$lang} FROM TEKSTEN WHERE CODE = '{$code}' AND SETTINGS = 1");
         return $tekst;
