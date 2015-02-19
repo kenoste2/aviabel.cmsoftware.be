@@ -18,9 +18,8 @@ class Application_Model_Binformation extends Application_Model_Base
         $vat = str_replace("BE", "", $vat);
         $vat = str_replace("NL", "", $vat);
 
-        //print "<pre>";
-        //print_r($client->GetDemoCompanies(array('CountryCode' => 'BE')));
-        //die();
+        $data = array();
+
         try {
             $result = $client->Search(array('NationalNumber' => $vat, 'CountryCode' => 'BE'));
             if (!empty($result)) {
