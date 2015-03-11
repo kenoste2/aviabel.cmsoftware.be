@@ -17,19 +17,9 @@ class BaseFileController extends BaseController {
         $session = new Zend_Session_Namespace('FILES');
 
 
-        if ($this->getParam("fileId")) {
-            $this->fileId = $this->getParam("fileId");
-            $session->fileId = $this->getParam("fileId");
-            $session->fileList = false;
-            $this->view->indexes['prevIndex'] = false;
-            $this->view->indexes['nextIndex'] = false;
-            $this->view->index = 0;
-        } else {
-            $indexes = $this->_getNextPrevCurrent();
-            $this->fileId = $indexes['currentFileId'];
-            $this->view->indexes = $indexes;
-            $this->view->index = $this->getParam("index");
-        }
+        $indexes = $this->_getNextPrevCurrent();
+        $this->fileId = $indexes['currentFileId'];
+        $this->view->indexes = $indexes;
 
 
         if (empty($this->fileId) && !empty($session->fileId)) {
@@ -48,25 +38,38 @@ class BaseFileController extends BaseController {
 
     protected function _getNextPrevCurrent() {
         $session = new Zend_Session_Namespace('FILES');
-        $index = $this->getParam("index");
-        
-        switch ($index) {
-            case 0:
-                $next = (key_exists(1, $session->fileList)) ? 1 : false;
-                $prev = false;
-                break;
-            case ($index > 0):
-                $next = (key_exists($index + 1, $session->fileList)) ? $index + 1 : false;
-                $prev = (key_exists($index - 1, $session->fileList)) ? $index - 1 : false;
-                break;
+        $fileId = $this->getParam("fileId");
+
+        $next = false;
+        $prev = true;
+
+        $index = -1;
+
+        if($session->fileList && count($session->fileList) > 0) {
+
+            foreach($session->fileList as $item) {
+                $index++;
+                if($item['FILE_ID'] == $fileId) {
+                    break;
+                }
+            }
+
+            if($index < count($session->fileList) ) {
+                $next = $session->fileList[$index + 1];
+            }
+
+            if($index > 0 && $index <= count($session->fileList)) {
+                $prev = $session->fileList[$index - 1];
+            }
         }
 
         $indexes = array(
-            'currentFileId' => $session->fileList[$index]['FILE_ID'],
-            'nextIndex' => $next,
-            'prevIndex' => $prev,
+            'currentFileId' => $fileId,
+            'nextIndex' => $next ? $next['FILE_ID'] : false,
+            'prevIndex' => $prev ? $prev['FILE_ID'] : false,
         );
 
+        $this->view->fileId = $fileId;
         return $indexes;
     }
     

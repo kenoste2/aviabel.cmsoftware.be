@@ -35,7 +35,7 @@ if ($this->deleted) {
                 $todo_type = !$todo_type ? '-' : $todo_type;?>
             <tr>
                 <td><?php echo $this->date($result->CREATION_DATE) ?></td>
-                <td><a href=# onClick="newscreen('<?php echo $row->DEBTOR_NAME ?>', '<?php echo $this->location() ?>/file-detail/view/index/0/fileId/<?php echo $result->FILE_ID ?>')"><?php echo $result->FILE_NR ?></a></td>
+                <td><a href=# onClick="newscreen('<?php echo $row->DEBTOR_NAME ?>', '<?php echo $this->location() ?>/file-detail/view/fileId/<?php echo $result->FILE_ID ?>')"><?php echo $result->FILE_NR ?></a></td>
                 <td><?php echo $result->DEBTOR_NAME ?></td>
                 <td><?php echo $todo_type ?></td>
                 <td><?php echo $remark ?></td>
