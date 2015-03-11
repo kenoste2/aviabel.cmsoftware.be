@@ -10,7 +10,7 @@
     </thead>
     <tbody>
         <?php foreach ($this->results as $index => $file): ?>
-            <tr onclick="newscreen('<?php echo $file->DEBTOR_NAME ?>', '<?php echo $this->location() ?>/file-detail/view/index/<?php echo $index; ?>')">
+            <tr onclick="newscreen('<?php echo $file->DEBTOR_NAME ?>', '<?php echo $this->location() ?>/file-detail/view/fileId/<?php echo $file->FILE_ID; ?>')">
                 <td><?php echo $file->REFERENCE ?></td>
                 <td><?php echo $file->DEBTOR_NAME ?><br><?php echo $file->DEBTOR_ADDRESS ?><br><?php echo $file->DEBTOR_ZIP_CODE . ' ' . $file->DEBTOR_CITY ?>
                     <?php echo ($file->DEBTOR_TELEPHONE) ? '<br>Tel.: ' . $file->DEBTOR_TELEPHONE : ''; ?>

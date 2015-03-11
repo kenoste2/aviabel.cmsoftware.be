@@ -125,6 +125,8 @@ input#submit {
     color : #fff;
 }
 
+.ws_data_table tr[onclick] { cursor: pointer; }
+
 .due
 {
     color: #900000 ;
