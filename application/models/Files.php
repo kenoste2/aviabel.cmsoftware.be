@@ -50,6 +50,11 @@ class Application_Model_Files extends Application_Model_Base
         return $fileId;
     }
 
+    public function getFileNumberById($fileId)
+    {
+        return $this->db->get_var("select FILE_NR from FILES\$FILES WHERE FILE_ID='{$fileId}'");
+    }
+
     public function save($data, $fileId)
     {
         $this->saveData('FILES$FILES', $data, 'FILE_ID = ' . $fileId);

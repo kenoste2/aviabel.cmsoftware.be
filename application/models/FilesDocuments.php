@@ -83,7 +83,46 @@ class Application_Model_FilesDocuments extends Application_Model_Base {
         return $results;
     }
 
+    public function getDocumentsByIds($documentIds) {
+        if(count($documentIds) <= 0) {
+            return array();
+        }
 
+        $documentIdsStr = implode(',', $documentIds);
+
+        $escDocumentIdsStr = $this->db->escape($documentIdsStr);
+        $sql = "SELECT * FROM FILE_DOCUMENTS WHERE FILE_DOCUMENTS_ID IN ({$escDocumentIdsStr})";
+        return $this->db->get_results($sql);
+    }
+
+    public function getNextId()
+    {
+        $sql = "SELECT MAX(FILE_DOCUMENTS_ID) FROM FILE_DOCUMENTS";
+        $id = $this->db->get_var($sql);
+        if (empty($id)) {
+            $id = 0;
+        }
+        $id++;
+        return $id;
+    }
+
+    /**
+     * @param $originalFilename
+     * @return mixed
+     */
+    private function getExtension($originalFilename)
+    {
+
+        $extension = "";
+
+        $matches = array();
+        if (preg_match('/^(.*?)\.(.*)$/', $originalFilename, $matches)) {
+            $originalFilename = $matches[1];
+            $extension = $matches[2];
+            return $extension;
+        }
+        return $extension;
+    }
 }
 
 ?>

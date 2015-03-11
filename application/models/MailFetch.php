@@ -4,8 +4,9 @@ require_once 'application/models/Base.php';
 
 class Application_Model_MailFetch extends Application_Model_Base
 {
+    public static $emailUser = 'inbox_manager@cmsoftware.be';
+
     private $_emailHost = 'mail.cmsoftware.be';
-    private $_emailUser = 'inbox_manager@cmsoftware.be';
     private $_emailPass = 'voordewind2013';
     /**
      * Zend_Mail_Storage
@@ -30,7 +31,7 @@ class Application_Model_MailFetch extends Application_Model_Base
 
             $this->_mail = new Zend_Mail_Storage_Pop3(array(
                 'host' => $this->_emailHost,
-                'user' => $this->_emailUser,
+                'user' => self::$emailUser,
                 'password' => $this->_emailPass));
         } catch (Exception $e) {
 

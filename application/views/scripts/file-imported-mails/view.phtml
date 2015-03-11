@@ -17,7 +17,10 @@ if(count($this->importedMails) > 0) {
                 <table>
                     <tbody>
                     <tr>
-                        <th colspan="4"><?php echo formatDate($importedMail['CREATION_DATE']) ?> : <?php echo $importedMail['MAIL_SUBJECT'] ?></th>
+                        <th colspan="4">
+                            <a href="<?php echo $this->pageRootUrl ?>/file-imported-mails/forward-email/fileId/<?php print $this->fileId ?>?email-id=<?php echo $importedMail['IMPORTED_MAIL_ID'] ?>" title="forward" class="ui-state-default ui-corner-all" style="display: inline-block; vertical-align: middle;"><span class="ui-icon ui-icon-arrowthick-1-e"></span></a>
+                            <?php echo formatDate($importedMail['CREATION_DATE']) ?> : <?php echo $importedMail['MAIL_SUBJECT'] ?>
+                        </th>
                     </tr>
                     <tr>
                         <th><?php $this->T('mail_from_c') ?>:</th><td><?php echo $importedMail['FROM_EMAIL'] ?></td>

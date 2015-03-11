@@ -17,12 +17,33 @@ class Application_Model_ImportedMails extends Application_Model_Base
         return $this->adddata("imported_mail_attachments", $data);
     }
 
+    public function retrieveImportedMailById($importedMailId) {
+        if(!$importedMailId) {
+            $importedMailId = '0';
+        }
+        $escImportedMailId = $this->db->escape($importedMailId);
+        return $this->db->get_row("SELECT * FROM IMPORTED_MAILS WHERE IMPORTED_MAIL_ID = {$escImportedMailId}");
+    }
+
     public function retrieveAttachmentById($attachmentId) {
         if(!$attachmentId) {
             $attachmentId = '0';
         }
         $escAttachmentId = $this->db->escape($attachmentId);
         return $this->db->get_row("SELECT * FROM IMPORTED_MAIL_ATTACHMENTS WHERE IMPORTED_MAIL_ATTACHMENT_ID = {$escAttachmentId}");
+    }
+
+    public function retrieveAttachmentsById($attachmentIds) {
+        if(count($attachmentIds) <= 0) {
+            return array();
+        }
+
+        $escAttachmentIds = array();
+        foreach($attachmentIds as $attachmentId) {
+            $escAttachmentIds []= $this->db->escape($attachmentId);
+        }
+        $escAttachmentIdsStr = implode(',', $escAttachmentIds);
+        return $this->db->get_results("SELECT * FROM IMPORTED_MAIL_ATTACHMENTS WHERE IMPORTED_MAIL_ATTACHMENT_ID IN ({$escAttachmentIdsStr})");
     }
 
     public function retrieveAttachmentsByMailId($mailId) {

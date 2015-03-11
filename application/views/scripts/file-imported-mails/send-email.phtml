@@ -1,0 +1,74 @@
+<?php
+if(count($this->messages) > 0) {
+    foreach($this->messages as $message) {
+        ?><div class="ui-state-error ui-corner-all" style="padding: 0.7em; width:400px;"><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;" ></span><?php print $message ?></div> <?php
+    }
+}
+
+if($this->success) {
+    ?><div class="ui-state-highlight ui-corner-all" style="padding: 0.7em; width:400px;"><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;" ></span><?php print $this->T('success_c') ?></div><?php
+}
+?>
+<?php
+//NOTE: remove wrapping dt-tag from labels.
+foreach ($this->form->getElements() as $element) {
+    $decorator = $element->getDecorator('label');
+    if($decorator)  {
+        $decorator->setOption('tag', null);
+    }
+}
+?>
+
+<form method="POST">
+    <table>
+        <tr>
+            <td>
+                <dl class="Zend_Form">
+                    <dt><?php print $this->form->TO->renderLabel() ?></dt>
+                    <dd><?php print $this->form->TO->renderViewHelper() ?></dd>
+                    <dt><?php print $this->form->FROM->renderLabel() ?></dt>
+                    <dd><?php print $this->form->FROM->renderViewHelper() ?></dd>
+                    <dt data-belongsTo="custom-from"><?php print $this->form->CUSTOM_FROM->renderLabel() ?></dt>
+                    <dd data-belongsTo="custom-from"><?php print $this->form->CUSTOM_FROM->renderViewHelper() ?> @<?php print $this->emailHost ?></dd>
+                </dl>
+                <dl class="Zend_Form">
+                    <dt><?php print $this->form->SUBJECT->renderLabel() ?></dt>
+                    <dd><?php print $this->form->SUBJECT->renderViewHelper() ?></dd>
+                    <dt><?php print $this->form->CONTENT->renderLabel() ?></dt>
+                    <dd><?php print $this->form->CONTENT->renderViewHelper() ?></dd>
+                </dl>
+            </td>
+            <td>
+                <h4><?php print $this->T("action_documents_c") ?></h4>
+                <?php if(isset($this->form->ACTION_DOCUMENTS)) {
+                    print $this->form->ACTION_DOCUMENTS->renderViewHelper();
+                } else {
+                    ?><span><?php print $this->T("no_attachments_found_c") ?></span><?php
+                } ?>
+                <h4><?php print $this->T("file_documents_c") ?></h4>
+                <?php if(isset($this->form->DOCUMENTS)) {
+                    print $this->form->DOCUMENTS->renderViewHelper();
+                } else {
+                    ?><span><?php print $this->T("no_attachments_found_c") ?></span><?php
+                } ?>
+            </td>
+        </tr>
+    </table>
+
+    <dl class="Zend_Form">
+        <?php print $this->form->SUBMIT ?>
+    </dl>
+</form>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $("[data-belongsTo]").hide();
+        $("[name=FROM]").change(function() {
+            if($(this).attr('id') === 'FROM-CUSTOM' && $(this).prop('checked')) {
+                $("[data-belongsTo=custom-from]").slideDown();
+            } else {
+                $("[data-belongsTo=custom-from]").slideUp();
+            }
+        })
+    });
+</script>

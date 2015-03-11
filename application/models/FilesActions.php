@@ -384,6 +384,29 @@ class Application_Model_FilesActions extends Application_Model_Base
         return $cleanedUpNumber;
     }
 
+    public function getActionsWithDocumentsByFileId($fileId) {
+        global $config;
+
+        if(!$fileId) {
+            $fileId = 0;
+        }
+
+        $escFileId = $this->db->escape($fileId);
+
+        $sql = "select A.FILE_ACTION_ID,A.ACTION_DATE,A.DUE_DATE,A.ACTION_ID,A.ACTION_CODE,A.ACTION_DESCRIPTION,A.TEMPLATE_ID,A.REMARKS,A.ACTION_USER,B.TEMPLATE_CONTENT
+                from FILES\$FILE_ACTIONS_ALL_INFO A
+                JOIN FILES\$FILE_ACTIONS B ON A.FILE_ACTION_ID = B.FILE_ACTION_ID
+                where A.FILE_ID= {$escFileId} order by A.ACTION_DATE DESC ,A.FILE_ACTION_ID DESC";
+        $actions =  $this->db->get_results($sql);
+        $filteredActions = array();
+        foreach($actions as $action) {
+            if(file_exists($config->rootFileActionDocuments . "/{$action->FILE_ACTION_ID}.pdf")) {
+                $filteredActions []= $action;
+            }
+        }
+        return $filteredActions;
+    }
+
     public function getToBePrintedCount()
     {
         $sql = "SELECT A.TEMPLATE_ID,B.DESCRIPTION,COUNT(*) AS COUNTER FROM FILES\$FILE_ACTIONS A

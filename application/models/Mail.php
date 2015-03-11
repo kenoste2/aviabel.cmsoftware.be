@@ -38,8 +38,8 @@ class Application_Model_Mail extends Application_Model_Base {
      * @param Text $content
      * @param array Binary $attachment
      */
-    public function sendMail($to, $subject, $content,$contentText = false, $attachments = false, $from = false) {
-        $mail = new Zend_Mail();
+    public function sendMail($to, $subject, $content,$contentText = false, $attachments = false, $from = false, $cc = false, $bcc = false, $isUtf8 = false) {
+        $mail = $isUtf8 ? new Zend_Mail('UTF-8') : new Zend_Mail();
 
         if (!empty($from)) {
             $mail->setFrom($from['email'], $from['name']);
@@ -67,6 +67,15 @@ class Application_Model_Mail extends Application_Model_Base {
         if (!empty($this->cc)) {
             $mail->addCc($this->cc);
         }
+
+        if($cc) {
+            $mail->addCc($cc);
+        }
+
+        if($bcc) {
+            $mail->addBcc($bcc);
+        }
+
         $mail->setSubject($subject);
         $mail->setBodyText($content);
         $contentHtml = nl2br($content);

@@ -189,6 +189,7 @@
                 $.getJSON("<?php echo $this->Location() ?>/ajax/templatedata/term/" + value + "/fileId/<?php echo $this->fileId ?>", {id: $(this).val(), ajax: 'true'}, function (j) {
                     var options = '';
                     for (var i = 0; i < j.length; i++) {
+                        $("#GSM").val(j[i].GSM);
                         $("#E_MAIL").val(j[i].EMAIL);
                         $("#ADDRESS").val(j[i].ADDRESS);
                         if (j[i].EMAIL) {
