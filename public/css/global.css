@@ -250,6 +250,8 @@ fieldset {
     background-color: #8fc157;
 }
 
+.ws_data_table tr[onclick] { cursor: pointer; }
+
 .uppercase {
     text-transform: uppercase;
 }

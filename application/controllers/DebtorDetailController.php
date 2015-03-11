@@ -36,7 +36,14 @@ class DebtorDetailController extends BaseDebtorController {
 
         $vatNr = $obj->getDebtorField($this->debtorId,'VATNR');
         if ($this->moduleAccess('binformation') && strlen($vatNr) >=9 ) {
+
+            $this->view->vat = $vatNr;
+
             $client = new Application_Model_Binformation();
+
+            $this->view->binfo_counter = $client->getCounter();
+
+
             $report = $client->getDataByVat($vatNr);
             $xml = simplexml_load_string($report['XML']);
             $this->view->ratios = array('turnover','profit_loss_brought_forward','equity','net_profit_loss','gross_result'

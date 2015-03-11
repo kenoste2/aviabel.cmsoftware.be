@@ -88,6 +88,11 @@
                 <?php } else { ?>
                 <?php echo $this->Message($this->G("no_credit_incidents_found_c")); ?>
                 <?php } ?>
+                <br><br>
+                <span class="title"><?php echo $this->T('download_report_c'); ?></span>
+                <br>(<?php echo $this->T('aantal_eenheden_c'); ?> : <?php echo $this->binfo_counter ?>)
+                <br><a href="<?php echo $this->location() ?>/binfo/binfo/vat/<?php echo $this->vat ?>">
+                    <span title="<?php $this->T("view_c") ?>" class="ui-icon ui-icon-disk"></span></a>
                 <br><br><i><?php $this->T("gegevens_by_eurodb_c") ?></i>
 
         </td>
