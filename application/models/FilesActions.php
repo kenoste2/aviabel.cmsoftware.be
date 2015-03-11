@@ -30,11 +30,19 @@ class Application_Model_FilesActions extends Application_Model_Base
         );
 
 
-        if ($action['VIA'] == 'EMAIL') {
-            $data['EMAIL'] = $action['E_MAIL'];
-        }
-        if ($action['VIA'] == 'POST') {
-            $data['ADDRESS'] = $action['ADDRESS'];
+        if($action['TEMPLATE_ID']) {
+
+            if ($action['VIA'] == 'EMAIL') {
+                $data['EMAIL'] = $action['E_MAIL'];
+            }
+            if ($action['VIA'] == 'POST') {
+                $data['ADDRESS'] = $action['ADDRESS'];
+            }
+            if ($action['VIA'] == 'SMS') {
+                $data['GSM'] = $action['GSM'];
+            }
+
+            $data['VIA'] = $action['VIA'];
         }
 
         if ($action['PRINTED'] == 1) {
@@ -145,12 +153,13 @@ class Application_Model_FilesActions extends Application_Model_Base
         return true;
     }
 
-    public function add($data)
+    public function add($data, $allowPdfDocuments = false)
     {
         global $config;
 
         if (!empty($config->convertUTF8)) {
             $data['CONTENT'] = utf8_encode($data['CONTENT']);
+            $data['SMS_CONTENT'] = utf8_encode($data['SMS_CONTENT']);
         }
         $data['CONTENT'] = str_replace("'","`",$data['CONTENT']);
 
@@ -161,6 +170,8 @@ class Application_Model_FilesActions extends Application_Model_Base
         if (!empty($data['BP_NR_PAYMENTS']) && !empty($data['BP_STARTDATE'])) {
             $this->addPaymentPlan($data['FILE_ID'], $data);
         }
+
+        $this->handleSendLogic($data['TEMPLATE_ID'], $fileActionId, $data, $data['CONTENT'], $data['SMS_CONTENT'], $data['VIA'], $allowPdfDocuments);
 
         if ($data['VIA'] == "EMAIL") {
             $template = new Application_Model_Templates();
@@ -192,14 +203,60 @@ class Application_Model_FilesActions extends Application_Model_Base
             $mail->sendMail($data['E_MAIL'],$subject,$data['CONTENT'],false,false, $from);
         }
 
-
         return $fileActionId;
+    }
 
+    /**
+     * @param $interestCostsAccess
+     * @param $fileActionId
+     */
+    public function createPdfForAction($interestCostsAccess, $fileActionId)
+    {
+        global $config;
+
+        $pdfDoc = new Application_Model_PdfDocument($interestCostsAccess);
+        $pdfDoc->_initPdf();
+        $pdfDoc->_loadContentToPdf($fileActionId);
+        $fileName = $config->rootFileActionDocuments . "/{$fileActionId}.pdf";
+        if (!file_exists($fileName)) {
+            $pdfDoc->pdf->Output($fileName);
+        }
+    }
+
+    /**
+     * @param $templateId
+     * @param $fileActionId
+     * @param $toContent
+     * @param $content
+     * @param $smsContent
+     * @param $communicationType
+     * @param $smsContent
+     * @param $communicationType
+     * @param $allowPdfGeneration
+     */
+    public function handleSendLogic($templateId, $fileActionId, $toContent, $content, $smsContent, $communicationType, $allowPdfGeneration)
+    {
+        if ($templateId > 0) {
+
+            if ($communicationType === 'EMAIL') {
+
+                $this->sendFileActionMail($templateId, $toContent["E_MAIL"], $content);
+            }
+
+            if ($communicationType === 'SMS') {
+                $this->sendSmsFileActionMail($templateId, $toContent["GSM"], $smsContent);
+            }
+
+            if ($communicationType === 'POST' && $allowPdfGeneration) {
+                $moduleAccessObj = new Application_Model_ModuleAccess();
+                $interestCostsAccess = $moduleAccessObj->moduleAccess('intrestCosts');
+                $this->createPdfForAction($interestCostsAccess, $fileActionId);
+            }
+        }
     }
 
     public function addPaymentPlan($fileId, $arrayData)
     {
-
         $obj = new Application_Model_TemplatesContent();
 
         $paymentPlan = $obj->getPaymentPlanContent($fileId, $arrayData['STARTDATE'], $arrayData['BP_NR_PAYMENTS']);
@@ -259,12 +316,72 @@ class Application_Model_FilesActions extends Application_Model_Base
 
     public function getActionsByFileId($fileId)
     {
-        $sql = "select A.FILE_ACTION_ID,A.ACTION_DATE,A.DUE_DATE,A.ACTION_ID,A.ACTION_CODE,A.ACTION_DESCRIPTION,A.TEMPLATE_ID,A.REMARKS,A.ACTION_USER,B.TEMPLATE_CONTENT
+        $sql = "select A.FILE_ACTION_ID,A.ACTION_DATE,A.DUE_DATE,A.ACTION_ID,A.ACTION_CODE,B.VIA,A.ACTION_DESCRIPTION,A.TEMPLATE_ID,A.REMARKS,A.ACTION_USER,B.TEMPLATE_CONTENT,A.FILE_ID
                 from FILES\$FILE_ACTIONS_ALL_INFO A
                 JOIN FILES\$FILE_ACTIONS B ON A.FILE_ACTION_ID = B.FILE_ACTION_ID
                 where A.FILE_ID='$fileId' order by A.ACTION_DATE DESC ,A.FILE_ACTION_ID DESC";
         $results = $this->db->get_results($sql);
         return $results;
+    }
+
+    /**
+     * @param $templateId
+     * @param $emailAddress
+     * @param $content
+     * @return bool|\Email
+     */
+    public function sendFileActionMail($templateId, $emailAddress, $content) {
+        $template = new Application_Model_Templates();
+        $subject = $template->getTemplateDescription($templateId);
+        if (empty($subject)) {
+            $subject = "";
+        }
+        $mail = new Application_Model_Mail();
+
+        return $mail->sendMail($emailAddress, $subject, $content, false, false);
+    }
+
+    public function sendSmsFileActionMail($templateId, $phoneNumber, $smsContent) {
+        $content = "{$smsContent}<END>";
+
+        $strippedPhoneNumber = $this->standardizePhoneNumber($phoneNumber);
+
+        $emailAddress = "{$strippedPhoneNumber}@smsemail.be";
+        $template = new Application_Model_Templates();
+        $subject = $template->getTemplateDescription($templateId);
+
+        $mail = new Application_Model_Mail();
+
+        return $mail->sendMail($emailAddress, $subject, $content, false, false);
+    }
+
+    /**
+     * @param $phoneNumber
+     * @return mixed
+     */
+    public function standardizePhoneNumber($phoneNumber)
+    {
+        $isRawInternational = false;
+        //NOTE: numbers starting with + are considered to need no correction, just removal of non-numeric characters
+        if(preg_match('/^\+\d/', $phoneNumber)) {
+            $isRawInternational = true;
+        }
+        $cleanedUpNumber = preg_replace('/\D/', '', $phoneNumber);
+        if($isRawInternational) {
+            return $cleanedUpNumber;
+        }
+        //NOTE: numbers starting with 00 are considered international numbers. The 00 is chopped off.
+        $matches = array();
+        if(preg_match('/^00(.*)$/', $cleanedUpNumber, $matches)) {
+            return $matches[1];
+        }
+        //NOTE: numbers starting with 0 are considered Belgian numbers. 32 is added to them.
+        $matches = array();
+        if(preg_match('/^0(.*)$/', $cleanedUpNumber, $matches)) {
+            return "32" . $matches[1];
+        }
+        //NOTE: if none of the previous matched, just dump the cleaned up number
+        return $cleanedUpNumber;
     }
 
     public function getToBePrintedCount()

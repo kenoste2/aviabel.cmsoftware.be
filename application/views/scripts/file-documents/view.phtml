@@ -24,7 +24,7 @@ if ($this->deleted) {
                 <td><?php echo $row->CREATED ?></td>
                 <td><?php echo $row->CREATEDBY ?></td>
                 <td><a href="<?php echo $this->locationFiles?>/<?php echo $row->FILENAME ?>" target="_blank" ><span title ="<?php $this->T("view_c") ?>"  class="ui-icon ui-icon-disk"></span></td>
-                <td><?php if ($this->online_user == $row->CREATEDBY or isset($this->MayDelete)) { echo $this->Delete($this->location()."/file-documents/view/delete/".$row->FILE_DOCUMENTS_ID."/index/".$this->index, $row->DESCRIPTION); } ?></td>
+                <td><?php if ($this->online_user == $row->CREATEDBY or isset($this->MayDelete)) { echo $this->Delete($this->location()."/file-documents/view/delete/".$row->FILE_DOCUMENTS_ID."/fileId/".$this->fileId, $row->DESCRIPTION); } ?></td>
             </tr>
         <?php } ?>
     <?php } else { ?>

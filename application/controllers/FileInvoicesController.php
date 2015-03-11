@@ -12,7 +12,7 @@ class FileInvoicesController extends BaseFileController
         $this->_helper->_layout->setLayout('file-layout');
 
         if ($this->hasAccess('manageInvoices')) {
-            $this->view->addButton = "/file-invoices/add/index/" . $this->getParam("index");
+            $this->view->addButton = "/file-invoices/add/fileId/" . $this->fileId;
             $this->view->manageInvoices = true;
         }
         $this->view->printButton = true;

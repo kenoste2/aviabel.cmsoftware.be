@@ -10,6 +10,21 @@ class Application_Model_Languages extends Application_Model_Base {
         return $results;
     }
 
+    public function getLanguageById($languageId) {
+        $escLanguageId = $this->db->escape($languageId);
+        return $this->db->get_row("select LANGUAGE_ID, DESCRIPTION from SUPPORT\$LANGUAGES WHERE LANGUAGE_ID = {$escLanguageId}");
+    }
+
+    public function getShortLanguageStringById($languageId)
+    {
+        $language = $this->getLanguageById($languageId);
+        $mapping = array('DUTCH' => 'NL', 'FRENCH' => 'FR', 'ENGLISH' => 'EN', 'GERMAN' => 'DE');
+        if(in_array($language->DESCRIPTION, $mapping)) {
+            return $mapping[$language->DESCRIPTION];
+        }
+        return 'NL';
+    }
+
     public function getIdByCode($code)
     {
         switch($code) {

@@ -27,40 +27,34 @@ class CronController extends BaseController
             $content = $print->getTemplateContent($module->FILE_ID, $module->TEMPLATE_ID);
             $content = json_decode($content);
             $content = $content->CONTENT;
+            $smsContent = $content->SMS_CONTENT;
             $to = $print->getToContent($module->FILE_ID,$module->TEMPLATE_ID);
 
             $now = new DateTime();
+
+            $communicationType = $this->getCommunicationType($module, $to, $smsContent);
             $action = array(
                 'FILE_ID' => $module->FILE_ID,
                 'ACTION_ID' => $module->ACTION_ID,
                 'REMARKS' => '',
-                'VIA' => 'POST',
-                'ADDRESS' => "{$to['NAME']}\n{$to['ADDRESS']}\n{$to['ZIP_CODE']} {$to['CITY']}",
-                'EMAIL' => $to['E_MAIL'],
+                'VIA' => $communicationType,
+                'ADDRESS' => $print->formatAddress($to),
+                'E_MAIL' => $to['E_MAIL'],
+                'GSM' => $to['GSM'],
                 'PRINTED' => 0,
                 'ACTION_DATE' => $now->format('Y-m-d'),
                 'TEMPLATE_ID' => $module->TEMPLATE_ID,
                 'FILE_STATE_ID' => $modules->STATE_ID,
-                'CONTENT' => $content
+                'CONTENT' => $content,
+                'SMS_CONTENT' => $smsContent
             );
             /* 3. model Application_Model_FilesActions -> add */
-            $fileActionId = $filesActions->add($action);
-
-
-            $interestCostsAccess = $this->moduleAccess('intrestCosts');
-
-            $pdfDoc = new Application_Model_PdfDocument($interestCostsAccess);
-
-            $pdfDoc->_initPdf();
-            $pdfDoc->_loadContentToPdf($fileActionId);
-            $fileName = $config->rootFileActionDocuments . "/{$fileActionId}.pdf";
-            if (!file_exists($fileName)) {
-                $pdfDoc->pdf->Output($fileName);
-            }
+            $filesActions->add($action, true);
         }
 
         die("train has run");
     }
+
 
     public function intrestsAction()
     {
@@ -235,6 +229,26 @@ class CronController extends BaseController
                 }
             }
         }
+    }
+
+    /**
+     * @param $module
+     * @param $toContent
+     * @param $smsContent
+     * @return string
+     */
+    public function getCommunicationType($module, $toContent, $smsContent)
+    {
+        $templateModulesObj = new Application_Model_TemplateModules();
+        $modules = $templateModulesObj->getModulesForTemplate($module->TEMPLATE_ID);
+
+        if (in_array($templateModulesObj->MAIL_MODULE, $modules) && $toContent["E_MAIL"]) {
+            return 'EMAIL';
+        }
+        if (in_array($templateModulesObj->SMS_MODULE, $modules) && $toContent["GSM"] && $smsContent) {
+            return 'SMS';
+        }
+        return 'POST';
     }
 }
 

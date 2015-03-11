@@ -14,18 +14,10 @@ class BaseFileController extends BaseController {
         parent::init();
         
         $this->_helper->_layout->setLayout('file-layout');
-        $session = new Zend_Session_Namespace('FILES');
-
 
         $indexes = $this->_getNextPrevCurrent();
         $this->fileId = $indexes['currentFileId'];
         $this->view->indexes = $indexes;
-
-
-        if (empty($this->fileId) && !empty($session->fileId)) {
-            $this->fileId = $session->fileId;
-        }
-
 
         $this->loadFile();
 

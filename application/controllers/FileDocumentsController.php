@@ -9,7 +9,7 @@ class FileDocumentsController extends BaseFileController {
         global $config;
 
         if ($this->hasAccess('addDocuments')) {
-            $this->view->addButton = "/file-documents/add/index/" . $this->getParam("index");
+            $this->view->addButton = "/file-documents/add/fileId/" . $this->fileId;
         }
         if ($this->hasAccess('deleteAllDocuments')) {
             $this->view->MayDelete = true;

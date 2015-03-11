@@ -19,15 +19,14 @@ class FileActionsController extends BaseFileController
         }
 
         if ($this->hasAccess('addActions')) {
-            $this->view->addButton = "/file-actions/add/index/" . $this->getParam("index");
+            $this->view->addButton = "/file-actions/add/fileId/" . $this->fileId;
         }
-
 
         if ($this->getParam("pdf")) {
             $this->view->pdf = $this->getParam("pdf");
         }
 
-            if ($this->getParam("delete") && $this->hasAccess('deleteActions') ) {
+        if ($this->getParam("delete") && $this->hasAccess('deleteActions') ) {
             $this->delete($this->getParam("delete"));
             $this->view->deleted = true;
         }
@@ -83,9 +82,9 @@ class FileActionsController extends BaseFileController
                 $actionId = $obj->add($update);
 
                 if ($update['PRINTED'] == '1' && $update['VIA'] == 'POST') {
-                    $this->_redirect("/file-actions/view/added/1/pdf/{$actionId}/index/" . $this->getParam("index"));
+                    $this->_redirect("/file-actions/view/added/1/pdf/{$actionId}/fileId/" . $this->fileId);
                 } else {
-                    $this->_redirect('/file-actions/view/added/1/index/' . $this->getParam("index"));
+                    $this->_redirect('/file-actions/view/added/1/fileId/' . $this->fileId);
                 }
             } else {
                 if (empty($actionId)) {

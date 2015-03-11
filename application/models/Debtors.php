@@ -207,11 +207,13 @@ class Application_Model_Debtors extends Application_Model_Base {
         }
     }
 
-
-
-
-    
-
+    public function getDebtorByFileActionId($fileActionId) {
+         $escFileActionId = $this->db->escape($fileActionId);
+         $sql = "SELECT * FROM FILES\$DEBTORS WHERE DEBTOR_ID =
+                    (SELECT DEBTOR_ID FROM FILES\$FILES WHERE FILE_ID =
+                        (SELECT FILE_ID FROM FILES\$FILE_ACTIONS WHERE FILE_ACTION_ID = {$escFileActionId}))";
+        return $this->db->get_row($sql);
+    }
 }
 
 ?>

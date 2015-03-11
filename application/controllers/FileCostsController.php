@@ -6,7 +6,7 @@ class FileCostsController extends BaseFileController {
 
     public function viewAction() {
 
-        $this->view->addButton = "/file-costs/add/index/" . $this->getParam("index");
+        $this->view->addButton = "/file-costs/add/fileId/" . $this->fileId;
         $this->view->printButton = true;
 
 

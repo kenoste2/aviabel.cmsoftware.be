@@ -17,6 +17,7 @@ if ($this->pdf > 0) { ?>
     <tr>
         <th><?php $this->T("action_date_c"); ?></th>
         <th><?php $this->T("code_c"); ?></th>
+        <th><?php $this->T("via_c"); ?></th>
         <th><?php $this->T("description_c"); ?></th>
         <th><?php $this->T("remarks_c"); ?></th>
         <th><?php $this->T("user_c"); ?></th>
@@ -29,6 +30,7 @@ if ($this->pdf > 0) { ?>
             <tr>
                 <td><?php echo $this->Date($row->ACTION_DATE) ?></td>
                 <td><?php echo $row->ACTION_CODE ?></td>
+                <td><?php echo $row->VIA ?></td>
                 <td><?php echo $row->ACTION_DESCRIPTION ?></td>
                 <td><?php echo $row->REMARKS ?></td>
                 <td><?php echo $row->ACTION_USER ?></td>
@@ -37,7 +39,7 @@ if ($this->pdf > 0) { ?>
                        target="_blank"><span title="<?php $this->T("view_c") ?>" class="ui-icon ui-icon-disk"></span>
                         <?php } ?>
                 </td>
-                <td><?php if (!empty($this->mayDelete)) { echo $this->Delete($this->location() . "/file-actions/view/delete/" . $row->FILE_ACTION_ID . "/index/" . $this->index, $row->ACTION_DESCRIPTION); } ?></td>
+                <td><?php if (!empty($this->mayDelete)) { echo $this->Delete($this->location() . "/file-actions/view/delete/" . $row->FILE_ACTION_ID . "/fileId/" . $this->fileId, $row->ACTION_DESCRIPTION); } ?></td>
 
             </tr>
         <?php } ?>

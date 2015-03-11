@@ -879,3 +879,10 @@ INSERT INTO TEKSTEN (CODE,NAV,NL,FR,EN,SETTINGS) VALUES ('attachments_c','all','
 INSERT INTO TEKSTEN (CODE,NAV,NL,FR,EN,SETTINGS) VALUES ('laatste_c','all','Laatste', 'Dernières','last',0);
 INSERT INTO TEKSTEN (CODE,NAV,NL,FR,EN,SETTINGS) VALUES ('no_step_c','all','géén vervolg', 'pas de suite','no next step',0);
 
+INSERT INTO TEKSTEN (CODE,NAV,NL,FR,EN,SETTINGS) VALUES ('conditions_file_c','all','Bestand met factuurvoorwaarden','Fichier conditions de facturation','Invoice conditions file',0);
+INSERT INTO TEKSTEN (CODE,NAV,NL,FR,EN,SETTINGS) VALUES ('download_file_c','all','Bestand downloaden','Télécharger fichier','Download file',0);
+INSERT INTO TEKSTEN (CODE,NAV,NL,FR,EN,SETTINGS) VALUES ('via_c','all','Verstuurd via','Envoyé par','Sent by',0);
+
+INSERT INTO TEKSTEN (CODE,NAV,NL,FR,EN,SETTINGS) VALUES ('textinhoud_sms_c','all','tekstinhoud SMS','contenu SMS','text message content',0);
+INSERT INTO TEKSTEN (CODE,NAV,NL,FR,EN,SETTINGS) VALUES ('inhoud_sms_c','all','tekstinhoud SMS','contenu SMS','text message content',0);
+INSERT INTO TEKSTEN (CODE,NAV,NL,FR,EN,SETTINGS) VALUES ('sms_c','all','SMS','SMS','text message',0);

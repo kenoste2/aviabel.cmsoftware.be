@@ -124,7 +124,8 @@ class AjaxController extends BaseController
         $debtorData = $templatesObj->getToContent($fileId, $templateId);
         $array [] = array(
             'EMAIL' => $debtorData['E_MAIL'],
-            'ADDRESS' => "{$debtorData['NAME']}\n{$debtorData['ADDRESS']}\n{$debtorData['ZIP_CODE']} {$debtorData['CITY']}",
+            'GSM' => $debtorData['GSM'],
+            'ADDRESS' => $templatesObj->formatAddress($debtorData),
         );
         print json_encode($array);
     }
