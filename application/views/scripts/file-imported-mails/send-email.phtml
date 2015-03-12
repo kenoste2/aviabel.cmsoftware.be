@@ -7,7 +7,7 @@ if(count($this->messages) > 0) {
 
 if($this->success) {
     ?><div class="ui-state-highlight ui-corner-all" style="padding: 0.7em; width:400px;"><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;" ></span><?php print $this->T('success_c') ?></div><?php
-}
+} else {
 ?>
 <?php
 //NOTE: remove wrapping dt-tag from labels.
@@ -72,3 +72,4 @@ foreach ($this->form->getElements() as $element) {
         })
     });
 </script>
+<?php } ?>
