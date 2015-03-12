@@ -100,7 +100,11 @@ class FileImportedMailsController extends BaseFileController {
         $from = array('email' => $fromEmail, 'name' => $fromEmail);
         $baseSubject = $form->getValue("SUBJECT");
         $fileNr = $filesObj->getFileNumberById($this->fileId);
-        $subject = "{$baseSubject} #{$fileNr}#";
+
+        $fileObj = new Application_Model_File();
+        $reference = $fileObj->getFileField($this->fileId, 'REFERENCE');
+        $clientCode = $fileObj->getFileField($this->fileId, 'CLIENT_CODE');
+        $subject = "{$baseSubject} #{$clientCode}-{$reference}#";
         $content = $form->getValue("CONTENT");
 
         $attachments = $this->addFileDocumentsAsAttachments($form, $config);

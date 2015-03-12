@@ -59,7 +59,7 @@ class Application_Model_ImportedMails extends Application_Model_Base
             $fileId = '0';
         }
         $escFileId = $this->db->escape($fileId);
-        return $this->db->get_results("SELECT * FROM IMPORTED_MAILS WHERE FILE_ID = {$escFileId}");
+        return $this->db->get_results("SELECT * FROM IMPORTED_MAILS WHERE FILE_ID = {$escFileId} ORDER BY IMPORTED_MAIL_ID DESC ");
     }
 
     public function retrieveByDateRange($fromDate, $toDate)
@@ -76,7 +76,7 @@ class Application_Model_ImportedMails extends Application_Model_Base
                            (SELECT FIRST 1 FILE_NR FROM FILES\$FILES WHERE FILE_ID = i.FILE_ID) AS FILE_NR,
                            (SELECT FIRST 1 DEBTOR_NAME FROM FILES\$FILES_ALL_INFO WHERE FILE_ID = i.FILE_ID) AS CLIENT_NAME,
                            (SELECT FIRST 1 REFERENCE FROM FILES\$FILES_ALL_INFO WHERE FILE_ID = i.FILE_ID) AS REFERENCE
-                    FROM IMPORTED_MAILS i WHERE i.CREATION_DATE >= '{$escFromDate} 00:00:00' AND i.CREATION_DATE <= '{$escToDate} 23:59:59'";
+                    FROM IMPORTED_MAILS i WHERE i.CREATION_DATE >= '{$escFromDate} 00:00:00' AND i.CREATION_DATE <= '{$escToDate} 23:59:59' ORDER BY IMPORTED_MAIL_ID DESC";
             return $this->db->get_results($sql);
         }
         return array();
