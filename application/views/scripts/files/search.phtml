@@ -1,9 +1,8 @@
 <style>
     #chartdiv {
-        width: 500px;
+        width: 450px;
         height: 200px;
-        font-size: 11px;
-        position: relative;
+        position: absolute;
         float: right;
     }
 </style>
@@ -35,10 +34,10 @@ if ($this->deleted) {
 ?>
 
 <div class="toggler noprint">
-    <div id="chartdiv"></div>
-    <div id="searchbox" class="ui-widget-content" style="width: 600px;">
+    <div id="searchbox"  class="ui-widget-content" style="width: 90%;">
         <form action="<?php echo $this->location() ?>/files/search" method="post">
             <input type="hidden" name='formSubmit' value='1'>
+            <table><tr><td>
             <table width="100%">
                 <thead>
                     <tr>
@@ -75,6 +74,9 @@ if ($this->deleted) {
                 </tr>
             </table>
         </form>
+        </td><td>
+            <div id="chartdiv"></div>
+        </td></tr></table>
     </div>
 </div>
 <br>

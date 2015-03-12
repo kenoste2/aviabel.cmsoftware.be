@@ -343,16 +343,12 @@ class Application_Model_FilesActions extends Application_Model_Base
 
     public function sendSmsFileActionMail($templateId, $phoneNumber, $smsContent) {
         $content = "{$smsContent}<END>";
-
         $strippedPhoneNumber = $this->standardizePhoneNumber($phoneNumber);
-
         $emailAddress = "{$strippedPhoneNumber}@smsemail.be";
         $template = new Application_Model_Templates();
         $subject = $template->getTemplateDescription($templateId);
-
         $mail = new Application_Model_Mail();
-
-        return $mail->sendMail($emailAddress, $subject, $content, false, false);
+        return $mail->sendMail($emailAddress, utf8_decode($subject), utf8_decode($content), false, true);
     }
 
     /**
