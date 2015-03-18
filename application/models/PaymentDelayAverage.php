@@ -32,11 +32,47 @@ class Application_Model_PaymentDelayAverage extends Application_Model_Base {
                                   R.INVOICE_DATE) AS FORECAST_DAY
                     FROM FILES\$REFERENCES R
                         JOIN FILES\$FILES F ON F.FILE_ID = R.FILE_ID
-                    WHERE (SELECT SUM(AMOUNT) FROM FILES\$PAYMENTS WHERE REFERENCE_ID = R.REFERENCE_ID) < R.SALDO_AMOUNT
+                    WHERE R.SALDO_AMOUNT > 0 AND R.AMOUNT > 0
                 )
-                WHERE FORECAST_DAY > CURRENT_DATE
-                GROUP BY FORECAST_DAY";
-        return $this->db->get_results($sql);
+                WHERE FORECAST_DAY > CURRENT_DATE AND FORECAST_DAY <= CURRENT_DATE + 60
+                GROUP BY FORECAST_DAY
+                ORDER BY FORECAST_DAY ASC";
+        $results = $this->db->get_results($sql);
+        if(count($results) <= 0) {
+            //NOTE: when no data available: return empty information for the next seven days.
+            $emptySet = array();
+            for($i = 0; $i < 7; $i++) {
+                $now = new DateTime();
+                $now->add(new DateInterval("P{$i}D"));
+                $emptySet []= (object) array( "FORECAST_DAY" => $now->format("Y-m-d"), "FORECAST_VALUE" => 0);
+            }
+            return $emptySet;
+        }
+
+        $correctedSet = array();
+
+        $firstDaySet = false;
+        foreach($results as $result) {
+            $dayToReach = DateTime::createFromFormat('Y-m-d', $result->FORECAST_DAY);
+
+            //NOTE: fill in the gaps between results with empty data.
+            if(!$firstDaySet) {
+                $now = new DateTime();
+                $interval = $now->diff($dayToReach);
+                if($interval->days >= 1) {
+                    $correctedSet []= (object) array(
+                        "FORECAST_DAY" =>  $now->format('Y-m-d'),
+                        "FORECAST_VALUE" => 0
+                    );
+                }
+                $firstDaySet = true;
+            }
+
+            $correctedSet []= (object) array(
+                "FORECAST_DAY" =>  $result->FORECAST_DAY,
+                "FORECAST_VALUE" => $result->FORECAST_VALUE);
+        }
+        return $correctedSet;
     }
 }
 

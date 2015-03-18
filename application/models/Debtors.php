@@ -32,11 +32,10 @@ class Application_Model_Debtors extends Application_Model_Base {
     }
 
     public function getAllDebtors() {
-        $sql = "SELECT * FROM FILES\$DEBTORS";
-        /*
+        $sql = "SELECT * FROM FILES\$DEBTORS
                 WHERE DEBTOR_ID IN
                     (SELECT DEBTOR_ID FROM FILES\$FILES
-                     WHERE DATE_CLOSED IS NULL OR DATE_CLOSED > (CURRENT_DATE - 7))";*/
+                     WHERE DATE_CLOSED IS NULL OR DATE_CLOSED > (CURRENT_DATE - 7))";
         return $this->db->get_results($sql);
     }
 
@@ -175,8 +174,8 @@ class Application_Model_Debtors extends Application_Model_Base {
                 FROM FILES\$REFERENCES R
                     JOIN FILES\$FILES F ON F.FILE_ID = R.FILE_ID
                 WHERE F.DEBTOR_ID = {$escDebtorId}
-                  AND ((SELECT FIRST 1 PAYMENT_DATE FROM FILES\$PAYMENTS WHERE REFERENCE_ID = R.REFERENCE_ID ORDER BY PAYMENT_DATE DESC) - R.INVOICE_DATE) > {$escPaymentDelay}
-                  AND (SELECT SUM(AMOUNT) FROM FILES\$PAYMENTS WHERE REFERENCE_ID = R.REFERENCE_ID) < R.SALDO_AMOUNT";
+                  AND (CURRENT_DATE - R.INVOICE_DATE) > {$escPaymentDelay}
+                  AND R.SALDO_AMOUNT > 0 AND R.AMOUNT > 0";
         return $this->db->get_results($sql);
     }
 
@@ -187,7 +186,7 @@ class Application_Model_Debtors extends Application_Model_Base {
                   COUNT(*) AS NR_OF_PAYMENTS
                 FROM FILES\$REFERENCES R
                     JOIN FILES\$FILES F ON F.FILE_ID = R.FILE_ID
-                WHERE F.DEBTOR_ID = {$escDebtorId} AND (SELECT SUM(AMOUNT) FROM FILES\$PAYMENTS WHERE REFERENCE_ID = R.REFERENCE_ID) >= R.SALDO_AMOUNT";
+                WHERE F.DEBTOR_ID = {$escDebtorId} AND R.SALDO_AMOUNT <= 0 AND R.AMOUNT > 0";
 
         return $this->db->get_row($sql);
     }

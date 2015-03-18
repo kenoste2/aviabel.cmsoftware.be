@@ -48,6 +48,8 @@ class IndexController extends BaseController {
         $aging = $statisticsForClientModel->getGeneralAging();
         $this->view->aging = $aging;
 
+        $paymentDelayAverageObj = new Application_Model_PaymentDelayAverage();
+        $this->view->paymentForecast = $paymentDelayAverageObj->getPaymentForecast();
     }
 
 }

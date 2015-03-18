@@ -85,7 +85,7 @@ class CronController extends BaseController
                     if(count($references) > 0) {
                         foreach($references as $reference) {
                             $actionData = array(
-                                "ACTION_ID" => $action->ACTION_ID,
+                                "ACTION_ID" => $action['ACTION_ID'],
                                 "REMARKS" => "Over expected payment delay for invoice '{$reference->REFERENCE}'.",
                                 "PRINTED" => 'Y');
                             $fileActionsObj->addAction($reference->FILE_ID, $actionData);

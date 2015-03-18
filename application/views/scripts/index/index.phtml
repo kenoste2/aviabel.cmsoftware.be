@@ -1,9 +1,10 @@
 <script type="text/javascript" src="<?php echo $this->location() ?>/public/amcharts/amcharts.js"></script>
 <script type="text/javascript" src="<?php echo $this->location() ?>/public/amcharts/pie.js"></script>
 <script type="text/javascript" src="<?php echo $this->location() ?>/public/amcharts/gauge.js"></script>
+<script type="text/javascript" src="<?php echo $this->location() ?>/public/amcharts/serial.js"></script>
 
 <style>
-    #vervallen {
+    #vervallen, #paymentDelayForecastHistogram {
         width: 100%;
         height: 250px;
         position: relative;
@@ -11,6 +12,45 @@
     }
 </style>
 
+<script type="text/javascript">
+    var paymentDelayForecastHistogram = AmCharts.makeChart("paymentDelayForecastHistogram", {
+        "type": "serial",
+        "pathToImages": "http://www.amcharts.com/lib/3/images/",
+        "categoryField": "day",
+        "valueAxes": [{
+            "axisAlpha": 0,
+            "inside": true,
+            "position": "left",
+            "ignoreAxisWidth": true
+        }],
+        "graphs": [
+            {
+                "type" : "column",
+                "fillAlphas": 1,
+                "valueField": "value",
+                "hideBulletsCount": 3
+            }
+        ],
+        "dataDateFormat": "YYYY-MM-DD",
+        "chartScrollbar": {},
+        "chartCursor": {
+            "categoryBalloonDateFormat": "DD-MM-YYYY",
+            "cursorAlpha": 0,
+            "cursorPosition": "mouse"
+        },
+        "categoryAxis": {
+            "minPeriod": "DD",
+            "parseDates": true,
+            "minorGridAlpha": 0.1,
+            "minorGridEnabled": true
+        },
+        "dataProvider": [
+            <?php foreach($this->paymentForecast as $row) { ?>
+            { "day" : "<?php echo $row->FORECAST_DAY ?>", "value" : <?php echo $row->FORECAST_VALUE ?> },
+            <?php }?>
+        ]
+    });
+</script>
 <script>
     var chart = AmCharts.makeChart("vervallen", {
         "type": "pie",
@@ -216,5 +256,12 @@
         <?php } ?>
             </td>
 </tr>
+    <tr>
+        <td class="windowPart" colspan="3">
+
+            <div id="paymentDelayForecastHistogram"></div>
+        </td>
+    </tr>
 </table>
 </div>
+
