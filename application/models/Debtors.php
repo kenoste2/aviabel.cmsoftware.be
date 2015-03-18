@@ -28,7 +28,17 @@ class Application_Model_Debtors extends Application_Model_Base {
         }
 
         $debtorId = $this->addData('FILES$DEBTORS',$createData,'DEBTOR_ID');
-        return $debtorId;    }
+        return $debtorId;
+    }
+
+    public function getAllDebtors() {
+        $sql = "SELECT * FROM FILES\$DEBTORS";
+        /*
+                WHERE DEBTOR_ID IN
+                    (SELECT DEBTOR_ID FROM FILES\$FILES
+                     WHERE DATE_CLOSED IS NULL OR DATE_CLOSED > (CURRENT_DATE - 7))";*/
+        return $this->db->get_results($sql);
+    }
 
     public function add($data)
     {
@@ -150,8 +160,40 @@ class Application_Model_Debtors extends Application_Model_Base {
         return $this->db->get_var("SELECT TRAIN_TYPE FROM FILES\$DEBTORS WHERE DEBTOR_ID = {$debtorId}");
     }
 
+    function getMostRecentPaymentDelayAndPaymentNrHistory($debtorId) {
+        $escDebtorId = $this->db->escape($debtorId);
+        $sql = "SELECT FIRST 1 * FROM PAYMENT_DELAY_AVERAGE
+                WHERE DEBTOR_ID = {$escDebtorId}
+                ORDER BY DATE_STAMP DESC";
+        return $this->db->get_row($sql);
+    }
+
+    function getReferencesOverPaymentDelay($debtorId, $paymentDelay) {
+        $escDebtorId = $this->db->escape($debtorId);
+        $escPaymentDelay = $this->db->escape($paymentDelay);
+        $sql = "SELECT *
+                FROM FILES\$REFERENCES R
+                    JOIN FILES\$FILES F ON F.FILE_ID = R.FILE_ID
+                WHERE F.DEBTOR_ID = {$escDebtorId}
+                  AND ((SELECT FIRST 1 PAYMENT_DATE FROM FILES\$PAYMENTS WHERE REFERENCE_ID = R.REFERENCE_ID ORDER BY PAYMENT_DATE DESC) - R.INVOICE_DATE) > {$escPaymentDelay}
+                  AND (SELECT SUM(AMOUNT) FROM FILES\$PAYMENTS WHERE REFERENCE_ID = R.REFERENCE_ID) < R.SALDO_AMOUNT";
+        return $this->db->get_results($sql);
+    }
+
+    function calculatePaymentDelayAndPaymentNrInvoices($debtorId) {
+        $escDebtorId = $this->db->escape($debtorId);
+        $sql = "SELECT
+                  AVG((SELECT FIRST 1 PAYMENT_DATE FROM FILES\$PAYMENTS WHERE REFERENCE_ID = R.REFERENCE_ID ORDER BY PAYMENT_DATE DESC)- R.INVOICE_DATE) AS PAYMENT_DELAY,
+                  COUNT(*) AS NR_OF_PAYMENTS
+                FROM FILES\$REFERENCES R
+                    JOIN FILES\$FILES F ON F.FILE_ID = R.FILE_ID
+                WHERE F.DEBTOR_ID = {$escDebtorId} AND (SELECT SUM(AMOUNT) FROM FILES\$PAYMENTS WHERE REFERENCE_ID = R.REFERENCE_ID) >= R.SALDO_AMOUNT";
+
+        return $this->db->get_row($sql);
+    }
+
     function getPaymentDelay($debtorId) {
-        $sql = "SELECT AVG(COALESCE((SELECT PAYMENT_DATE FROM FILES\$PAYMENTS WHERE REFERENCE_ID = R.REFERENCE_ID),CURRENT_DATE)- R.INVOICE_DATE) AS DELAY_PAYMENT
+        $sql = "SELECT AVG(COALESCE((SELECT FIRST 1 PAYMENT_DATE FROM FILES\$PAYMENTS WHERE REFERENCE_ID = R.REFERENCE_ID ORDER BY PAYMENT_DATE DESC),CURRENT_DATE)- R.INVOICE_DATE) AS DELAY_PAYMENT
                 FROM FILES\$REFERENCES R
                     JOIN FILES\$FILES F ON F.FILE_ID = R.FILE_ID WHERE F.DEBTOR_ID = {$debtorId}";
 
@@ -159,9 +201,8 @@ class Application_Model_Debtors extends Application_Model_Base {
 
         if ($row->DELAY_PAYMENT) {
             $delay = $row->DELAY_PAYMENT;
-        } else {
-            $delay = $row->DELAY_NOPAYMENT;
         }
+
         if (empty($delay)) {
             $delay = "-";
         }

@@ -88,6 +88,11 @@ class ReportController extends BaseController
 
         $this->view->realtimeSummary = $realtimeSummary;
         $this->view->realtimeSummaryTotal = $realtimeSummaryTotal;
+
+        //TODO: move this to the correct controller/action
+
+        $paymentDelayAverageObj = new Application_Model_PaymentDelayAverage();
+        $this->view->paymentForecast = $paymentDelayAverageObj->getPaymentForecast();
     }
 
 

@@ -1,6 +1,6 @@
 <?php if (count($this->realtimeSummary) > 0): ?>
     <style>
-        #chartdiv {
+        #chartdiv, #paymentDelayForecastHistogram {
             width: 100%;
             height: 400px;
             font-size: 11px;
@@ -95,3 +95,23 @@
 <?php else: ?>
     <?php echo $this->Message($this->G("no_results_c")); ?>
 <?php endif; ?>
+
+<!-- TODO: move to correct controller/action -->
+<script type="text/javascript" src="<?php echo $this->location() ?>/public/amcharts/serial.js"></script>
+<script type="text/javascript">
+    var paymentDelayForecastHistogram = AmCharts.makeChart("paymentDelayForecastHistogram", {
+        "type": "serial",
+        "categoryField": "day",
+        "graphs": [
+            {
+                "valueField": "value"
+            }
+        ],
+        "dataProvider": [
+            <?php foreach($this->paymentForecast as $row) { ?>
+                { "day" : "<?php echo $row->FORECAST_DAY ?>", "value" : <?php echo $row->FORECAST_VALUE ?> },
+            <?php }?>
+        ]
+    });
+</script>
+<div id="paymentDelayForecastHistogram"></div>

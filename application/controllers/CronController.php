@@ -55,6 +55,47 @@ class CronController extends BaseController
         die("train has run");
     }
 
+    public function updatePaymentDelayHistoryAction() {
+        $this->_helper->layout->disableLayout();
+        $this->_helper->viewRenderer->setNoRender();
+
+        $debtorsObj = new Application_Model_Debtors();
+        $paymentDelayHistoryObj = new Application_Model_PaymentDelayAverage();
+        $fileActionsObj = new Application_Model_FilesActions();
+        $actionsObj = new Application_Model_Actions();
+
+        $action = $actionsObj->getActionByCode("OVER_DELAY");
+
+        $allDebtors = $debtorsObj->getAllDebtors();
+        if(count($allDebtors) > 0) {
+            foreach($allDebtors as $debtor) {
+                $info = $debtorsObj->calculatePaymentDelayAndPaymentNrInvoices($debtor->DEBTOR_ID);
+                $history = $debtorsObj->getMostRecentPaymentDelayAndPaymentNrHistory($debtor->DEBTOR_ID);
+
+                $currentDelay = $history->PAYMENT_DELAY;
+                if($info->NR_OF_PAYMENTS > 0
+                    && ($info->PAYMENT_DELAY != $history->PAYMENT_DELAY
+                        || $info->NR_OF_PAYMENTS != $history->NR_OF_PAYMENTS)) {
+                    $paymentDelayHistoryObj->addPaymentDelayHistory($debtor->DEBTOR_ID, $info->PAYMENT_DELAY, $info->NR_OF_PAYMENTS);
+                    $currentDelay = $info->PAYMENT_DELAY;
+                }
+
+                if($currentDelay) {
+                    $references = $debtorsObj->getReferencesOverPaymentDelay($debtor->DEBTOR_ID, $currentDelay);
+                    if(count($references) > 0) {
+                        foreach($references as $reference) {
+                            $actionData = array(
+                                "ACTION_ID" => $action->ACTION_ID,
+                                "REMARKS" => "Over expected payment delay for invoice '{$reference->REFERENCE}'.",
+                                "PRINTED" => 'Y');
+                            $fileActionsObj->addAction($reference->FILE_ID, $actionData);
+                        }
+                    }
+                }
+            }
+        }
+        die("Payment delays updated");
+    }
 
     public function intrestsAction()
     {
