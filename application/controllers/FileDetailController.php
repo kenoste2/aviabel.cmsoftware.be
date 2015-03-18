@@ -106,7 +106,7 @@ class FileDetailController extends BaseFileController {
         $data['CREATION_DATE'] = $this->functions->dateformat($this->file->CREATION_DATE);
         $next = $fileObj->getNextAction($this->fileId);
         if (!empty($next)) {
-            $data['NEXT_ACTION'] = $this->functions->dateformat($next['date']) . " -> " . $next['actionCode'] . ", " . $next['trainDescription'];
+            $data['NEXT_ACTION'] = $this->functions->dateformat($next['date']) . " -> " . $next['actionCode'] . ", " . $next['actionDescription'];
         } else {
             $data['NEXT_ACTION'] = $this->functions->T("no_step_c");
         }

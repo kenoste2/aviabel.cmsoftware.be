@@ -105,8 +105,14 @@ if ($this->deleted) {
                 <?php if (!empty($this->deleteRight)) { ?><th>&nbsp;</th><?php } ?>
             </tr>
         </thead>
-    <?php foreach ($this->results as $row) { ?>
-            <tr onClick="newscreen('<?php echo $row->DEBTOR_NAME ?>', '<?php echo $this->location() ?>/file-detail/view/fileId/<?php echo $row->FILE_ID ?>')">
+    <?php foreach ($this->results as $row) {
+        if (!empty($this->agendaStates) && stripos($this->agendaStates,$row->STATE_CODE) !== false ) {
+            $class = " class='due' ";
+        } else {
+            $class = "";
+        }
+        ?>
+            <tr <?php echo $class ?> onClick="newscreen('<?php echo $row->DEBTOR_NAME ?>', '<?php echo $this->location() ?>/file-detail/view/fileId/<?php echo $row->FILE_ID ?>')">
                 <td><?php echo $row->REFERENCE ?></td>
                 <td><?php echo $row->DEBTOR_NAME ?></td>
                 <td><?php echo $this->date($row->CREATION_DATE) ?></td>

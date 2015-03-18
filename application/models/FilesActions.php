@@ -413,6 +413,17 @@ class Application_Model_FilesActions extends Application_Model_Base
         $results = $this->db->get_results($sql);
         return $results;
     }
+
+    public function getToBePrintedAllCount()
+    {
+        $sql = "SELECT COUNT(*) AS COUNTER FROM FILES\$FILE_ACTIONS A
+                  JOIN SYSTEM\$TEMPLATES B ON A.TEMPLATE_ID = B.TEMPLATE_ID
+                WHERE A.TEMPLATE_ID > 0 AND A.TEMPLATE_CONTENT !='' AND A.PRINTED != 'Y' AND A.ADDRESS != ''
+                      AND B.VISIBLE = 'Y'";
+        $count = $this->db->get_var($sql);
+        return $count;
+
+    }
     public function getToBePrinted($templateId)
     {
         $sql = "SELECT FILE_ACTION_ID,ACTION_DATE FROM FILES\$FILE_ACTIONS A
@@ -422,6 +433,7 @@ class Application_Model_FilesActions extends Application_Model_Base
         $results = $this->db->get_results($sql);
         return $results;
     }
+
 
     public function setPrinted($templateId)
     {

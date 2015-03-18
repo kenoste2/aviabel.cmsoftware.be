@@ -27,8 +27,8 @@ if ($this->deleted) {
                 <td><?php echo $row->PAYMENT_FOR ?></td>
                 <td><?php echo $row->ACCOUNT_CODE ?></td>
                 <td><?php echo $row->JOURNAL_DESCRIPTION ?></td>
-                <td><?php if (!empty($this->managePayments)) { ?><a href="<?php echo $this->location() ?>/file-payments/edit/id/<?php echo $row->PAYMENT_ID ?>/fileId/<?php echo $row->fileId ?>" ><span title ="<?php $this->T("edit_c") ?>"  class="ui-icon ui-icon-zoomin"></span><?php } ?></td>
-                <td><?php if (!empty($this->managePayments)) { ?><?php echo $this->Delete($this->location()."/file-payments/view/delete/".$row->PAYMENT_ID."/fileId/".$row->fileId, $this->Amount($row->AMOUNT)) ?><?php } ?></td>
+                <td><?php if (!empty($this->managePayments)) { ?><a href="<?php echo $this->location() ?>/file-payments/edit/id/<?php echo $row->PAYMENT_ID ?>/fileId/<?php echo $this->fileId ?>" ><span title ="<?php $this->T("edit_c") ?>"  class="ui-icon ui-icon-zoomin"></span><?php } ?></td>
+                <td><?php if (!empty($this->managePayments)) { ?><?php echo $this->Delete($this->location()."/file-payments/view/delete/".$row->PAYMENT_ID."/fileId/".$this->fileId, $this->Amount($row->AMOUNT)) ?><?php } ?></td>
             </tr>
         <?php } ?>
     <?php } else { ?>

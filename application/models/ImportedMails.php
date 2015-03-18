@@ -81,4 +81,14 @@ class Application_Model_ImportedMails extends Application_Model_Base
         }
         return array();
     }
+
+    public function getTodayCount()
+    {
+        $sql = "SELECT COUNT(*) AS COUNTER FROM IMPORTED_MAILS
+                WHERE CREATION_DATE LIKE '".date("Y-m-d")."%'";
+        $count = $this->db->get_var($sql);
+        return $count;
+
+    }
+
 }
