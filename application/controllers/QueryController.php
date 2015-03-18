@@ -48,7 +48,8 @@ class QueryController extends BaseController
 
             foreach ($queries as $query) {
 
-                $sql1 = preg_replace('/^SELECT /i', 'SELECT FIRST 1000 ', trim($query));
+                //$sql1 = preg_replace('/^SELECT /i', 'SELECT FIRST 1000 ', trim($query));
+                $sql1 = trim($query);
                 print "<h3>$sql1</h3>";
 
                 if ($results = $this->db->get_results($sql1, ARRAY_N)) {

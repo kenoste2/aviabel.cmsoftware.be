@@ -14,6 +14,11 @@ class FilesController extends BaseController
         $this->view->exportButton = true;
         $this->view->printButton = true;
 
+
+        $agendaStates = $this->functions->getUserSetting("AGENDA_STATES");
+        $this->view->agendaStates = $agendaStates;
+
+
         $rights = new Application_Model_UserRights();
 
         if ($rights->hasRights($this->auth->online_user_id, 'DELETE_FILE')) {
@@ -58,13 +63,24 @@ class FilesController extends BaseController
         }
 
 
+        if ($this->getParam('agenda')) {
+            $session->data['state_id'] = $this->getParam('agenda');
+        }
+
+
+
         if ($form->isValid($_POST) && $this->getParam('formSubmit')) {
             $data = $form->getValues();
             $session->data = $data;
         }
+
+
+
         if (!empty($session->data)) {
             $form->populate($session->data);
         }
+
+
 
 
         $query_extra = "";
@@ -77,6 +93,9 @@ class FilesController extends BaseController
                 $closed_query = "";
             }
             if ($session->data['client'] != "") {
+                $query_extra = " and A.CLIENT_NAME CONTAINING  '{$session->data['client']}'";
+            }
+            if ($session->agenda != "") {
                 $query_extra = " and A.CLIENT_NAME CONTAINING  '{$session->data['client']}'";
             }
             if (!empty($session->data['debtor_name'])) {

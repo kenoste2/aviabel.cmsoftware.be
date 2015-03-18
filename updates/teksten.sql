@@ -907,3 +907,6 @@ INSERT INTO TEKSTEN (CODE,NAV,NL,FR,EN,SETTINGS) VALUES ('action_documents_c','a
 INSERT INTO TEKSTEN (CODE,NAV,NL,FR,EN,SETTINGS) VALUES ('file_documents_c','all','Dossierdocumenten.','Documents du dossier','File documents',0);
 INSERT INTO TEKSTEN (CODE,NAV,NL,FR,EN,SETTINGS) VALUES ('no_attachments_found_c','all','Geen bijlages gevonden.','Pas de pièces jointes retrouvées','No attachments found.',0);
 INSERT INTO TEKSTEN (CODE,NAV,NL,FR,EN,SETTINGS) VALUES ('mail_not_sent_c','all','De mail kon niet uitgestuurd worden. Mogelijk heeft u te veel of te grote attachments toegevoegd. Probeer graag opnieuw met minder attachments.','L''email n''a pas été envoyé. Peut-être vous avez ajouté trop de fichiers en annexe ou des fichiers trop grands. Veuillez ressayer avec moins de fichiers en annexe.','The mail could not be sent out. Possibly this is because you added to many attachments or attachments that are too big. Please retry with fewer attachments.',0);
+INSERT INTO TEKSTEN (CODE,NAV,NL,FR,EN,SETTINGS) VALUES ('menu_index_index','all','Dashboard','Dashboard','Dashboard',0);
+INSERT INTO TEKSTEN (CODE,NAV,NL,FR,EN,SETTINGS) VALUES ('vandaag_c','all','vandaag','aujourd`hui','today',0);
+INSERT INTO TEKSTEN (CODE,NAV,NL,FR,EN,SETTINGS) VALUES ('agenda_c','all','Agenda','Calendrier','Calendar',0);

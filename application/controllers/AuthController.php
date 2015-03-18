@@ -35,7 +35,7 @@ class AuthController extends Zend_Controller_Action {
             }
 
             if ($adapter->isValid()) {
-                $this->_redirect('/files/search');
+                $this->_redirect('/index/index');
                 return;
             } else {
                 $this->view->showError = true;
