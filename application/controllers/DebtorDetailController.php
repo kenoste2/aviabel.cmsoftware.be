@@ -30,8 +30,10 @@ class DebtorDetailController extends BaseDebtorController {
         $generalForm->populate($data);
         $this->view->openAmount = $obj->getOpenAmount($this->debtorId);
         $this->view->totalAmount = $obj->getTotalAmount($this->debtorId);
-        
-        $this->view->paymentDelay = $obj->getPaymentDelay($this->debtorId);
+
+        $delayInfo = $obj->calculatePaymentDelayAndPaymentNrInvoices($this->debtorId);
+        $this->view->paymentDelay = $delayInfo->PAYMENT_DELAY;
+        $this->view->nrOfPayments = $delayInfo->NR_OF_PAYMENTS;
         $this->view->generalForm = $generalForm;
 
         $vatNr = $obj->getDebtorField($this->debtorId,'VATNR');

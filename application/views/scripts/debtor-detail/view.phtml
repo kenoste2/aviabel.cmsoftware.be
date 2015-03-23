@@ -32,7 +32,11 @@
                 <dt><?php $this->T("Created_c") ?> </dt>
                 <dd><?php echo $this->date($this->debtor->CREATION_DATE) ?></dd>
                 <dt><?php $this->T("gem_betalingstermijn_c") ?></dt>
-                <dd><?php echo $this->paymentDelay ?></dd>
+                <?php if($this->nrOfPayments > 0) { ?>
+                    <dd><?php echo $this->paymentDelay ?> (<?php $this->T("based_on_payments_c") ?>: <?php echo $this->nrOfPayments ?>)</dd>
+                <?php } else { ?>
+                    <dd><?php echo $this->T("insufficient_data_for_delay_c") ?></dd>
+                <?php } ?>
                 <br><br>
                 <?php if ($this->report && !empty($this->report->financial_data->fiscal_year)) {  ?>
                 <span class="title"><?php echo $this->T('credit_ratios_c'); ?></span>

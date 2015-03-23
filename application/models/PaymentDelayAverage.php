@@ -55,7 +55,7 @@ class Application_Model_PaymentDelayAverage extends Application_Model_Base {
         foreach($results as $result) {
             $dayToReach = DateTime::createFromFormat('Y-m-d', $result->FORECAST_DAY);
 
-            //NOTE: fill in the gaps between results with empty data.
+            //NOTE: if the first day is not set, add an empty item for that day so that it shows up in graphs.
             if(!$firstDaySet) {
                 $now = new DateTime();
                 $interval = $now->diff($dayToReach);
