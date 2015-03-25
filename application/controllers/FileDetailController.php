@@ -65,15 +65,6 @@ class FileDetailController extends BaseFileController {
             if ($generalForm->isValid($_POST)) {
                 $update = $data = $generalForm->getValues();
                 unset($update['GENERALFORM']);
-                // set field to database format
-                //if (!empty($update['VERJARING'])) {
-                //    $update['VERJARING'] = $this->functions->date_dbformat($update['VERJARING']);
-                //}
-                //if (empty($update['VERJARING'])) {
-                //    unset($update['VERJARING']);
-                //}
-                //$update['INCASSOKOST'] = $this->functions->dbBedrag($update['INCASSOKOST']);
-                //unset($update['REFERENCE']);
 
                 if (empty($update['STATE_ID'])) {
                     $update['STATE_ID'] = $this->file->STATE_ID;
@@ -90,9 +81,6 @@ class FileDetailController extends BaseFileController {
             $data = array(
                 'STATE_ID' => $this->file->STATE_ID,
                 'REFERENCE' => $this->file->REFERENCE,
-                //'CLOSE_STATE_ID' => $this->file->CLOSE_STATE_ID,
-                //'VERJARING' => $this->functions->dateformat($this->file->VERJARING),
-                //'INCASSOKOST' => $this->functions->amount($this->file2->INCASSOKOST),
                 'COLLECTOR_VISIBLE' => $this->file2->COLLECTOR_VISIBLE,
                 'COLLECTOR_ID' => $this->file->COLLECTOR_ID,
             );
@@ -140,8 +128,10 @@ class FileDetailController extends BaseFileController {
         $this->view->debtorForm = $debtorForm;
         $this->view->fileForm = $generalForm;
         $debtorObj = new Application_Model_Debtors();
-        $this->view->paymentDelay = $debtorObj->getPaymentDelay($this->file->DEBTOR_ID);
-    }    
+        $delayInfo = $debtorObj->calculatePaymentDelayAndPaymentNrInvoices($this->file->DEBTOR_ID);
+        $this->view->paymentDelay = $delayInfo->PAYMENT_DELAY;
+        $this->view->nrOfPayments = $delayInfo->NR_OF_PAYMENTS;
+    }
 
 }
 

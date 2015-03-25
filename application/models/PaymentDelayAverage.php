@@ -17,7 +17,6 @@ class Application_Model_PaymentDelayAverage extends Application_Model_Base {
             "NR_OF_PAYMENTS" => $nrOfPayments,
             "DATE_STAMP" => $now->format("Y-m-d")
         );
-        print_r($data);
         $this->saveData("PAYMENT_DELAY_AVERAGE", $data);
     }
 
