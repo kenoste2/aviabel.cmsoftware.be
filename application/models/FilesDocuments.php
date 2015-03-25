@@ -21,8 +21,8 @@ class Application_Model_FilesDocuments extends Application_Model_Base {
         $this->db->query($sql);
     }
 
-    public function save($data, $where) {
-        $this->saveData('FILES$DOCUMENTS', $data, $where);
+    public function save($data, $where = false) {
+        $this->saveData('FILE_DOCUMENTS', $data, $where);
     }
 
     public function add($fileId, $file, $description, $visible) {
@@ -77,10 +77,33 @@ class Application_Model_FilesDocuments extends Application_Model_Base {
         }
     }
 
+    public function getByReferenceId($referenceId) {
+
+        if(!$referenceId) {
+            $escReferenceId = 0;
+        } else {
+            $escReferenceId = $referenceId;
+        }
+
+        $sql = "SELECT * FROM FILE_DOCUMENTS WHERE REFERENCE_ID={$escReferenceId} ORDER BY FILENAME";
+        $results = $this->db->get_results($sql);
+        return $results;
+    }
+
     public function getDocumentsFromFile($fileId) {
         $sql = "SELECT * FROM FILE_DOCUMENTS WHERE FILE_ID={$fileId} ORDER BY FILENAME";
         $results = $this->db->get_results($sql);
         return $results;
+    }
+
+    public function getById($fileDocumentId) {
+        if(!$fileDocumentId) {
+            $escFileDocumentId = 0;
+        } else {
+            $escFileDocumentId = $this->db->escape($fileDocumentId);
+        }
+        $sql = "SELECT * FROM FILE_DOCUMENTS WHERE FILE_DOCUMENTS_ID = {$escFileDocumentId}";
+        return $this->db->get_row($sql);
     }
 
     public function getDocumentsByIds($documentIds) {

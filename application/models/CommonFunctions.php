@@ -47,7 +47,6 @@ class Application_Model_CommonFunctions
     public function db2array($data, $empty = true)
     {
 
-
         if ($empty === true) {
             $resultArray = array("" => "-");
         } else {

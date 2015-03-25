@@ -126,6 +126,18 @@ class Application_Model_FilesReferences extends Application_Model_Base {
         return $this->db->get_row($sql, "ARRAY_A");
     }
 
+    public function getAllReferencesByFileIdAsArray($fileId) {
+
+        $escFileId = $this->db->escape($fileId);
+        $sql = "select REFERENCE_ID,REFERENCE,CREATION_DATE,START_DATE,END_DATE,INVOICE_DATE,REFUND_STATEMENT,AUTO_CALCULATE,INTEREST_PERCENT,INTEREST_MINIMUM,COST_PERCENT,COST_MINIMUM,AMOUNT,COSTS
+                ,INTEREST,(AMOUNT+INTEREST+COSTS) as TOTAL,(SALDO_AMOUNT+SALDO_INTEREST+SALDO_COSTS) as SALDO, DISPUTE,I.STATE_ID, S.CODE AS STATE_CODE, I.TRAIN_TYPE from FILES\$REFERENCES I
+                 JOIN FILES\$STATES S ON S.STATE_ID = I.STATE_ID
+                 where FILE_ID='{$escFileId}'
+                 order by START_DATE DESC ,REFERENCE_ID DESC";
+
+        return $this->db->get_results($sql, "ARRAY_N");
+    }
+
     public function getReferencesByFileId($fileId, $excludeDisputes = false , $due = 'A')
     {
         $disputeExtra = $excludeDisputes ? "AND DISPUTE = 0" : "";

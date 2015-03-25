@@ -22,12 +22,11 @@ class FileInvoicesController extends BaseFileController
             $this->view->showIntrestCosts = true;
         }
 
-
-
         if ($this->getParam("delete") && $this->hasAccess('manageInvoices')) {
             $this->delete($this->getParam("delete"));
             $this->view->deleted = true;
         }
+
         $results = $obj->getReferencesByFileId($this->fileId);
         $this->view->results = $results;
     }
@@ -79,6 +78,8 @@ class FileInvoicesController extends BaseFileController
             $form->removeElement('submit');
         }
 
+        $referenceId = $this->getParam('id');
+
         $data = array();
         if ($this->getRequest()->isPost()) {
             if ($form->isValid($_POST)) {
@@ -104,7 +105,7 @@ class FileInvoicesController extends BaseFileController
                 $this->view->errors = $form->getErrors();
             }
         } else {
-            $reference = $this->db->get_row("SELECT * FROM FILES\$REFERENCES WHERE REFERENCE_ID = {$this->getParam('id')}");
+            $reference = $this->db->get_row("SELECT * FROM FILES\$REFERENCES WHERE REFERENCE_ID = {$referenceId}");
             $data = array(
                 'REFERENCE_TYPE' => $reference->REFERENCE_TYPE,
                 'REFERENCE_ID' => $reference->REFERENCE_ID,
@@ -132,6 +133,9 @@ class FileInvoicesController extends BaseFileController
         }
         $form->populate($data);
 
+        $fileDocumentsObj = new Application_Model_FilesDocuments();
+
+        $this->view->documents = $fileDocumentsObj->getByReferenceId($referenceId);
         $this->view->form = $form;
     }
 

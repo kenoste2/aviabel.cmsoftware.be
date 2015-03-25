@@ -24,9 +24,11 @@ class FileDocumentsController extends BaseFileController {
         }
 
         if ($this->auth->online_rights != 4) {
-            $extra_query = " AND VISIBLE = '1'";
+            $extra_query = " AND f.VISIBLE = '1'";
         }
-        $sql = "SELECT * FROM FILE_DOCUMENTS WHERE FILE_ID={$this->fileId} $extra_query ORDER BY FILENAME";
+        $sql = "SELECT f.*, (SELECT FIRST 1 r.REFERENCE FROM FILES\$REFERENCES r
+                        WHERE r.REFERENCE_ID = f.REFERENCE_ID) AS REFERENCE
+                FROM FILE_DOCUMENTS f WHERE f.FILE_ID={$this->fileId} $extra_query ORDER BY f.FILENAME";
         $this->view->results = $this->db->get_results($sql);
         
         
@@ -73,32 +75,36 @@ class FileDocumentsController extends BaseFileController {
     }
 
     public function editAction() {
-        $form = new Application_Form_FileEditPayment();
-        $filePaymentObj = new Application_Model_FilesPayments();
+        $form = new Application_Form_FileEditDocument($this->fileId);
+        $fileDocumentObj = new Application_Model_FilesDocuments();
+
+        $fileDocumentId = $this->getParam("fileDocumentId");
+
+        $fileDocument = $fileDocumentObj->getById($fileDocumentId);
 
         $data = array();
         if ($this->getRequest()->isPost()) {
             if ($form->isValid($_POST)) {
-                $data = $update = $form->getValues();
-                $update['PAYMENT_DATE'] = $this->functions->date_dbformat($update['PAYMENT_DATE']);
-                $update['AMOUNT'] = $this->functions->dbBedrag($update['AMOUNT']);
-                $update['COMMISSION'] = $this->functions->dbBedrag($update['COMMISSION']);
-                $filePaymentObj->save($update, "PAYMENT_ID = {$this->getParam('id')}");
+                $data = $form->getValues();
+                $escFileDocumentId = $this->db->escape($fileDocumentId);
+                $fileDocumentObj->save(array(
+                    "REFERENCE_ID" => $data["REFERENCE_ID"] && $data["REFERENCE_ID"] != '' ? $data["REFERENCE_ID"] : null,
+                    "DESCRIPTION" => $data["DESCRIPTION"] && $data["DESCRIPTION"] != '' ? $data["DESCRIPTION"] : null,
+                    ), "FILE_DOCUMENTS_ID = {$escFileDocumentId}");
                 $this->view->formSaved = true;
             } else {
                 $this->view->formError = true;
                 $this->view->errors = $form->getErrors();
             }
         } else {
-            $row = $this->db->get_row("SELECT * FROM FILES\$PAYMENTS WHERE PAYMENT_ID = {$this->getParam('id')}");
+            $form->populate(array("REFERENCE_ID" => $fileDocument->REFERENCE_ID, "DESCRIPTION" => $fileDocument->DESCRIPTION));
             $data = array();
-            $data['PAYMENT_DATE'] = $this->functions->dateformat($row->PAYMENT_DATE);
-            $data['AMOUNT'] = $this->functions->amount($row->AMOUNT);
-            $data['COMMISSION'] = $this->functions->amount($row->COMMISSION);
         }
+
         // Populating form
         $form->populate($data);
 
+        $this->view->fileName = $fileDocument->FILENAME;
         $this->view->form = $form;
     }
 
