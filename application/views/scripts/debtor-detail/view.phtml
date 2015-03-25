@@ -1,3 +1,11 @@
+<script type="text/javascript" src="<?php echo $this->location() ?>/public/js/jquery.raty.js"></script>
+<script type="text/javascript">
+    $(function() {
+        $('[data-rater]').each(function () {
+            $(this).raty({'score': $(this).attr('data-rater'), 'scoreName' : 'DEBTOR_SCORE' });
+        });
+    })
+</script>
 <div id="general" style="position: relative; width: 100%">
     <table width="100%">
         <tr>
@@ -37,6 +45,8 @@
                 <?php } else { ?>
                     <dd><?php echo $this->T("insufficient_data_for_delay_c") ?></dd>
                 <?php } ?>
+                <dt><?php $this->T("debtor_rating_c") ?></dt>
+                <dd><div data-rater="<?php echo $this->currentRating ?>"></div></dd>
                 <br><br>
                 <?php if ($this->report && !empty($this->report->financial_data->fiscal_year)) {  ?>
                 <span class="title"><?php echo $this->T('credit_ratios_c'); ?></span>

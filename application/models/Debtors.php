@@ -61,6 +61,7 @@ class Application_Model_Debtors extends Application_Model_Base {
         $zipCodeId = $zipCodesModel->CheckOrCreate($data);
         $birthDay = (!empty($data['BIRTH_DAY'])) ? "BIRTH_DAY = '{$data['BIRTH_DAY']}'" : 'BIRTH_DAY = null';
 
+
         $sql = "UPDATE FILES\$DEBTORS
             SET NAME = '{$data['NAME']}',
                 ADDRESS = '{$data['ADDRESS']}',
@@ -78,6 +79,18 @@ class Application_Model_Debtors extends Application_Model_Base {
                 WHERE DEBTOR_ID = {$data['DEBTOR_ID']}";
 
 
+        $this->db->query($sql);
+
+    }
+
+    public function changeDebtorScore($debtorScore, $userId) {
+
+        $escUserId = $this->db->escape($userId);
+        $escDebtorScore = $this->db->escape($debtorScore);
+
+        $sql = "INSERT INTO DEBTOR_SCORE
+                (DEBTOR_SCORE_ID, USER_ID, SCORE, TIME_STAMP)
+                VALUES((SELECT MAX(DEBTOR_SCORE_ID) + 1 FROM DEBTOR_SCORE), {$escUserId}, {$escDebtorScore}, CURRENT_TIME)";
         $this->db->query($sql);
     }
 

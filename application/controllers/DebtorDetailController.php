@@ -6,6 +6,7 @@ class DebtorDetailController extends BaseDebtorController {
 
     public function viewAction() {
         $obj = new Application_Model_Debtors();
+        $userObj = new Application_Model_Users();
 
         $generalForm = new Application_Form_AddDebtor();
         $data = array();
@@ -14,7 +15,11 @@ class DebtorDetailController extends BaseDebtorController {
                 $update = $data = $generalForm->getValues();
                 $update['BIRTH_DAY'] = $this->functions->date_dbformat($data['BIRTH_DAY']);
                 $update['CREDIT_LIMIT'] = $this->functions->dbBedrag($data['CREDIT_LIMIT']);
+
                 $obj->update($update);
+                die($_POST['DEBTOR_SCORE']);
+                $obj->changeDebtorScore($_POST['DEBTOR_SCORE'], $userObj->getLoggedInUser()->USER_ID);
+
                 $this->view->generalFormSaved = true;
             } else {
                 $this->view->generalFormError = true;
@@ -55,6 +60,7 @@ class DebtorDetailController extends BaseDebtorController {
             $this->view->report = false;
         }
 
+        $this->view->currentRating = 4;
 
     }
 

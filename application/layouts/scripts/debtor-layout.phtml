@@ -6,10 +6,16 @@
         <title><?php echo $this->headerTitle ?></title>
         <?php echo $this->headLink()->appendStylesheet(BASE_URL . 'css/global.css') ?>
         <?php echo $this->headLink()->appendStylesheet(BASE_URL . 'css/start/jquery-ui-1.10.4.custom.css') ?>
+        <?php echo $this->headLink()->appendStylesheet(BASE_URL . 'js/jquery.raty.css') ?>
         <?php echo $this->headScript()->appendFile(BASE_URL . 'js/jquery-1.10.2.js') ?>
         <?php echo $this->headScript()->appendFile(BASE_URL . 'js/jquery-ui-1.10.4.custom.js') ?>
         <?php //echo $this->headScript()->appendFile(BASE_URL . 'js/jquery.tablesorter.js') ?>
         <?php echo $this->headScript()->appendFile(BASE_URL . 'js/app.js') ?>
+        <script type="text/javascript">
+            var appInfo = {
+                'resourcePath' : '<?php echo $this->baseHttp ?>'
+            }
+        </script>
         <style>
             div#addButton{
                 position:absolute;

@@ -9,6 +9,7 @@ class BaseDebtorController extends BaseController {
     protected $index;
 
     public function init() {
+        global $config;
 
         parent::init();
 
@@ -28,6 +29,7 @@ class BaseDebtorController extends BaseController {
 
         $this->view->debtorFileId = $this->db->get_var("SELECT FILE_ID FROM FILES\$FILES WHERE DEBTOR_ID = $this->debtorId ");
         $this->view->headerTitle = "{$this->debtor->NAME}";
+        $this->view->baseHttp = $config->baseHttp;
     }
 
     protected function loadDebtor() {
