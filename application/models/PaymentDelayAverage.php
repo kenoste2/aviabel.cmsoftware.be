@@ -20,7 +20,12 @@ class Application_Model_PaymentDelayAverage extends Application_Model_Base {
         $this->saveData("PAYMENT_DELAY_AVERAGE", $data);
     }
 
-    public function getPaymentForecast() {
+    public function getPaymentForecast($clientId = null) {
+        $where = "";
+        if($clientId) {
+            $where = "AND F.CLIENT_ID = {$clientId}";
+        }
+
         $sql = "SELECT FORECAST_DAY, COUNT(*) AS FORECAST_VALUE
                 FROM (
                     SELECT DATEADD(DAY,
@@ -31,7 +36,7 @@ class Application_Model_PaymentDelayAverage extends Application_Model_Base {
                                   R.INVOICE_DATE) AS FORECAST_DAY
                     FROM FILES\$REFERENCES R
                         JOIN FILES\$FILES F ON F.FILE_ID = R.FILE_ID
-                    WHERE R.SALDO_AMOUNT > 0 AND R.AMOUNT > 0
+                    WHERE R.SALDO_AMOUNT > 0 AND R.AMOUNT > 0 {$where}
                 )
                 WHERE FORECAST_DAY > CURRENT_DATE AND FORECAST_DAY <= CURRENT_DATE + 60
                 GROUP BY FORECAST_DAY

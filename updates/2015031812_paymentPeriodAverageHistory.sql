@@ -15,5 +15,7 @@ INSERT INTO FILES$ACTIONS (ACTION_ID,CODE,DESCRIPTION,AMOUNT,INVOICEABLE,SYSTEM,
 INSERT INTO TEKSTEN (CODE,NAV,NL,FR,EN,SETTINGS) VALUES ('based_on_payments_c','all','gebaseerd op aantal betalingen','basé sur nombre de payements','based on number of payments',0);
 INSERT INTO TEKSTEN (CODE,NAV,NL,FR,EN,SETTINGS) VALUES ('insufficient_data_for_delay_c','all','nog niet genoeg gegevens.','pas encore assez de données','not enough information available',0);
 INSERT INTO TEKSTEN (CODE,NAV,NL,FR,EN,SETTINGS) VALUES ('forecastHistogram_c','all','Betalingsvoorspelling','Prédiction de payement','Payment forecast',0);
+INSERT INTO TEKSTEN (CODE,NAV,NL,FR,EN,SETTINGS) VALUES ('all_clients_c','all','alle klanten','tous les clients','all clients',0);
+INSERT INTO TEKSTEN (CODE,NAV,NL,FR,EN,SETTINGS) VALUES ('menu_report_payment-forecast','all','Betalingsvoorspelling','Prédiction de payement','Payment forecast',0);
 
 

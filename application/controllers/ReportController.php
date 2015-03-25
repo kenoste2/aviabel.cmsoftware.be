@@ -122,6 +122,34 @@ class ReportController extends BaseController
         $this->view->results = $results;
     }
 
+    public function paymentForecastAction()
+    {
+        $this->view->bread = $this->functions->T("menu_reports") . "->" . $this->functions->T("forecastHistogram_c")  ;
+
+        $paymentDelayAverageObj = new Application_Model_PaymentDelayAverage();
+
+        $clientModel = new Application_Model_Clients();
+
+        if ($this->isClient()) {
+            $clients = array($this->auth->online_client_id);
+            $clientId = $rawClientId = $this->auth->online_client_id;
+            $this->view->allowChoice = false;
+        } else {
+            list($clients) = $clientModel->getAllClients();
+            $rawClientId = $this->getRequest()->getParam('clientId');
+            if(!$rawClientId || $rawClientId == 'all') {
+                $clientId = null;
+            } else {
+                $clientId = $rawClientId;
+            }
+            $this->view->allowChoice = true;
+        }
+
+        $this->view->paymentForecast = $paymentDelayAverageObj->getPaymentForecast($clientId);
+
+        $this->view->clients = $clients;
+        $this->view->clientId = $clientId;
+    }
 
     public function clientHistoryAction()
     {

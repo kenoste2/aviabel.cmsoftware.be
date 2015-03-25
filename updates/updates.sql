@@ -191,3 +191,8 @@ INSERT INTO TEKSTEN (CODE,NAV,NL,FR,EN,SETTINGS) VALUES ('no_attachments_found_c
 INSERT INTO TEKSTEN (CODE,NAV,NL,FR,EN,SETTINGS) VALUES ('mail_not_sent_c','all','De mail kon niet uitgestuurd worden. Mogelijk heeft u te veel of te grote attachments toegevoegd. Probeer graag opnieuw met minder attachments.','L''email n''a pas été envoyé. Peut-être vous avez ajouté trop de fichiers en annexe ou des fichiers trop grands. Veuillez ressayer avec moins de fichiers en annexe.','The mail could not be sent out. Possibly this is because you added to many attachments or attachments that are too big. Please retry with fewer attachments.',0);
 
 INSERT INTO TEKSTEN (CODE,NAV,NL,FR,EN,SETTINGS) VALUES ('AGENDA_STATES','all','AGENDA,TO_LAWYER,TEL1,TEL2','AGENDA,TO_LAWYER,TEL1,TEL2','AGENDA,TO_LAWYER,TEL1,TEL2','1');
+INSERT INTO TEKSTEN (CODE,NAV,NL,FR,EN,SETTINGS) VALUES ('based_on_payments_c','all','gebaseerd op aantal betalingen','basé sur nombre de payements','based on number of payments',0);
+INSERT INTO TEKSTEN (CODE,NAV,NL,FR,EN,SETTINGS) VALUES ('insufficient_data_for_delay_c','all','nog niet genoeg gegevens.','pas encore assez de données','not enough information available',0);
+INSERT INTO TEKSTEN (CODE,NAV,NL,FR,EN,SETTINGS) VALUES ('forecastHistogram_c','all','Betalingsvoorspelling','Prédiction de payement','Payment forecast',0);
+INSERT INTO TEKSTEN (CODE,NAV,NL,FR,EN,SETTINGS) VALUES ('all_clients_c','all','alle klanten','tous les clients','all clients',0);
+INSERT INTO TEKSTEN (CODE,NAV,NL,FR,EN,SETTINGS) VALUES ('menu_report_payment-forecast','all','Betalingsvoorspelling','Prédiction de payement','Payment forecast',0);
