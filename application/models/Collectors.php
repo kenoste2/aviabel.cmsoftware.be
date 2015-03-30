@@ -44,7 +44,12 @@ class Application_Model_Collectors extends Application_Model_Base
     
     public function getCollectorsForSelect()
     {
-        return $this->db->get_results("select COLLECTOR_ID,NAME FROM SYSTEM\$COLLECTORS where ACTIF='Y' order by NAME", ARRAY_N);
+        return $this->db->get_results("select COLLECTOR_ID,NAME FROM SYSTEM\$COLLECTORS where ACTIF='Y' AND COALESCE(EXTERN, 0) = 0 order by NAME", ARRAY_N);
+    }
+
+    public function getExternalCollectorsForSelect()
+    {
+        return $this->db->get_results("select COLLECTOR_ID,NAME FROM SYSTEM\$COLLECTORS where ACTIF='Y' AND EXTERN = 1 order by NAME", ARRAY_N);
     }
 
     public function checkIsDeletable($id)

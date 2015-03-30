@@ -19,6 +19,7 @@ class Application_Form_Settings_Collectors extends Zend_Form {
         $this->addElement('select', 'COUNTRY_ID', array('label' => $functions->T('country_c'), 'required' => true, 'MultiOptions' => $functions->db2array($countryModel->getCountriesForSelect())));
         $this->addElement('select', 'LANGUAGE_ID', array('label' => $functions->T('language_c'), 'required' => true, 'MultiOptions' => $functions->db2array($languageModel->getLanguages())));
         $this->addElement('text', 'EMAIL', array('label' => $functions->T('email_c'), 'required' => true, 'size' => 30, 'maxlength' => 100));
+        $this->addElement('checkbox', 'EXTERN', array('label' => $functions->T('external_c'), 'required' => true, 'size' => 30));
 
         $this->addElement('submit', 'submit', array(
             'ignore' => true,

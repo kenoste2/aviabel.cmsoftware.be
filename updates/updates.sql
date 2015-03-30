@@ -206,3 +206,5 @@ create table DEBTOR_SCORE (
 )
 
 INSERT INTO TEKSTEN (CODE,NAV,NL,FR,EN,SETTINGS) VALUES ('debtor_score_c','all','Score','Score','Score',0);
+INSERT INTO TEKSTEN (CODE,NAV,NL,FR,EN,SETTINGS) VALUES ('external_c','all','Extern','Externe','External',0);
+INSERT INTO TEKSTEN (CODE,NAV,NL,FR,EN,SETTINGS) VALUES ('external_collector_c','all','Externe beheerder','Gestionnaire externe','External caseworker',0);

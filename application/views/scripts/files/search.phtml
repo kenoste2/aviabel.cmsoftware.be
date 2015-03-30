@@ -55,13 +55,18 @@ if ($this->deleted) {
 
                 <tr>
                     <td class="label"><?php print $this->T("reference_c") ?> </td><td><?php echo $this->SearchBox->client_reference->renderViewHelper(); ?></td>
-                    <td class="label"><?php print $this->T("invoice_c") ?> </td><td><?php echo $this->SearchBox->invoice->renderViewHelper(); ?></td>
+                    <?php if (!empty($this->showCollector)) { ?>
+                        <td class="label"><?php print $this->T("external_collector_c") ?> </td><td><?php echo $this->SearchBox->external_collector->renderViewHelper(); ?></td>
+                    <?php } ?>
                 </tr>
                 <tr>
                     <td class="label"><?php print $this->T("debtor_c") ?> </td><td><?php echo $this->SearchBox->debtor->renderViewHelper(); ?></td>
+                    <td class="label"><?php print $this->T("invoice_c") ?> </td><td><?php echo $this->SearchBox->invoice->renderViewHelper(); ?></td>
+                </tr>
+                <tr>
+                    <td class="label"><?php print $this->T("train_type_c") ?> </td><td><?php echo $this->SearchBox->train_id->renderViewHelper(); ?></td>
                     <td class="label"><?php print $this->T("state_code_c") ?> </td><td><?php echo $this->SearchBox->state_id->renderViewHelper(); ?></td>
                 </tr>
-
                 <tr>
                     <td colspan ="4"><?php echo $this->SearchBox->extra_field->renderViewHelper(); ?>
                         <?php echo $this->SearchBox->extra_compare->renderViewHelper(); ?>

@@ -14,6 +14,7 @@ if ($this->deleted) {
         <th><?php $this->T("collector_code_c"); ?></th>
         <th><?php $this->T("name_c"); ?></th>
         <th><?php $this->T("system_standard_c"); ?></th>
+        <th><?php $this->T("external_c"); ?></th>
         <th></th>
         <th></th>
     </tr>
@@ -24,6 +25,9 @@ if ($this->deleted) {
                 <td><?php echo $row->CODE ?></td>
                 <td><?php echo $row->NAME ?></td>
                 <td><?php echo $row->SYSTEM_DEFAULT ?></td>
+                <td>
+                    <?php echo $row->EXTERN ? $this->G("yes_c") : $this->G("no_c") ?>
+                </td>
                 <td><a href="<?php echo $this->location() ?>/settings-collectors/edit/id/<?php echo $row->COLLECTOR_ID ?>" ><span title ="<?php $this->T("edit_c") ?>"  class="ui-icon ui-icon-zoomin"></span></td>
                 <td>
                     <?php echo $this->Delete($this->location()."/settings-collectors/view/delete/" . $row->COLLECTOR_ID , $row->CODE) ?>

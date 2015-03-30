@@ -115,8 +115,15 @@ class FilesController extends BaseController
             if ($session->data['collector'] != "") {
                 $query_extra .= " and A.COLLECTOR_ID = '{$session->data['collector']}' ";
             }
+            if ($session->data['external_collector'] != "") {
+                $query_extra .= " and B.EXTERNAL_COLLECTOR_ID = '{$session->data['external_collector']}' ";
+            }
             if ($session->data['state_id'] != "") {
                 $query_extra .= " and A.STATE_ID = '{$session->data['state_id']}' ";
+            }
+            if ($session->data['train_id'] != "") {
+                $escTrainType = $this->db->escape($session->data['train_id']);
+                $query_extra .= " and A.DEBTOR_ID IN (SELECT DEBTOR_ID FROM FILES\$DEBTORS D WHERE D.TRAIN_TYPE = '{$escTrainType}')";
             }
             if ($session->data['debtor'] != "") {
                 $query_extra .= " and A.DEBTOR_NAME CONTAINING '{$session->data['debtor']}' ";
@@ -167,13 +174,18 @@ class FilesController extends BaseController
             $query_extra .= " and A.COLLECTOR_ID = '{$this->auth->online_collector_id}' ";
         }
 
-        $sql = "SELECT COUNT(*) AS COUNTER,SUM(TOTAL+INCASSOKOST) AS TOTAL, SUM(PAYABLE+INCASSOKOST) AS PAYABLE FROM FILES\$FILES_ALL_INFO A WHERE 1=1 {$query_extra}";
+        $sql = "SELECT COUNT(*) AS COUNTER,SUM(A.TOTAL+A.INCASSOKOST) AS TOTAL, SUM(A.PAYABLE+A.INCASSOKOST) AS PAYABLE FROM FILES\$FILES_ALL_INFO A
+                LEFT JOIN FILES\$FILES B ON A.FILE_ID = B.FILE_ID
+                WHERE 1=1 {$query_extra}";
         $totals = $this->db->get_row($sql);
         $this->view->totals = $totals;
 
         $sql = "SELECT DISTINCT A.DATE_CLOSED,A.FILE_ID,A.CLIENT_NAME,A.CREATION_DATE,A.FILE_NR,A.STATE_CODE,A.REFERENCE,A.COLLECTOR_CODE,A.LAST_ACTION_DATE,A.AMOUNT,A.INTEREST,A.COSTS,(A.TOTAL+A.INCASSOKOST) AS TOTAL,
               (A.PAYABLE+A.INCASSOKOST) AS PAYABLE,A.PAYED_AMOUNT,A.PAYED_INTEREST,A.PAYED_COSTS,A.PAYED_UNKNOWN,A.PAYED_TOTAL,(A.SALDO+A.INCASSOKOST) AS SALDO,A.DEBTOR_NAME,A.DEBTOR_VAT_NR,A.DEBTOR_BIRTH_DAY,A.DEBTOR_ADDRESS,A.DEBTOR_ZIP_CODE,A.DEBTOR_CITY,
-              A.DEBTOR_LANGUAGE_CODE,A.DATE_CLOSED,A.CLOSE_STATE_DESCRIPTION FROM FILES\$FILES_ALL_INFO A WHERE 1=1 {$query_extra} order by {$session->orderby} {$session->order}";
+              A.DEBTOR_LANGUAGE_CODE,A.DATE_CLOSED,A.CLOSE_STATE_DESCRIPTION
+              FROM FILES\$FILES_ALL_INFO A
+              LEFT JOIN FILES\$FILES B ON A.FILE_ID = B.FILE_ID
+              WHERE 1=1 {$query_extra} order by {$session->orderby} {$session->order}";
 
         if ($totals->COUNTER > $maxRecords) {
             $sql = str_replace("SELECT ", "SELECT FIRST {$maxRecords} ", $sql);
