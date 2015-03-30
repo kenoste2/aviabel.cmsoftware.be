@@ -83,14 +83,15 @@ class Application_Model_Debtors extends Application_Model_Base {
 
     }
 
-    public function changeDebtorScore($debtorScore, $userId) {
+    public function changeDebtorScore($debtorScore, $debtorId, $userId) {
 
         $escUserId = $this->db->escape($userId);
+        $escDebtorId = $this->db->escape($debtorId);
         $escDebtorScore = $this->db->escape($debtorScore);
 
         $sql = "INSERT INTO DEBTOR_SCORE
-                (DEBTOR_SCORE_ID, USER_ID, SCORE, TIME_STAMP)
-                VALUES((SELECT MAX(DEBTOR_SCORE_ID) + 1 FROM DEBTOR_SCORE), {$escUserId}, {$escDebtorScore}, CURRENT_TIME)";
+                (DEBTOR_SCORE_ID, DEBTOR_ID, USER_ID, SCORE, TIME_STAMP)
+                VALUES(COALESCE((SELECT MAX(DEBTOR_SCORE_ID) + 1 FROM DEBTOR_SCORE), 1), {$escDebtorId}, {$escUserId}, {$escDebtorScore}, CURRENT_TIME)";
         $this->db->query($sql);
     }
 
@@ -138,7 +139,9 @@ class Application_Model_Debtors extends Application_Model_Base {
     }
 
     function getArrayData($debtorId) {
-        $sql = "SELECT D.*, D2.TRAIN_TYPE, D2.CREDIT_LIMIT FROM FILES\$DEBTORS_ALL_INFO D
+        $sql = "SELECT D.*, D2.TRAIN_TYPE, D2.CREDIT_LIMIT,
+              (SELECT FIRST 1 SCORE FROM DEBTOR_SCORE ds WHERE ds.DEBTOR_ID = D.DEBTOR_ID ORDER BY TIME_STAMP DESC) AS DEBTOR_SCORE
+            FROM FILES\$DEBTORS_ALL_INFO D
             JOIN FILES\$DEBTORS D2 ON D2.DEBTOR_ID = D.DEBTOR_ID WHERE D.DEBTOR_ID = $debtorId";
         $row = $this->db->get_row($sql, ARRAY_A);
 

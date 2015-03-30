@@ -196,3 +196,13 @@ INSERT INTO TEKSTEN (CODE,NAV,NL,FR,EN,SETTINGS) VALUES ('insufficient_data_for_
 INSERT INTO TEKSTEN (CODE,NAV,NL,FR,EN,SETTINGS) VALUES ('forecastHistogram_c','all','Betalingsvoorspelling','Prédiction de payement','Payment forecast',0);
 INSERT INTO TEKSTEN (CODE,NAV,NL,FR,EN,SETTINGS) VALUES ('all_clients_c','all','alle klanten','tous les clients','all clients',0);
 INSERT INTO TEKSTEN (CODE,NAV,NL,FR,EN,SETTINGS) VALUES ('menu_report_payment-forecast','all','Betalingsvoorspelling','Prédiction de payement','Payment forecast',0);
+
+create table DEBTOR_SCORE (
+    DEBTOR_SCORE_ID DOM_RECORD_ID,
+    DEBTOR_ID DOM_RECORD_ID,
+    SCORE INT,
+    USER_ID DOM_RECORD_ID,
+    TIME_STAMP TIMESTAMP
+)
+
+INSERT INTO TEKSTEN (CODE,NAV,NL,FR,EN,SETTINGS) VALUES ('debtor_score_c','all','Score','Score','Score',0);

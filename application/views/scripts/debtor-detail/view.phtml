@@ -27,7 +27,27 @@
                 }
                 ?>
 
-                <?php print $this->generalForm ?>
+                <form enctype="application/x-www-form-urlencoded" action="" method="post">
+                    <?php print $this->generalForm->NAME ?>
+                    <dt><?php $this->T("debtor_score_c") ?></dt>
+                    <dd><div data-rater="<?php echo $this->currentRating ?>"></div></dd>
+                    <?php print $this->generalForm->VATNR ?>
+                    <?php print $this->generalForm->ADDRESS ?>
+                    <?php print $this->generalForm->COUNTRY_ID ?>
+                    <?php print $this->generalForm->ZIP_CODE ?>
+                    <?php print $this->generalForm->CITY ?>
+                    <?php print $this->generalForm->BIRTH_DAY ?>
+                    <?php print $this->generalForm->E_MAIL ?>
+                    <?php print $this->generalForm->TELEPHONE ?>
+                    <?php print $this->generalForm->TELEFAX ?>
+                    <?php print $this->generalForm->GSM ?>
+                    <?php print $this->generalForm->LANGUAGE_ID ?>
+                    <?php print $this->generalForm->EXTRA_FIELD ?>
+                    <?php print $this->generalForm->TRAIN_TYPE ?>
+                    <?php print $this->generalForm->DEBTOR_ID ?>
+                    <?php print $this->generalForm->debtor_id ?>
+                    <?php print $this->generalForm->submit ?>
+                </form>
                 <script>
                     $(function () {
                         $("#BIRTH_DAY").datepicker({dateFormat: 'dd/mm/yy'});
@@ -45,8 +65,6 @@
                 <?php } else { ?>
                     <dd><?php echo $this->T("insufficient_data_for_delay_c") ?></dd>
                 <?php } ?>
-                <dt><?php $this->T("debtor_rating_c") ?></dt>
-                <dd><div data-rater="<?php echo $this->currentRating ?>"></div></dd>
                 <br><br>
                 <?php if ($this->report && !empty($this->report->financial_data->fiscal_year)) {  ?>
                 <span class="title"><?php echo $this->T('credit_ratios_c'); ?></span>

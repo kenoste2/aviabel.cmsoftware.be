@@ -14,7 +14,7 @@ class Application_Form_EditDebtor extends Zend_Form {
         
         $countries = $db->get_results("select COUNTRY_ID,DESCRIPTION from SUPPORT\$COUNTRIES  order by DESCRIPTION", ARRAY_N);
         array_unshift($countries,array('0' =>4,1 => 'BELGIUM'));
-        $this->addElement('select', 'COUNTRY', array('label'=> $functions->T('country_c'),'MultiOptions' => $functions->db2array($countries,false)));
+        $this->addElement('select', 'COUNTRY', array('label'=> $functions->T('country_c'), 'MultiOptions' => $functions->db2array($countries,false)));
         $this->addElement('text', 'ZIP_CODE', array('label'=> $functions->T('zipcode_c'),'size' => 8, 'required' => true));
         $this->addElement('text', 'CITY', array('label'=> $functions->T('city_c'),'size' => 34, 'required' => true));
         $this->addElement('text', 'BIRTH_DAY', array('label'=> $functions->T('birthday_c'),'size' => 10,'validators'=>array (array('date', false, array('dd/MM/yyyy'))),));
