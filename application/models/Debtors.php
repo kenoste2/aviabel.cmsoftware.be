@@ -248,7 +248,27 @@ class Application_Model_Debtors extends Application_Model_Base {
         return $results;
     }
 
+    public function getDebtorByReferenceId($referenceId) {
+        $escReferenceId = $this->db->escape($referenceId);
+        $sql = "SELECT * FROM FILES\$DEBTORS WHERE DEBTOR_ID IN
+                    (SELECT DEBTOR_ID FROM FILES\$FILES
+                     WHERE FILE_ID IN
+                        (SELECT FILE_ID FROM FILES\$REFERENCES
+                         WHERE REFERENCE_ID = {$escReferenceId}))";
+        return $this->db->get_row($sql);
+    }
 
+    public function getDebtor($debtorId) {
+        $escDebtorId = $this->db->escape($debtorId);
+        return $this->db->get_row("SELECT * FROM FILES\$DEBTORS WHERE DEBTOR_ID = {$escDebtorId}");
+    }
+
+    /**
+     * @deprecated getDebtorData returns an array of debtor results, even though there should only be 1 result per
+     *             id. It's probably better to use getDebtor instead, which just returns the debtor object.
+     * @param $debtorId
+     * @return null
+     */
     public function getDebtorData($debtorId) {
         $results = $this->db->get_results("SELECT * FROM FILES\$DEBTORS WHERE DEBTOR_ID = {$debtorId}");
         return $results;

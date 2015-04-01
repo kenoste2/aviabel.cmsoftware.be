@@ -51,7 +51,7 @@ if ($this->deleted) {
                 <td align="right"><?php echo $this->Amount($row->TOTAL) ?></td>
                 <?php } ?>
                 <td align="right"><?php echo $this->Amount($row->SALDO) ?></td>
-                <td align="center"><?php echo $this->Selection($row->DISPUTE) ?></td>
+                <td align="center"><?php echo $this->GoodBad(!$row->DISPUTE) ?></td>
                 <td><?php echo $row->STATE_CODE ?></td>
                 <td><?php echo $row->TRAIN_TYPE ?></td>
                 <td><?php if (!empty($this->manageInvoices)) { ?><a href="<?php echo $this->location() ?>/file-invoices/edit/id/<?php echo $row->REFERENCE_ID ?>/fileId/<?php echo $this->fileId ?>" ><span title ="<?php $this->T("edit_c") ?>"  class="ui-icon ui-icon-zoomin"></span><?php } ?></td>

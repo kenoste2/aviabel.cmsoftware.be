@@ -1,0 +1,49 @@
+<?php if ($this->authenticated) { ?>
+    <h2><?php echo $this->debtorName ?></h2>
+    <?php
+        foreach($this->references as $reference) {
+            $form = new Application_Form_ExternalDebtorReference($reference); ?>
+            <div data-item="invoice" class="collapsablePanel">
+                <div class="header">
+                    <table>
+                        <tr>
+                            <td><span class="title2"><?php $this->T('invoice_c') ?> <?php print $reference->REFERENCE ?></span></td>
+                            <td><?php $this->T('original_amount_c') ?>: <?php print $reference->AMOUNT ?></td>
+                            <td><?php $this->T('total_amount_c') ?>: <?php print $reference->TOTAL ?></td>
+                            <td><?php $this->T('open_amount_c') ?>: <?php print $reference->SALDO ?></td>
+                        </tr>
+
+                    </table>
+
+                </div>
+                <div class="body">
+                    <?php print $form; ?>
+                </div>
+            </div>
+            <?php
+        }
+    ?>
+    <script type="text/javascript">
+        var ExternalAccess = {
+            Invoice : function(element) {
+                var invoiceContent = element.find('> div.body');
+                invoiceContent.hide();
+                element.find('> div.header').click(function() {
+                    invoiceContent.slideToggle();
+                });
+            },
+            init : function() {
+                $("[data-item=invoice]").each(function() { new ExternalAccess.Invoice($(this)); })
+            }
+        };
+        $(document).ready(ExternalAccess.init);
+    </script>
+<?php
+    } else { ?>
+    <h2>No access</h2>
+    <p>You are not allowed to view this page, either because you do not have a valid link, or your link has expired.</p>
+    <h2>Geen toegang</h2>
+    <p>U hebt geen toegang om deze pagina te bekijken. Ofwel heeft u geen geldige link, ofwel is uw link intussen vervallen.</p>
+    <h2>Acces interdit</h2>
+    <p>Vous n'avez pas d'authorization pour accéder à cette page. Soit vous n'avez pas de lien valable, soit votre lien à été périmé.</p>
+<?php } ?>

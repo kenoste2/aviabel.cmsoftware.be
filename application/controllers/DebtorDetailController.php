@@ -11,7 +11,12 @@ class DebtorDetailController extends BaseDebtorController {
         $generalForm = new Application_Form_AddDebtor();
         $data = array();
         if ($this->getRequest()->isPost()) {
-            if ($generalForm->isValid($_POST)) {
+            if (isset($_POST['invite_for_external_access'])) {
+                $debtorExternalAccessObj = new Application_Model_DebtorExternalAccess();
+                $debtorExternalAccessObj->sendExternalAccessInviteMail($this->debtor);
+                //TODO: confirm mail sent out
+            }
+            else if ($generalForm->isValid($_POST)) {
                 $update = $data = $generalForm->getValues();
                 $data['DEBTOR_SCORE'] = $_POST['DEBTOR_SCORE'];
                 $update['BIRTH_DAY'] = $this->functions->date_dbformat($data['BIRTH_DAY']);

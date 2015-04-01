@@ -1,0 +1,21 @@
+<!-- application/layouts/scripts/external-access.phtml -->
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Credit management: external access</title>
+        <?php echo $this->headLink()->appendStylesheet(BASE_URL . 'css/global.css') ?>
+        <?php echo $this->headScript()->appendFile(BASE_URL . 'js/jquery-1.10.2.js') ?>
+        <?php echo $this->headScript()->appendFile(BASE_URL . 'js/jquery-ui-1.10.4.custom.js') ?>
+    </head>
+    <body>
+        <div id="topContainer" class="noprint">
+
+            <img src="<?php echo $this->location() ?>/public/images/logo.jpg" height="30">
+            <span class="title"><?php echo $this->layout()->title ?></span>
+        </div>
+        <div id="content">
+            <?php echo $this->layout()->content ?>
+        </div>
+    </body>
+</html>

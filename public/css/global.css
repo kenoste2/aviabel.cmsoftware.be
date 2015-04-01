@@ -60,22 +60,13 @@ table tfoot td {
 .data tr:nth-child(odd) {background: #FFF}
 
 
-input#submit {
+input#submit, .submit, button[type=submit] {
     padding: 5px;
     border:1px solid darkgray;
     border-radius:5px;
     background-color: #0398CA;
     color : #FFFFFF;
 }
-
-.submit {
-    padding: 5px;
-    border:1px solid darkgray;
-    border-radius:5px;
-    background-color: #0398CA;
-    color : #FFFFFF;
-}
-
 
 /* @group Data Tables */
 
@@ -300,4 +291,21 @@ input {
 
 .collapsablePanel > div.body {
     padding: 20px;
+}
+
+.ui-icon-green {
+    background-image: url(../images/ui-icons_108900_256x240.png);
+}
+
+.ui-icon-red {
+    background-image: url(../images/ui-icons_c13a30_256x240.png);
+}
+
+.ui-icon-red, .ui-icon-green {
+    width: 16px;
+    height: 16px;
+    display: block;
+    text-indent: -99999px;
+    overflow: hidden;
+    background-repeat: no-repeat;
 }

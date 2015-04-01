@@ -28,6 +28,9 @@
                 ?>
 
                 <form enctype="application/x-www-form-urlencoded" action="" method="post">
+                    <button type="submit" name="invite_for_external_access"><?php $this->T("invite_for_external_access_c") ?></button>
+                </form>
+                <form enctype="application/x-www-form-urlencoded" action="" method="post">
                     <?php print $this->generalForm->NAME ?>
                     <dt><?php $this->T("debtor_score_c") ?></dt>
                     <dd><div data-rater="<?php echo $this->currentRating ?>"></div></dd>
