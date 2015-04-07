@@ -173,36 +173,6 @@ class Application_Model_FilesActions extends Application_Model_Base
 
         $this->handleSendLogic($data['TEMPLATE_ID'], $fileActionId, $data, $data['CONTENT'], $data['SMS_CONTENT'], $data['VIA'], $allowPdfDocuments);
 
-        if ($data['VIA'] == "EMAIL") {
-            $template = new Application_Model_Templates();
-            $subject = $template->getTemplateDescription($data['TEMPLATE_ID']);
-            if (empty($subject)) {
-                $subject = "";
-            }
-            $mail = new Application_Model_Mail();
-            $fileObj = new Application_Model_File();
-            $reference = $fileObj->getFileField($data['FILE_ID'], 'REFERENCE');
-            $clientCode = $fileObj->getFileField($data['FILE_ID'], 'CLIENT_CODE');
-            $subject .= " #{$clientCode}-{$reference}#";
-
-            $clientId = $fileObj->getClientId($data['FILE_ID']);
-            $clientObj = new Application_Model_Clients();
-            $client = $clientObj->getClientViewData($clientId);
-
-
-            if ($config->sendMailsAsClient == 'Y') {
-                $from = array (
-                    'name' => $client->NAME,
-                    'email' => $client->E_MAIL,
-                );
-            } else {
-                $from = false;
-            }
-
-
-            $mail->sendMail($data['E_MAIL'],$subject,$data['CONTENT'],false,false, $from);
-        }
-
         return $fileActionId;
     }
 
@@ -234,17 +204,16 @@ class Application_Model_FilesActions extends Application_Model_Base
      * @param $communicationType
      * @param $allowPdfGeneration
      */
-    public function handleSendLogic($templateId, $fileActionId, $toContent, $content, $smsContent, $communicationType, $allowPdfGeneration)
+    public function handleSendLogic($templateId, $fileActionId, $data, $content, $smsContent, $communicationType, $allowPdfGeneration)
     {
         if ($templateId > 0) {
 
             if ($communicationType === 'EMAIL') {
-
-                $this->sendFileActionMail($templateId, $toContent["E_MAIL"], $content);
+                $this->sendFileActionMail($templateId, $data["E_MAIL"], $content, $data['FILE_ID']);
             }
 
             if ($communicationType === 'SMS') {
-                $this->sendSmsFileActionMail($templateId, $toContent["GSM"], $smsContent);
+                $this->sendSmsFileActionMail($templateId, $data["GSM"], $smsContent);
             }
 
             if ($communicationType === 'POST' && $allowPdfGeneration) {
@@ -330,15 +299,38 @@ class Application_Model_FilesActions extends Application_Model_Base
      * @param $content
      * @return bool|\Email
      */
-    public function sendFileActionMail($templateId, $emailAddress, $content) {
+    public function sendFileActionMail($templateId, $emailAddress, $content , $fileId = false) {
+
+        global $config;
+
+        $mail = new Application_Model_Mail();
         $template = new Application_Model_Templates();
         $subject = $template->getTemplateDescription($templateId);
+
         if (empty($subject)) {
             $subject = "";
         }
-        $mail = new Application_Model_Mail();
 
-        return $mail->sendMail($emailAddress, $subject, $content, false, false);
+        $fileObj = new Application_Model_File();
+        $reference = $fileObj->getFileField($fileId, 'REFERENCE');
+        $clientCode = $fileObj->getFileField($fileId, 'CLIENT_CODE');
+        $subject .= " #{$clientCode}-{$reference}#";
+
+        $clientId = $fileObj->getClientId($fileId);
+        $clientObj = new Application_Model_Clients();
+        $client = $clientObj->getClientViewData($clientId);
+
+
+        if ($config->sendMailsAsClient == 'Y') {
+            $from = array (
+                'name' => $client->NAME,
+                'email' => $client->E_MAIL,
+            );
+        } else {
+            $from = false;
+        }
+
+        return $mail->sendMail($emailAddress,$subject,$content,false,false, $from);
     }
 
     public function sendSmsFileActionMail($templateId, $phoneNumber, $smsContent) {
