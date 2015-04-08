@@ -30,3 +30,15 @@ INSERT INTO TEKSTEN (CODE,NAV,NL,FR,EN,SETTINGS) VALUES ('no_debtor_dispute_comm
 INSERT INTO TEKSTEN (CODE,NAV,NL,FR,EN,SETTINGS) VALUES ('dispute_comment_c','all','Opmerkingen bij betwisting','Commentaire sur la dispute','Dispute comments',0);
 INSERT INTO TEKSTEN (CODE,NAV,NL,FR,EN,SETTINGS) VALUES ('invite_for_external_access_c', 'all', 'Uitnodigen voor externe log-in', 'Inviter pour acces externe', 'Invite for external log-in',0);
 INSERT INTO TEKSTEN (CODE,NAV,NL,FR,EN,SETTINGS) VALUES ('debtor_invited_c', 'all', 'De klant werd uitgenodigd per e-mail.', 'Le client à été invité par e-mail.', 'The client was invited by e-mail.',0);
+
+UPDATE TEKSTEN
+SET NL = 'datum ingave', FR = 'date d''entrée des données', EN = 'input date'
+WHERE CODE = 'dispute_date_c'
+
+UPDATE TEKSTEN
+SET NL = 'oplossen vóór', FR = 'résoudre avant le', EN = 'solve before'
+WHERE CODE = 'dispute_duedate_c'
+
+UPDATE TEKSTEN
+SET NL = 'feitelijke oplosdatum', FR = 'date effective de la résolution', EN = 'effective solution date'
+WHERE CODE = 'dispute_ended_c'

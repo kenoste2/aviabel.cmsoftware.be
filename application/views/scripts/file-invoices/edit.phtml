@@ -34,47 +34,51 @@
                     <?php print $this->form->submit ?>
                 </dl>
             </td>
-            <td style="width: 50%" class="windowPart">
-                <p><span class="title2"><?php $this->T("dispute_c") ?></span></p>
-                <dl class="zend_form">
-                    <dt>
-                        <?php $this->T("debtor_dispute_comment_c") ?>
-                    </dt>
-                    <dd>
-                        <?php
-                        if($this->debtorDisputeComment) {
-                            print $this->debtorDisputeComment;
-                        } else {
-                            $this->T("no_debtor_dispute_comment_found_c");
-                        } ?>
-                    </dd>
-                    <?php print $this->form->DISPUTE_STATUS ?>
-                    <?php print $this->form->DISPUTE ?>
-                    <?php print $this->form->DISPUTE_COMMENT ?>
-                    <?php print $this->form->DISPUTE_DATE ?>
-                    <?php print $this->form->DISPUTE_DUEDATE ?>
-                    <?php print $this->form->DISPUTE_ENDED_DATE ?>
-                    <?php print $this->form->DISPUTE_ASSIGNEE ?>
-                </dl>
-                <p><span class="title2"><?php $this->T("related_documents_c") ?></span></p>
-                <?php if(count($this->documents) > 0) { ?>
-                    <table class="ws_data_table" style="width: 100%">
-                        <thead>
+            <td style="width: 50%">
+                <div class="windowPart">
+                    <p><span class="title2"><?php $this->T("dispute_c") ?></span></p>
+                    <dl class="zend_form">
+                        <dt>
+                            <?php $this->T("debtor_dispute_comment_c") ?>
+                        </dt>
+                        <dd>
+                            <?php
+                            if($this->debtorDisputeComment) {
+                                print $this->debtorDisputeComment;
+                            } else {
+                                $this->T("no_debtor_dispute_comment_found_c");
+                            } ?>
+                        </dd>
+                        <?php print $this->form->DISPUTE_STATUS ?>
+                        <?php print $this->form->DISPUTE ?>
+                        <?php print $this->form->DISPUTE_COMMENT ?>
+                        <?php print $this->form->DISPUTE_DATE ?>
+                        <?php print $this->form->DISPUTE_DUEDATE ?>
+                        <?php print $this->form->DISPUTE_ENDED_DATE ?>
+                        <?php print $this->form->DISPUTE_ASSIGNEE ?>
+                    </dl>
+                </div>
+                <div class="windowPart" style="margin-top: 5px">
+                    <p><span class="title2"><?php $this->T("related_documents_c") ?></span></p>
+                    <?php if(count($this->documents) > 0) { ?>
+                        <table class="ws_data_table" style="width: 100%">
+                            <thead>
                             <tr>
                                 <th><?php $this->T("document_name_c") ?></th>
                                 <th><?php $this->T("document_description_c") ?></th>
                             </tr>
-                        </thead>
-                        <?php foreach($this->documents as $document) { ?>
-                            <tr>
-                                <td><?php echo $document->FILENAME ?></td>
-                                <td><?php echo $document->DESCRIPTION ?></td>
-                            </tr>
-                        <?php } ?>
-                    </table>
-                <?php } else { ?>
-                    <p><?php $this->T("no_documents_found_c") ?></p>
-                <?php } ?>
+                            </thead>
+                            <?php foreach($this->documents as $document) { ?>
+                                <tr>
+                                    <td><?php echo $document->FILENAME ?></td>
+                                    <td><?php echo $document->DESCRIPTION ?></td>
+                                </tr>
+                            <?php } ?>
+                        </table>
+                    <?php } else { ?>
+                        <p><?php $this->T("no_documents_found_c") ?></p>
+                    <?php } ?>
+                </div>
             </td>
         </tr>
     </table>

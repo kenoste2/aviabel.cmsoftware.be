@@ -840,7 +840,7 @@ INSERT INTO TEKSTEN (CODE,NAV,NL,FR,EN,SETTINGS) VALUES ('bedrag_c','financieel_
 INSERT INTO TEKSTEN (CODE,NAV,NL,FR,EN,SETTINGS) VALUES ('menu_invoices_search','all','Facturen','Factures','Invoices',0);
 INSERT INTO TEKSTEN (CODE,NAV,NL,FR,EN,SETTINGS) VALUES ('search_invoices_c','all','Zoek facturen','Factures','Search invoices',0);
 INSERT INTO TEKSTEN (CODE,NAV,NL,FR,EN,SETTINGS) VALUES ('dispute_c','all','Betwisting','Litige','Dispute',0);
-INSERT INTO TEKSTEN (CODE,NAV,NL,FR,EN,SETTINGS) VALUES ('dispute_duedate_c','all','Betwisting vervaldag','Litige date de résolution','Dispute due date',0);
+INSERT INTO TEKSTEN (CODE,NAV,NL,FR,EN,SETTINGS) VALUES ('dispute_duedate_c','all','oplossen vóór','résoudre avant le','solve before',0);
 INSERT INTO TEKSTEN (CODE,NAV,NL,FR,EN,SETTINGS) VALUES ('industrie_c','all','Industrie','Industrie','Industry',0);
 INSERT INTO TEKSTEN (CODE,NAV,NL,FR,EN,SETTINGS) VALUES ('view_fiche_c','all','Raadpleeg fische','Visualiser la fiche','View file',0);
 INSERT INTO TEKSTEN (CODE,NAV,NL,FR,EN,SETTINGS) VALUES ('menu_settings-dso_view','all','Dso','Dso','Dso',0);
@@ -856,8 +856,10 @@ INSERT INTO TEKSTEN (CODE,NAV,NL,FR,EN,SETTINGS) VALUES ('column_layout_c', 'all
 INSERT INTO TEKSTEN (CODE,NAV,NL,FR,EN,SETTINGS) VALUES ('invoice_number_c', 'all', 'Faktuurnummer', 'Numéro de facture', 'Invoice number', 0);
 INSERT INTO TEKSTEN (CODE,NAV,NL,FR,EN,SETTINGS) VALUES ('invoice_number_c', 'all', 'Vervaldag', 'Date d''écheance', 'Due date', 0);
 INSERT INTO TEKSTEN (CODE,NAV,NL,FR,EN,SETTINGS) VALUES ('invoice_number_c', 'all', 'Datum einde betwisting', 'Date fin de la dispute', 'End of dispute date', 0);
-INSERT INTO TEKSTEN (CODE,NAV,NL,FR,EN,SETTINGS) VALUES ('dispute_date_c', 'all', 'Datum betwisting', 'Date de la dispute', 'dispute date', 0);
-INSERT INTO TEKSTEN (CODE,NAV,NL,FR,EN,SETTINGS) VALUES ('dispute_ended_date_c', 'all', 'Datum einde betwisting', 'Date fin de la dispute', 'End of dispute date', 0);
+
+
+INSERT INTO TEKSTEN (CODE,NAV,NL,FR,EN,SETTINGS) VALUES ('dispute_date_c', 'all', 'datum ingave', 'date d''entrée des données', 'input date', 0);
+INSERT INTO TEKSTEN (CODE,NAV,NL,FR,EN,SETTINGS) VALUES ('dispute_ended_date_c', 'all', 'feitelijke oplosdatum', 'date effective de la résolution', 'effective solution date', 0);
 INSERT INTO TEKSTEN (CODE,NAV,NL,FR,EN,SETTINGS) VALUES ('not_due_list_c', 'all', 'Niet vervallen lijst', 'Liste non échu', 'Not delayed list', 0);
 INSERT INTO TEKSTEN (CODE,NAV,NL,FR,EN,SETTINGS) VALUES ('due_list_c', 'all', 'Vervallen lijst', 'Liste échu', 'Delayed list', 0);
 INSERT INTO TEKSTEN (CODE,NAV,NL,FR,EN,SETTINGS) VALUES ('order_c', 'all', 'Volgorde', 'Ordre', 'Order', 0);
