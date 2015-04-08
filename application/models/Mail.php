@@ -39,9 +39,21 @@ class Application_Model_Mail extends Application_Model_Base {
      * @param array Binary $attachment
      */
     public function sendMail($to, $subject, $content,$contentText = false, $attachments = false, $from = false, $cc = false, $bcc = false, $isUtf8 = false) {
+
+        global $config;
+        
+
+        if ($config->mailDecodeUtf8 == 'Y') {
+            $content = utf8_decode($content);
+            $subject = utf8_decode($subject);
+            $contentText = utf8_decode($contentText);
+        }
+
+
+
         $mail = $isUtf8 ? new Zend_Mail('UTF-8') : new Zend_Mail();
 
-        if (!empty($from)) {
+        if (!empty($from) && !empty($from['email'])) {
             $mail->setFrom($from['email'], $from['name']);
         } else {
             $mail->setFrom($this->fromEmail, $this->fromName);
