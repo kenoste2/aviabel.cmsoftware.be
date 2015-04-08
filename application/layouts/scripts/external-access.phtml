@@ -10,9 +10,14 @@
     </head>
     <body>
         <div id="topContainer" class="noprint">
-
             <img src="<?php echo $this->location() ?>/public/images/logo.jpg" height="30">
             <span class="title"><?php echo $this->layout()->title ?></span>
+            <div id="#welcome">
+                <a class="body" href="<?php echo $this->location() ?>/external-access/check-invoices/a/<?php echo $this->activeCode ?>/selectlang/NL">NL</a>
+                <a class="body" href="<?php echo $this->location() ?>/external-access/check-invoices/a/<?php echo $this->activeCode ?>/selectlang/FR">FR</a>
+                <a class="body" href="<?php echo $this->location() ?>/external-access/check-invoices/a/<?php echo $this->activeCode ?>/selectlang/EN">EN</a>
+            </div>
+
         </div>
         <div id="content">
             <?php echo $this->layout()->content ?>

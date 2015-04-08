@@ -8,17 +8,18 @@ class ExternalAccessController extends Zend_Controller_Action
         $this->_helper->_layout->setLayout('external-access');
     }
 
-    public function testAccessCodesAction() {
-        //TODO: delete this: testing/development infrastructure that compromises security.
-
-        $this->_helper->layout->disableLayout();
-        $this->_helper->viewRenderer->setNoRender();
-
-        die(uniqid("", true));
-    }
-
     public function checkInvoicesAction() {
+        global $lang;
+
         $accessCode = $this->getParam('a');
+        $allowedLanguages = array('NL', 'FR', 'EN');
+        if(in_array($this->getParam('l'), $allowedLanguages)) {
+            $lang = $this->getParam('l');
+        } else {
+            $lang = 'NL';
+        }
+
+        $this->view->activeCode = $accessCode;
         $debtorExternalAccessObj = new Application_Model_DebtorExternalAccess();
         $debtorId = $debtorExternalAccessObj->getDebtorIdByExternalAccessCode($accessCode);
         if($debtorId && $debtorId > 0) {

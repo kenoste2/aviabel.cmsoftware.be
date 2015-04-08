@@ -259,7 +259,12 @@ class Application_Model_Debtors extends Application_Model_Base {
 
     public function getDebtor($debtorId) {
         $escDebtorId = $this->db->escape($debtorId);
-        return $this->db->get_row("SELECT * FROM FILES\$DEBTORS WHERE DEBTOR_ID = {$escDebtorId}");
+        $sql = "SELECT D.*,
+                    (SELECT FIRST 1 CODE FROM SUPPORT\$LANGUAGES
+                    WHERE LANGUAGE_ID = D.LANGUAGE_ID) AS LANGUAGE_CODE
+                FROM FILES\$DEBTORS D
+                WHERE D.DEBTOR_ID = {$escDebtorId}";
+        return $this->db->get_row($sql);
     }
 
     /**

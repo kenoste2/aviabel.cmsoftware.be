@@ -34,7 +34,7 @@ class Application_Model_DebtorExternalAccess extends Application_Model_Base {
         return $debtor->EXTERNAL_AUTH_CODE;
     }
 
-    public function sendExternalAccessInviteMail($debtor) {
+    public function sendExternalAccessInviteMail($debtor, $file) {
         global $config;
 
         $templates = array(
@@ -85,8 +85,8 @@ class Application_Model_DebtorExternalAccess extends Application_Model_Base {
             $rawMailSubject = $templates[strtoupper($debtor->LANGUAGE_CODE)]['subject'];
         }
 
-        $mailBody = $this->ReplaceReplacementFieldsBasedOnDebtor($debtor, $rawMailBody);
-        $mailSubject = $this->ReplaceReplacementFieldsBasedOnDebtor($debtor, $rawMailSubject);
+        $mailBody = $this->ReplaceReplacementFieldsBasedOnDebtor($debtor, $file, $rawMailBody);
+        $mailSubject = $this->ReplaceReplacementFieldsBasedOnDebtor($debtor, $file, $rawMailSubject);
 
         $mailObj = new Application_Model_Mail();
         $mailObj->sendMail($debtor->E_MAIL, $mailSubject, $mailBody, $mailBody, $config->fromEmail, false, false, true);
@@ -186,14 +186,13 @@ class Application_Model_DebtorExternalAccess extends Application_Model_Base {
         return $this->replaceInText($rawText, $replacementFields);
     }
 
-    public function replaceReplacementFieldsBasedOnDebtor($debtor, $rawText) {
+    public function replaceReplacementFieldsBasedOnDebtor($debtor, $file, $rawText) {
         global $config;
 
-        $externalAccessCode = $this->createExternalAccessCode($debtor->DEBTOR_ID);
+        $externalAccessLink = $this->createExternalAccessLink($debtor);
         $replacementFields = array(
-            //TODO: add proper client name
-            'CLIENT_NAME' => 'client name',
-            'EXTERNAL_ACCESS_LINK' => "{$config->rootLocation}/external-access/check-invoices/a/{$externalAccessCode}"
+            'CLIENT_NAME' => $file->CLIENT_NAME,
+            'EXTERNAL_ACCESS_LINK' => $externalAccessLink
         );
 
         return $this->replaceInText($rawText, $replacementFields);
@@ -231,6 +230,19 @@ class Application_Model_DebtorExternalAccess extends Application_Model_Base {
                 WHERE DEBTOR_ID = {$escDebtorId}";
         $this->db->query($sql);
         return $externalAccessToken;
+    }
+
+    /**
+     * @param $debtor
+     * @return string
+     */
+    public function createExternalAccessLink($debtor) {
+        global $config;
+        $externalAccessCode = $this->createExternalAccessCode($debtor->DEBTOR_ID);
+        $functions = new Application_Model_CommonFunctions();
+        $languageCode = $functions->langToCode($debtor->LANGUAGE_CODE);
+        $externalAccessLink = "{$config->rootLocation}/external-access/check-invoices/a/{$externalAccessCode}/l/{$languageCode}";
+        return $externalAccessLink;
     }
 }
 

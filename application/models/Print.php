@@ -43,9 +43,18 @@ class Application_Model_Print extends Application_Model_Base
         if (empty($actionDate)) {
             $actionDate = date("d/m/Y");
         }
+
+        $debtorExternalAccess = new Application_Model_DebtorExternalAccess();
         $actionDateField = array(
             'ACTION_DATE' => $actionDate,
         );
+
+        $debtorId = $fileObj->getFileField($fileId, 'DEBTOR_ID');
+        if($debtorId && (preg_match("/xEXTERNAL_ACCESS_LINK/", $text) || preg_match("/xEXTERNAL_ACCESS_LINK/", $smsText))) {
+            $debtorObj = new Application_Model_Debtors();
+            $debtor = $debtorObj->getDebtor($debtorId);
+            $actionDateField['EXTERNAL_ACCESS_LINK'] = $debtorExternalAccess->createExternalAccessLink($debtor);
+        }
 
         $inlineFooter = array(
             'INLINEFOOTER' => $this->functions->getUserSetting("templateAddText",$lang),
