@@ -14,7 +14,10 @@ class DebtorDetailController extends BaseDebtorController {
             if (isset($_POST['invite_for_external_access'])) {
                 $debtorExternalAccessObj = new Application_Model_DebtorExternalAccess();
                 $debtorExternalAccessObj->sendExternalAccessInviteMail($this->debtor);
-                //TODO: confirm mail sent out
+
+                $this->view->debtorInvited = true;
+
+                $data = $this->loadInfoIntoFormFromDb($obj);
             }
             else if ($generalForm->isValid($_POST)) {
                 $update = $data = $generalForm->getValues();
@@ -31,9 +34,7 @@ class DebtorDetailController extends BaseDebtorController {
                 $this->view->errors = $generalForm->getErrors();
             }
         } else {
-            $data = $obj->getArrayData($this->debtorId);
-            $data['BIRTH_DAY'] = $this->functions->dateFormat($data['BIRTH_DAY']);
-            $data['CREDIT_LIMIT'] = $this->functions->amount($data['CREDIT_LIMIT']);
+            $data = $this->loadInfoIntoFormFromDb($obj);
         }
 
 
@@ -68,6 +69,18 @@ class DebtorDetailController extends BaseDebtorController {
         $this->view->currentRating = $data['DEBTOR_SCORE'];
         $this->view->email = $data['E_MAIL'];
 
+    }
+
+    /**
+     * @param $obj
+     * @return mixed
+     */
+    public function loadInfoIntoFormFromDb($obj)
+    {
+        $data = $obj->getArrayData($this->debtorId);
+        $data['BIRTH_DAY'] = $this->functions->dateFormat($data['BIRTH_DAY']);
+        $data['CREDIT_LIMIT'] = $this->functions->amount($data['CREDIT_LIMIT']);
+        return $data;
     }
 
 }
