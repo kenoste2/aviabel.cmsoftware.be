@@ -18,7 +18,7 @@ class DebtorDetailController extends BaseDebtorController {
             }
             else if ($generalForm->isValid($_POST)) {
                 $update = $data = $generalForm->getValues();
-                $data['DEBTOR_SCORE'] = $_POST['DEBTOR_SCORE'];
+                $data['DEBTOR_SCORE'] = $_POST['DEBTOR_SCORE'] ? $_POST['DEBTOR_SCORE'] : 0;
                 $update['BIRTH_DAY'] = $this->functions->date_dbformat($data['BIRTH_DAY']);
                 $update['CREDIT_LIMIT'] = $this->functions->dbBedrag($data['CREDIT_LIMIT']);
 
@@ -66,6 +66,7 @@ class DebtorDetailController extends BaseDebtorController {
         }
 
         $this->view->currentRating = $data['DEBTOR_SCORE'];
+        $this->view->email = $data['E_MAIL'];
 
     }
 

@@ -1,8 +1,7 @@
 <?php if ($this->authenticated) { ?>
     <h2><?php echo $this->debtorName ?></h2>
     <?php
-        foreach($this->references as $reference) {
-            $form = new Application_Form_ExternalDebtorReference($reference); ?>
+        foreach($this->references as $reference) { ?>
             <div data-item="invoice" class="collapsablePanel">
                 <div class="header">
                     <table>
@@ -17,7 +16,14 @@
 
                 </div>
                 <div class="body">
-                    <?php print $form; ?>
+                    <?php  $form = new Application_Form_ExternalDebtorReference($reference);
+                           print $form; ?>
+                    <?php
+                        $debtorExternalAccessObj = new Application_Model_DebtorExternalAccess();
+                        if(!$debtorExternalAccessObj->shouldBeEditableByDebtor($reference->DISPUTE_STATUS)) {
+                            ?><p><?php $this->T('invoice_in_process_c') ?></p><?php
+                        }
+                    ?>
                 </div>
             </div>
             <?php

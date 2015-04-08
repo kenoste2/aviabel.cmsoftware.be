@@ -233,13 +233,12 @@ class Application_Model_Debtors extends Application_Model_Base {
         return $value;
     }
 
-
-
     public function getAllFiles($debtorId) {
         $results = $this->db->get_results("SELECT FILE_NR,CREATION_DATE,STATE_CODE,REFERENCE,LAST_ACTION_DATE,FILE_ID,
             (TOTAL+INCASSOKOST) AS TOTAL,(PAYABLE+INCASSOKOST-PAYED_UNKNOWN) AS PAYABLE FROM FILES\$FILES_ALL_INFO WHERE DEBTOR_ID = {$debtorId}");
         return $results;
     }
+
     public function getHistory($debtorId) {
         $results = $this->db->get_results("select A.CREATION_DATE,A.CREATION_USER,A.NAME,A.ADDRESS,A.E_MAIL,A.TELEPHONE,A.TELEFAX,A.ZIP_CODE_ID,B.CODE,B.CITY from 
             FILES\$DEBTORS_HISTORY A

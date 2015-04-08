@@ -79,6 +79,7 @@ class FileInvoicesController extends BaseFileController
         }
 
         $referenceId = $this->getParam('id');
+        $reference = $this->db->get_row("SELECT * FROM FILES\$REFERENCES WHERE REFERENCE_ID = {$referenceId}");
 
         $data = array();
         if ($this->getRequest()->isPost()) {
@@ -105,7 +106,6 @@ class FileInvoicesController extends BaseFileController
                 $this->view->errors = $form->getErrors();
             }
         } else {
-            $reference = $this->db->get_row("SELECT * FROM FILES\$REFERENCES WHERE REFERENCE_ID = {$referenceId}");
             $data = array(
                 'REFERENCE_TYPE' => $reference->REFERENCE_TYPE,
                 'REFERENCE_ID' => $reference->REFERENCE_ID,
@@ -128,7 +128,10 @@ class FileInvoicesController extends BaseFileController
                 'DISPUTE' => $reference->DISPUTE,
                 'DISPUTE_DATE' => $this->functions->dateformat($reference->DISPUTE_DATE),
                 'DISPUTE_DUEDATE' => $this->functions->dateformat($reference->DISPUTE_DUEDATE),
-                'DISPUTE_ENDED_DATE' => $this->functions->dateformat($reference->DISPUTE_ENDED_DATE)
+                'DISPUTE_ENDED_DATE' => $this->functions->dateformat($reference->DISPUTE_ENDED_DATE),
+                'DISPUTE_STATUS' => $reference->DISPUTE_STATUS,
+                'DISPUTE_ASSIGNEE' => $reference->DISPUTE_ASSIGNEE,
+                'DISPUTE_COMMENT' => $reference->DISPUTE_COMMENT
             );
         }
         $form->populate($data);
@@ -136,6 +139,7 @@ class FileInvoicesController extends BaseFileController
         $fileDocumentsObj = new Application_Model_FilesDocuments();
 
         $this->view->documents = $fileDocumentsObj->getByReferenceId($referenceId);
+        $this->view->debtorDisputeComment = $reference->DEBTOR_DISPUTE_COMMENT;
         $this->view->form = $form;
     }
 

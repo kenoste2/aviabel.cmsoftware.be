@@ -42,8 +42,10 @@ class ExternalAccessController extends Zend_Controller_Action
                         $shouldSendMail = !$reference->DEBTOR_DISPUTE_COMMENT;
                         $data = array(
                             'REFERENCE_ID' => $reference->REFERENCE_ID,
-                            'DEBTOR_DISPUTE_COMMENT' => $disputeComment);
+                            'DEBTOR_DISPUTE_COMMENT' => $disputeComment,
+                            'DISPUTE_STATUS' => 'DEBTOR_REMARK');
                         $referenceObj->saveReference($data);
+
                         $reference->DEBTOR_DISPUTE_COMMENT = $disputeComment;
                     }
 

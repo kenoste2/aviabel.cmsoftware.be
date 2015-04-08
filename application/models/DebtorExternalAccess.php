@@ -13,6 +13,10 @@ class Application_Model_DebtorExternalAccess extends Application_Model_Base {
         return $this->db->get_var($sql);
     }
 
+    public function shouldBeEditableByDebtor($disputeStatus) {
+        return !$disputeStatus || $disputeStatus === 'DEBTOR_REMARK';
+    }
+
     public function createExternalAccessCode($debtorId) {
         $debtorsObj = new Application_Model_Debtors();
         $debtor = $debtorsObj->getDebtor($debtorId);
@@ -33,55 +37,131 @@ class Application_Model_DebtorExternalAccess extends Application_Model_Base {
     public function sendExternalAccessInviteMail($debtor) {
         global $config;
 
+        $templates = array(
+            "FRENCH" => array(
+                "subject" => "Invitation pour le résumé de vos factures ouvertes",
+                "body" => "Monsieur, madame,
 
-        $rawMailSubject = "Uitnodiging overzicht openstaande facturen";
-        $rawMailBody = "Beste klant,
+                Nous avons noté que vous avez encore quelques factures ouvertes chez nous.
+                Veuillez les contrôler sur le lien ci-dessous.
 
-                    We merkten op dat u nog een aantal openstaande facturen bij ons hebt staan. U kan ze bekijken
-                    op onderstaande link. Eventueel kan u ook op nalatigheden van onze kant duiden.
+                xEXTERNAL_ACCESS_LINKx
+
+                Bien à vous,
+
+                xCLIENT_NAMEx"
+            ),
+            "DUTCH" => array(
+                "subject" => "Uitnodiging overzicht openstaande facturen",
+                "body" => "Beste klant,
+
+                    We merkten op dat u nog een aantal openstaande facturen bij ons open hebt staan. U kan ze bekijken
+                    op onderstaande link.
 
                     xEXTERNAL_ACCESS_LINKx
 
                     Vriendelijke groeten,
 
-                    xCLIENT_NAMEx";
+                    xCLIENT_NAMEx"
+            ),
+            "ENGLISH" => array(
+                "subject" => "Invitation open invoice overview",
+                "body" => "Dear customer,
+
+                We have noticed you still have a number of open invoices with us. You can review them via the link below.
+
+                xEXTERNAL_ACCESS_LINKx
+
+                Kind regards,
+
+                xCLIENT_NAMEx"
+            ),
+        );
+
+        $rawMailBody = $templates['ENGLISH']['body'];
+        $rawMailSubject = $templates['ENGLISH']['subject'];
+        if(array_key_exists(strtoupper($debtor->LANGUAGE_CODE), $templates)) {
+            $rawMailBody = $templates[strtoupper($debtor->LANGUAGE_CODE)]['body'];
+            $rawMailSubject = $templates[strtoupper($debtor->LANGUAGE_CODE)]['subject'];
+        }
 
         $mailBody = $this->ReplaceReplacementFieldsBasedOnDebtor($debtor, $rawMailBody);
         $mailSubject = $this->ReplaceReplacementFieldsBasedOnDebtor($debtor, $rawMailSubject);
 
-        //TODO: call method from somewhere
-
-        //TODO: remove test statement below
-        print "send mail: <br>to: {$debtor->EMAIL}<br>subject: {$mailSubject}<br>body HTML: {$mailBody}<br>body text: {$mailBody}<br>from: {$config->fromEmail}";
-        //TODO: comment mail back in on LIVE environment.
-        //$mailObj->sendMail($debtor->EMAIL, $mailSubject, $mailBody, $mailBody, $config->fromEmail, false, false, true);
+        $mailObj = new Application_Model_Mail();
+        $mailObj->sendMail($debtor->E_MAIL, $mailSubject, $mailBody, $mailBody, $config->fromEmail, false, false, true);
     }
 
     public function sendDisputeWarningMail($reference) {
         global $config;
 
-        $rawMailSubject = "Dispuut gesuggereerd voor factuur xREFERENCEx #xFILE_NRx#";
-        $rawMailBody = "Beste Medewerker,
+        $templates = array(
+            "FRENCH" => array(
+                "subject" => "Commentaire du client pour facture xREFERENCEx",
+                "body" => "Monsieur, Madame,
 
-                    De debiteur xDEBTOR_NAMEx, in dossier xFILE_NRx heeft een dispuut gesuggereerd voor factuur xREFERENCEx met de volgende boodschap.
+                    Le client xDEBTOR_NAMEx a ajouté un commentaire pour facture xREFERENCEx avec le contenu suivant:
 
                     ------
                     xMESSAGEx
                     ------
 
+                    C'est possible qu'il faut mettre ce dossier en dispute.
+
+                    Bien à vous,
+
+                    Le logiciel CM"
+            ),
+            "DUTCH" => array(
+                "subject" => "Opmerking van klant voor factuur xREFERENCEx",
+                "body" => "Beste medewerker,
+
+                    De klant xDEBTOR_NAMEx heeft een opmerking toegevoegd bij factuur xREFERENCEx met de volgende boodschap.
+
+                    ------
+                    xMESSAGEx
+                    ------
+
+                    Mogelijk moet dit dossier in betwisting worden geplaatst.
+
                     Vriendelijke groeten,
 
-                    Het CM-softwarepakket";
+                    Het CM-softwarepakket"
+            ),
+            "ENGLISH" => array(
+                "subject" => "Remark from client for invoice xREFERENCEx",
+                "body" => "Dear sir, madam,
+
+                    The client xDEBTOR_NAMEx has added a remark to invoice xREFERENCEx with the following message.
+
+                    ------
+                    xMESSAGEx
+                    ------
+
+                    You might need to mark this file as a disputed invoice.
+
+                    Kind regards,
+
+                    The CM-software system"
+            ),
+        );
+
+        $collectorsObj = new Application_Model_Collectors();
+        $collector = $collectorsObj->getCollectorByFileId($reference->FILE_ID);
+
+        $rawMailBody = $templates['ENGLISH']['body'];
+        $rawMailSubject = $templates['ENGLISH']['subject'];
+        if(array_key_exists(strtoupper($collector->LANGUAGE_CODE), $templates)) {
+            $rawMailBody = $templates[strtoupper($collector->LANGUAGE_CODE)]['body'];
+            $rawMailSubject = $templates[strtoupper($collector->LANGUAGE_CODE)]['subject'];
+        }
 
         $mailBody = $this->replaceReplacementFieldsBasedOnReference($reference, $rawMailBody);
         $mailSubject = $this->replaceReplacementFieldsBasedOnReference($reference, $rawMailSubject);
 
         $mailObj = new Application_Model_Mail();
 
-        //TODO: remove test statement below
-        print "send mail: <br>to: {$config->fromEmail}<br>subject: {$mailSubject}<br>body HTML: {$mailBody}<br>body text: {$mailBody}<br>from: {$config->fromEmail}";
-        //TODO: comment mail back in on LIVE environment.
-        //$mailObj->sendMail($config->fromEmail, $mailSubject, $mailBody, $mailBody, $config->fromEmail, false, false, true);
+        $mailObj->sendMail($collector->EMAIL, $mailSubject, $mailBody, $mailBody, $config->fromEmail, false, false, true);
     }
 
     /**

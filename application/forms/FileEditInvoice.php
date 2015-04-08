@@ -28,6 +28,9 @@ class Application_Form_FileEditInvoice extends Zend_Form {
         $this->addElement('text', 'INTEREST_MINIMUM',array('label' => $functions->T('Interest_minimum_c'),'size' => 5, 'validators'=> array($helper->getFloatValidator())));
         $this->addElement('text', 'COST_MINIMUM',array('label' => $functions->T('Cost_minimum_c'),'size' => 5, 'validators'=> array($helper->getFloatValidator())));
         $this->addElement('select', 'DISPUTE',array('label' => $functions->T('dispute_c'),'MultiOptions' => array("1" =>$functions->T('yes_c'), "0" => $functions->T('no_c')),'required' => true , 'OnChange' => "dispute()"));
+        $this->addElement('textarea', 'DISPUTE_COMMENT', array('label' => $functions->T('dispute_comment_c'), 'rows' => 5, 'cols' => 45, 'required' => false));
+        $this->addElement('text', 'DISPUTE_ASSIGNEE', array('label' => $functions->T('dispute_assignee_c'), 'size' => 25, 'required' => false));
+        $this->addElement('text', 'DISPUTE_STATUS', array('label' => $functions->T('dispute_status_c'), 'size' => 25, 'required' => false));
         $this->addElement('text', 'DISPUTE_DATE',array('label' => $functions->T('dispute_date_c'),'size' => 15, 'required' => false,'validators'=>array (array('date', false, array('dd/MM/yyyy'))),));
         $this->addElement('text', 'DISPUTE_DUEDATE',array('label' => $functions->T('dispute_duedate_c'),'size' => 15, 'false' => true,'validators'=>array (array('date', false, array('dd/MM/yyyy'))),));
         $this->addElement('text', 'DISPUTE_ENDED_DATE',array('label' => $functions->T('dispute_ended_date_c'),'size' => 15, 'required' => false,'validators'=>array (array('date', false, array('dd/MM/yyyy'))),));

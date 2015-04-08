@@ -27,8 +27,8 @@
                 }
                 ?>
 
-                <form enctype="application/x-www-form-urlencoded" action="" method="post">
-                    <button type="submit" name="invite_for_external_access"><?php $this->T("invite_for_external_access_c") ?></button>
+                <form enctype="application/x-www-form-urlencoded" action="" method="post" style="float: right; margin: 5px;">
+                    <button type="submit" name="invite_for_external_access" <?php print !$this->email ? "disabled" : "" ?> ><?php $this->T("invite_for_external_access_c") ?></button>
                 </form>
                 <form enctype="application/x-www-form-urlencoded" action="" method="post">
                     <?php print $this->generalForm->NAME ?>

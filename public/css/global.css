@@ -68,6 +68,10 @@ input#submit, .submit, button[type=submit] {
     color : #FFFFFF;
 }
 
+input#submit:disabled, .submit:disabled, button[type=submit]:disabled {
+    background-color: #CCC;
+}
+
 /* @group Data Tables */
 
 .ws_data_table {
