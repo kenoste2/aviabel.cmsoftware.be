@@ -89,10 +89,7 @@ class Application_Model_DebtorExternalAccess extends Application_Model_Base {
         $mailSubject = $this->ReplaceReplacementFieldsBasedOnDebtor($debtor, $file, $rawMailSubject);
 
         $mailObj = new Application_Model_Mail();
-        //TODO: test line, remove on LIVE
-        print "to : {$debtor->E_MAIL}, subject : {$mailSubject}, body : {$mailBody}, from : {$config->fromEmail}";
-        //TODO: comment back in
-        //$mailObj->sendMail($debtor->E_MAIL, $mailSubject, $mailBody, $mailBody, $config->fromEmail, false, false, true);
+        $mailObj->sendMail($debtor->E_MAIL, $mailSubject, $mailBody, $mailBody, $config->fromEmail, false, false, true);
     }
 
     public function sendDisputeWarningMail($reference) {
@@ -164,11 +161,7 @@ class Application_Model_DebtorExternalAccess extends Application_Model_Base {
 
         $mailObj = new Application_Model_Mail();
 
-        //TODO: 
-        print "to : {$collector->E_MAIL}, subject : {$mailSubject}, body : {$mailBody}, from : {$config->fromEmail}";
-
-        //TODO:
-        //$mailObj->sendMail($collector->EMAIL, $mailSubject, $mailBody, $mailBody, $config->fromEmail, false, false, true);
+        $mailObj->sendMail($collector->EMAIL, $mailSubject, $mailBody, $mailBody, $config->fromEmail, false, false, true);
     }
 
     /**
