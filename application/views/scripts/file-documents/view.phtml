@@ -26,7 +26,7 @@ if ($this->deleted) {
                 <td><?php echo $row->REFERENCE ?></td>
                 <td><?php echo $row->CREATED ?></td>
                 <td><?php echo $row->CREATEDBY ?></td>
-                <td><a href="<?php echo $this->locationFiles?>/<?php echo $row->FILENAME ?>" target="_blank" ><span title ="<?php $this->T("view_c") ?>"  class="ui-icon ui-icon-disk"></span></td>
+                <td><a href="<?php echo $this->location() ?>/downloader/document/id/<?php echo $row->FILE_DOCUMENTS_ID ?>/verify/<?php echo sha1("{$row->FILE_DOCUMENTS_ID}Triple@"); ?>"><span title ="<?php $this->T("view_c") ?>"  class="ui-icon ui-icon-disk"></span></td>
                 <td>
                     <a href="<?php echo $this->location() ?>/file-documents/edit/fileDocumentId/<?php echo $row->FILE_DOCUMENTS_ID ?>/fileId/<?php echo $this->fileId ?>" ><span title="<?php $this->T("view_c") ?>" class="ui-icon ui-icon-zoomin"></span>
                 </td>

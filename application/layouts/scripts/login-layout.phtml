@@ -8,8 +8,21 @@
         <?php echo $this->headLink()->appendStylesheet(BASE_URL . 'css/south-street/jquery-ui-1.10.4.custom.css') ?>
         <?php echo $this->headScript()->appendFile(BASE_URL . 'js/jquery-1.10.2.js') ?>
         <?php echo $this->headScript()->appendFile(BASE_URL . 'js/jquery-ui-1.10.4.custom.js') ?>
+        <style>
+            body {
+                background-image: url();
+                background-color: #fff;
+                background: url("<?php echo $this->location() ?>/public/images/background.jpg") no-repeat center center fixed;
+                -webkit-background-size: cover;
+                -moz-background-size: cover;
+                -o-background-size: cover;
+                background-size: cover;
+            }
+        </style>
     </head>
     <body>
-        <?php echo $this->layout()->content ?> 
+    <?php echo $this->layout()->content ?>
     </body>
+
+
 </html>
