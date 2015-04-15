@@ -2,25 +2,24 @@
     <h2><?php echo $this->debtorName ?></h2>
     <?php
         foreach($this->references as $reference) { ?>
-            <div data-item="invoice" class="collapsablePanel">
+            <div data-item="invoice" class="collapsablePanel" data-hidecontent="<?php print $this->openReferenceId == $reference['obj']->REFERENCE_ID ? "false" : "true" ?>">
                 <div class="header">
                     <table>
                         <tr>
-                            <td><span class="title2"><?php $this->T('invoice_c') ?> <?php print $reference->REFERENCE ?></span></td>
-                            <td><?php $this->T('original_amount_c') ?>: <?php print $reference->AMOUNT ?></td>
-                            <td><?php $this->T('total_amount_c') ?>: <?php print $reference->TOTAL ?></td>
-                            <td><?php $this->T('open_amount_c') ?>: <?php print $reference->SALDO ?></td>
+                            <td><span class="title2"><?php $this->T('invoice_c') ?> <?php print $reference['obj']->REFERENCE ?></span></td>
+                            <td><?php $this->T('original_amount_c') ?>: <?php print $reference['obj']->AMOUNT ?></td>
+                            <td><?php $this->T('total_amount_c') ?>: <?php print $reference['obj']->TOTAL ?></td>
+                            <td><?php $this->T('open_amount_c') ?>: <?php print $reference['obj']->SALDO ?></td>
                         </tr>
 
                     </table>
 
                 </div>
                 <div class="body">
-                    <?php  $form = new Application_Form_ExternalDebtorReference($reference);
-                           print $form; ?>
+                    <?php print $reference['form']; ?>
                     <?php
                         $debtorExternalAccessObj = new Application_Model_DebtorExternalAccess();
-                        if(!$debtorExternalAccessObj->shouldBeEditableByDebtor($reference->DISPUTE_STATUS)) {
+                        if(!$debtorExternalAccessObj->shouldBeEditableByDebtor($reference['obj']->DISPUTE_STATUS)) {
                             ?><p><?php $this->T('invoice_in_process_c') ?></p><?php
                         }
                     ?>
@@ -32,8 +31,11 @@
     <script type="text/javascript">
         var ExternalAccess = {
             Invoice : function(element) {
+                var hide = element.attr('data-hidecontent');
                 var invoiceContent = element.find('> div.body');
-                invoiceContent.hide();
+                if(hide != "false") {
+                    invoiceContent.hide();
+                }
                 element.find('> div.header').click(function() {
                     invoiceContent.slideToggle();
                 });
