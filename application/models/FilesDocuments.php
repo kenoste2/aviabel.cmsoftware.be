@@ -11,7 +11,7 @@ class Application_Model_FilesDocuments extends Application_Model_Base {
 
         $file_nr = $this->db->get_var("SELECT FILE_NR FROM FILES\$FILES WHERE FILE_ID={$document->FILE_ID}");
 
-        $filelink = $config->rootFileDocuments . '/' . $file_nr . '_' . $document->FILE_DOCUMENTS_ID . '_' . $document->FILENAME;
+        $filelink = $config->rootFileDocuments . '/' . $document->FILENAME;
 
         if (file_exists($filelink)) {
             unlink($filelink);
@@ -21,8 +21,8 @@ class Application_Model_FilesDocuments extends Application_Model_Base {
         $this->db->query($sql);
     }
 
-    public function save($data, $where) {
-        $this->saveData('FILES$DOCUMENTS', $data, $where);
+    public function save($data, $where = false) {
+        $this->saveData('FILE_DOCUMENTS', $data, $where);
     }
 
     public function add($fileId, $file, $description, $visible) {
@@ -49,8 +49,11 @@ class Application_Model_FilesDocuments extends Application_Model_Base {
                 $extension = $matches[2];
             }
 
-            $filename = $config->rootFileDocuments . '/' . $file_nr . '_' . $last_id . '.' . $extension;
-            $filenameUrl = $file_nr . '_' . $last_id . '.' . $extension;
+
+            $rand = rand(0,99999);
+
+            $filename = $config->rootFileDocuments . '/' . $file_nr . '_' . $last_id . $rand . '.' . $extension;
+            $filenameUrl = $file_nr . '_' . $last_id . $rand . '.' . $extension;
 
             if (copy($info[$userfile]['tmp_name'], $filename)) {
                 unlink($info[$userfile]['tmp_name']);
@@ -74,6 +77,75 @@ class Application_Model_FilesDocuments extends Application_Model_Base {
         }
     }
 
+    public function getByReferenceId($referenceId) {
+
+        if(!$referenceId) {
+            $escReferenceId = 0;
+        } else {
+            $escReferenceId = $referenceId;
+        }
+
+        $sql = "SELECT * FROM FILE_DOCUMENTS WHERE REFERENCE_ID={$escReferenceId} ORDER BY FILENAME";
+        $results = $this->db->get_results($sql);
+        return $results;
+    }
+
+    public function getDocumentsFromFile($fileId) {
+        $sql = "SELECT * FROM FILE_DOCUMENTS WHERE FILE_ID={$fileId} ORDER BY FILENAME";
+        $results = $this->db->get_results($sql);
+        return $results;
+    }
+
+    public function getById($fileDocumentId) {
+        if(!$fileDocumentId) {
+            $escFileDocumentId = 0;
+        } else {
+            $escFileDocumentId = $this->db->escape($fileDocumentId);
+        }
+        $sql = "SELECT * FROM FILE_DOCUMENTS WHERE FILE_DOCUMENTS_ID = {$escFileDocumentId}";
+        return $this->db->get_row($sql);
+    }
+
+    public function getDocumentsByIds($documentIds) {
+        if(count($documentIds) <= 0) {
+            return array();
+        }
+
+        $documentIdsStr = implode(',', $documentIds);
+
+        $escDocumentIdsStr = $this->db->escape($documentIdsStr);
+        $sql = "SELECT * FROM FILE_DOCUMENTS WHERE FILE_DOCUMENTS_ID IN ({$escDocumentIdsStr})";
+        return $this->db->get_results($sql);
+    }
+
+    public function getNextId()
+    {
+        $sql = "SELECT MAX(FILE_DOCUMENTS_ID) FROM FILE_DOCUMENTS";
+        $id = $this->db->get_var($sql);
+        if (empty($id)) {
+            $id = 0;
+        }
+        $id++;
+        return $id;
+    }
+
+    /**
+     * @param $originalFilename
+     * @return mixed
+     */
+    private function getExtension($originalFilename)
+    {
+
+        $extension = "";
+
+        $matches = array();
+        if (preg_match('/^(.*?)\.(.*)$/', $originalFilename, $matches)) {
+            $originalFilename = $matches[1];
+            $extension = $matches[2];
+            return $extension;
+        }
+        return $extension;
+    }
 }
 
 ?>

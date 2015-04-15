@@ -385,7 +385,7 @@ class InvoicesController extends BaseController
             $sessionFiles = new Zend_Session_Namespace("FILES");
             $sql = "SELECT FILE_ID,FILE_NR,DEBTOR_NAME FROM FILES\$FILES_ALL_INFO A WHERE FILE_ID = {$fileId}";
             $sessionFiles->fileList = $this->db->get_results($sql, ARRAY_A);
-            $this->_redirect("/file-detail/view/index/0");
+            $this->_redirect("/file-detail/view/fileId/{$fileId}");
         }
     }
 

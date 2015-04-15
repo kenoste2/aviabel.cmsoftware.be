@@ -7,7 +7,7 @@ class FilePaymentsController extends BaseFileController {
     public function viewAction() {
         $this->view->printButton = true;
         if ($this->hasAccess('addPayments')) {
-            $this->view->addButton = "/file-payments/add/index/" . $this->getParam("index");
+            $this->view->addButton = "/file-payments/add/fileId/" . $this->fileId;
         }
         if ($this->hasAccess('managePayments')) {
             $this->view->managePayments = true;

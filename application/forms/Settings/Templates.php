@@ -17,10 +17,15 @@ class Application_Form_Settings_Templates extends Zend_Form {
         $this->addElement('select', 'TEMPLATE_FOR', array('label' => $functions->T('template_for_c'), 'required' => false, 'MultiOptions' => $this->getTemplateFor($functions)));
         $this->addElement('multiCheckbox', 'TEMPLATE_MODULES', array('label' => $functions->T('Activated_modules_c'), 'required' => false, 'MultiOptions' => $this->getModules()));
 
-        $this->addElement('textarea', 'TEXT_NL', array('label' => $functions->T('textinhoud_c') . 'NL', 'required' => false, 'rows' => '15', 'cols' => '120'));
-        $this->addElement('textarea', 'TEXT_FR', array('label' => $functions->T('textinhoud_c') . 'FR', 'required' => false, 'rows' => '15', 'cols' => '120'));
-        $this->addElement('textarea', 'TEXT_EN', array('label' => $functions->T('textinhoud_c') . 'EN', 'required' => false, 'rows' => '15', 'cols' => '120'));
-        $this->addElement('textarea', 'TEXT_DE', array('label' => $functions->T('textinhoud_c') . 'DE', 'required' => false, 'rows' => '15', 'cols' => '120'));
+        $this->addElement('textarea', 'TEXT_NL', array('label' => $functions->T('textinhoud_c') . ' NL', 'required' => false, 'rows' => '15', 'cols' => '120'));
+        $this->addElement('textarea', 'TEXT_FR', array('label' => $functions->T('textinhoud_c') . ' FR', 'required' => false, 'rows' => '15', 'cols' => '120'));
+        $this->addElement('textarea', 'TEXT_EN', array('label' => $functions->T('textinhoud_c') . ' EN', 'required' => false, 'rows' => '15', 'cols' => '120'));
+        $this->addElement('textarea', 'TEXT_DE', array('label' => $functions->T('textinhoud_c') . ' DE', 'required' => false, 'rows' => '15', 'cols' => '120'));
+
+        $this->addElement('textarea', 'TEXT_SMS_NL', array('label' => $functions->T('textinhoud_sms_c') . ' NL', 'required' => false, 'rows' => '15', 'cols' => '120'));
+        $this->addElement('textarea', 'TEXT_SMS_FR', array('label' => $functions->T('textinhoud_sms_c') . ' FR', 'required' => false, 'rows' => '15', 'cols' => '120'));
+        $this->addElement('textarea', 'TEXT_SMS_EN', array('label' => $functions->T('textinhoud_sms_c') . ' EN', 'required' => false, 'rows' => '15', 'cols' => '120'));
+        $this->addElement('textarea', 'TEXT_SMS_DE', array('label' => $functions->T('textinhoud_sms_c') . ' DE', 'required' => false, 'rows' => '15', 'cols' => '120'));
 
         $this->addElement('submit', 'submit', array(
             'ignore' => true,

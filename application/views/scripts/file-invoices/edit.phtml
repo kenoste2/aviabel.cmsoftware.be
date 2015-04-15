@@ -1,16 +1,88 @@
-<span  class="title2"><?php $this->T("edit_ref_c") ?></span>
-<?php
-if ($this->formSaved) {
-    print $this->Ok($this->G("saved_c"));
-}
-?>
-<?php
-if ($this->formError) {
-    print $this->Error($this->G("not_all_fields_c"));
-}
-?>
-
-<?php print $this->form ?>
+<form enctype="application/x-www-form-urlencoded" action="" method="post">
+    <table style="width: 100%">
+        <tr>
+            <td style="width: 50%" class="windowPart">
+                <span  class="title2"><?php $this->T("edit_ref_c") ?></span>
+                <?php
+                if ($this->formSaved) {
+                    print $this->Ok($this->G("saved_c"));
+                }
+                ?>
+                <?php
+                if ($this->formError) {
+                    print $this->Error($this->G("not_all_fields_c"));
+                }
+                ?>
+                <dl class="zend_form">
+                    <?php print $this->form->REFERENCE_ID ?>
+                    <?php print $this->form->REFERENCE_TYPE ?>
+                    <?php print $this->form->TRAIN_TYPE ?>
+                    <?php print $this->form->REFERENCE ?>
+                    <?php print $this->form->STATE_ID ?>
+                    <?php print $this->form->REFUND_STATEMENT ?>
+                    <?php print $this->form->INVOICE_DATE ?>
+                    <?php print $this->form->START_DATE ?>
+                    <?php print $this->form->END_DATE ?>
+                    <?php print $this->form->AMOUNT ?>
+                    <?php print $this->form->AUTO_CALCULATE ?>
+                    <?php print $this->form->INTEREST ?>
+                    <?php print $this->form->COSTS ?>
+                    <?php print $this->form->INTEREST_PERCENT ?>
+                    <?php print $this->form->COST_PERCENT ?>
+                    <?php print $this->form->INTEREST_MINIMUM ?>
+                    <?php print $this->form->COST_MINIMUM ?>
+                    <?php print $this->form->submit ?>
+                </dl>
+            </td>
+            <td style="width: 50%">
+                <div class="windowPart">
+                    <p><span class="title2"><?php $this->T("dispute_c") ?></span></p>
+                    <dl class="zend_form">
+                        <dt>
+                            <?php $this->T("debtor_dispute_comment_c") ?>
+                        </dt>
+                        <dd>
+                            <?php
+                            if($this->debtorDisputeComment) {
+                                print $this->debtorDisputeComment;
+                            } else {
+                                $this->T("no_debtor_dispute_comment_found_c");
+                            } ?>
+                        </dd>
+                        <?php print $this->form->DISPUTE_STATUS ?>
+                        <?php print $this->form->DISPUTE ?>
+                        <?php print $this->form->DISPUTE_COMMENT ?>
+                        <?php print $this->form->DISPUTE_DATE ?>
+                        <?php print $this->form->DISPUTE_DUEDATE ?>
+                        <?php print $this->form->DISPUTE_ENDED_DATE ?>
+                        <?php print $this->form->DISPUTE_ASSIGNEE ?>
+                    </dl>
+                </div>
+                <div class="windowPart" style="margin-top: 5px">
+                    <p><span class="title2"><?php $this->T("related_documents_c") ?></span></p>
+                    <?php if(count($this->documents) > 0) { ?>
+                        <table class="ws_data_table" style="width: 100%">
+                            <thead>
+                            <tr>
+                                <th><?php $this->T("document_name_c") ?></th>
+                                <th><?php $this->T("document_description_c") ?></th>
+                            </tr>
+                            </thead>
+                            <?php foreach($this->documents as $document) { ?>
+                                <tr>
+                                    <td><?php echo $document->FILENAME ?></td>
+                                    <td><?php echo $document->DESCRIPTION ?></td>
+                                </tr>
+                            <?php } ?>
+                        </table>
+                    <?php } else { ?>
+                        <p><?php $this->T("no_documents_found_c") ?></p>
+                    <?php } ?>
+                </div>
+            </td>
+        </tr>
+    </table>
+</form>
 
 
 
@@ -52,24 +124,18 @@ if ($this->formError) {
     autoCalculate();
     function dispute()
     {
+        var disputeList = ['DISPUTE_DATE', 'DISPUTE_DUEDATE', 'DISPUTE_ENDED_DATE', 'DISPUTE_ASSIGNEE'];
         var value = $('#DISPUTE').val();
         if (value == 1) {
-            $('#DISPUTE_DATE-label').show();
-            $('#DISPUTE_DATE-element').show();
-            $('#DISPUTE_DUEDATE-label').show();
-            $('#DISPUTE_DUEDATE-element').show();
-            $('#DISPUTE_ENDED_DATE-label').show();
-            $('#DISPUTE_ENDED_DATE-element').show();
+            $.each(disputeList, function(i, item) {
+                $('#' + item + '-label').show();
+                $('#' + item + '-element').show();
+            });
         } else {
-            $('#DISPUTE_DATE-label').hide();
-            $('#DISPUTE_DATE-element').hide();
-            $('#DISPUTE_DATE').val('');
-            $('#DISPUTE_DUEDATE-label').hide();
-            $('#DISPUTE_DUEDATE-element').hide();
-            $('#DISPUTE_DUEDATE').val('');
-            $('#DISPUTE_ENDED_DATE-label').hide();
-            $('#DISPUTE_ENDED_DATE-element').hide();
-            $('#DISPUTE_ENDED_DATE').val('');
+            $.each(disputeList, function(i, item) {
+                $('#' + item + '-label').hide();
+                $('#' + item + '-element').hide().val('');
+            });
         }
     }
     dispute();

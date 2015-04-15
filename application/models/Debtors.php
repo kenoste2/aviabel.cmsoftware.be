@@ -9,17 +9,34 @@ class Application_Model_Debtors extends Application_Model_Base {
 
         $zipCodeId = $zipCodesModel->CheckOrCreate($data);
 
-        $birthDay = (!empty($data['BIRTH_DAY'])) ? "'{$data['BIRTH_DAY']}'" : 'null';
+        $createData = array(
+            'NAME' => $data['NAME'],
+            'ADDRESS' => $data['ADDRESS'],
+            'ZIP_CODE_ID' => $zipCodeId,
+            'LANGUAGE_ID' => $data['LANGUAGE_ID'],
+            'E_MAIL' => $data['E_MAIL'],
+            'TELEPHONE' => $data['TELEPHONE'],
+            'TELEFAX' => $data['TELEFAX'],
+            'VATNR' => $data['VATNR'],
+            'CREATION_DATE' => date("Y-m-d"),
+            'CREATION_USER' => $this->online_user,
+            'PASS' => '',
+        );
 
+        if (!empty($data['BIRTH_DAY'])) {
+            $createData['BIRTH_DAY'] = $data['BIRTH_DAY'];
+        }
 
-        $sql = "insert into FILES\$DEBTORS 
-            (NAME,ADDRESS,ZIP_CODE_ID,LANGUAGE_ID,E_MAIL,TELEPHONE,TELEFAX,VATNR,CREATION_DATE,CREATION_USER,TRAIN_TYPE,PASS)
-            values ('{$data['NAME']}','{$data['ADDRESS']}',{$zipCodeId},'{$data['LANGUAGE_ID']}'
-                ,'{$data['E_MAIL']}','{$data['TELEPHONE']}','{$data['TELEFAX']}'
-                ,'{$data['VATNR']}',CURRENT_DATE,'{$this->online_user}','{$data['TRAIN_TYPE']}','')
-            RETURNING DEBTOR_ID";
-        $debtorId = $this->db->get_var($sql);
+        $debtorId = $this->addData('FILES$DEBTORS',$createData,'DEBTOR_ID');
         return $debtorId;
+    }
+
+    public function getAllDebtors() {
+        $sql = "SELECT * FROM FILES\$DEBTORS
+                WHERE DEBTOR_ID IN
+                    (SELECT DEBTOR_ID FROM FILES\$FILES
+                     WHERE DATE_CLOSED IS NULL OR DATE_CLOSED > (CURRENT_DATE - 7))";
+        return $this->db->get_results($sql);
     }
 
     public function add($data)
@@ -44,6 +61,7 @@ class Application_Model_Debtors extends Application_Model_Base {
         $zipCodeId = $zipCodesModel->CheckOrCreate($data);
         $birthDay = (!empty($data['BIRTH_DAY'])) ? "BIRTH_DAY = '{$data['BIRTH_DAY']}'" : 'BIRTH_DAY = null';
 
+
         $sql = "UPDATE FILES\$DEBTORS
             SET NAME = '{$data['NAME']}',
                 ADDRESS = '{$data['ADDRESS']}',
@@ -54,6 +72,7 @@ class Application_Model_Debtors extends Application_Model_Base {
                 TELEFAX =  '{$data['TELEFAX']}',
                 GSM =  '{$data['GSM']}',    
                 VATNR= '{$data['VATNR']}',
+                EXTRA_FIELD = '{$data['EXTRA_FIELD']}',
                 TRAIN_TYPE = '{$data['TRAIN_TYPE']}',
                 CREDIT_LIMIT = '{$data['CREDIT_LIMIT']}',
                 $birthDay
@@ -74,6 +93,19 @@ class Application_Model_Debtors extends Application_Model_Base {
         $this->db->query($sqlDelete);
 
         $sql = "INSERT INTO SUBDEBTORS (SUPER_DEBTOR_ID, SUB_DEBTOR_ID) VALUES ({$escSuperDebtorId}, {$escSubDebtorId})";
+        $this->db->query($sql);
+
+    }
+
+    public function changeDebtorScore($debtorScore, $debtorId, $userId) {
+
+        $escUserId = $this->db->escape($userId);
+        $escDebtorId = $this->db->escape($debtorId);
+        $escDebtorScore = $this->db->escape($debtorScore);
+
+        $sql = "INSERT INTO DEBTOR_SCORE
+                (DEBTOR_SCORE_ID, DEBTOR_ID, USER_ID, SCORE, TIME_STAMP)
+                VALUES(COALESCE((SELECT MAX(DEBTOR_SCORE_ID) + 1 FROM DEBTOR_SCORE), 1), {$escDebtorId}, {$escUserId}, {$escDebtorScore}, CURRENT_TIME)";
         $this->db->query($sql);
     }
 
@@ -124,7 +156,8 @@ class Application_Model_Debtors extends Application_Model_Base {
         $sql = "SELECT D.*, D2.TRAIN_TYPE, D2.CREDIT_LIMIT,
             (SELECT FIRST 1 SUPER_DEBTOR_ID FROM SUBDEBTORS WHERE SUB_DEBTOR_ID = D.DEBTOR_ID) AS SUPER_DEBTOR_ID,
             (SELECT FIRST 1 NAME FROM FILES\$DEBTORS
-              WHERE DEBTOR_ID IN (SELECT FIRST 1 SUPER_DEBTOR_ID FROM SUBDEBTORS WHERE SUB_DEBTOR_ID = D.DEBTOR_ID)) AS SUPER_DEBTOR_NAME
+              WHERE DEBTOR_ID IN (SELECT FIRST 1 SUPER_DEBTOR_ID FROM SUBDEBTORS WHERE SUB_DEBTOR_ID = D.DEBTOR_ID)) AS SUPER_DEBTOR_NAME,
+              (SELECT FIRST 1 SCORE FROM DEBTOR_SCORE ds WHERE ds.DEBTOR_ID = D.DEBTOR_ID ORDER BY TIME_STAMP DESC) AS DEBTOR_SCORE
             FROM FILES\$DEBTORS_ALL_INFO D
             JOIN FILES\$DEBTORS D2 ON D2.DEBTOR_ID = D.DEBTOR_ID WHERE D.DEBTOR_ID = $debtorId";
         $row = $this->db->get_row($sql, ARRAY_A);
@@ -159,8 +192,40 @@ class Application_Model_Debtors extends Application_Model_Base {
         return $this->db->get_var("SELECT TRAIN_TYPE FROM FILES\$DEBTORS WHERE DEBTOR_ID = {$debtorId}");
     }
 
+    function getMostRecentPaymentDelayAndPaymentNrHistory($debtorId) {
+        $escDebtorId = $this->db->escape($debtorId);
+        $sql = "SELECT FIRST 1 * FROM PAYMENT_DELAY_AVERAGE
+                WHERE DEBTOR_ID = {$escDebtorId}
+                ORDER BY DATE_STAMP DESC";
+        return $this->db->get_row($sql);
+    }
+
+    function getReferencesOverPaymentDelay($debtorId, $paymentDelay) {
+        $escDebtorId = $this->db->escape($debtorId);
+        $escPaymentDelay = $this->db->escape($paymentDelay);
+        $sql = "SELECT *
+                FROM FILES\$REFERENCES R
+                    JOIN FILES\$FILES F ON F.FILE_ID = R.FILE_ID
+                WHERE F.DEBTOR_ID = {$escDebtorId}
+                  AND (CURRENT_DATE - R.INVOICE_DATE) > {$escPaymentDelay}
+                  AND R.SALDO_AMOUNT > 0 AND R.AMOUNT > 0";
+        return $this->db->get_results($sql);
+    }
+
+    function calculatePaymentDelayAndPaymentNrInvoices($debtorId) {
+        $escDebtorId = $this->db->escape($debtorId);
+        $sql = "SELECT
+                  AVG((SELECT FIRST 1 PAYMENT_DATE FROM FILES\$PAYMENTS WHERE REFERENCE_ID = R.REFERENCE_ID ORDER BY PAYMENT_DATE DESC)- R.INVOICE_DATE) AS PAYMENT_DELAY,
+                  COUNT(*) AS NR_OF_PAYMENTS
+                FROM FILES\$REFERENCES R
+                    JOIN FILES\$FILES F ON F.FILE_ID = R.FILE_ID
+                WHERE F.DEBTOR_ID = {$escDebtorId} AND R.SALDO_AMOUNT <= 0 AND R.AMOUNT > 0";
+
+        return $this->db->get_row($sql);
+    }
+
     function getPaymentDelay($debtorId) {
-        $sql = "SELECT AVG(COALESCE((SELECT PAYMENT_DATE FROM FILES\$PAYMENTS WHERE REFERENCE_ID = R.REFERENCE_ID),CURRENT_DATE)- R.INVOICE_DATE) AS DELAY_PAYMENT
+        $sql = "SELECT AVG(COALESCE((SELECT FIRST 1 PAYMENT_DATE FROM FILES\$PAYMENTS WHERE REFERENCE_ID = R.REFERENCE_ID ORDER BY PAYMENT_DATE DESC),CURRENT_DATE)- R.INVOICE_DATE) AS DELAY_PAYMENT
                 FROM FILES\$REFERENCES R
                     JOIN FILES\$FILES F ON F.FILE_ID = R.FILE_ID WHERE F.DEBTOR_ID = {$debtorId}";
 
@@ -168,21 +233,29 @@ class Application_Model_Debtors extends Application_Model_Base {
 
         if ($row->DELAY_PAYMENT) {
             $delay = $row->DELAY_PAYMENT;
-        } else {
-            $delay = $row->DELAY_NOPAYMENT;
         }
+
         if (empty($delay)) {
             $delay = "-";
         }
 
         return $delay;
     }
-    
+
+    function getMeanPaymentDelay() {
+        $sql = "SELECT AVG(COALESCE((SELECT PAYMENT_DATE FROM FILES\$PAYMENTS WHERE REFERENCE_ID = R.REFERENCE_ID),CURRENT_DATE)- R.INVOICE_DATE) AS DELAY_PAYMENT
+                FROM FILES\$REFERENCES R
+                    JOIN FILES\$FILES F ON F.FILE_ID = R.FILE_ID";
+        $value = $this->db->get_var($sql);
+        return $value;
+    }
+
     public function getAllFiles($debtorId) {
         $results = $this->db->get_results("SELECT FILE_NR,CREATION_DATE,STATE_CODE,REFERENCE,LAST_ACTION_DATE,FILE_ID,
             (TOTAL+INCASSOKOST) AS TOTAL,(PAYABLE+INCASSOKOST-PAYED_UNKNOWN) AS PAYABLE FROM FILES\$FILES_ALL_INFO WHERE DEBTOR_ID = {$debtorId}");
         return $results;
     }
+
     public function getHistory($debtorId) {
         $results = $this->db->get_results("select A.CREATION_DATE,A.CREATION_USER,A.NAME,A.ADDRESS,A.E_MAIL,A.TELEPHONE,A.TELEFAX,A.ZIP_CODE_ID,B.CODE,B.CITY from 
             FILES\$DEBTORS_HISTORY A
@@ -191,7 +264,32 @@ class Application_Model_Debtors extends Application_Model_Base {
         return $results;
     }
 
+    public function getDebtorByReferenceId($referenceId) {
+        $escReferenceId = $this->db->escape($referenceId);
+        $sql = "SELECT * FROM FILES\$DEBTORS WHERE DEBTOR_ID IN
+                    (SELECT DEBTOR_ID FROM FILES\$FILES
+                     WHERE FILE_ID IN
+                        (SELECT FILE_ID FROM FILES\$REFERENCES
+                         WHERE REFERENCE_ID = {$escReferenceId}))";
+        return $this->db->get_row($sql);
+    }
 
+    public function getDebtor($debtorId) {
+        $escDebtorId = $this->db->escape($debtorId);
+        $sql = "SELECT D.*,
+                    (SELECT FIRST 1 CODE FROM SUPPORT\$LANGUAGES
+                    WHERE LANGUAGE_ID = D.LANGUAGE_ID) AS LANGUAGE_CODE
+                FROM FILES\$DEBTORS D
+                WHERE D.DEBTOR_ID = {$escDebtorId}";
+        return $this->db->get_row($sql);
+    }
+
+    /**
+     * @deprecated getDebtorData returns an array of debtor results, even though there should only be 1 result per
+     *             id. It's probably better to use getDebtor instead, which just returns the debtor object.
+     * @param $debtorId
+     * @return null
+     */
     public function getDebtorData($debtorId) {
         $results = $this->db->get_results("SELECT * FROM FILES\$DEBTORS WHERE DEBTOR_ID = {$debtorId}");
         return $results;
@@ -216,11 +314,13 @@ class Application_Model_Debtors extends Application_Model_Base {
         }
     }
 
-
-
-
-    
-
+    public function getDebtorByFileActionId($fileActionId) {
+         $escFileActionId = $this->db->escape($fileActionId);
+         $sql = "SELECT * FROM FILES\$DEBTORS WHERE DEBTOR_ID =
+                    (SELECT DEBTOR_ID FROM FILES\$FILES WHERE FILE_ID =
+                        (SELECT FILE_ID FROM FILES\$FILE_ACTIONS WHERE FILE_ACTION_ID = {$escFileActionId}))";
+        return $this->db->get_row($sql);
+    }
 }
 
 ?>

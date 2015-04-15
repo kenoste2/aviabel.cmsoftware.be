@@ -26,12 +26,15 @@ class Application_Form_FileAddAction extends Zend_Form
 
         $this->addElement('text', 'E_MAIL', array('label' => $functions->T('email_c'), 'size' => 50, 'validators' => array(array('EmailAddress')),));
         $this->addElement('textarea', 'ADDRESS', array('label' => $functions->T('bestemming_c'), 'size' => 15, 'rows' => 3, 'cols' => 30));
-        $options = array("POST" => $functions->T('post_c'), "EMAIL" => $functions->T('email_c'));
+        $this->addElement('text', 'GSM', array('label' => $functions->T('gsm_c'), 'size' => 50));
+        $options = array("POST" => $functions->T('post_c'), "EMAIL" => $functions->T('email_c'), "SMS" => $functions->T('sms_c'));
+
         $this->addElement('radio', 'VIA', array(
             'label' => $functions->T('via_c'),
             'MultiOptions' => $options,
             'onchange' => 'via();'
         ));
+
         $confirm = array(1 => $functions->T('yes_c'), 0 => $functions->T('no_c'));
         $this->addElement('radio', 'PRINTED', array(
             'label' => $functions->T('print_now_c'),
@@ -39,7 +42,7 @@ class Application_Form_FileAddAction extends Zend_Form
         ));
 
         $this->addElement('textarea', 'CONTENT', array('label' => $functions->T('inhoud_c'), 'size' => 15, 'rows' => 30, 'cols' => 60));
-
+        $this->addElement('textarea', 'SMS_CONTENT', array('label' => $functions->T('inhoud_sms_c'), 'size' => 15, 'rows' => 10, 'cols' => 60));
 
         $this->addElement('submit', 'submit', array(
             'ignore' => true,

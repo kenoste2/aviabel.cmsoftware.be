@@ -5,6 +5,10 @@ require_once 'application/controllers/BaseClientController.php';
 class ClientDetailController extends BaseClientController {
 
     public function viewAction() {
+        global $config;
+
+        $this->view->printButton = true;
+
         $obj = new Application_Model_Clients();
         $clientData = $obj->getArrayData($this->clientId);
 
@@ -38,14 +42,19 @@ class ClientDetailController extends BaseClientController {
                 if (empty($update['INVOICE_COUTRY_ID'])) {
                     $data['INVOICE_COUNTRY_ID'] = $update['INVOICE_COUNTRY_ID'] = $update['COUNTRY_ID'];
                 }
+
+                $passError = false;
+                $updatePassword = false;
                 if (!empty($update['PASSWORD'])) {
+                    $updatePassword = true;
                     $valide = $this->functions->validatePassword($update["PASSWORD"], $update["PASSWORD2"]);
                     if ($valide !== true) {
                         $this->view->generalPassError = true;
                         $passError = true;
                     }
                 }
-                if (empty($passError)) {
+
+                if (!$passError && $updatePassword) {
 
                     $usersObj = new Application_Model_Users();
 

@@ -67,7 +67,7 @@ class AjaxController extends BaseController
         $term = trim(strtoupper($this->getParam('term')));
         $sql = "SELECT FIRST 100 ACTION_ID,CODE,DESCRIPTION
             FROM FILES\$ACTIONS
-            WHERE CODE CONTAINING '{$term}' OR DESCRIPTION CONTAINING '{$term}' ORDER BY DESCRIPTION";
+            WHERE (CODE CONTAINING '{$term}' OR DESCRIPTION CONTAINING '{$term}') AND ACTIEF = 1 ORDER BY DESCRIPTION";
         $array = array();
         $results = $this->db->get_results($sql);
         if ($results) {
@@ -124,7 +124,8 @@ class AjaxController extends BaseController
         $debtorData = $templatesObj->getToContent($fileId, $templateId);
         $array [] = array(
             'EMAIL' => $debtorData['E_MAIL'],
-            'ADDRESS' => "{$debtorData['NAME']}\n{$debtorData['ADDRESS']}\n{$debtorData['ZIP_CODE']} {$debtorData['CITY']}",
+            'GSM' => $debtorData['GSM'],
+            'ADDRESS' => $templatesObj->formatAddress($debtorData),
         );
         print json_encode($array);
     }

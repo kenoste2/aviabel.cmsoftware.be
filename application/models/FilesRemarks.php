@@ -16,6 +16,11 @@ class Application_Model_FilesRemarks extends Application_Model_Base {
     public function add($data) {
         $data['CREATION_DATE'] =  date("Y-m-d");
         $data['CREATION_USER'] = $this->online_user;
+
+        if (empty($data['REMARK_CLIENT'])) {
+            $data['REMARK_CLIENT'] = $data['REMARK'];
+        }
+
         $this->addData('FILES$REMARKS', $data);
         return true;
     }

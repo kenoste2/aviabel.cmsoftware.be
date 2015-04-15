@@ -14,6 +14,11 @@ class FilesController extends BaseController
         $this->view->exportButton = true;
         $this->view->printButton = true;
 
+
+        $agendaStates = $this->functions->getUserSetting("AGENDA_STATES");
+        $this->view->agendaStates = $agendaStates;
+
+
         $rights = new Application_Model_UserRights();
 
         if ($rights->hasRights($this->auth->online_user_id, 'DELETE_FILE')) {
@@ -58,13 +63,24 @@ class FilesController extends BaseController
         }
 
 
+        if ($this->getParam('agenda')) {
+            $session->data['state_id'] = $this->getParam('agenda');
+        }
+
+
+
         if ($form->isValid($_POST) && $this->getParam('formSubmit')) {
             $data = $form->getValues();
             $session->data = $data;
         }
+
+
+
         if (!empty($session->data)) {
             $form->populate($session->data);
         }
+
+
 
 
         $query_extra = "";
@@ -77,6 +93,9 @@ class FilesController extends BaseController
                 $closed_query = "";
             }
             if ($session->data['client'] != "") {
+                $query_extra = " and A.CLIENT_NAME CONTAINING  '{$session->data['client']}'";
+            }
+            if ($session->agenda != "") {
                 $query_extra = " and A.CLIENT_NAME CONTAINING  '{$session->data['client']}'";
             }
             if (!empty($session->data['debtor_name'])) {
@@ -96,8 +115,15 @@ class FilesController extends BaseController
             if ($session->data['collector'] != "") {
                 $query_extra .= " and A.COLLECTOR_ID = '{$session->data['collector']}' ";
             }
+            if ($session->data['external_collector'] != "") {
+                $query_extra .= " and B.EXTERNAL_COLLECTOR_ID = '{$session->data['external_collector']}' ";
+            }
             if ($session->data['state_id'] != "") {
                 $query_extra .= " and A.STATE_ID = '{$session->data['state_id']}' ";
+            }
+            if ($session->data['train_id'] != "") {
+                $escTrainType = $this->db->escape($session->data['train_id']);
+                $query_extra .= " and A.DEBTOR_ID IN (SELECT DEBTOR_ID FROM FILES\$DEBTORS D WHERE D.TRAIN_TYPE = '{$escTrainType}')";
             }
             if ($session->data['debtor'] != "") {
                 $query_extra .= " and A.DEBTOR_NAME CONTAINING '{$session->data['debtor']}' ";
@@ -148,13 +174,18 @@ class FilesController extends BaseController
             $query_extra .= " and A.COLLECTOR_ID = '{$this->auth->online_collector_id}' ";
         }
 
-        $sql = "SELECT COUNT(*) AS COUNTER,SUM(TOTAL+INCASSOKOST) AS TOTAL, SUM(PAYABLE+INCASSOKOST) AS PAYABLE FROM FILES\$FILES_ALL_INFO A WHERE 1=1 {$query_extra}";
+        $sql = "SELECT COUNT(*) AS COUNTER,SUM(A.TOTAL+A.INCASSOKOST) AS TOTAL, SUM(A.PAYABLE+A.INCASSOKOST) AS PAYABLE FROM FILES\$FILES_ALL_INFO A
+                LEFT JOIN FILES\$FILES B ON A.FILE_ID = B.FILE_ID
+                WHERE 1=1 {$query_extra}";
         $totals = $this->db->get_row($sql);
         $this->view->totals = $totals;
 
         $sql = "SELECT DISTINCT A.DATE_CLOSED,A.FILE_ID,A.CLIENT_NAME,A.CREATION_DATE,A.FILE_NR,A.STATE_CODE,A.REFERENCE,A.COLLECTOR_CODE,A.LAST_ACTION_DATE,A.AMOUNT,A.INTEREST,A.COSTS,(A.TOTAL+A.INCASSOKOST) AS TOTAL,
               (A.PAYABLE+A.INCASSOKOST) AS PAYABLE,A.PAYED_AMOUNT,A.PAYED_INTEREST,A.PAYED_COSTS,A.PAYED_UNKNOWN,A.PAYED_TOTAL,(A.SALDO+A.INCASSOKOST) AS SALDO,A.DEBTOR_NAME,A.DEBTOR_VAT_NR,A.DEBTOR_BIRTH_DAY,A.DEBTOR_ADDRESS,A.DEBTOR_ZIP_CODE,A.DEBTOR_CITY,
-              A.DEBTOR_LANGUAGE_CODE,A.DATE_CLOSED,A.CLOSE_STATE_DESCRIPTION FROM FILES\$FILES_ALL_INFO A WHERE 1=1 {$query_extra} order by {$session->orderby} {$session->order}";
+              A.DEBTOR_LANGUAGE_CODE,A.DATE_CLOSED,A.CLOSE_STATE_DESCRIPTION
+              FROM FILES\$FILES_ALL_INFO A
+              LEFT JOIN FILES\$FILES B ON A.FILE_ID = B.FILE_ID
+              WHERE 1=1 {$query_extra} order by {$session->orderby} {$session->order}";
 
         if ($totals->COUNTER > $maxRecords) {
             $sql = str_replace("SELECT ", "SELECT FIRST {$maxRecords} ", $sql);
@@ -163,8 +194,15 @@ class FilesController extends BaseController
         $results = $this->db->get_results($sql);
         if (!empty($results)) {
             $this->export->sql = $sql;
-            $sql = "SELECT FILE_ID,FILE_NR,DEBTOR_NAME FROM FILES\$FILES_ALL_INFO A WHERE 1=1 {$query_extra} order by {$session->orderby} {$session->order}";
-            $session->fileList = $this->db->get_results($sql, ARRAY_A);
+            $fileList = array();
+            foreach ($results as $row) {
+                $fileList[] = array(
+                    "FILE_ID" => $row->FILE_ID,
+                    "FILE_NR" => $row->FILE_NR,
+                    "DEBTOR_NAME" => $row->DEBTOR_NAME,
+                );
+            }
+            $session->fileList = $fileList;
             $this->view->results = $results;
         } else {
             $this->export->sql = "";
@@ -395,7 +433,7 @@ class FilesController extends BaseController
             $sessionFiles = new Zend_Session_Namespace("FILES");
             $sql = "SELECT FILE_ID,FILE_NR,DEBTOR_NAME FROM FILES\$FILES_ALL_INFO A WHERE FILE_ID = {$fileId}";
             $sessionFiles->fileList = $this->db->get_results($sql, ARRAY_A);
-            $this->_redirect("/file-detail/view/index/0");
+            $this->_redirect("/file-detail/view/fileId/{$fileId}");
         }
     }
 

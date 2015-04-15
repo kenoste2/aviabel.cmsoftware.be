@@ -9,6 +9,16 @@ class Application_Model_FilesReferences extends Application_Model_Base {
         return $this->db->get_row("select REFERENCE_ID,(SALDO_AMOUNT+SALDO_COSTS+SALDO_INTEREST) AS SALDO from FILES\$REFERENCES where REFERENCE = '$reference' AND FILE_ID = $fileId ORDER BY START_DATE");
     }
 
+    public function saveReference($reference) {
+        $data = (Array) $reference;
+        $where = '';
+        if(isset($reference['REFERENCE_ID'])) {
+            $escReferenceId = $this->db->escape($reference['REFERENCE_ID']);
+            $where = "REFERENCE_ID = {$escReferenceId}";
+        }
+        $this->saveData('FILES$REFERENCES', $data, $where);
+    }
+
     public function create($data) {
         $fileObj = new Application_Model_File();
         $conditions = $fileObj->getClientConditions($data['FILE_ID']);
@@ -126,6 +136,18 @@ class Application_Model_FilesReferences extends Application_Model_Base {
         return $this->db->get_row($sql, "ARRAY_A");
     }
 
+    public function getAllReferencesByFileIdAsArray($fileId) {
+
+        $escFileId = $this->db->escape($fileId);
+        $sql = "select REFERENCE_ID,REFERENCE,CREATION_DATE,START_DATE,END_DATE,INVOICE_DATE,REFUND_STATEMENT,AUTO_CALCULATE,INTEREST_PERCENT,INTEREST_MINIMUM,COST_PERCENT,COST_MINIMUM,AMOUNT,COSTS
+                ,INTEREST,(AMOUNT+INTEREST+COSTS) as TOTAL,(SALDO_AMOUNT+SALDO_INTEREST+SALDO_COSTS) as SALDO, DISPUTE,I.STATE_ID, S.CODE AS STATE_CODE, I.TRAIN_TYPE from FILES\$REFERENCES I
+                 JOIN FILES\$STATES S ON S.STATE_ID = I.STATE_ID
+                 where FILE_ID='{$escFileId}'
+                 order by START_DATE DESC ,REFERENCE_ID DESC";
+
+        return $this->db->get_results($sql, "ARRAY_N");
+    }
+
     public function getReferencesByFileId($fileId, $excludeDisputes = false , $due = 'A')
     {
         $disputeExtra = $excludeDisputes ? "AND DISPUTE = 0" : "";
@@ -151,6 +173,26 @@ class Application_Model_FilesReferences extends Application_Model_Base {
         $results = $this->db->get_results($sql);
         return $results;
     }
+
+
+    public function getAllOpenReferencesByDebtorId($debtorId) {
+
+        $escDebtorId = $this->db->escape($debtorId);
+
+        $sql = "select REFERENCE_ID,REFERENCE,FILE_ID,CREATION_DATE,START_DATE,END_DATE,INVOICE_DATE,REFUND_STATEMENT,AUTO_CALCULATE,INTEREST_PERCENT,INTEREST_MINIMUM,COST_PERCENT,COST_MINIMUM,AMOUNT,COSTS,
+                INTEREST,(AMOUNT+INTEREST+COSTS) as TOTAL,(SALDO_AMOUNT+SALDO_INTEREST+SALDO_COSTS) as SALDO, DISPUTE,I.STATE_ID, S.CODE AS STATE_CODE, I.TRAIN_TYPE, DEBTOR_DISPUTE_COMMENT,
+                DEBTOR_DISPUTE_PHONE, DEBTOR_DISPUTE_EMAIL, DISPUTE_STATUS
+                from FILES\$REFERENCES I
+                 JOIN FILES\$STATES S ON S.STATE_ID = I.STATE_ID
+                 where FILE_ID IN (SELECT FILE_ID FROM FILES\$FILES WHERE DEBTOR_ID = {$escDebtorId})
+                      AND I.STATE_ID != 40
+                 order by START_DATE DESC ,REFERENCE_ID DESC";
+
+        $results = $this->db->get_results($sql);
+        return $results;
+
+    }
+
 
     public function getTotalPastDue() {
 

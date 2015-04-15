@@ -23,12 +23,14 @@ class Application_Model_Print extends Application_Model_Base
 
         $template = $templateObj->getTemplateContent($templateId, $lang);
         $text = $template['CONTENT'];
+        $smsText = $template['SMS_CONTENT'];
         $fileFields = $templateContentObj->getFileContent($text, $fileId, $templateId);
         $clientFields = $templateContentObj->getClientContent($text, $clientId);
         $dateFields = $templateContentObj->getDatesContent($text);
         $prevActions = $templateContentObj->getPrevActionsDates($text, $fileId);
         $invoices = $templateContentObj->getInvoices($fileId,$lang);
         $invoicesDetailed = $templateContentObj->getInvoicesDetail($fileId,$lang);
+        $fileDocuments = $templateContentObj->getDocuments($fileId);
         $rpv = $templateContentObj->getRPV($fileId);
 
 
@@ -41,9 +43,18 @@ class Application_Model_Print extends Application_Model_Base
         if (empty($actionDate)) {
             $actionDate = date("d/m/Y");
         }
+
+        $debtorExternalAccess = new Application_Model_DebtorExternalAccess();
         $actionDateField = array(
             'ACTION_DATE' => $actionDate,
         );
+
+        $debtorId = $fileObj->getFileField($fileId, 'DEBTOR_ID');
+        if($debtorId && (preg_match("/xEXTERNAL_ACCESS_LINK/", $text) || preg_match("/xEXTERNAL_ACCESS_LINK/", $smsText))) {
+            $debtorObj = new Application_Model_Debtors();
+            $debtor = $debtorObj->getDebtor($debtorId);
+            $actionDateField['EXTERNAL_ACCESS_LINK'] = $debtorExternalAccess->createExternalAccessLink($debtor);
+        }
 
         $inlineFooter = array(
             'INLINEFOOTER' => $this->functions->getUserSetting("templateAddText",$lang),
@@ -51,11 +62,27 @@ class Application_Model_Print extends Application_Model_Base
 
         $fields = array_merge($fileFields,$clientFields,$dateFields
             ,$ppFields,$actionDateField,$prevActions,$inlineFooter
-            ,$invoices,$invoicesDetailed,$rpv);
+            ,$invoices,$invoicesDetailed,$rpv,$fileDocuments);
         $newText = $this->replaceFields($fields, $text);
+        $smsNewText = $this->replaceFields($fields, $smsText);
 
         $result['CONTENT'] = $newText;
+        $result['SMS_CONTENT'] = $smsNewText;
         return json_encode($result);
+    }
+
+
+    /**
+     * @param $to
+     * @return string
+     */
+    public function formatAddress($to)
+    {
+        $baseAddress =  "{$to['NAME']}\n{$to['ADDRESS']}\n{$to['ZIP_CODE']} {$to['CITY']}";
+        if($to['COUNTRY'] && $to['COUNTRY'] != "BELGIUM") {
+            return "{$baseAddress}\n{$to['COUNTRY']}";
+        }
+        return $baseAddress;
     }
 
     public function replaceFields($fields, $text)
@@ -91,8 +118,10 @@ class Application_Model_Print extends Application_Model_Base
                     'NAME' => $clientData['NAME'],
                     'ADDRESS' => $clientData['ADDRESS'],
                     'ZIP_CODE' => $clientData['ZIP_CODE'],
+                    'GSM' => $clientData['GSM'],
                     'CITY' => $clientData['CITY'],
                     'E_MAIL' => $clientData['E_MAIL'],
+                    'COUNTRY' => $clientData['COUNTRY_DESCRIPTION']
                 );
                 break;
             case 'P':
@@ -101,7 +130,9 @@ class Application_Model_Print extends Application_Model_Base
                     'ADDRESS' => '',
                     'ZIP_CODE' => '',
                     'CITY' => '',
+                    'GSM' => '',
                     'E_MAIL' => '',
+                    'COUNTRY' => ''
                 );
                 break;
             default :
@@ -124,6 +155,8 @@ class Application_Model_Print extends Application_Model_Base
                     'ADDRESS' => $debtorData['ADDRESS'],
                     'ZIP_CODE' => $debtorData['ZIP_CODE'],
                     'CITY' => $debtorData['CITY'],
+                    'COUNTRY' => $debtorData['COUNTRY_DESCRIPTION'],
+                    'GSM' => $debtorData['GSM'],
                     'E_MAIL' => $debtorData['E_MAIL'],
                 );
                 break;

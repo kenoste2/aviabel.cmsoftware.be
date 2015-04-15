@@ -25,8 +25,8 @@ if ($this->deleted) {
                 <td><?php echo $row->TODO_TYPE ?></td>
                 <td><?php echo $row->ASSIGNED_TO ?></td>
                 <td><?php echo $this->Selection($row->DONE) ?></td>
-                <td><?php if (!empty($this->manageTasks) or $this->online_user == $row->CREATION_USER ) { ?><a href="<?php echo $this->location() ?>/file-todos/edit/id/<?php echo $row->TODO_ID ?>/index/<?php echo $this->index ?>" ><span title ="<?php $this->T("edit_c") ?>"  class="ui-icon ui-icon-zoomin"></span><?php } ?></td>
-                <td><?php if (!empty($this->manageTasks) or $this->online_user == $row->CREATION_USER ) {echo $this->Delete($this->location()."/file-todos/view/delete/".$row->TODO_ID."/index/".$this->index, $row->REMARK); }  ?></td>
+                <td><?php if (!empty($this->manageTasks) or $this->online_user == $row->CREATION_USER ) { ?><a href="<?php echo $this->location() ?>/file-todos/edit/id/<?php echo $row->TODO_ID ?>/fileId/<?php echo $this->fileId ?>" ><span title ="<?php $this->T("edit_c") ?>"  class="ui-icon ui-icon-zoomin"></span><?php } ?></td>
+                <td><?php if (!empty($this->manageTasks) or $this->online_user == $row->CREATION_USER ) {echo $this->Delete($this->location()."/file-todos/view/delete/".$row->TODO_ID."/fileId/".$this->fileId, $row->REMARK); }  ?></td>
                 
             </tr>
         <?php } ?>

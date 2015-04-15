@@ -47,7 +47,6 @@ class Application_Model_CommonFunctions
     public function db2array($data, $empty = true)
     {
 
-
         if ($empty === true) {
             $resultArray = array("" => "-");
         } else {
@@ -69,6 +68,10 @@ class Application_Model_CommonFunctions
 
         if (!empty($otherLang)) {
             $lang = $otherLang;
+        }
+
+        if ($lang == "DE") {
+            $lang = "GE";
         }
 
         $tekst = $db->get_var("SELECT {$lang} FROM TEKSTEN WHERE CODE = '{$code}'");
@@ -145,21 +148,26 @@ class Application_Model_CommonFunctions
             $lang = $otherLang;
         }
 
+        if ($lang == "DE") {
+            $lang = "GE";
+        }
+
+
         $tekst = $db->get_var("SELECT {$lang} FROM TEKSTEN WHERE CODE = '{$code}' AND SETTINGS = 1");
         return $tekst;
     }
 
 
-    function saveData($tableName, $data, $where = false, $returnField = false)
+    function saveData($tableName, $data, $where = false, $returnField = false, $escapeSql = false)
     {
         global $db;
         $dataSql = "";
         $fields = array_keys($data);
         if (empty($where)) {
             $fieldSql = implode(",", $fields);
-            $dataSql .= "#" . implode("#,#", $data) . "#";
+            $dataSql .= "#|" . implode("#|,#|", $data) . "#|";
             $dataSql = str_replace("'", "`", $dataSql);
-            $dataSql = str_replace("#", "'", $dataSql);
+            $dataSql = str_replace("#|", "'", $dataSql);
             $sql = "INSERT INTO {$tableName} ({$fieldSql}) VALUES ({$dataSql})";
             if (!empty($returnField)) {
                 $sql .= " RETURNING {$returnField}";

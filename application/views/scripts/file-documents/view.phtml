@@ -9,8 +9,10 @@ if ($this->deleted) {
             <th><?php $this->T("filename_c"); ?></th>
             <th><?php $this->T("description_c"); ?></th>
             <th><?php $this->T("visible_c"); ?></th>
+            <th><?php $this->T("invoice_c"); ?></th>
             <th><?php $this->T("date_c"); ?></th>
             <th><?php $this->T("user_c"); ?></th>
+            <th></th>
             <th></th>
             <th></th>
         </tr>
@@ -21,15 +23,19 @@ if ($this->deleted) {
                 <td><?php echo $row->FILENAME ?></td>
                 <td><?php echo $row->DESCRIPTION ?></td>
                 <td><?php echo $this->Selection($row->VISIBLE) ?></td>
+                <td><?php echo $row->REFERENCE ?></td>
                 <td><?php echo $row->CREATED ?></td>
                 <td><?php echo $row->CREATEDBY ?></td>
                 <td><a href="<?php echo $this->locationFiles?>/<?php echo $row->FILENAME ?>" target="_blank" ><span title ="<?php $this->T("view_c") ?>"  class="ui-icon ui-icon-disk"></span></td>
-                <td><?php if ($this->online_user == $row->CREATEDBY or isset($this->MayDelete)) { echo $this->Delete($this->location()."/file-documents/view/delete/".$row->FILE_DOCUMENTS_ID."/index/".$this->index, $row->DESCRIPTION); } ?></td>
+                <td>
+                    <a href="<?php echo $this->location() ?>/file-documents/edit/fileDocumentId/<?php echo $row->FILE_DOCUMENTS_ID ?>/fileId/<?php echo $this->fileId ?>" ><span title="<?php $this->T("view_c") ?>" class="ui-icon ui-icon-zoomin"></span>
+                </td>
+                <td><?php if ($this->online_user == $row->CREATEDBY or isset($this->MayDelete)) { echo $this->Delete($this->location()."/file-documents/view/delete/".$row->FILE_DOCUMENTS_ID."/fileId/".$this->fileId, $row->DESCRIPTION); } ?></td>
             </tr>
         <?php } ?>
     <?php } else { ?>
         <tr>
-            <td colspan="7" class="no_results">
+            <td colspan="9" class="no_results">
                 <?php $this->T("no_results_c"); ?>
             </td>
         </tr>

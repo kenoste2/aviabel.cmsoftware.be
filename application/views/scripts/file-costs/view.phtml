@@ -24,7 +24,7 @@ if ($this->deleted) {
                 <td><?php echo $this->Amount($row->AMOUNT) ?></td>
                 <td><?php echo $row->INVOICE_NR ?></td>
                 <td><?php echo $this->Selection($row->INVOICEABLE) ?></td>
-                <td><?php echo $this->Delete($this->location()."/file-costs/view/delete/".$row->RECORD_ID."/index/".$this->index, $row->DESCRIPTION) ?></td>
+                <td><?php echo $this->Delete($this->location()."/file-costs/view/delete/".$row->RECORD_ID."/fileId/".$this->fileId, $row->DESCRIPTION) ?></td>
             </tr>
         <?php } ?>
     <?php } else { ?>

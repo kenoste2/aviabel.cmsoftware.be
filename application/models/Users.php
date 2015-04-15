@@ -45,6 +45,11 @@ class Application_Model_Users extends Application_Model_Base {
         return $this->db->get_row("SELECT * FROM SYSTEM\$USERS WHERE USER_ID = " . $user_id);
     }
 
+    function getLoggedInUser() {
+        $authNamespace = new Zend_Session_Namespace('Zend_Auth');
+        return $this->getUser($authNamespace->online_user_id);
+    }
+
     public function getAllUsers()
     {
         return $this->db->get_results("SELECT * FROM SYSTEM\$USERS");
@@ -57,6 +62,8 @@ class Application_Model_Users extends Application_Model_Base {
         } else {
             $data['PASS'] = sha1($data['PASS']);
         }
+
+
 
         $userRights = array();
         if (isset($data['USER_RIGHTS'])) {
@@ -71,6 +78,8 @@ class Application_Model_Users extends Application_Model_Base {
             unset($data['COLLECTOR_ID']);
         }
 
+        print "<pre>";
+        print_r($data);
 
         unset($data['USER_RIGHTS']);
         $this->saveData("SYSTEM\$USERS", $data, 'USER_ID = ' . $id);

@@ -1,0 +1,71 @@
+<?php
+function formatDate($dateStr) {
+    if($dateStr) {
+        $dateTime = DateTime::createFromFormat('Y-m-d H:i:s', $dateStr);
+        if($dateTime) {
+            return $dateTime->format('d-m-Y H:i');
+        }
+    }
+    return '';
+}
+
+if(count($this->importedMails) > 0) {
+    foreach($this->importedMails as $importedMail) {
+        ?>
+        <div data-item="mail" class="collapsablePanel">
+            <div class="header">
+                <table>
+                    <tbody>
+                    <tr>
+                        <th colspan="4">
+                            <a href="<?php echo $this->pageRootUrl ?>/file-imported-mails/forward-email/fileId/<?php print $this->fileId ?>?email-id=<?php echo $importedMail['IMPORTED_MAIL_ID'] ?>" title="forward" class="ui-state-default ui-corner-all" style="display: inline-block; vertical-align: middle;"><span class="ui-icon ui-icon-arrowthick-1-e"></span></a>
+                            <?php echo formatDate($importedMail['CREATION_DATE']) ?> : <?php echo $importedMail['MAIL_SUBJECT'] ?>
+                        </th>
+                    </tr>
+                    <tr>
+                        <th><?php $this->T('mail_from_c') ?>:</th><td><?php echo $importedMail['FROM_EMAIL'] ?></td>
+                        <th><?php $this->T('mail_to_c') ?>:</th><td><?php echo $importedMail['TO_EMAIL'] ?></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="body">
+                <table width="100%">
+                    <tbody>
+                        <tr>
+                            <td width="70%"><?php echo preg_replace("/\n/",'</br>', $importedMail['MAIL_BODY']) ?></td>
+                            <td width="30%">
+                                <h3><? echo $this->T('attachments_c') ?></h3>
+                                <?php if(count($importedMail['attachments']) > 0) {
+                                    foreach($importedMail['attachments'] as $attachment) { ?>
+                                        <div><a href="<?php echo $this->pageRootUrl ?>/imported-mail/download-attachment/index/<?php echo $attachment->IMPORTED_MAIL_ATTACHMENT_ID ?>"><?php echo $attachment->ORIGINAL_FILENAME ?></a></div>
+                                    <?php }
+                                } ?>
+                            </td>
+                        </tr>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    <?php
+    }
+} else { ?>
+    <div><?php $this->T('no_mails_found_c') ?></div>
+<?php }
+?>
+<script type="text/javascript">
+    var ImportedMail = {
+        MailItem : function(element) {
+            var mailContent = element.find('> div.body');
+            mailContent.hide();
+            element.find('> div.header').click(function() {
+                mailContent.slideToggle();
+            });
+        },
+        init : function() {
+            $("[data-item=mail]").each(function() { new ImportedMail.MailItem($(this)); })
+        }
+    };
+    $(document).ready(ImportedMail.init);
+</script>

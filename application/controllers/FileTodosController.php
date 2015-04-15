@@ -7,15 +7,12 @@ class FileTodosController extends BaseFileController {
     public function viewAction() {
 
         if ($this->hasAccess('addTasks') ) {
-            $this->view->addButton = "/file-todos/add/index/" . $this->getParam("index");
+            $this->view->addButton = "/file-todos/add/fileId/" . $this->fileId;
         }
         if ($this->hasAccess('manageTasks') ) {
             $this->view->manageTasks = true;
         }
         $this->view->printButton = true;
-
-
-
 
         if ($this->getParam("delete")) {
             $obj = new Application_Model_FilesTodos();

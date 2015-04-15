@@ -236,6 +236,19 @@ class Application_Model_FilesPayments extends Application_Model_Base {
         }
     }
 
+    public function getDayPayments($date = false)
+    {
+        if (empty($date)) {
+            $date = date("Y-m-d");
+        }
+
+        $sql = "SELECT SUM(AMOUNT) AS AMOUNT FROM ACCOUNTS\$JOURNAL WHERE VALUTA_DATE = '{$date}'";
+        $count = $this->db->get_var($sql);
+        return $count;
+
+    }
+
+
 }
 
 ?>

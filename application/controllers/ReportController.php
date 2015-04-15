@@ -88,19 +88,67 @@ class ReportController extends BaseController
 
         $this->view->realtimeSummary = $realtimeSummary;
         $this->view->realtimeSummaryTotal = $realtimeSummaryTotal;
+
     }
 
 
     public function doubtfullDebtsAction()
     {
         $this->view->exportButton = true;
+        $this->view->addButton = "/report/doubtfull-debts-detail";
+
 
         $obj = new Application_Model_DoubtfullDebts();
         $results  = $obj->getDueClientFileList();
         $this->view->results = $results;
 
-        $this->export->sql = $obj->getDueClientInvoicesSql();
+        $this->export->sql = $obj->getDueClientFileSql();
 
+    }
+
+    public function doubtfullDebtsDetailAction()
+    {
+        $this->_helper->layout->disableLayout();
+        $fileName = "export_doubtfullDebts".rand(0,999999).".xls";
+
+        header('Content-type: application/octet-stream');
+        header('Content-Disposition: attachment; filename="' . $fileName . '"');
+
+
+        $obj = new Application_Model_DoubtfullDebts();
+
+        $sql = $obj->getDueClientInvoicesSql();
+        $results = $this->db->get_results($sql);
+        $this->view->results = $results;
+    }
+
+    public function paymentForecastAction()
+    {
+        $this->view->bread = $this->functions->T("menu_reports") . "->" . $this->functions->T("forecastHistogram_c")  ;
+
+        $paymentDelayAverageObj = new Application_Model_PaymentDelayAverage();
+
+        $clientModel = new Application_Model_Clients();
+
+        if ($this->isClient()) {
+            $clients = array($this->auth->online_client_id);
+            $clientId = $rawClientId = $this->auth->online_client_id;
+            $this->view->allowChoice = false;
+        } else {
+            list($clients) = $clientModel->getAllClients();
+            $rawClientId = $this->getRequest()->getParam('clientId');
+            if(!$rawClientId || $rawClientId == 'all') {
+                $clientId = null;
+            } else {
+                $clientId = $rawClientId;
+            }
+            $this->view->allowChoice = true;
+        }
+
+        $this->view->paymentForecast = $paymentDelayAverageObj->getPaymentForecast($clientId);
+
+        $this->view->clients = $clients;
+        $this->view->clientId = $clientId;
     }
 
     public function clientHistoryAction()

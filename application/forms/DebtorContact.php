@@ -10,7 +10,7 @@ class Application_Form_DebtorContact extends Zend_Form {
         $languageModel = new Application_Model_Languages();
         $this->addElement('text', 'FUNCTION_DESCRIPTION', array('label' => $functions->T('function_c'), 'required' => true));
         $this->addElement('text', 'NAME', array('label' => $functions->T('name_c'), 'required' => true));
-        $this->addElement('text', 'EMAIL', array('label' => $functions->T('email_c'), 'required' => true, 'validators' => array('EmailAddress')));
+        $this->addElement('text', 'EMAIL', array('label' => $functions->T('email_c'), 'required' => false, 'validators' => array('EmailAddress')));
         $this->addElement('textarea', 'ADDRESS', array('label' => $functions->T('address_c'), 'required' => false, 'rows' => 3, 'cols' => 50));
         $this->addElement('text', 'TEL', array('label' => $functions->T('tel_c'), 'required' => false));
         $this->addElement('text', 'FAX', array('label' => $functions->T('fax_c'), 'required' => false));

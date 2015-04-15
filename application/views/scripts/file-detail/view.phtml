@@ -72,6 +72,7 @@
         </td>
         <td width="33%" class="windowPart">
             <span class="title"><?php $this->T("amounts_c") ?></span>
+            <dd>&nbsp;</dd>
         <table>
             <thead>
                 <tr>
@@ -100,7 +101,6 @@
                 <td align="right"><?php echo $this->Amount($this->file->PAYED_INTEREST) ?></td>
                 <td align="right"><?php echo $this->Amount($this->file->SALDO_INTEREST) ?></td>
             </tr>
-            <?php } ?>
             <tr>
                 <td class="label"><?php $this->T("incasso_kost_c") ?></td>
                 <td align="right"><?php echo $this->Amount($this->file->INCASSOKOST) ?></td>
@@ -115,25 +115,22 @@
                     <td align="right"><?php echo $this->Amount($this->file->PAYABLE + $this->file->INCASSOKOST - $this->file->PAYED_UNKNOWN) ?></td>
                 </tr>
             </tfoot>
+            <?php } ?>
         </table>
-            <!--
-            <br>
-            <span class="title"><?php $this->T("credit_rating_c") ?></span>
-            <dt><label><?php $this->T("credit_rating_c") ?></label></dt>
-            <dd>A</dd>
-            <dt><label><?php $this->T("credit_score_c") ?></label></dt>
-            <dd>19,5/20</dd>
-            <dt><label><?php $this->T("credit_limit_c") ?></label></dt>
-            <dd>&euro; 9338</dd>
-            <br>
-            <span class="title"><?php echo $this->T('credit_incident_overview_c'); ?></span>
-            <br><br><?php echo $this->Message($this->G("no_credit_incidents_found_c")); ?>
-            -->
+            <dd>&nbsp;</dd>
+            <span class="title"><?php $this->T("info_c") ?></span>
+            <dd>&nbsp;</dd>
+            <dt><?php $this->T("gem_betalingstermijn_c") ?></dt>
+            <?php if($this->nrOfPayments > 0) { ?>
+                <dd><?php echo $this->paymentDelay ?> (<?php $this->T("based_on_payments_c") ?>: <?php echo $this->nrOfPayments ?>)</dd>
+            <?php } else { ?>
+                <dd><?php echo $this->T("insufficient_data_for_delay_c") ?></dd>
+            <?php } ?>
         </td>
         </tr>
         <tr>
             <td class="windowPart">
-                <span class="title"><?php $this->T("actions_c") ?></span>
+                <span class="title"><?php $this->T("laatste_c") ?> <?php $this->T("actions_c") ?></span>
                 <table id="data" class="tablesorter ws_data_table" width="100%">
                     <thead>
                         <tr>
@@ -165,7 +162,7 @@
                 </table>
             </td>
             <td class="windowPart">
-                <span class="title"><?php $this->T("remarks_c") ?></span>
+                <span class="title"><?php $this->T("laatste_c") ?> <?php $this->T("remarks_c") ?></span>
 
                 <table id="data" class="tablesorter ws_data_table" width="100%">
                     <thead>
@@ -193,7 +190,7 @@
                 </table>
             </td>
             <td class="windowPart">
-                <span class="title"><?php $this->T("payments_c") ?></span>
+                <span class="title"><?php $this->T("laatste_c") ?> <?php $this->T("payments_c") ?></span>
                 <table id="data" class="tablesorter ws_data_table" width="100%">
                     <thead>
                         <tr>

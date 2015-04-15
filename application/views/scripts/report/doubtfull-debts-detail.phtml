@@ -1,0 +1,105 @@
+<style>
+    .num {
+        mso-number-format:General;
+    }
+    .text{
+        mso-number-format:"\@";/*force text*/
+    }
+</style>
+
+<?php if (!empty($this->results)) {
+    $index = 0;
+    $provision1 = 0;
+    $provision2 = 0;
+    $provision3 = 0;
+    $lastRef = "";
+    ?>
+    <table id="data" class="ws_data_table" width="100%">
+        <thead>
+        <tr>
+            <th><?php print $this->T("referenceclient_c") ?></th>
+            <th><?php print $this->T("debtor_c") ?></th>
+            <th align="left"><?php print $this->T("invoice_c") ?></th>
+            <th><?php print $this->T("start_date_c") ?></th>
+            <th><?php print $this->T("saldo_c") ?></th>
+            <th>15% <?php print $this->T("provision_c") ?></th>
+            <th>50% <?php print $this->T("provision_c") ?></th>
+            <th>100% <?php print $this->T("provision_c") ?></th>
+            <th>&nbsp;</th>
+        </tr>
+        </thead>
+
+
+
+        <?php foreach ($this->results as $row) {
+
+
+            if ($lastRef != $row->REFERENCE && !empty($lastRef) ) {
+                ?>
+                <tr>
+                    <td colspan="5" align="right"><strong><?php $this->T("total_c"); ?></strong></td>
+                    <td align="right"><strong><?php echo $this->number($provision1) ?></strong></td>
+                    <td align="right"><strong><?php echo $this->number($provision2) ?></strong></td>
+                    <td align="right"><strong><?php echo $this->number($provision3) ?></strong></td>
+                </tr>
+
+                <?php
+
+                $provision1 = 0;
+                $provision2 = 0;
+                $provision3 = 0;
+            }
+
+
+
+
+            if ($row->PROVISION1 < 0.00) {
+                $row->PROVISION1 = $row->SALDO_AMOUNT;
+            }
+            if ($row->PROVISION2 < 0.00) {
+                $row->PROVISION2 = $row->SALDO_AMOUNT;
+            }
+            if ($row->PROVISION3 < 0.00) {
+                $row->PROVISION3 = $row->SALDO_AMOUNT;
+            }
+
+            if ($row->PROVISION1 < 0.00) {
+                $row->PROVISION2 += $row->PROVISION1;
+                $row->PROVISION1 = 0.00;
+            }
+            if ($row->PROVISION2 < 0.00) {
+                $row->PROVISION3 += $row->PROVISION2;
+                $row->PROVISION2 = 0.00;
+            }
+            if ($row->PROVISION3 < 0.00) {
+                $row->PROVISION3 = 0.00;
+            }
+
+
+            ?>
+            <tr>
+                <td class="text"><?php echo $row->REFERENCE ?></td>
+                <td class="text"><?php echo $row->DEBTOR_NAME ?></td>
+                <td class="text"><?php echo $row->REFERENCE_01 ?></td>
+                <td align="right"  class="text"><?php echo $this->Date($row->START_DATE) ?></td>
+                <td align="right"  class="num"><?php echo $this->number($row->SALDO_AMOUNT) ?></td>
+                <td align="right"  class="num"><?php echo $this->number($row->PROVISION1) ?></td>
+                <td align="right"  class="num"><?php echo $this->number($row->PROVISION2) ?></td>
+                <td align="right"  class="num"><?php echo $this->number($row->PROVISION3) ?></td>
+            </tr>
+            <?php $index++;
+
+            $provision1 += $row->PROVISION1;
+            $provision2 += $row->PROVISION2;
+            $provision3 += $row->PROVISION3;
+            $lastRef = $row->REFERENCE;
+        }
+        ?>
+        <tr>
+            <td colspan="5" align="right"><strong><?php $this->T("total_c"); ?></strong></td>
+            <td align="right" class="num"><strong><?php echo $this->number($provision1) ?></strong></td>
+            <td align="right" class="num"><strong><?php echo $this->number($provision2) ?></strong></td>
+            <td align="right" class="num"><strong><?php echo $this->number($provision3) ?></strong></td>
+        </tr>
+    </table>
+    <?php } ?>

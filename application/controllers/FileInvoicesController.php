@@ -12,7 +12,7 @@ class FileInvoicesController extends BaseFileController
         $this->_helper->_layout->setLayout('file-layout');
 
         if ($this->hasAccess('manageInvoices')) {
-            $this->view->addButton = "/file-invoices/add/index/" . $this->getParam("index");
+            $this->view->addButton = "/file-invoices/add/fileId/" . $this->fileId;
             $this->view->manageInvoices = true;
         }
         $this->view->printButton = true;
@@ -22,12 +22,11 @@ class FileInvoicesController extends BaseFileController
             $this->view->showIntrestCosts = true;
         }
 
-
-
         if ($this->getParam("delete") && $this->hasAccess('manageInvoices')) {
             $this->delete($this->getParam("delete"));
             $this->view->deleted = true;
         }
+
         $results = $obj->getReferencesByFileId($this->fileId);
         $this->view->results = $results;
     }
@@ -79,6 +78,9 @@ class FileInvoicesController extends BaseFileController
             $form->removeElement('submit');
         }
 
+        $referenceId = $this->getParam('id');
+        $reference = $this->db->get_row("SELECT * FROM FILES\$REFERENCES WHERE REFERENCE_ID = {$referenceId}");
+
         $data = array();
         if ($this->getRequest()->isPost()) {
             if ($form->isValid($_POST)) {
@@ -104,7 +106,6 @@ class FileInvoicesController extends BaseFileController
                 $this->view->errors = $form->getErrors();
             }
         } else {
-            $reference = $this->db->get_row("SELECT * FROM FILES\$REFERENCES WHERE REFERENCE_ID = {$this->getParam('id')}");
             $data = array(
                 'REFERENCE_TYPE' => $reference->REFERENCE_TYPE,
                 'REFERENCE_ID' => $reference->REFERENCE_ID,
@@ -127,11 +128,18 @@ class FileInvoicesController extends BaseFileController
                 'DISPUTE' => $reference->DISPUTE,
                 'DISPUTE_DATE' => $this->functions->dateformat($reference->DISPUTE_DATE),
                 'DISPUTE_DUEDATE' => $this->functions->dateformat($reference->DISPUTE_DUEDATE),
-                'DISPUTE_ENDED_DATE' => $this->functions->dateformat($reference->DISPUTE_ENDED_DATE)
+                'DISPUTE_ENDED_DATE' => $this->functions->dateformat($reference->DISPUTE_ENDED_DATE),
+                'DISPUTE_STATUS' => $reference->DISPUTE_STATUS,
+                'DISPUTE_ASSIGNEE' => $reference->DISPUTE_ASSIGNEE,
+                'DISPUTE_COMMENT' => $reference->DISPUTE_COMMENT
             );
         }
         $form->populate($data);
 
+        $fileDocumentsObj = new Application_Model_FilesDocuments();
+
+        $this->view->documents = $fileDocumentsObj->getByReferenceId($referenceId);
+        $this->view->debtorDisputeComment = $reference->DEBTOR_DISPUTE_COMMENT;
         $this->view->form = $form;
     }
 

@@ -162,5 +162,18 @@ class InstallController extends BaseController
         $this->db->query($sql);
         die("<br>System updated");
     }
+
+    public function installFetchMailsAction() {
+
+        $content = file_get_contents("updates/20150121_mailTab.sql");
+        $queries = explode(";", $content);
+
+        if (!empty($queries)) {
+            foreach ($queries as $sql) {
+                $this->db->query($sql);
+            }
+        }
+        die("<br>System is up to date");
+    }
 }
 

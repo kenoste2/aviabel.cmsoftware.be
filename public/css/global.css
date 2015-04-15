@@ -1,6 +1,6 @@
 body {
     font-family: "Verdana", Arial, Helvetica, sans-serif;
-    font-size: 10px;
+    font-size: 11px;
     color: #555;
     text-align: left;
     background: #fff;
@@ -11,17 +11,18 @@ body {
         font-size: 11px;
     }
 }
+
 @media (max-width: 1280px) {
     body {
         font-size: 9px;
     }
 }
+
 @media (max-width: 1024px) {
     body {
         font-size: 7px;
     }
 }
-
 
 table td {
     vertical-align: top;
@@ -59,7 +60,7 @@ table tfoot td {
 .data tr:nth-child(odd) {background: #FFF}
 
 
-input#submit {
+input#submit, .submit, button[type=submit] {
     padding: 5px;
     border:1px solid darkgray;
     border-radius:5px;
@@ -67,14 +68,9 @@ input#submit {
     color : #FFFFFF;
 }
 
-.submit {
-    padding: 5px;
-    border:1px solid darkgray;
-    border-radius:5px;
-    background-color: #0398CA;
-    color : #FFFFFF;
+input#submit:disabled, .submit:disabled, button[type=submit]:disabled {
+    background-color: #CCC;
 }
-
 
 /* @group Data Tables */
 
@@ -118,6 +114,23 @@ input#submit {
 .ws_data_table tr:nth-child(even) {
     background-color: #E6E6E6;
 }
+
+.ws_data_table tr:hover {
+    background-color: #8B9DBE;
+    color : #fff;
+}
+
+.ws_data_table tr[onclick] { cursor: pointer; }
+
+.due
+{
+    color: #900000 ;
+}
+.dispute
+{
+    color: #915608;
+}
+
 
 .header {
     cursor: pointer;
@@ -232,6 +245,8 @@ fieldset {
     background-color: #8fc157;
 }
 
+.ws_data_table tr[onclick] { cursor: pointer; }
+
 .uppercase {
     text-transform: uppercase;
 }
@@ -253,4 +268,48 @@ a {
 input {
     border-radius: 5px;
     border: solid 1px #999;
+}
+
+.collapsablePanel {
+    border: 1px solid #a6c9e2;
+    background: #fcfdfd;
+    color: #222222;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+.collapsablePanel > div.header {
+    padding: 10px;
+    cursor: pointer;
+    background: #eee;
+    border-radius: 5px;
+}
+
+.collapsablePanel > div.header th {
+    text-align: left;
+}
+
+.collapsablePanel td {
+    padding: 5px 10px;
+}
+
+.collapsablePanel > div.body {
+    padding: 20px;
+}
+
+.ui-icon-green {
+    background-image: url(../images/ui-icons_108900_256x240.png);
+}
+
+.ui-icon-red {
+    background-image: url(../images/ui-icons_c13a30_256x240.png);
+}
+
+.ui-icon-red, .ui-icon-green {
+    width: 16px;
+    height: 16px;
+    display: block;
+    text-indent: -99999px;
+    overflow: hidden;
+    background-repeat: no-repeat;
 }

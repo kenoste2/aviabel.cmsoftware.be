@@ -15,10 +15,11 @@ class Application_Form_FileAddpayment extends Zend_Form {
             'MultiOptions' => $functions->db2array($accounts),
             'label' => $functions->T('Account_c'),
         ));
-        
+
+        $helper = new Application_Form_FormHelper();
         
         $this->addElement('text', 'VALUTA_DATE', array('label' => $functions->T('date_c'), 'size' => 15, 'required' => true, 'validators' => array(array('date', false, array('dd/MM/yyyy'))),));
-        $this->addElement('text', 'AMOUNT', array('label' => $functions->T('amount_c'), 'size' => 15, 'required' => false, 'validators' => array('float')));
+        $this->addElement('text', 'AMOUNT', array('label' => $functions->T('amount_c'), 'size' => 15, 'required' => true, 'validators'=> array($helper->getFloatValidator())));
         $this->addElement('text', 'DESCRIPTION', array('label' => $functions->T('description_c'), 'size' => 15, 'validators' => array('notEmpty')));
         
         $this->addElement('select', 'REFERENCE_ID', array(

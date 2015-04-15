@@ -1,0 +1,8 @@
+ALTER TABLE SYSTEM$COLLECTORS
+ADD EXTERN CHAR(1) DEFAULT 0
+
+ALTER TABLE FILES$FILES
+ADD EXTERNAL_COLLECTOR_ID DOM_RECORD_ID
+
+INSERT INTO TEKSTEN (CODE,NAV,NL,FR,EN,SETTINGS) VALUES ('external_c','all','Extern','Externe','External',0);
+INSERT INTO TEKSTEN (CODE,NAV,NL,FR,EN,SETTINGS) VALUES ('external_collector_c','all','Externe beheerder','Gestionnaire externe','External caseworker',0);

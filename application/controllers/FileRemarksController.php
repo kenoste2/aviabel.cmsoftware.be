@@ -7,7 +7,7 @@ class FileRemarksController extends BaseFileController {
     public function viewAction() {
 
         if ($this->hasAccess('addRemarks') ) {
-            $this->view->addButton = "/file-remarks/add/index/" . $this->getParam("index");
+            $this->view->addButton = "/file-remarks/add/fileId/" . $this->fileId;
         }
         if ($this->hasAccess('manageRemarks') ) {
             $this->view->manageRemarks = true;

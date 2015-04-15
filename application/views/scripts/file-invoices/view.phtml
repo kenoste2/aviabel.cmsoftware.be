@@ -27,8 +27,17 @@ if ($this->deleted) {
         </tr>
     </thead>
     <?php if (!empty($this->results)) { ?>
-        <?php foreach ($this->results as $row) { ?>
-            <tr>
+        <?php foreach ($this->results as $row) {
+            if(!empty($row->DISPUTE)) {
+                $class = " class='dispute' ";
+            }
+            elseif ($row->START_DATE <= date("Y-m-d") && $row->SALDO >0.00) {
+                $class = " class='due' ";
+            } else {
+                $class = "";
+            }
+            ?>
+            <tr <?php echo $class ?>>
                 <td><?php echo $row->REFERENCE ?></td>
                 <td><?php echo $this->Date($row->INVOICE_DATE) ?></td>
                 <td><?php echo $this->Date($row->START_DATE) ?></td>
@@ -42,11 +51,11 @@ if ($this->deleted) {
                 <td align="right"><?php echo $this->Amount($row->TOTAL) ?></td>
                 <?php } ?>
                 <td align="right"><?php echo $this->Amount($row->SALDO) ?></td>
-                <td align="center"><?php echo $this->Selection($row->DISPUTE) ?></td>
+                <td align="center"><?php echo $this->GoodBad(!$row->DISPUTE) ?></td>
                 <td><?php echo $row->STATE_CODE ?></td>
                 <td><?php echo $row->TRAIN_TYPE ?></td>
-                <td><?php if (!empty($this->manageInvoices)) { ?><a href="<?php echo $this->location() ?>/file-invoices/edit/id/<?php echo $row->REFERENCE_ID ?>/index/<?php echo $this->index ?>" ><span title ="<?php $this->T("edit_c") ?>"  class="ui-icon ui-icon-zoomin"></span><?php } ?></td>
-                <td><?php if (!empty($this->manageInvoices)) { echo $this->Delete($this->location()."/file-invoices/view/delete/".$row->REFERENCE_ID."/index/".$this->index, $row->REFERENCE); } ?></td>
+                <td><?php if (!empty($this->manageInvoices)) { ?><a href="<?php echo $this->location() ?>/file-invoices/edit/id/<?php echo $row->REFERENCE_ID ?>/fileId/<?php echo $this->fileId ?>" ><span title ="<?php $this->T("edit_c") ?>"  class="ui-icon ui-icon-zoomin"></span><?php } ?></td>
+                <td><?php if (!empty($this->manageInvoices)) { echo $this->Delete($this->location()."/file-invoices/view/delete/".$row->REFERENCE_ID."/fileId/".$row->FILE_ID, $row->REFERENCE); } ?></td>
             </tr>
         <?php } ?>
     <?php } else { ?>

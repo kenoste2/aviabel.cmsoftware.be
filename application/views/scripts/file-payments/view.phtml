@@ -9,7 +9,7 @@ if ($this->deleted) {
             <th><?php $this->T("payment_date_c"); ?></th>
             <th><?php $this->T("creation_date_c"); ?></th>
             <th><?php $this->T("amount_c"); ?></th>
-            <th><?php $this->T("commission_c"); ?></th>
+            <th><?php $this->T("invoice_c"); ?></th>
             <th><?php $this->T("payment_for_c"); ?></th>
             <th><?php $this->T("account_c"); ?></th>
             <th><?php $this->T("description_c"); ?></th>
@@ -23,12 +23,12 @@ if ($this->deleted) {
                 <td><?php echo $this->Date($row->PAYMENT_DATE) ?></td>
                 <td><?php echo $this->Date($row->CREATION_DATE) ?></td>
                 <td align="right"><?php echo $this->Amount($row->AMOUNT) ?></td>
-                <td align="right"><?php echo $this->Amount($row->COMMISSION) ?></td>
+                <td align="right"><?php echo $row->REFERENCE ?></td>
                 <td><?php echo $row->PAYMENT_FOR ?></td>
                 <td><?php echo $row->ACCOUNT_CODE ?></td>
-                <td><?php echo $row->ACCOUNT_DESCRIPTION ?></td>
-                <td><?php if (!empty($this->managePayments)) { ?><a href="<?php echo $this->location() ?>/file-payments/edit/id/<?php echo $row->PAYMENT_ID ?>/index/<?php echo $this->index ?>" ><span title ="<?php $this->T("edit_c") ?>"  class="ui-icon ui-icon-zoomin"></span><?php } ?></td>
-                <td><?php if (!empty($this->managePayments)) { ?><?php echo $this->Delete($this->location()."/file-payments/view/delete/".$row->PAYMENT_ID."/index/".$this->index, $this->Amount($row->AMOUNT)) ?><?php } ?></td>
+                <td><?php echo $row->JOURNAL_DESCRIPTION ?></td>
+                <td><?php if (!empty($this->managePayments)) { ?><a href="<?php echo $this->location() ?>/file-payments/edit/id/<?php echo $row->PAYMENT_ID ?>/fileId/<?php echo $this->fileId ?>" ><span title ="<?php $this->T("edit_c") ?>"  class="ui-icon ui-icon-zoomin"></span><?php } ?></td>
+                <td><?php if (!empty($this->managePayments)) { ?><?php echo $this->Delete($this->location()."/file-payments/view/delete/".$row->PAYMENT_ID."/fileId/".$this->fileId, $this->Amount($row->AMOUNT)) ?><?php } ?></td>
             </tr>
         <?php } ?>
     <?php } else { ?>

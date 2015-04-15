@@ -40,11 +40,16 @@ class QueryController extends BaseController
         }
         $content = "";
 
+        $this->export->sql = $sqlStr;
+        $this->view->exportButton = true;
+
+
         if (is_array($queries)) {
 
             foreach ($queries as $query) {
 
-                $sql1 = preg_replace('/^SELECT /i', 'SELECT FIRST 1000 ', trim($query));
+                //$sql1 = preg_replace('/^SELECT /i', 'SELECT FIRST 1000 ', trim($query));
+                $sql1 = trim($query);
                 print "<h3>$sql1</h3>";
 
                 if ($results = $this->db->get_results($sql1, ARRAY_N)) {
@@ -56,7 +61,7 @@ class QueryController extends BaseController
                     $rows = '';
                     foreach ($results as $result) {
                         $result = implode(";", $result);
-                        $result = str_replace("\n", "", $result);
+                        $result = str_replace("\n", "<br>", $result);
                         $result = str_replace("\r", "", $result);
                         $result = str_replace(';', '</td><td>', $result);
                         $rows .= "<tr><td>{$result}</td></tr>";

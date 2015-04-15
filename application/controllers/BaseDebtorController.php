@@ -9,22 +9,15 @@ class BaseDebtorController extends BaseController {
     protected $index;
 
     public function init() {
+        global $config;
 
         parent::init();
 
         $this->_helper->_layout->setLayout('debtor-layout');
         $session = new Zend_Session_Namespace('DEBTORS');
 
-        if ($this->getParam("index") != "") {
-            $indexes = $this->_getNextPrevCurrent();
-            $this->debtorId = $indexes['currentDebtorId'];
-            $this->view->indexes = $indexes;
-            $this->view->index = $this->getParam("index");
-        }
-
         if ($this->getParam("debtorId") > 0) {
             $this->debtorId = $this->getParam("debtorId");
-
             $session->debtorId = $this->getParam("debtorId");
         }
 
@@ -33,37 +26,10 @@ class BaseDebtorController extends BaseController {
         }
 
         $this->loadDebtor();
+
+        $this->view->debtorFileId = $this->db->get_var("SELECT FILE_ID FROM FILES\$FILES WHERE DEBTOR_ID = $this->debtorId ");
         $this->view->headerTitle = "{$this->debtor->NAME}";
-    }
-
-    protected function _getNextPrevCurrent() {
-        $session = new Zend_Session_Namespace('DEBTORS');
-        $index = $this->getParam("index");
-
-        $next = false;
-        $prev = false;
-        $currentDebtor = false;
-
-        if (!empty($session->debtorList)) {
-            switch ($index) {
-                case 0:
-                    $next = (key_exists(1, $session->debtorList)) ? 1 : false;
-                    $prev = false;
-                    break;
-                case ($index > 0):
-                    $next = (key_exists($index + 1, $session->debtorList)) ? $index + 1 : false;
-                    $prev = (key_exists($index - 1, $session->debtorList)) ? $index - 1 : false;
-                    break;
-            }
-            $currentDebtor = $session->debtorList[$index]['DEBTOR_ID'];
-        }
-        $indexes = array(
-            'currentDebtorId' => $currentDebtor,
-            'nextIndex' => $next,
-            'prevIndex' => $prev,
-        );
-
-        return $indexes;
+        $this->view->baseHttp = $config->baseHttp;
     }
 
     protected function loadDebtor() {

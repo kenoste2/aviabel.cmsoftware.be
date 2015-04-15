@@ -50,8 +50,19 @@ class Application_Model_Files extends Application_Model_Base
         return $fileId;
     }
 
-    public function save($data, $fileId)
-    {
+    public function getFilesByDebtorId($debtorId) {
+
+        $escDebtorId = $this->db->escape($debtorId);
+        $sql = "SELECT * FROM FILES\$FILES
+                WHERE DEBTOR_ID = {$escDebtorId}";
+        return $this->db->get_results($sql);
+    }
+
+    public function getFileNumberById($fileId) {
+        return $this->db->get_var("select FILE_NR from FILES\$FILES WHERE FILE_ID='{$fileId}'");
+    }
+
+    public function save($data, $fileId) {
         $this->saveData('FILES$FILES', $data, 'FILE_ID = ' . $fileId);
     }
 
@@ -200,6 +211,15 @@ class Application_Model_Files extends Application_Model_Base
         }
     }
 
+    public function getFileByReferenceId($referenceId) {
+        $escReferenceId = $this->db->escape($referenceId);
+
+        $sql = "SELECT * FROM FILES\$FILES
+                WHERE FILE_ID IN
+                    (SELECT FILE_ID FROM FILES\$REFERENCES
+                     WHERE REFERENCE_ID = {$escReferenceId})";
+        return $this->db->get_row($sql);
+    }
 
     public function getFileStateId ($fileId) {
         return $this->db->get_var("SELECT STATE_ID FROM FILES\$FILES WHERE FILE_ID = {$fileId}");

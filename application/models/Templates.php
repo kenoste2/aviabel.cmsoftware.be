@@ -78,8 +78,8 @@ class Application_Model_Templates extends Application_Model_Base
 
     public function getTemplateContent($templateId, $lang)
     {
-        $data['CONTENT'] = $this->db->get_var("SELECT TEXT_{$lang} FROM SYSTEM\$TEMPLATES
-                   WHERE TEMPLATE_ID = {$templateId} ");
+        $data['CONTENT'] = $this->db->get_var("SELECT TEXT_{$lang} FROM SYSTEM\$TEMPLATES WHERE TEMPLATE_ID = {$templateId} ");
+        $data['SMS_CONTENT'] = $this->db->get_var("SELECT TEXT_SMS_{$lang} FROM SYSTEM\$TEMPLATES WHERE TEMPLATE_ID = {$templateId} ");
 
         $data['CONTENT'] = str_replace("€","EURO",$data['CONTENT']);
         $data['CONTENT'] = str_replace("&'128;","EURO",$data['CONTENT']);

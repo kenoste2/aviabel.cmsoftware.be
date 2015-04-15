@@ -19,6 +19,19 @@ class Application_Model_Collectors extends Application_Model_Base
             WHERE C.COLLECTOR_ID = " . $collector_id);
     }
 
+    public function getCollectorByFileId($fileId) {
+        $escFileId = $this->db->escape($fileId);
+        $sql = "SELECT C.*, Z.CODE AS ZIP_CODE, Z.CITY, Z.COUNTRY_ID,
+                    (SELECT FIRST 1 CODE FROM SUPPORT\$LANGUAGES
+                      WHERE LANGUAGE_ID = C.LANGUAGE_ID) AS LANGUAGE_CODE
+                FROM SYSTEM\$COLLECTORS C
+                LEFT JOIN SUPPORT\$ZIP_CODES Z ON Z.ZIP_CODE_ID = C.ZIP_CODE_ID
+                WHERE C.COLLECTOR_ID IN
+                    (SELECT F.COLLECTOR_ID FROM FILES\$FILES F
+                    WHERE F.FILE_ID = {$escFileId})";
+        return $this->db->get_row($sql);
+    }
+
     public function add($data)
     {
         $data['ACCOUNT_ID'] = '1';
@@ -44,7 +57,12 @@ class Application_Model_Collectors extends Application_Model_Base
     
     public function getCollectorsForSelect()
     {
-        return $this->db->get_results("select COLLECTOR_ID,NAME FROM SYSTEM\$COLLECTORS where ACTIF='Y' order by NAME", ARRAY_N);
+        return $this->db->get_results("select COLLECTOR_ID,NAME FROM SYSTEM\$COLLECTORS where ACTIF='Y' AND COALESCE(EXTERN, 0) = 0 order by NAME", ARRAY_N);
+    }
+
+    public function getExternalCollectorsForSelect()
+    {
+        return $this->db->get_results("select COLLECTOR_ID,NAME FROM SYSTEM\$COLLECTORS where ACTIF='Y' AND EXTERN = 1 order by NAME", ARRAY_N);
     }
 
     public function checkIsDeletable($id)

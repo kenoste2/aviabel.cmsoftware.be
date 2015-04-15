@@ -1,6 +1,6 @@
 <?php if (count($this->realtimeSummary) > 0): ?>
     <style>
-        #chartdiv {
+        #chartdiv, #paymentDelayForecastHistogram {
             width: 100%;
             height: 400px;
             font-size: 11px;
@@ -95,3 +95,5 @@
 <?php else: ?>
     <?php echo $this->Message($this->G("no_results_c")); ?>
 <?php endif; ?>
+
+

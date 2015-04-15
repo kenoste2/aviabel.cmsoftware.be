@@ -1,1 +1,267 @@
-NO CONTENT
+<script type="text/javascript" src="<?php echo $this->location() ?>/public/amcharts/amcharts.js"></script>
+<script type="text/javascript" src="<?php echo $this->location() ?>/public/amcharts/pie.js"></script>
+<script type="text/javascript" src="<?php echo $this->location() ?>/public/amcharts/gauge.js"></script>
+<script type="text/javascript" src="<?php echo $this->location() ?>/public/amcharts/serial.js"></script>
+
+<style>
+    #vervallen, #paymentDelayForecastHistogram {
+        width: 100%;
+        height: 250px;
+        position: relative;
+        float: right;
+    }
+</style>
+
+<script type="text/javascript">
+    var paymentDelayForecastHistogram = AmCharts.makeChart("paymentDelayForecastHistogram", {
+        "type": "serial",
+        "pathToImages": "http://www.amcharts.com/lib/3/images/",
+        "categoryField": "day",
+        "valueAxes": [{
+            "axisAlpha": 0,
+            "inside": true,
+            "position": "left",
+            "ignoreAxisWidth": true
+        }],
+        "graphs": [
+            {
+                "type" : "column",
+                "fillAlphas": 1,
+                "valueField": "value",
+                "hideBulletsCount": 3
+            }
+        ],
+        "dataDateFormat": "YYYY-MM-DD",
+        "chartScrollbar": {},
+        "chartCursor": {
+            "categoryBalloonDateFormat": "DD-MM-YYYY",
+            "cursorAlpha": 0,
+            "cursorPosition": "mouse"
+        },
+        "categoryAxis": {
+            "minPeriod": "DD",
+            "parseDates": true,
+            "minorGridAlpha": 0.1,
+            "minorGridEnabled": true
+        },
+        "dataProvider": [
+            <?php foreach($this->paymentForecast as $row) { ?>
+            { "day" : "<?php echo $row->FORECAST_DAY ?>", "value" : <?php echo $row->FORECAST_VALUE ?> },
+            <?php }?>
+        ]
+    });
+</script>
+<script>
+    var chart = AmCharts.makeChart("vervallen", {
+        "type": "pie",
+        "theme": "none",
+        "legend": {
+            "position": "right",
+            "horizontalGap": 10,
+            "markerSize": 10,
+            "useGraphSettings": false,
+            "valueWidth": 0
+        },
+        "dataProvider": [
+            {
+                "titel": "<?php echo $this->T("past_due_c") ?>",
+                "waarde": <?php echo $this->totalPastDue ?>
+            },
+            {
+                "titel": "<?php echo $this->T("not_due_c") ?>",
+                "waarde": <?php echo $this->totalNotDue ?>
+            }],
+        "titleField": "titel",
+        "valueField": "waarde",
+        "labelText": ""
+    });
+</script>
+
+<style>
+    #realtime {
+        width: 100%;
+        height: 250px;
+        position: relative;
+    }
+</style>
+<script>
+    var chart = AmCharts.makeChart("realtime", {
+        "type": "pie",
+        "theme": "none",
+        "legend": {
+            "position": "right",
+            "horizontalGap": 10,
+            "markerSize": 10,
+            "useGraphSettings": false,
+            "valueWidth": 0
+        },
+        "dataProvider": [
+            <?php foreach ($this->realtimeSummary as $row): ?>
+            {
+                "titel": "<?php echo $row->STATE_CODE ?>",
+                "waarde": <?php echo $row->COUNTER ?>
+            },
+            <?php endforeach ?>
+        ],
+        "valueField": "waarde",
+        "titleField": "titel",
+        "labelText": ""
+    });
+    var legend = new AmCharts.AmLegend();
+</script>
+
+<style>
+    #aging {
+        width: 100%;
+        height: 250px;
+        position: relative;
+    }
+</style>
+<script>
+    var chart = AmCharts.makeChart("aging", {
+        "type": "pie",
+        "theme": "none",
+        "legend": {
+            "position": "right",
+            "horizontalGap": 10,
+            "markerSize": 10,
+            "useGraphSettings": false,
+            "valueWidth": 0
+        },
+        "dataProvider": [
+            <?php foreach ($this->aging as $type => $value): ?>
+            {
+                "titel": "<?php echo $type ?> <?php $this->T("days_c")?>",
+                "waarde": <?php echo ($value->SUM) ? $value->SUM : 0;  ?>
+            },
+            <?php endforeach ?>
+        ],
+        "valueField": "waarde",
+        "titleField": "titel",
+        "labelText": ""
+    });
+    var legend = new AmCharts.AmLegend();
+</script>
+
+<style>
+    .paymentdelay {
+        width: 100%;
+        height: 250px;
+        position: relative;
+    }
+</style>
+<script language="JavaScript">
+    var gaugeChart = AmCharts.makeChart("paymentdelay", {
+        "type": "gauge",
+        "theme": "none",
+        "axes": [
+            {
+                "axisThickness": 3,
+                "axisAlpha": 0.5,
+                "tickAlpha": 0.5,
+                "valueInterval": 10,
+                "bands": [
+                    {
+                        "color": "#84b761",
+                        "endValue": 60,
+                        "startValue": 0
+                    },
+                    {
+                        "color": "#cc4748",
+                        "endValue": 100,
+                        "innerRadius": "95%",
+                        "startValue": 60
+                    }
+                ],
+                "bottomText": "",
+                "bottomTextYOffset": 20,
+                "endValue": 100
+            }
+        ],
+        "arrows": [
+            {
+                "value" : <?php echo $this->paymentDelay; ?>
+            }
+        ]
+    });
+</script>
+
+
+
+
+
+
+<div id="general"  style="position: relative; width: 100%">
+<table width="100%">
+<tr>
+    <td width="33%" class="windowPart">
+        <span class="title" <?php echo $this->onclick("{$this->location()}/invoices/search"); ?>><?php $this->T("invoices_c") ?></span>
+        <div id="vervallen"></div>
+    </td>
+    <td width="33%" class="windowPart">
+        <span class="title"<?php echo $this->onclick("{$this->location()}/report/realtime"); ?>><?php $this->T("menu_report_realtime") ?></span>
+        <div id="realtime"></div>
+    </td>
+    <td width="33%" class="windowPart" colspan="2">
+        <span class="title" <?php echo $this->onclick("{$this->location()}/report/aging"); ?>><?php $this->T("menu_report_aging") ?></span>
+        <div id="aging"></div>
+    </td>
+</tr>
+<tr>
+    <td class="windowPart">
+        <span class="title">Dashboard overview</span>
+        <table id="data" class="tablesorter ws_data_table" width="100%">
+            <thead>
+            <tr>
+                <th><?php $this->T("description_c"); ?></th>
+                <th><?php $this->T("number_c"); ?></th>
+            </tr>
+            </thead>
+            <tr <?php echo $this->onclick("{$this->location()}/print/documents"); ?> >
+                <td><?php $this->T("documents_to_be_printed_c") ?></td>
+                <td><?php echo $this->toBePrinted?></td>
+            </tr>
+            <tr <?php echo $this->onclick("{$this->location()}/payments/search"); ?> >
+                <td><?php $this->T("Total_payments_c") ?> <?php $this->T("vandaag_c") ?></td>
+                <td><?php echo $this->amount($this->payedToday)?></td>
+            </tr>
+            <tr <?php echo $this->onclick("{$this->location()}/imported-mail/overview"); ?> >
+                <td>E-mails <?php $this->T("vandaag_c") ?></td>
+                <td><?php echo $this->emailsToday?></td>
+            </tr>
+        </table>
+
+    </td>
+    <td class="windowPart">
+        <span class="title"><?php $this->T("gem_betalingstermijn_c") ?></span>
+        <div id="paymentdelay"  class="paymentdelay"></div>
+    </td>
+    <td class="windowPart">
+        <span class="title" ><?php $this->T("agenda_c") ?></span>
+        <?php if (!empty($this->agenda)) { ?>
+        <table id="data" class="tablesorter ws_data_table" width="100%">
+            <thead>
+            <tr>
+                <th><?php $this->T("description_c"); ?></th>
+                <th><?php $this->T("number_c"); ?></th>
+            </tr>
+            </thead>
+            <?php foreach ($this->agenda as $agenda) {  ?>
+            <tr <?php echo $this->onclick("{$this->location()}/files/search/agenda/{$agenda->STATE_ID}"); ?> >
+                <td><?php echo $agenda->STATE_DESCRIPTION ?></td>
+                <td><?php echo $agenda->COUNTER?></td>
+            </tr>
+            <?php } ?>
+        </table>
+        <?php } ?>
+            </td>
+    </tr>
+    <tr>
+        <td class="windowPart" colspan="3">
+            <span class="title"><?php $this->T("forecastHistogram_c") ?></span>
+            <div id="paymentDelayForecastHistogram"></div>
+        </td>
+    </tr>
+</table>
+</div>
+
