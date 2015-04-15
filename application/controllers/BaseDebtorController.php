@@ -30,6 +30,8 @@ class BaseDebtorController extends BaseController {
         $this->view->debtorFileId = $this->db->get_var("SELECT FILE_ID FROM FILES\$FILES WHERE DEBTOR_ID = $this->debtorId ");
         $this->view->headerTitle = "{$this->debtor->NAME}";
         $this->view->baseHttp = $config->baseHttp;
+        $debtorObj = new Application_Model_Debtors();
+        $this->view->subdebtors = $debtorObj->getSubdebtorsByDebtorId($this->debtorId);
     }
 
     protected function loadDebtor() {

@@ -8,7 +8,8 @@ class DebtorDetailController extends BaseDebtorController {
         $obj = new Application_Model_Debtors();
         $userObj = new Application_Model_Users();
 
-        $generalForm = new Application_Form_AddDebtor();
+        $superDebtor = $obj->getSuperdebtorByDebtorId($this->debtor->DEBTOR_ID);
+        $generalForm = new Application_Form_AddDebtor($superDebtor ? $superDebtor->DEBTOR_ID : null);
         $data = array();
         if ($this->getRequest()->isPost()) {
             if (isset($_POST['invite_for_external_access'])) {
@@ -26,14 +27,20 @@ class DebtorDetailController extends BaseDebtorController {
             }
             else if ($generalForm->isValid($_POST)) {
                 $update = $data = $generalForm->getValues();
-                $data['DEBTOR_SCORE'] = $_POST['DEBTOR_SCORE'] ? $_POST['DEBTOR_SCORE'] : 0;
-                $update['BIRTH_DAY'] = $this->functions->date_dbformat($data['BIRTH_DAY']);
-                $update['CREDIT_LIMIT'] = $this->functions->dbBedrag($data['CREDIT_LIMIT']);
+                if($this->isSuperDebtorValid($data['SUPER_DEBTOR_ID'])){
+                    $data['DEBTOR_SCORE'] = $_POST['DEBTOR_SCORE'] ? $_POST['DEBTOR_SCORE'] : 0;
+                    $update['BIRTH_DAY'] = $this->functions->date_dbformat($data['BIRTH_DAY']);
+                    $update['CREDIT_LIMIT'] = $this->functions->dbBedrag($data['CREDIT_LIMIT']);
 
-                $obj->update($update);
-                $obj->changeDebtorScore($data['DEBTOR_SCORE'], $data['DEBTOR_ID'], $userObj->getLoggedInUser()->USER_ID);
+                    $obj->update($update);
+                    $obj->changeDebtorScore($data['DEBTOR_SCORE'], $data['DEBTOR_ID'], $userObj->getLoggedInUser()->USER_ID);
 
-                $this->view->generalFormSaved = true;
+                    $this->view->generalFormSaved = true;
+
+                } else {
+                    $this->view->generalFormError = true;
+                    $this->view->errors = array('SUPER_DEBTOR_NAME' => 'Incorrect supercompany: already exists in hierarchy');
+                }
             } else {
                 $this->view->generalFormError = true;
                 $this->view->errors = $generalForm->getErrors();
@@ -76,6 +83,16 @@ class DebtorDetailController extends BaseDebtorController {
 
     }
 
+    public function isSuperDebtorValid($superDebtorId) {
+        if($superDebtorId == $this->debtorId) {
+            return false;
+        }
+
+        $usedIds = array($this->debtorId, $superDebtorId);
+        $debtorsObj = new Application_Model_Debtors();
+        return $this->checkSubdebtors($debtorsObj, $superDebtorId, $usedIds);
+    }
+
     /**
      * @param $obj
      * @return mixed
@@ -86,6 +103,28 @@ class DebtorDetailController extends BaseDebtorController {
         $data['BIRTH_DAY'] = $this->functions->dateFormat($data['BIRTH_DAY']);
         $data['CREDIT_LIMIT'] = $this->functions->amount($data['CREDIT_LIMIT']);
         return $data;
+    }
+
+    /**
+     * @param $debtorsObj
+     * @param $lastDebtorId
+     * @param $usedIds
+     * @return bool
+     */
+    private function checkSubdebtors($debtorsObj, $lastDebtorId, $usedIds)
+    {
+        $subdebtors = $debtorsObj->getSubdebtorsByDebtorId($lastDebtorId);
+        if (count($subdebtors) > 0) {
+            foreach ($subdebtors as $subdebtor) {
+                if (in_array($subdebtor->DEBTOR_ID, $usedIds)) {
+                    return false;
+                } else {
+                    $usedIds [] = $subdebtor->DEBTOR_ID;
+                    return $this->checkSubdebtors($debtorsObj, $subdebtor->DEBTOR_ID, $usedIds);
+                }
+            }
+        }
+        return true;
     }
 
 }

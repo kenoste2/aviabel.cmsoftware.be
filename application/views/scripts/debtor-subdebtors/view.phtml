@@ -1,8 +1,26 @@
 <div id="general" style="position: relative; width: 100%">
-
+    <span class="title" ><?php $this->T('subdebtors_c') ?></span>
     <ul>
-        <?php foreach($this->debtors as $debtor) { ?>
-            <li><?php echo $debtor->NAME ?></li>
-        <?php } ?>
+        <table id="data" class="tablesorter ws_data_table" width="100%">
+            <thead>
+            <tr>
+                <th><?php $this->T('name_c') ?></th>
+            </tr>
+            </thead>
+            <tbody>
+            <?php if(count($this->subDebtors) > 0) {
+                foreach($this->subDebtors as $debtor) { ?>
+                    <tr>
+                        <td>
+                            <?php for($i = 0; $i < $debtor['depth']; $i++) { ?>
+                                &nbsp;&nbsp;&nbsp;<span class="ui-icon ui-icon-carat-1-e" style="display: inline-block; vertical-align: middle;"></span>
+                            <?php } ?>
+                            <a href="<?php print $this->location() ?>/debtor-detail/view/debtorId/<?php print $debtor['debtor']->DEBTOR_ID ?>" ><?php echo $debtor['debtor']->NAME ?></a>
+                        </td>
+                    </tr>
+             <?php }
+            } ?>
+            </tbody>
+        </table>
     </ul>
 </div>

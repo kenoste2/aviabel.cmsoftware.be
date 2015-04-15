@@ -3,4 +3,5 @@ CREATE TABLE SUBDEBTORS (
   SUB_DEBTOR_ID int REFERENCES FILES$DEBTORS(DEBTOR_ID)
 );
 
-external_debtor_c
+INSERT INTO TEKSTEN (CODE,NAV,NL,FR,EN,SETTINGS) VALUES ('subdebtors_c','all','Subklanten','Sous-clients','Subclients',0);
+INSERT INTO TEKSTEN (CODE,NAV,NL,FR,EN,SETTINGS) VALUES ('super_debtor_c','all','Hoofdklant','Client principal','Parent client',0);

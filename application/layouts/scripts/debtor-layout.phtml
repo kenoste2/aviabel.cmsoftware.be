@@ -77,11 +77,13 @@
                                     <li><a href="<?php echo $this->location() ?>/debtor-contacts/view/index/<?php echo $this->index ?>"><?php print $this->T("contacts_c") ?></a></li>
                                 </ul>
                             </td>
-                            <td>
-                                <ul id="menu5" class="menu">
-                                    <li><a href="<?php echo $this->location() ?>/debtor-subdebtors/view/index/<?php echo $this->index ?>"><?php print $this->T("subdebtors_c") ?></a></li>
-                                </ul>
-                            </td>
+                            <?php if(count($this->subdebtors) > 0) { ?>
+                                <td>
+                                    <ul id="menu5" class="menu">
+                                        <li><a href="<?php echo $this->location() ?>/debtor-subdebtors/view/index/<?php echo $this->index ?>"><?php print $this->T("subdebtors_c") ?></a></li>
+                                    </ul>
+                                </td>
+                            <?php } ?>
                         </tr>
                     </table>
                 </div>

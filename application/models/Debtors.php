@@ -118,6 +118,37 @@ class Application_Model_Debtors extends Application_Model_Base {
         return $this->saveData('FILES\$DEBTORS', $data, 'DEBTOR_ID = ' . $id);
     }
 
+    function getSubdebtorsByDebtorId($debtorId, $ignoredIds = array()) {
+        $escDebtorId = $this->db->escape($debtorId);
+        $ignoredIdsClause = '';
+        if(count($ignoredIds)) {
+            $escIgnoredIds = array();
+            foreach($ignoredIds as $ignoredId) {
+                $escIgnoredIds []= $this->db->escape($ignoredId);
+            }
+            $strEscIgnoredIds = implode(',', $escIgnoredIds);
+            $ignoredIdsClause = " AND DEBTOR_ID NOT IN ({$strEscIgnoredIds})";
+        }
+
+
+        $sql = "SELECT * FROM FILES\$DEBTORS
+                WHERE DEBTOR_ID IN
+                    (SELECT SUB_DEBTOR_ID FROM SUBDEBTORS
+                    WHERE SUPER_DEBTOR_ID = {$escDebtorId})
+                {$ignoredIdsClause}";
+        return $this->db->get_results($sql);
+    }
+
+    function getSuperdebtorByDebtorId($debtorId) {
+        $escDebtorId = $this->db->escape($debtorId);
+
+        $sql = "SELECT * FROM FILES\$DEBTORS
+                WHERE DEBTOR_ID IN
+                    (SELECT SUPER_DEBTOR_ID FROM SUBDEBTORS WHERE SUB_DEBTOR_ID = {$escDebtorId})";
+        return $this->db->get_row($sql);
+
+    }
+
     function getDebtorsQuery($data) {
         $query_debtors = "";
 

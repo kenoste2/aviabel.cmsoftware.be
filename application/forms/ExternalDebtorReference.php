@@ -29,17 +29,29 @@ class Application_Form_ExternalDebtorReference extends Zend_Form {
 
         $this->addElement('textarea', "DEBTOR_DISPUTE_COMMENT_{$this->_reference->REFERENCE_ID}", $fieldAttributes);
 
-        $this->addElement('text', "DEBTOR_DISPUTE_EMAIL_{$this->_reference->REFERENCE_ID}", array(
+        $emailAtrributes = array(
             "required" => true,
-            'label' => $functions->T('external_dispute_email_c')));
+            'label' => $functions->T('external_dispute_email_c'));
 
-        $this->addElement('text', "DEBTOR_DISPUTE_PHONE_{$this->_reference->REFERENCE_ID}", array(
+        if(!$enabled) {
+            $emailAtrributes['disabled'] = !$enabled;
+        }
+
+        $this->addElement('text', "DEBTOR_DISPUTE_EMAIL_{$this->_reference->REFERENCE_ID}", $emailAtrributes);
+
+        $phoneAttributes = array(
             "required" => true,
-            'label' => $functions->T('external_dispute_phone_c')));
+            'label' => $functions->T('external_dispute_phone_c'));
+
+        if(!$enabled) {
+            $phoneAtrributes['disabled'] = !$enabled;
+        }
+
+        $this->addElement('text', "DEBTOR_DISPUTE_PHONE_{$this->_reference->REFERENCE_ID}", $phoneAttributes);
 
 
         if($enabled) {
-            $this->addElement('submit', $functions->T('add_comment_c'));
+            $this->addElement('submit', $functions->T('add_comment_c'), array('label' => $functions->T('add_comment_c')));
         }
     }
 }

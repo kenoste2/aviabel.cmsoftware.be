@@ -2,6 +2,13 @@
 
 class Application_Form_AddDebtor extends Zend_Form {
 
+    private $_superDebtorId;
+
+    public function __construct($superDebtorId) {
+        $this->_superDebtorId = $superDebtorId;
+        parent::__construct();
+    }
+
     public function init() {
 
         global $db;
@@ -12,8 +19,14 @@ class Application_Form_AddDebtor extends Zend_Form {
 
         $this->addElement('text', 'NAME', array('label'=> $functions->T('name_c'),'size' => 50, 'required' => true));
         $this->addElement('text', 'VATNR', array('label'=> $functions->T('vatnr_c'),'size' => 50, 'onchange' => 'getCreditInfo();'));
-        $this->addElement('text', 'SUPER_DEBTOR_NAME', array('label'=> $functions->T('super_debtor_c'),'size' => 50));
+
+        $debtorNameField = new Zend_Form_Element_Text('SUPER_DEBTOR_NAME', array('label'=> $functions->T('super_debtor_c'),'size' => 50, 'required' => true));
+        if($this->_superDebtorId) {
+            $this->addDebtorLinkDecorator($debtorNameField);
+        }
+        $this->addElement($debtorNameField);
         $this->addElement('hidden', 'SUPER_DEBTOR_ID');
+
         $this->addElement('text', 'ADDRESS', array('label'=> $functions->T('address_c'),'size' => 50, 'required' => true));
         $countries = $db->get_results("select COUNTRY_ID,DESCRIPTION from SUPPORT\$COUNTRIES  order by DESCRIPTION", ARRAY_N);
         array_unshift($countries,array('0' =>4,1 => 'BELGIUM'));
@@ -37,5 +50,34 @@ class Application_Form_AddDebtor extends Zend_Form {
         ));
     }
 
+    public function addDebtorLinkDecorator($clientNameField)
+    {
+        global $config;
+
+        //NOTE: this is a lot of code to generate the following right behind the field:
+        //      <a class=\"ui-icon ui-icon-zoomin inline-icon\" style=\"display: inline-block;\" href=\"{$this->_location}/client-detail/view/clientId/{$this->file->CLIENT_ID}\"></a>";
+        //NOTE: check out this article for more on decorators: http://devzone.zend.com/1240/decorators-with-zend_form/
+        $decorators = $clientNameField->getDecorators();
+
+        //NOTE: just inserting our custom-decorator in the array won't get it at the right position (for weird PHP-internal reasons) so we need to create a new array of decorators.
+        $newDecorators = array();
+        $i = 0;
+        foreach ($decorators as $decorator) {
+            $newDecorators [] = $decorator;
+            if ($i == 1) {
+                //NOTE: insert the custom decorator at the 2nd position in the array.
+                $newDecorators [] = array(array("link" => "HtmlTag"),
+                    array('tag' => 'a',
+                        'placement' => 'append',
+                        'class' => 'ui-icon ui-icon-zoomin inline-icon',
+                        'style' => 'display: inline-block;',
+                        'href' => $config->rootLocation . "/debtor-detail/view/debtorId/" . $this->_superDebtorId
+                    )
+                );
+            }
+            $i++;
+        }
+        $clientNameField->setDecorators($newDecorators);
+    }
 }
 
