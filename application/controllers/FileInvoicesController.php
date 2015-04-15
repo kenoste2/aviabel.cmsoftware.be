@@ -99,6 +99,7 @@ class FileInvoicesController extends BaseFileController
                 $update['DISPUTE_DATE'] = $this->functions->date_dbformat($update['DISPUTE_DATE']);
                 $update['DISPUTE_DUEDATE'] = $this->functions->date_dbformat($update['DISPUTE_DUEDATE']);
                 $update['DISPUTE_ENDED_DATE'] = $this->functions->date_dbformat($update['DISPUTE_ENDED_DATE']);
+                $update['DISPUTE_AMOUNT'] = $this->functions->dbBedrag($update['DISPUTE_AMOUNT']);
                 $fileReferenceObj->update($update);
                 $this->view->formSaved = true;
             } else {
@@ -131,7 +132,8 @@ class FileInvoicesController extends BaseFileController
                 'DISPUTE_ENDED_DATE' => $this->functions->dateformat($reference->DISPUTE_ENDED_DATE),
                 'DISPUTE_STATUS' => $reference->DISPUTE_STATUS,
                 'DISPUTE_ASSIGNEE' => $reference->DISPUTE_ASSIGNEE,
-                'DISPUTE_COMMENT' => $reference->DISPUTE_COMMENT
+                'DISPUTE_COMMENT' => $reference->DISPUTE_COMMENT,
+                'DISPUTE_AMOUNT' => $reference->DISPUTE_AMOUNT
             );
         }
         $form->populate($data);
@@ -140,6 +142,8 @@ class FileInvoicesController extends BaseFileController
 
         $this->view->documents = $fileDocumentsObj->getByReferenceId($referenceId);
         $this->view->debtorDisputeComment = $reference->DEBTOR_DISPUTE_COMMENT;
+        $this->view->debtorDisputePhone = $reference->DEBTOR_DISPUTE_PHONE;
+        $this->view->debtorDisputeEmail = $reference->DEBTOR_DISPUTE_EMAIL;
         $this->view->form = $form;
     }
 

@@ -42,6 +42,12 @@ INSERT INTO TEKSTEN (CODE,NAV,NL,FR,EN,SETTINGS) VALUES ('debtor_invited_c', 'al
 
 INSERT INTO TEKSTEN (CODE,NAV,NL,FR,EN,SETTINGS) VALUES ('external_dispute_email_c', 'all', 'Contact-e-mail', 'E-mail', 'Contact email.',0);
 INSERT INTO TEKSTEN (CODE,NAV,NL,FR,EN,SETTINGS) VALUES ('external_dispute_phone_c', 'all', 'Contacttelefoonnr.', 'Numéro de téléphone', 'Contact phone.',0);
+INSERT INTO TEKSTEN (CODE,NAV,NL,FR,EN,SETTINGS) VALUES ('debtor_dispute_email_c', 'all', 'Contact-e-mail', 'E-mail', 'Contact email.',0);
+INSERT INTO TEKSTEN (CODE,NAV,NL,FR,EN,SETTINGS) VALUES ('debtor_dispute_phone_c', 'all', 'Contacttelefoonnr.', 'Numéro de téléphone', 'Contact phone.',0);
+INSERT INTO TEKSTEN (CODE,NAV,NL,FR,EN,SETTINGS) VALUES ('no_debtor_dispute_phone_found_c','all','Er werd geen telefoonnr. door de debiteur ingegeven','Le débiteur n''a pas ajouté un numéro de téléphone','The debtor has not provided a phone number',0);
+INSERT INTO TEKSTEN (CODE,NAV,NL,FR,EN,SETTINGS) VALUES ('no_debtor_dispute_email_found_c','all','Er werd geen e-mail door de debiteur ingegeven','Le débiteur n''a pas ajouté un e-mail','The debtor has not provided an email',0);
+INSERT INTO TEKSTEN (CODE,NAV,NL,FR,EN,SETTINGS) VALUES ('dispute_amount_c','all','Betwist bedrag','Montant disputé','Disputed amount',0);
+
 
 UPDATE TEKSTEN
 SET NL = 'datum ingave', FR = 'date d''entrée des données', EN = 'input date'

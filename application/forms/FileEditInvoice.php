@@ -34,6 +34,7 @@ class Application_Form_FileEditInvoice extends Zend_Form {
         $this->addElement('text', 'DISPUTE_DATE',array('label' => $functions->T('dispute_date_c'),'size' => 15, 'required' => false,'validators'=>array (array('date', false, array('dd/MM/yyyy'))),));
         $this->addElement('text', 'DISPUTE_DUEDATE',array('label' => $functions->T('dispute_duedate_c'),'size' => 15, 'false' => true,'validators'=>array (array('date', false, array('dd/MM/yyyy'))),));
         $this->addElement('text', 'DISPUTE_ENDED_DATE',array('label' => $functions->T('dispute_ended_date_c'),'size' => 15, 'required' => false,'validators'=>array (array('date', false, array('dd/MM/yyyy'))),));
+        $this->addElement('text', 'DISPUTE_AMOUNT',array('label' => $functions->T('dispute_amount_c'),'size' => 15, 'required' => false,'validators'=>array ('validators'=> array($helper->getFloatValidator()))));
         $this->addElement('submit', 'submit', array(
             'ignore' => true,
             'label' => $functions->T('save_c'),

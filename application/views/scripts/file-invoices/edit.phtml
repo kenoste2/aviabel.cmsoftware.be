@@ -49,6 +49,28 @@
                                 $this->T("no_debtor_dispute_comment_found_c");
                             } ?>
                         </dd>
+                        <dt>
+                            <?php $this->T("debtor_dispute_phone_c") ?>
+                        </dt>
+                        <dd>
+                            <?php
+                            if($this->debtorDisputePhone) {
+                                print $this->debtorDisputePhone;
+                            } else {
+                                $this->T("no_debtor_dispute_phone_found_c");
+                            } ?>
+                        </dd>
+                        <dt>
+                            <?php $this->T("debtor_dispute_email_c") ?>
+                        </dt>
+                        <dd>
+                            <?php
+                            if($this->debtorDisputeEmail) {
+                                print $this->debtorDisputeEmail;
+                            } else {
+                                $this->T("no_debtor_dispute_email_found_c");
+                            } ?>
+                        </dd>
                         <?php print $this->form->DISPUTE_STATUS ?>
                         <?php print $this->form->DISPUTE ?>
                         <?php print $this->form->DISPUTE_COMMENT ?>
@@ -56,6 +78,7 @@
                         <?php print $this->form->DISPUTE_DUEDATE ?>
                         <?php print $this->form->DISPUTE_ENDED_DATE ?>
                         <?php print $this->form->DISPUTE_ASSIGNEE ?>
+                        <?php print $this->form->DISPUTE_AMOUNT ?>
                     </dl>
                 </div>
                 <div class="windowPart" style="margin-top: 5px">
