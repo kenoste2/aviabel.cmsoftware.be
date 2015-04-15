@@ -10,6 +10,8 @@ class Application_Form_EditDebtor extends Zend_Form {
 
         $this->addElement('text', 'NAME', array('label'=> $functions->T('name_c'),'size' => 50, 'required' => true));
         $this->addElement('text', 'VATNR', array('label'=> $functions->T('vatnr_c'),'size' => 50));
+        $this->addElement('text', 'SUPER_DEBTOR_NAME', array('label'=> $functions->T('super_debtor_c'),'size' => 50));
+        $this->addElement('hidden', 'SUPER_DEBTOR_ID');
         $this->addElement('text', 'ADDRESS', array('label'=> $functions->T('address_c'),'size' => 50, 'required' => true));
         
         $countries = $db->get_results("select COUNTRY_ID,DESCRIPTION from SUPPORT\$COUNTRIES  order by DESCRIPTION", ARRAY_N);
