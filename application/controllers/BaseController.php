@@ -26,8 +26,8 @@ class BaseController extends Zend_Controller_Action {
 
         $controllerName = $this->getRequest()->getControllerName();
 
-        if (!$auth->hasIdentity() &&  $controllerName != 'cron') {
-            $this->_redirect('/Auth/Login');
+        if (!$auth->hasIdentity() &&  $controllerName != 'cron' &&  $controllerName != 'download' ) {
+            $this->redirect('/Auth/Login');
         }
 
         $authNamespace = new Zend_Session_Namespace('Zend_Auth');
