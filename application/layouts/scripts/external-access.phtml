@@ -22,5 +22,16 @@
         <div id="content">
             <?php echo $this->layout()->content ?>
         </div>
+        <script type="text/javascript">
+        <?php if (!empty($this->errors)) {
+                foreach ($this->errors as $key => $error) {
+                    if (!empty($error)) {
+                        ?>
+                        $("#<?php echo $key; ?>").addClass("errorfield");
+        <?php       }
+                }
+            }
+            ?>
+        </script>
     </body>
 </html>

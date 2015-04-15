@@ -13,7 +13,12 @@ class DebtorDetailController extends BaseDebtorController {
         if ($this->getRequest()->isPost()) {
             if (isset($_POST['invite_for_external_access'])) {
                 $debtorExternalAccessObj = new Application_Model_DebtorExternalAccess();
-                $debtorExternalAccessObj->sendExternalAccessInviteMail($this->debtor);
+
+                $filesObj = new Application_Model_Files();
+                $files = $filesObj->getFilesByDebtorId($this->debtor->DEBTOR_ID);
+                if(count($files) > 0) {
+                    $debtorExternalAccessObj->sendExternalAccessInviteMail($this->debtor, $files[0]);
+                }
 
                 $this->view->debtorInvited = true;
 
