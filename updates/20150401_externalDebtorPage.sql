@@ -23,7 +23,7 @@ ALTER TABLE FILES$REFERENCES
 ADD DEBTOR_DISPUTE_PHONE VARCHAR(300);
 
 ALTER TABLE FILES$REFERENCES
-ADD DISPUTE_AMOUNT INT;
+ADD DISPUTE_AMOUNT DECIMAL(10);
 
 INSERT INTO TEKSTEN (CODE,NAV,NL,FR,EN,SETTINGS) VALUES ('original_amount_c','all','Oorpronkelijk factuurbedrag','Montant original de la facture','Original invoice amount',0);
 INSERT INTO TEKSTEN (CODE,NAV,NL,FR,EN,SETTINGS) VALUES ('total_amount_c','all','Totaalbedrag met kosten en interesten','Montant total avec frais et intérêts','Total amount with costs and interests',0);

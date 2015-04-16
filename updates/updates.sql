@@ -112,6 +112,10 @@ ADD CONSTRAINT FK_DSO_CLIENT
 FOREIGN KEY (CLIENT_ID) REFERENCES CLIENTS$CLIENTS;
 INSERT INTO TEKSTEN (CODE,NAV,NL,FR,EN,SETTINGS) VALUES ('not_due_c', 'all', 'Niet vervallen', 'Non-échu', 'Not due', 0);
 INSERT INTO TEKSTEN (CODE,NAV,NL,FR,EN,SETTINGS) VALUES ('past_due_c', 'all', 'Vervallen', 'Échu', 'Due', 0);
+<<<<<<< HEAD
+ALTER TABLE FILES$DEBTORS ADD CREDIT_LIMIT DOM_MONEY;
+create index ix_debtor_credit_limit on FILES$DEBTORS computed by (CREDIT_LIMIT);
+=======
 ALTER TABLE FILES$DEBTORS ADD CREDIT_LIMIT DOM_MONEY#
 create index ix_debtor_credit_limit on FILES$DEBTORS computed by (CREDIT_LIMIT)#
 
@@ -246,3 +250,4 @@ INSERT INTO TEKSTEN (CODE,NAV,NL,FR,EN,SETTINGS) VALUES ('debtor_dispute_comment
 INSERT INTO TEKSTEN (CODE,NAV,NL,FR,EN,SETTINGS) VALUES ('no_debtor_dispute_comment_found_c','all','Er werd geen opmerking door de debiteur ingegeven','Le débiteur n''a pas ajouté un commentaire','The debtor has not provided any remarks',0);
 INSERT INTO TEKSTEN (CODE,NAV,NL,FR,EN,SETTINGS) VALUES ('dispute_comment_c','all','Opmerkingen bij betwisting','Commentaire sur la dispute','Dispute comments',0);
 INSERT INTO TEKSTEN (CODE,NAV,NL,FR,EN,SETTINGS) VALUES ('invite_for_external_access_c', 'all', 'Uitnodigen voor externe log-in', 'Inviter pour acces externe', 'Invite for external log-in',0);
+>>>>>>> origin/master

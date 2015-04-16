@@ -40,6 +40,8 @@
                     <dt><?php $this->T("debtor_score_c") ?></dt>
                     <dd><div data-rater="<?php echo $this->currentRating ?>"></div></dd>
                     <?php print $this->generalForm->VATNR ?>
+                    <?php print $this->generalForm->SUPER_DEBTOR_NAME ?>
+                    <?php print $this->generalForm->SUPER_DEBTOR_ID ?>
                     <?php print $this->generalForm->ADDRESS ?>
                     <?php print $this->generalForm->COUNTRY_ID ?>
                     <?php print $this->generalForm->ZIP_CODE ?>
@@ -140,3 +142,32 @@
         </tr>
     </table>
 </div>
+<script type="text/javascript">
+$(function () {
+    var cache = {}, lastXhr;
+    $("#SUPER_DEBTOR_NAME").autocomplete({
+        minLength: 3,
+        autoFocus: true,
+        source: function (request, response) {
+            var term = request.term;
+            if (term in cache) {
+                response(cache[ term ]);
+                return;
+            }
+            lastXhr = $.getJSON("<?php echo $this->Location() ?>/ajax/debtors", request, function (data, status, xhr) {
+                cache[ term ] = data;
+                if (xhr === lastXhr) {
+                    response(data);
+                }
+            });
+        },
+        select: function (evt, ui) {
+            var CurrentValue = ui.item.value;
+            var ArrayValues = CurrentValue.split("|");
+            $('#SUPER_DEBTOR_NAME').val(ArrayValues[0]);
+            $('#SUPER_DEBTOR_ID').val(ArrayValues[11]);
+            response(ArrayValues[0]);
+        }, minLength: 2
+    });
+});
+</script>

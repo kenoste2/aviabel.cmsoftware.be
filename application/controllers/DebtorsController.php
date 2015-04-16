@@ -26,7 +26,7 @@ class DebtorsController extends BaseController {
             $session->orderby = "NAME";
         }
         if (empty($session->order)) {
-            $session->orde = "ASC";
+            $session->order = "ASC";
         }
 
 

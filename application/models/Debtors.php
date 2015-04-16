@@ -78,7 +78,21 @@ class Application_Model_Debtors extends Application_Model_Base {
                 $birthDay
                 WHERE DEBTOR_ID = {$data['DEBTOR_ID']}";
 
+        $this->db->query($sql);
 
+        if(isset($data["SUPER_DEBTOR_ID"])) {
+            $this->addSubDebtor($data["SUPER_DEBTOR_ID"], $data['DEBTOR_ID']);
+        }
+    }
+
+    private function addSubDebtor($superDebtorId, $subDebtorId) {
+        $escSuperDebtorId = $this->db->escape($superDebtorId);
+        $escSubDebtorId = $this->db->escape($subDebtorId);
+
+        $sqlDelete = "DELETE FROM SUBDEBTORS WHERE SUB_DEBTOR_ID = {$escSubDebtorId}";
+        $this->db->query($sqlDelete);
+
+        $sql = "INSERT INTO SUBDEBTORS (SUPER_DEBTOR_ID, SUB_DEBTOR_ID) VALUES ({$escSuperDebtorId}, {$escSubDebtorId})";
         $this->db->query($sql);
 
     }
@@ -102,6 +116,37 @@ class Application_Model_Debtors extends Application_Model_Base {
         }
 
         return $this->saveData('FILES\$DEBTORS', $data, 'DEBTOR_ID = ' . $id);
+    }
+
+    function getSubdebtorsByDebtorId($debtorId, $ignoredIds = array()) {
+        $escDebtorId = $this->db->escape($debtorId);
+        $ignoredIdsClause = '';
+        if(count($ignoredIds)) {
+            $escIgnoredIds = array();
+            foreach($ignoredIds as $ignoredId) {
+                $escIgnoredIds []= $this->db->escape($ignoredId);
+            }
+            $strEscIgnoredIds = implode(',', $escIgnoredIds);
+            $ignoredIdsClause = " AND DEBTOR_ID NOT IN ({$strEscIgnoredIds})";
+        }
+
+
+        $sql = "SELECT * FROM FILES\$DEBTORS
+                WHERE DEBTOR_ID IN
+                    (SELECT SUB_DEBTOR_ID FROM SUBDEBTORS
+                    WHERE SUPER_DEBTOR_ID = {$escDebtorId})
+                {$ignoredIdsClause}";
+        return $this->db->get_results($sql);
+    }
+
+    function getSuperdebtorByDebtorId($debtorId) {
+        $escDebtorId = $this->db->escape($debtorId);
+
+        $sql = "SELECT * FROM FILES\$DEBTORS
+                WHERE DEBTOR_ID IN
+                    (SELECT SUPER_DEBTOR_ID FROM SUBDEBTORS WHERE SUB_DEBTOR_ID = {$escDebtorId})";
+        return $this->db->get_row($sql);
+
     }
 
     function getDebtorsQuery($data) {
@@ -140,6 +185,9 @@ class Application_Model_Debtors extends Application_Model_Base {
 
     function getArrayData($debtorId) {
         $sql = "SELECT D.*, D2.TRAIN_TYPE, D2.CREDIT_LIMIT,
+            (SELECT FIRST 1 SUPER_DEBTOR_ID FROM SUBDEBTORS WHERE SUB_DEBTOR_ID = D.DEBTOR_ID) AS SUPER_DEBTOR_ID,
+            (SELECT FIRST 1 NAME FROM FILES\$DEBTORS
+              WHERE DEBTOR_ID IN (SELECT FIRST 1 SUPER_DEBTOR_ID FROM SUBDEBTORS WHERE SUB_DEBTOR_ID = D.DEBTOR_ID)) AS SUPER_DEBTOR_NAME,
               (SELECT FIRST 1 SCORE FROM DEBTOR_SCORE ds WHERE ds.DEBTOR_ID = D.DEBTOR_ID ORDER BY TIME_STAMP DESC) AS DEBTOR_SCORE
             FROM FILES\$DEBTORS_ALL_INFO D
             JOIN FILES\$DEBTORS D2 ON D2.DEBTOR_ID = D.DEBTOR_ID WHERE D.DEBTOR_ID = $debtorId";
