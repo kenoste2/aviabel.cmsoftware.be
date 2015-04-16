@@ -200,7 +200,11 @@ class Application_Model_FilesReferences extends Application_Model_Base {
             WHERE START_DATE <= CURRENT_DATE
             AND FILE_ID IN (SELECT FILE_ID FROM FILES\$FILES WHERE DATE_CLOSED IS NULL)
             AND DISPUTE != 1";
-        return $this->db->get_var($sql);
+        $value = $this->db->get_var($sql);
+        if (empty($value)) {
+            $value = 0.00;
+        }
+        return $value;
     }
 
     public function getTotalNotDue() {
@@ -209,7 +213,13 @@ class Application_Model_FilesReferences extends Application_Model_Base {
             WHERE START_DATE > CURRENT_DATE
             AND FILE_ID IN (SELECT FILE_ID FROM FILES\$FILES WHERE DATE_CLOSED IS NULL)
             AND DISPUTE != 1";
-        return $this->db->get_var($sql);
+
+        $value = $this->db->get_var($sql);
+        if (empty($value)) {
+            $value = 0.00;
+        }
+        return $value;
+
     }
 
     public function getOpenReferencesWithAutoCalculate()
