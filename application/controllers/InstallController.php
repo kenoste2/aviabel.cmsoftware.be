@@ -11,6 +11,33 @@ class InstallController extends BaseController
     }
 
 
+    public function demoupdateAction()
+    {
+        $sql =  "UPDATE FILES\$REFERENCES SET START_DATE = START_DATE+10, END_DATE = END_DATE+10, INVOICE_DATE = INVOICE_DATE+10";
+        print $sql;
+        $this->db->query($sql);
+        $sql =  "UPDATE FILES\$FILE_ACTIONS SET ACTION_DATE = ACTION_DATE+10";
+        print "<br>".$sql;
+        $this->db->query($sql);
+        $sql =  "UPDATE FILES\$FILES SET LAST_ACTION_DATE = LAST_ACTION_DATE+10";
+        print "<br>".$sql;
+        $this->db->query($sql);
+        $sql =  "UPDATE FILES\$PAYMENTS SET PAYMENT_DATE = PAYMENT_DATE+10";
+        print "<br>".$sql;
+        $this->db->query($sql);
+        $sql =  "UPDATE FILES\$PAYMENTS SET CREATION_DATE = CREATION_DATE+10";
+        print "<br>".$sql;
+        $this->db->query($sql);
+
+    }
+
+
+
+
+
+
+
+
     public function setTekstenIdAction()
     {
         $nextId = $this->db->get_var("SELECT MAX(TEKSTEN_ID) + 1 AS ID  FROM TEKSTEN");
