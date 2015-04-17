@@ -127,12 +127,13 @@ class Application_Model_Debtors extends Application_Model_Base {
                 $escIgnoredIds []= $this->db->escape($ignoredId);
             }
             $strEscIgnoredIds = implode(',', $escIgnoredIds);
-            $ignoredIdsClause = " AND DEBTOR_ID NOT IN ({$strEscIgnoredIds})";
+            $ignoredIdsClause = " AND D.DEBTOR_ID NOT IN ({$strEscIgnoredIds})";
         }
 
 
-        $sql = "SELECT * FROM FILES\$DEBTORS
-                WHERE DEBTOR_ID IN
+        $sql = "SELECT D.*,F.* FROM FILES\$DEBTORS D
+                JOIN FILES\$FILES F ON F.DEBTOR_ID = D.DEBTOR_ID
+                WHERE D.DEBTOR_ID IN
                     (SELECT SUB_DEBTOR_ID FROM SUBDEBTORS
                     WHERE SUPER_DEBTOR_ID = {$escDebtorId})
                 {$ignoredIdsClause}";

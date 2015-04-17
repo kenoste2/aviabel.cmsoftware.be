@@ -14,6 +14,10 @@ class FileDetailController extends BaseFileController {
             'isCollector' => ($this->auth->online_rights == 6)
             ));
 
+       $creditlimiteForm = new Application_Form_FileCreditLimite();
+
+
+
         if ($this->hasAccess('viewActionDocuments')) {
             $this->view->viewActionContent = true;
         }
@@ -123,10 +127,39 @@ class FileDetailController extends BaseFileController {
                 'AFNAME_ADRES' => $this->file->AFNAME_ADRES,
             );
         }
-        // Populating form
+
+
         $debtorForm->populate($data);
+
+        $data = array();
+        if ($this->getRequest()->isPost() && $this->getParam("CREDITLIMITEFORM"))  {
+            if ($creditlimiteForm->isValid($_POST)) {
+                $update = $data = $creditlimiteForm->getValues();
+                $update['OWN_CREDIT_LIMIT'] = $this->functions->dbBedrag($data['OWN_CREDIT_LIMIT']);
+                unset($update['CREDITLIMITEFORM']);
+
+                $this->saveData('FILES$FILES', $update, "FILE_ID = {$this->fileId}");
+                $this->view->creditlimitSaved = true;
+
+                $data['PROVIDER_CREDIT_LIMIT'] = $this->functions->amount($this->file2->PROVIDER_CREDIT_LIMIT);
+                $data['INSURANCE_CREDIT_LIMIT'] = $this->functions->amount($this->file2->INSURANCE_CREDIT_LIMIT);
+
+            } else {
+                $this->view->creditlimitError = true;
+                $this->view->errors = $creditlimiteForm->getErrors();
+            }
+        } else {
+            $data = array(
+                'OWN_CREDIT_LIMIT' => $this->functions->amount($this->file2->OWN_CREDIT_LIMIT),
+                'PROVIDER_CREDIT_LIMIT' => $this->functions->amount($this->file2->PROVIDER_CREDIT_LIMIT),
+                'INSURANCE_CREDIT_LIMIT' => $this->functions->amount($this->file2->INSURANCE_CREDIT_LIMIT),
+            );
+        }
+        $creditlimiteForm->populate($data);
+
         $this->view->debtorForm = $debtorForm;
         $this->view->fileForm = $generalForm;
+        $this->view->creditlimiteForm = $creditlimiteForm;
         $debtorObj = new Application_Model_Debtors();
         $delayInfo = $debtorObj->calculatePaymentDelayAndPaymentNrInvoices($this->file->DEBTOR_ID);
         $this->view->paymentDelay = $delayInfo->PAYMENT_DELAY;
