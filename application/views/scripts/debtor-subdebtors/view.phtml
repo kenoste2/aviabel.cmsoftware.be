@@ -15,7 +15,7 @@
             <tbody>
             <?php if(count($this->subDebtors) > 0) {
                 foreach($this->subDebtors as $debtor) { ?>
-                    <tr>
+                    <tr onclick="window.location = '<?php print $this->location() ?>/debtor-detail/view/debtorId/<?php print $debtor['debtor']->DEBTOR_ID ?>'">
                         <td>
                             <?php for($i = 0; $i < $debtor['depth']; $i++) { ?>
                                 &nbsp;&nbsp;&nbsp;<span class="ui-icon ui-icon-carat-1-e" style="display: inline-block; vertical-align: middle;"></span>

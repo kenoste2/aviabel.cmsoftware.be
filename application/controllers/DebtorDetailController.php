@@ -39,6 +39,7 @@ class DebtorDetailController extends BaseDebtorController {
 
                 } else {
                     $this->view->generalFormError = true;
+                    $this->view->subdebtorInvalid = true;
                     $this->view->errors = array('SUPER_DEBTOR_NAME' => 'Incorrect supercompany: already exists in hierarchy');
                 }
             } else {
@@ -90,7 +91,7 @@ class DebtorDetailController extends BaseDebtorController {
 
         $usedIds = array($this->debtorId, $superDebtorId);
         $debtorsObj = new Application_Model_Debtors();
-        return $this->checkSubdebtors($debtorsObj, $superDebtorId, $usedIds);
+        return $this->checkSubdebtors($debtorsObj, $this->debtorId, $usedIds);
     }
 
     /**

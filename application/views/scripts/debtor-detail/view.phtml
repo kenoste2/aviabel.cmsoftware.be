@@ -31,6 +31,11 @@
                     print $this->Error($this->G("confirm_pass_c"));
                 }
                 ?>
+                <?php
+                if ($this->subdebtorInvalid) {
+                    print $this->Error($this->G("subdebtor_invalid_c"));
+                }
+                ?>
 
                 <form enctype="application/x-www-form-urlencoded" action="" method="post" style="float: right; margin: 5px;">
                     <button type="submit" name="invite_for_external_access" <?php print !$this->email ? "disabled" : "" ?> ><?php $this->T("invite_for_external_access_c") ?></button>
