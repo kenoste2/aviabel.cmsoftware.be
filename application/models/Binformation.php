@@ -78,7 +78,7 @@ class Application_Model_Binformation extends Application_Model_Base
     {
 
         global $lang;
-        $wsdlFile = APPLICATION_PATH . '/../library/bravo.wsdl';
+        $wsdlFile = APPLICATION_PATH . '/../library/bravo_iis.wsdl';
         $client = new Zend_Soap_Client ($wsdlFile, array("login" => "conlinep", "password" => "cOnl1nepr"));
 
         try {
@@ -114,8 +114,8 @@ class Application_Model_Binformation extends Application_Model_Base
     public function Search($name, $vat, $country)
     {
         global $lang;
-        $wsdlFile = APPLICATION_PATH . '/../library/bravo.wsdl';
-        $client = new Zend_Soap_Client($wsdlFile, array("login" => "conlinep", "password" => "cOnl1nepr"));
+        $wsdlFile = APPLICATION_PATH . '/../library/bravo_iis.wsdl';
+        $client = new Zend_Soap_Client ($wsdlFile, array("login" => "conlinep", "password" => "cOnl1nepr"));
         $params = array('Name' => $name, 'CountryCode' => $country, 'NationalNumber' => $vat);
         $result = $client->Search($params);
 
