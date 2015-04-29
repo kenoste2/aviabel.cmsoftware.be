@@ -61,6 +61,9 @@ class ExternalAccessController extends Zend_Controller_Action
 
                     $shouldSendMail = false;
                     if($processForm) {
+                        $now = new DateTime();
+                        $in30Days = new DateTime();
+                        $in30Days->add(new DateInterval('P30D'));
                         if($reference['form']->isValid($_POST)) {
                             $shouldSendMail = !$reference['obj']->DEBTOR_DISPUTE_COMMENT;
                             $data = array(
@@ -68,6 +71,9 @@ class ExternalAccessController extends Zend_Controller_Action
                                 'DEBTOR_DISPUTE_COMMENT' => $reference['form']->$disputeComment->getValue(),
                                 'DEBTOR_DISPUTE_EMAIL' => $reference['form']->$disputeEmail->getValue(),
                                 'DEBTOR_DISPUTE_PHONE' => $reference['form']->$disputePhone->getValue(),
+                                'DISPUTE' => 1,
+                                'DISPUTE_DATE' => $now->format('Y-m-d'),
+                                'DISPUTE_DUEDATE' => $in30Days->format('Y-m-d'),
                                 'DISPUTE_STATUS' => 'DEBTOR_REMARK');
                             $referenceObj->saveReference($data);
                         }
@@ -75,7 +81,7 @@ class ExternalAccessController extends Zend_Controller_Action
                     }
 
                     if($shouldSendMail) {
-                        $debtorExternalAccessObj->sendDisputeWarningMail($reference['obj']);
+                        //$debtorExternalAccessObj->sendDisputeWarningMail($reference['obj']);
                     }
                 }
             } else {

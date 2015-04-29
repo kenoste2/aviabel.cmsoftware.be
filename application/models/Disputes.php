@@ -22,9 +22,7 @@ class Application_Model_Disputes extends Application_Model_Base {
             $queryParts = $this->addDateRangePart($key, 'EXPIRY_DATE', $values, "DISPUTE_DUEDATE", $queryParts);
         }
 
-        if(count($queryParts) <= 0)  {
-            $queryParts []= "1 = 1";
-        }
+        $queryParts []= "r.DISPUTE = 1";
 
         $extendedWhere = implode(" AND ", $queryParts);
         $sql = "SELECT r.*,
