@@ -50,6 +50,9 @@ class IndexController extends BaseController {
 
         $paymentDelayAverageObj = new Application_Model_PaymentDelayAverage();
         $this->view->paymentForecast = $paymentDelayAverageObj->getPaymentForecast();
+
+        $disputesObj = new Application_Model_Disputes();
+        $this->view->disputesToday = $disputesObj->countForToday();
     }
 
 }

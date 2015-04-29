@@ -6,3 +6,17 @@ INSERT INTO TEKSTEN (CODE,NAV,NL,FR,EN,SETTINGS) VALUES ('setting_dispute_status
 INSERT INTO TEKSTEN (CODE,NAV,NL,FR,EN,SETTINGS) VALUES ('setting_dispute_assignees','all','persoon1' || ASCII_CHAR(10) || 'persoon2' || ASCII_CHAR(10) || 'persoon3', 'persoon1' || ASCII_CHAR(10) || 'persoon2' || ASCII_CHAR(10) || 'persoon3','persoon1' || ASCII_CHAR(10) || 'persoon2' || ASCII_CHAR(10) || 'persoon3',1);
 
 INSERT INTO TEKSTEN (CODE,NAV,NL,FR,EN,SETTINGS) VALUES ('menu_disputes_search', 'all','Zoek betwiste facturen', 'Recherchez des factures disputées','Search disputed invoices',0);
+
+UPDATE TEKSTEN
+SET NL = 'E-mails',
+  FR = 'Emails',
+  EN = 'Emails'
+WHERE CODE = 'imported_mails_c';
+
+UPDATE TEKSTEN
+SET NL = 'Betwistingen',
+  FR = 'Disputes',
+  EN = 'Disputes'
+WHERE CODE = 'menu_disputes_search';
+
+INSERT INTO TEKSTEN (CODE,NAV,NL,FR,EN,SETTINGS) VALUES ('disputes_today_c', 'all','Betwistingen vandaag', 'Disputes d''aujourd''hui','Today''s disputes',0);

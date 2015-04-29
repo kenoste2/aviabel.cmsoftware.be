@@ -20,7 +20,7 @@ class Application_Form_FileEditInvoice extends Zend_Form {
         $this->addElement('text', 'START_DATE',array('label' => $functions->T('vervaldatum_c'),'size' => 15, 'required' => true,'validators'=>array (array('date', false, array('dd/MM/yyyy'))),));
         $this->addElement('text', 'END_DATE',array('label' => $functions->T('end_date_c'),'size' => 15, 'required' => true,'validators'=>array (array('date', false, array('dd/MM/yyyy'))),));
         $this->addElement('text', 'AMOUNT',array('label' => $functions->T('amount_c'),'size' => 15, 'required' => true, 'validators'=> array($helper->getFloatValidator())));
-        $this->addElement('select', 'AUTO_CALCULATE',array('label' => $functions->T('auto_calculate_c'),'MultiOptions' => array("1" =>$functions->T('yes_c'), "0" => $functions->T('no_c')),'required' => true,'OnChange' => "autoCalculate()"));
+        $this->addElement('select', 'AUTO_CALCULATE',array('label' => $functions->T('auto_calculate_c'),'MultiOptions' => array("1" => $functions->T('yes_c'), "0" => $functions->T('no_c')),'required' => true,'OnChange' => "autoCalculate()"));
         $this->addElement('text', 'INTEREST',array('label' => $functions->T('interest_c'),'size' => 15, 'validators'=> array($helper->getFloatValidator())));
         $this->addElement('text', 'COSTS',array('label' => $functions->T('costs_c'),'size' => 15, 'validators'=> array($helper->getFloatValidator())));
         $this->addElement('text', 'INTEREST_PERCENT',array('label' => $functions->T('Interest_percent_c'),'size' => 5, 'validators'=> array($helper->getFloatValidator())));
@@ -29,8 +29,12 @@ class Application_Form_FileEditInvoice extends Zend_Form {
         $this->addElement('text', 'COST_MINIMUM',array('label' => $functions->T('Cost_minimum_c'),'size' => 5, 'validators'=> array($helper->getFloatValidator())));
         $this->addElement('select', 'DISPUTE',array('label' => $functions->T('dispute_c'),'MultiOptions' => array("1" =>$functions->T('yes_c'), "0" => $functions->T('no_c')),'required' => true , 'OnChange' => "dispute()"));
         $this->addElement('textarea', 'DISPUTE_COMMENT', array('label' => $functions->T('dispute_comment_c'), 'rows' => 5, 'cols' => 45, 'required' => false));
-        $this->addElement('text', 'DISPUTE_ASSIGNEE', array('label' => $functions->T('dispute_assignee_c'), 'size' => 25, 'required' => false));
-        $this->addElement('text', 'DISPUTE_STATUS', array('label' => $functions->T('dispute_status_c'), 'size' => 25, 'required' => false));
+
+        $disputeStatusses = $this->getSettingsMultiOptions($functions, "setting_dispute_statusses");
+        $disputeAssignees = $this->getSettingsMultiOptions($functions, "setting_dispute_assignees");
+
+        $this->addElement('select', 'DISPUTE_ASSIGNEE', array('label' => $functions->T('dispute_assignee_c'), 'required' => false, 'MultiOptions' => $disputeStatusses));
+        $this->addElement('select', 'DISPUTE_STATUS', array('label' => $functions->T('dispute_status_c'), 'required' => false, 'MultiOptions' => $disputeAssignees));
         $this->addElement('text', 'DISPUTE_DATE',array('label' => $functions->T('dispute_date_c'),'size' => 15, 'required' => false,'validators'=>array (array('date', false, array('dd/MM/yyyy'))),));
         $this->addElement('text', 'DISPUTE_DUEDATE',array('label' => $functions->T('dispute_duedate_c'),'size' => 15, 'false' => true,'validators'=>array (array('date', false, array('dd/MM/yyyy'))),));
         $this->addElement('text', 'DISPUTE_ENDED_DATE',array('label' => $functions->T('dispute_ended_date_c'),'size' => 15, 'required' => false,'validators'=>array (array('date', false, array('dd/MM/yyyy'))),));
@@ -41,5 +45,22 @@ class Application_Form_FileEditInvoice extends Zend_Form {
         ));
     }
 
+    /**
+     * @param $functions
+     * @param $setting
+     * @return array
+     */
+    public function getSettingsMultiOptions($functions, $setting)
+    {
+        $disputeStatussesSetting = $functions->getUserSetting($setting);
+        $disputesStatussesNonKeyed = array();
+        $explodedSetting = explode("\n", $disputeStatussesSetting);
+        foreach($explodedSetting as $setting) {
+            $disputesStatussesNonKeyed []= trim($setting);
+        }
+        $disputesStatussesKeyed = array_combine($disputesStatussesNonKeyed, $disputesStatussesNonKeyed);
+        $disputeStatusses = array_merge(array('' => '-'), $disputesStatussesKeyed);
+        return $disputeStatusses;
+    }
 }
 

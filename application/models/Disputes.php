@@ -3,6 +3,13 @@
 require_once 'application/models/Base.php';
 
 class Application_Model_Disputes extends Application_Model_Base {
+
+    public function countForToday() {
+        $sql = "SELECT COUNT(*) FROM FILES\$REFERENCES r
+                WHERE r.DISPUTE_DATE = CURRENT_DATE AND r.DISPUTE = 1";
+        return $this->db->get_var($sql);
+    }
+
     public function search($searchArray) {
 
         $queryParts = array();
@@ -48,12 +55,14 @@ class Application_Model_Disputes extends Application_Model_Base {
     {
         if ($key === $dateKey) {
             if ($values['from']) {
-                $escDateStartedFrom = $this->db->escape($values['from']);
-                $queryParts []= " r.{$dateColumn} >= '{$escDateStartedFrom}'";
+                $escFrom = $this->db->escape($values['from']);
+                $dbFrom = $this->functions->date_dbformat($escFrom);
+                $queryParts []= " r.{$dateColumn} >= '{$dbFrom}'";
             }
             if ($values['till']) {
-                $escDateStartedTill = $this->db->escape($values['till']);
-                $queryParts []= " r.{$dateColumn} <= '{$escDateStartedTill}'";
+                $escTill = $this->db->escape($values['till']);
+                $dbTill = $this->functions->date_dbformat($escTill);
+                $queryParts []= " r.{$dateColumn} <= '{$dbTill}'";
             }
         }
         return $queryParts;

@@ -81,7 +81,7 @@ class ExternalAccessController extends Zend_Controller_Action
                     }
 
                     if($shouldSendMail) {
-                        //$debtorExternalAccessObj->sendDisputeWarningMail($reference['obj']);
+                        $debtorExternalAccessObj->sendDisputeWarningMail($reference['obj']);
                     }
                 }
             } else {
