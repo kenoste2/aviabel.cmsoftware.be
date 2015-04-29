@@ -1,3 +1,54 @@
-<?php
+<div id="searchbox" class="ui-widget-content" style="width: 90%; padding: 5px;">
+    <span class="title2"><?php print $this->T('search_disputed_invoices_c') ?></span>
+    <form method="post">
+        <table>
+            <tbody>
+            <tr><td><?php print $this->form->DISPUTE_STATUS ?></td><td><?php print $this->form->DISPUTE_ASSIGNEE ?></td></tr>
+            <tr><td><?php print $this->form->DATE_STARTED_FROM ?></td><td><?php print $this->form->DATE_STARTED_TILL ?></td></tr>
+            <tr><td><?php print $this->form->DATE_ENDED_FROM ?></td><td><?php print $this->form->DATE_ENDED_TILL ?></td></tr>
+            <tr><td><?php print $this->form->EXPIRY_DATE_FROM ?></td><td><?php print $this->form->EXPIRY_DATE_TILL ?></td></tr>
+            <tr><td></td><td><?php print $this->form->submit ?></td></tr>
+            </tbody>
+        </table>
+    </form>
+</div>
+<br>
+<br>
+<?php if(count($this->disputedInvoices) > 0) { ?>
+    <table class="ws_data_table">
+        <thead>
+        <tr>
+            <th><?php $this->T('invoice_number_c') ?></th>
+            <th><?php $this->T('reference_c') ?></th>
+            <th><?php $this->T('debtor_c') ?></th>
+            <th><?php $this->T('dispute_status_c') ?></th>
+            <th><?php $this->T('dispute_assignee_c') ?></th>
+            <th><?php $this->T('debtor_dispute_email_c') ?></th>
+            <th><?php $this->T('debtor_dispute_phone_c') ?></th>
+            <th><?php $this->T('dispute_amount_c') ?></th>
+            <th><?php $this->T('debtor_dispute_comment_c') ?></th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php foreach($this->disputedInvoices as $dispute) { ?>
+            <tr onClick="newscreen('<?php echo $dispute->REFERENCE ?>', '<?php echo $this->location() ?>/file-invoices/edit/id/<?php echo $dispute->REFERENCE_ID ?>/fileId/<?php echo $dispute->FILE_ID ?>')">
+                <td><?php print $dispute->REFERENCE ?></td>
+                <td><?php print $dispute->DEBTOR_NUMBER ?></td>
+                <td><?php print $dispute->DEBTOR_NAME ?></td>
+                <td><?php print $dispute->DISPUTE_STATUS ?></td>
+                <td><?php print $dispute->DISPUTE_ASSIGNEE ?></td>
+                <td><?php print $dispute->DEBTOR_DISPUTE_EMAIL ?></td>
+                <td><?php print $dispute->DEBTOR_DISPUTE_PHONE ?></td>
+                <td><?php print $dispute->DISPUTE_AMOUNT ?></td>
+                <td><?php print $dispute->DEBTOR_DISPUTE_COMMENT ?></td>
+            </tr>
+        <?php } ?>
+        </tbody>
+    </table>
+<?php } else { ?>
+        <p><?php print $this->T("no_disputed_invoices_found_c") ?></p>
+<?php }?>
 
-print $this->form;
+<script type="text/javascript">
+    $('[data-fieldtype=datepicker]').datepicker({dateFormat: 'dd/mm/yy'});
+</script>

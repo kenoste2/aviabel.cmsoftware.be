@@ -9,34 +9,36 @@ class DisputesController extends BaseController {
         $form = new Application_Form_Disputes();
 
         if ($this->getRequest()->isPost()) {
+            $form->populate($_POST);
             if ($form->isValid($_POST)) {
-                $form->populate($_POST);
 
                 $searchArray = array();
-                if($form->DISPUTE_STATUS_ID)  {
-                    $searchArray['DISPUTE_STATUS_ID'] = $form->DISPUTE_STATUS_ID;
+                if($form->DISPUTE_STATUS->getValue())  {
+                    $searchArray['DISPUTE_STATUS'] = $form->DISPUTE_STATUS->getValue();
                 }
 
-                if($form->DISPUTE_OWNER_ID) {
-                    $searchArray['DISPUTE_OWNER_ID'] = $form->DISPUTE_OWNER_ID;
+                if($form->DISPUTE_ASSIGNEE->getValue()) {
+                    $searchArray['DISPUTE_ASSIGNEE'] = $form->DISPUTE_ASSIGNEE->getValue();
                 }
 
-                if($form->DATE_STARTED_FROM || $form->DATE_STARTED_TILL) {
-                    $searchArray['DATE_STARTED'] = array('from' => $form->DATE_STARTED_FROM, 'till' => $form->DATE_STARTED_TILL);
+                if($form->DATE_STARTED_FROM->getValue() || $form->DATE_STARTED_TILL->getValue()) {
+                    $searchArray['DATE_STARTED'] = array('from' => $form->DATE_STARTED_FROM->getValue(), 'till' => $form->DATE_STARTED_TILL->getValue());
                 }
 
-                if($form->DATE_ENDED_FROM || $form->DATE_ENDED_TILL) {
-                    $searchArray['DATE_ENDED'] = array('from' => $form->DATE_ENDED_FROM, 'till' => $form->DATE_ENDED_TILL);
+                if($form->DATE_ENDED_FROM->getValue() || $form->DATE_ENDED_TILL->getValue()) {
+                    $searchArray['DATE_ENDED'] = array('from' => $form->DATE_ENDED_FROM->getValue(), 'till' => $form->DATE_ENDED_TILL->getValue());
                 }
 
-                if($form->EXPIRY_DATE_FROM || $form->EXPIRY_DATE_TILL) {
-                    $searchArray['EXPIRY_DATE'] = array('from' => $form->EXPIRY_DATE_FROM, 'till' => $form->EXPIRY_DATE_FROM);
+                if($form->EXPIRY_DATE_FROM->getValue() || $form->EXPIRY_DATE_TILL->getValue()) {
+                    $searchArray['EXPIRY_DATE'] = array('from' => $form->EXPIRY_DATE_FROM->getValue(), 'till' => $form->EXPIRY_DATE_TILL->getValue());
                 }
 
-                //TODO: fill up search array
                 $disputesObj = new Application_Model_Disputes();
                 $disputedInvoices = $disputesObj->search($searchArray);
 
+                $this->view->disputedInvoices = $disputedInvoices;
+            } else {
+                $this->view->errors = $form->getErrors();
             }
         }
         $this->view->form = $form;

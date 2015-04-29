@@ -7,7 +7,6 @@ class Application_Model_CommonFunctions
     {
         if (strlen($variable) >= 6) {
 
-
             if (stripos($variable, "-")) {
                 list($day, $month, $year) = explode("-", $variable);
                 if (strlen($year) <= 2) {
@@ -38,10 +37,29 @@ class Application_Model_CommonFunctions
                 list($year, $month, $day) = explode("/", $variable);
             if ($day <= 31 and $day >= 1 and $month <= 12 and $month >= 1 and $year >= 1900) {
                 return "$day/$month/$year";
-            } else
+            } else {
                 return "";
-        } else
+            }
+        } else {
             return "";
+        }
+    }
+
+    public function db2arrayKV($data, $key, $value, $empty = true) {
+        if ($empty === true) {
+            $resultArray = array("" => "-");
+        } else {
+            $resultArray = array();
+        }
+
+        if (!empty($data)) {
+            foreach ($data as $row) {
+                $arrayRow = (array) $row;
+                $resultArray[$arrayRow[$key]] = $arrayRow[$value];
+            }
+        }
+
+        return $resultArray;
     }
 
     public function db2array($data, $empty = true)

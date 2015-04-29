@@ -7,24 +7,35 @@ class Application_Model_Disputes extends Application_Model_Base {
 
         $queryParts = array();
         foreach($searchArray as $key => $values) {
-            if($key === 'DISPUTE_STATUS_ID') {
-                $escDisputeStatusId = $this->db->escape($values);
-                $queryParts += "r.DISPUTE_STATUS_ID = {$escDisputeStatusId}"; //TODO: change database structure to use ids instead of varchars
+            if($key === 'DISPUTE_STATUS') {
+                $escDisputeStatus = $this->db->escape($values);
+                $queryParts []= " r.DISPUTE_STATUS = '{$escDisputeStatus}'";
             }
 
-            if($key === 'DISPUTE_OWNER') {
+            if($key === 'DISPUTE_ASSIGNEE') {
                 $escDisputeOwner = $this->db->escape($values);
-                $queryParts += "r.DISPUTE_ASSIGNEE = '{$escDisputeOwner}'";
+                $queryParts []= " r.DISPUTE_ASSIGNEE = '{$escDisputeOwner}'";
             }
 
             $queryParts = $this->addDateRangePart($key, 'DATE_STARTED', $values, "DISPUTE_DATE", $queryParts);
             $queryParts = $this->addDateRangePart($key, 'DATE_ENDED', $values, "DISPUTE_ENDED_DATE", $queryParts);
-            $queryParts = $this->addDateRangePart($key, 'EXPIRY_DATE', $values, "DISPUTE_DUE_DATE", $queryParts);
-
-
+            $queryParts = $this->addDateRangePart($key, 'EXPIRY_DATE', $values, "DISPUTE_DUEDATE", $queryParts);
         }
+
+        if(count($queryParts) <= 0)  {
+            $queryParts []= "1 = 1";
+        }
+
         $extendedWhere = implode(" AND ", $queryParts);
-        return $this->db->get_results("SELECT * FROM FILES\$REFERENCES WHERE {$$extendedWhere}");
+        $sql = "SELECT r.*,
+                    (SELECT d.NAME FROM FILES\$DEBTORS d
+                     WHERE d.DEBTOR_ID IN
+                        (SELECT f.DEBTOR_ID FROM FILES\$FILES f
+                         WHERE f.FILE_ID = r.FILE_ID)) AS DEBTOR_NAME,
+                    (SELECT f.REFERENCE FROM FILES\$FILES f
+                     WHERE f.FILE_ID = r.FILE_ID) AS DEBTOR_NUMBER
+                FROM FILES\$REFERENCES r WHERE {$extendedWhere}";
+        return $this->db->get_results($sql);
     }
 
     /**
@@ -40,14 +51,12 @@ class Application_Model_Disputes extends Application_Model_Base {
         if ($key === $dateKey) {
             if ($values['from']) {
                 $escDateStartedFrom = $this->db->escape($values['from']);
-                $queryParts += "r.{$dateColumn} => {$escDateStartedFrom}";
+                $queryParts []= " r.{$dateColumn} >= '{$escDateStartedFrom}'";
             }
             if ($values['till']) {
                 $escDateStartedTill = $this->db->escape($values['till']);
-                $queryParts += "r.{$dateColumn} <= {$escDateStartedTill}";
-                return $queryParts;
+                $queryParts []= " r.{$dateColumn} <= '{$escDateStartedTill}'";
             }
-            return $queryParts;
         }
         return $queryParts;
     }
