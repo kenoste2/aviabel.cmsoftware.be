@@ -54,14 +54,14 @@ class BaseController extends Zend_Controller_Action {
     public function checkAccessAndRedirect($menuAccessItems, $accessItems = array()) {
         foreach($menuAccessItems as $item) {
             if(!$this->hasMenuAccess($item)) {
-                $this->_redirect('error/error');
+                $this->_redirect('error/noaccess');
                 return;
             }
         }
 
         foreach($accessItems as $item) {
             if(!$this->hasAccess($item)) {
-                $this->_redirect('error/error');
+                $this->_redirect('error/noaccess');
                 return;
             }
         }
@@ -87,7 +87,6 @@ class BaseController extends Zend_Controller_Action {
             return false;
         } else return true;
     }
-
 
     public function addData($tableName, $data, $returnField = false) {
         return $this->functions->saveData($tableName, $data, $where = false, $returnField);
