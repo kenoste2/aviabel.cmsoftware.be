@@ -24,10 +24,9 @@ class DebtorDetailController extends BaseDebtorController {
                 $this->view->debtorInvited = true;
 
                 $data = $this->loadInfoIntoFormFromDb($obj);
-            }
-            else if ($generalForm->isValid($_POST)) {
+            } else if ($generalForm->isValid($_POST)) {
                 $update = $data = $generalForm->getValues();
-                if($this->isSuperDebtorValid($data['SUPER_DEBTOR_ID'])){
+                if(!$data['SUPER_DEBTOR_ID'] || $this->isSuperDebtorValid($data['SUPER_DEBTOR_ID'])){
                     $data['DEBTOR_SCORE'] = $_POST['DEBTOR_SCORE'] ? $_POST['DEBTOR_SCORE'] : 0;
                     $update['BIRTH_DAY'] = $this->functions->date_dbformat($data['BIRTH_DAY']);
                     $update['CREDIT_LIMIT'] = $this->functions->dbBedrag($data['CREDIT_LIMIT']);
@@ -36,7 +35,6 @@ class DebtorDetailController extends BaseDebtorController {
                     $obj->changeDebtorScore($data['DEBTOR_SCORE'], $data['DEBTOR_ID'], $userObj->getLoggedInUser()->USER_ID);
 
                     $this->view->generalFormSaved = true;
-
                 } else {
                     $this->view->generalFormError = true;
                     $this->view->subdebtorInvalid = true;
@@ -85,6 +83,7 @@ class DebtorDetailController extends BaseDebtorController {
     }
 
     public function isSuperDebtorValid($superDebtorId) {
+
         if($superDebtorId == $this->debtorId) {
             return false;
         }

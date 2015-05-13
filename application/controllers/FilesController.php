@@ -80,9 +80,6 @@ class FilesController extends BaseController
             $form->populate($session->data);
         }
 
-
-
-
         $query_extra = "";
         $query_files = "";
 
@@ -138,19 +135,29 @@ class FilesController extends BaseController
             }
 
             if ($data['extra_text'] != "") {
-                if (stripos($data['extra_field'], "DATE") !== false) {
-                    $session->data['extra_text'] = $this->functions->date_dbformat($session->data['extra_text']);
-                }
-                if (is_numeric($this->functions->dbBedrag($session->data['extra_text']))) {
-                    $session->data['extra_text'] = $this->functions->dbBedrag($session->data['extra_text']);
+
+                if($data['extra_field'] === "DEBTOR_SCORE") {
+                    $scorePart = $this->getDebtorScorePart($data['extra_compare'], $data['extra_text']);
+                    if($scorePart) {
+                        $query_extra .= $scorePart;
+                    } else {
+                        //TODO: handle incorrect data
+                    }
+                } else{
+                    if (stripos($data['extra_field'], "DATE") !== false) {
+                        $session->data['extra_text'] = $this->functions->date_dbformat($session->data['extra_text']);
+                    }
+                    if (is_numeric($this->functions->dbBedrag($session->data['extra_text']))) {
+                        $session->data['extra_text'] = $this->functions->dbBedrag($session->data['extra_text']);
+                    }
+
+                    if (!isset($extra_compare_query)) {
+                        $extra_compare_query = "";
+                    }
+                    $extra_compare_query .= " and A.{$session->data['extra_field']} {$session->data['extra_compare']} '{$session->data['extra_text']}' ";
+                    $query_extra .= "$extra_compare_query";
                 }
 
-
-                if (!isset($extra_compare_query)) {
-                    $extra_compare_query = "";
-                }
-                $extra_compare_query .= " and A.{$session->data['extra_field']} {$session->data['extra_compare']} '{$session->data['extra_text']}' ";
-                $query_extra .= "$extra_compare_query";
             }
         }
 
@@ -182,7 +189,8 @@ class FilesController extends BaseController
 
         $sql = "SELECT DISTINCT A.DATE_CLOSED,A.FILE_ID,A.CLIENT_NAME,A.CREATION_DATE,A.FILE_NR,A.STATE_CODE,A.REFERENCE,A.COLLECTOR_CODE,A.LAST_ACTION_DATE,A.AMOUNT,A.INTEREST,A.COSTS,(A.TOTAL+A.INCASSOKOST) AS TOTAL,
               (A.PAYABLE+A.INCASSOKOST) AS PAYABLE,A.PAYED_AMOUNT,A.PAYED_INTEREST,A.PAYED_COSTS,A.PAYED_UNKNOWN,A.PAYED_TOTAL,(A.SALDO+A.INCASSOKOST) AS SALDO,A.DEBTOR_NAME,A.DEBTOR_VAT_NR,A.DEBTOR_BIRTH_DAY,A.DEBTOR_ADDRESS,A.DEBTOR_ZIP_CODE,A.DEBTOR_CITY,
-              A.DEBTOR_LANGUAGE_CODE,A.DATE_CLOSED,A.CLOSE_STATE_DESCRIPTION
+              A.DEBTOR_LANGUAGE_CODE,A.DATE_CLOSED,A.CLOSE_STATE_DESCRIPTION,
+              (SELECT FIRST 1 SCORE FROM DEBTOR_SCORE DS WHERE DS.DEBTOR_ID = A.DEBTOR_ID ORDER BY TIME_STAMP DESC) AS DEBTOR_SCORE
               FROM FILES\$FILES_ALL_INFO A
               LEFT JOIN FILES\$FILES B ON A.FILE_ID = B.FILE_ID
               WHERE 1=1 {$query_extra} order by {$session->orderby} {$session->order}";
@@ -212,6 +220,15 @@ class FilesController extends BaseController
         $filesReferencesModel = new Application_Model_FilesReferences();
         $this->view->totalNotDue = $filesReferencesModel->getTotalNotDue();
         $this->view->totalPastDue = $filesReferencesModel->getTotalPastDue();
+    }
+
+    public function getDebtorScorePart($compare, $value){
+        $operatorMapping = array('<=', '>=', '=');
+        $operator = '=';
+        if(in_array($compare, $operatorMapping)) {
+            $operator = $compare;
+        }
+        return " AND (SELECT FIRST 1 SCORE FROM DEBTOR_SCORE DS WHERE DS.DEBTOR_ID = A.DEBTOR_ID ORDER BY TIME_STAMP DESC) {$operator} {$value}";
     }
 
     public function addAction()

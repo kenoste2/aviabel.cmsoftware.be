@@ -75,7 +75,8 @@ class Application_Form_Files extends Zend_Form
                 'LAST_ACTION_DATE' => $functions->T('last_action_date_c'),
                 'PAYABLE' => $functions->T('payable_c'),
                 'STATE_CODE' => $functions->T('state_code_c'),
-                'TOTAL' => $functions->T('total_c')
+                'TOTAL' => $functions->T('total_c'),
+                'DEBTOR_SCORE' => $functions->T('nr_of_stars_c')
             )
         ));
 

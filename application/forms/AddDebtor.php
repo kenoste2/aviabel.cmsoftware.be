@@ -20,7 +20,7 @@ class Application_Form_AddDebtor extends Zend_Form {
         $this->addElement('text', 'NAME', array('label'=> $functions->T('name_c'),'size' => 50, 'required' => true));
         $this->addElement('text', 'VATNR', array('label'=> $functions->T('vatnr_c'),'size' => 50, 'onchange' => 'getCreditInfo();'));
 
-        $debtorNameField = new Zend_Form_Element_Text('SUPER_DEBTOR_NAME', array('label'=> $functions->T('super_debtor_c'),'size' => 50, 'required' => true));
+        $debtorNameField = new Zend_Form_Element_Text('SUPER_DEBTOR_NAME', array('label'=> $functions->T('super_debtor_c'),'size' => 50));
         if($this->_superDebtorId) {
             $this->addDebtorLinkDecorator($debtorNameField);
         }

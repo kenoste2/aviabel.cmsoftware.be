@@ -11,52 +11,56 @@
 
 
 <div class="toggler noprint">
-    <div id="searchbox" class="ui-widget-content" style="width: 90%;">
+    <div id="searchbox" style="width: 90%;">
         <form action="<?php echo $this->location() ?>/invoices/search" method="post">
             <input type="hidden" name='formSubmit' value='1'>
-            <table><tr><td>
-              <table width="100%">
-                <thead>
-                    <tr>
-                        <th colspan="2"><?php print $this->T("search_invoices_c") ?></th>
-                    </tr>
-                </thead>
-                    <tr>
-                        <?php if (!empty($this->showClient)) { ?>
-                        <td class="label"><?php print $this->T("client_c") ?> </td><td><?php echo $this->SearchBox->client->renderViewHelper(); ?></td>
-                        <?php } ?>
-                        <?php if (!empty($this->showCollector)) { ?>
-                        <td class="label"><?php print $this->T("collector_c") ?> </td><td><?php echo $this->SearchBox->collector->renderViewHelper(); ?></td>
-                        <?php } ?>
-                    </tr>
-
+            <table>
                 <tr>
-                    <td class="label"><?php print $this->T("referenceclient_c") ?> </td><td><?php echo $this->SearchBox->client_reference->renderViewHelper(); ?></td>
-                    <td class="label"><?php print $this->T("invoice_c") ?> </td><td><?php echo $this->SearchBox->invoice->renderViewHelper(); ?></td>
-                </tr>
-                <tr>
-                    <td class="label"><?php print $this->T("debtor_c") ?> </td><td><?php echo $this->SearchBox->debtor->renderViewHelper(); ?></td>
-                    <td class="label"><?php print $this->T("state_code_c") ?> </td><td><?php echo $this->SearchBox->state_id->renderViewHelper(); ?></td>
-                </tr>
-                <tr>
-                    <td class="label"><?php print $this->T("dispute_c") ?> </td><td><?php echo $this->SearchBox->dispute->renderViewHelper(); ?></td>
-                    <td class="label"><?php print $this->T("industrie_c") ?></td><td><?php echo $this->SearchBox->invoice_type->renderViewHelper(); ?></td>
-                </tr>
-                <tr>
-                    <td colspan ="4"><?php echo $this->SearchBox->extra_field->renderViewHelper(); ?>
-                        <?php echo $this->SearchBox->extra_compare->renderViewHelper(); ?>
-                        <?php echo $this->SearchBox->extra_text->renderViewHelper(); ?>
+                    <td class="ui-widget-content" >
+                      <table width="100%">
+                        <thead>
+                            <tr>
+                                <th colspan="2"><?php print $this->T("search_invoices_c") ?></th>
+                            </tr>
+                        </thead>
+                            <tr>
+                                <?php if (!empty($this->showClient)) { ?>
+                                <td class="label"><?php print $this->T("client_c") ?> </td><td><?php echo $this->SearchBox->client->renderViewHelper(); ?></td>
+                                <?php } ?>
+                                <?php if (!empty($this->showCollector)) { ?>
+                                <td class="label"><?php print $this->T("collector_c") ?> </td><td><?php echo $this->SearchBox->collector->renderViewHelper(); ?></td>
+                                <?php } ?>
+                            </tr>
+                            <tr>
+                                <td class="label"><?php print $this->T("referenceclient_c") ?> </td><td><?php echo $this->SearchBox->client_reference->renderViewHelper(); ?></td>
+                                <td class="label"><?php print $this->T("invoice_c") ?> </td><td><?php echo $this->SearchBox->invoice->renderViewHelper(); ?></td>
+                            </tr>
+                            <tr>
+                                <td class="label"><?php print $this->T("debtor_c") ?> </td><td><?php echo $this->SearchBox->debtor->renderViewHelper(); ?></td>
+                                <td class="label"><?php print $this->T("state_code_c") ?> </td><td><?php echo $this->SearchBox->state_id->renderViewHelper(); ?></td>
+                            </tr>
+                            <tr>
+                                <td class="label"><?php print $this->T("dispute_c") ?> </td><td><?php echo $this->SearchBox->dispute->renderViewHelper(); ?></td>
+                                <td class="label"><?php print $this->T("industrie_c") ?></td><td><?php echo $this->SearchBox->invoice_type->renderViewHelper(); ?></td>
+                            </tr>
+                            <tr>
+                                <td colspan ="4"><?php echo $this->SearchBox->extra_field->renderViewHelper(); ?>
+                                    <?php echo $this->SearchBox->extra_compare->renderViewHelper(); ?>
+                                    <?php echo $this->SearchBox->extra_text->renderViewHelper(); ?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="3">&nbsp;</td>
+                                <td align="right"><?php echo $this->SearchBox->submit->renderViewHelper(); ?> </td>
+                            </tr>
+                        </table>
                     </td>
-                </tr>
-                <tr>
-                    <td colspan="3">&nbsp;</td>
-                    <td align="right"><?php echo $this->SearchBox->submit->renderViewHelper(); ?> </td>
+                    <td>
+                        <div id="chartdiv"></div>
+                    </td>
                 </tr>
             </table>
         </form>
-        </td><td>
-        <div id="chartdiv"></div>
-        </td></tr></table>
     </div>
 </div>
 <br>
@@ -110,7 +114,7 @@
                 <td><?php echo $row->STATE_CODE ?></td>
                 <td align="right"><?php echo $this->amount($row->TOTAL) ?></td>
                 <td align="right"><?php echo $this->amount($row->PAYABLE) ?></td>
-                <td align="center"><?php echo $this->Selection($row->DISPUTE) ?></td>
+                <td align="center"><?php echo $this->GoodBad(!$row->DISPUTE) ?></td>
             </tr>
             <?php $index++;
         }

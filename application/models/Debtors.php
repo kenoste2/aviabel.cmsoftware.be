@@ -75,12 +75,12 @@ class Application_Model_Debtors extends Application_Model_Base {
                 EXTRA_FIELD = '{$data['EXTRA_FIELD']}',
                 TRAIN_TYPE = '{$data['TRAIN_TYPE']}',
                 CREDIT_LIMIT = '{$data['CREDIT_LIMIT']}',
-                $birthDay
+                {$birthDay}
                 WHERE DEBTOR_ID = {$data['DEBTOR_ID']}";
 
         $this->db->query($sql);
 
-        if(isset($data["SUPER_DEBTOR_ID"])) {
+        if($data["SUPER_DEBTOR_ID"]) {
             $this->addSubDebtor($data["SUPER_DEBTOR_ID"], $data['DEBTOR_ID']);
         }
     }
@@ -191,7 +191,7 @@ class Application_Model_Debtors extends Application_Model_Base {
               WHERE DEBTOR_ID IN (SELECT FIRST 1 SUPER_DEBTOR_ID FROM SUBDEBTORS WHERE SUB_DEBTOR_ID = D.DEBTOR_ID)) AS SUPER_DEBTOR_NAME,
               (SELECT FIRST 1 SCORE FROM DEBTOR_SCORE ds WHERE ds.DEBTOR_ID = D.DEBTOR_ID ORDER BY TIME_STAMP DESC) AS DEBTOR_SCORE
             FROM FILES\$DEBTORS_ALL_INFO D
-            JOIN FILES\$DEBTORS D2 ON D2.DEBTOR_ID = D.DEBTOR_ID WHERE D.DEBTOR_ID = $debtorId";
+            JOIN FILES\$DEBTORS D2 ON D2.DEBTOR_ID = D.DEBTOR_ID WHERE D.DEBTOR_ID = {$debtorId}";
         $row = $this->db->get_row($sql, ARRAY_A);
 
         if (!empty($row)) {
