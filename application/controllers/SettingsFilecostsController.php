@@ -7,6 +7,8 @@ class SettingsFilecostsController extends BaseController
 
     public function viewAction()
     {
+        $this->checkAccessAndRedirect(array('settings-filecosts/view'));
+
         $this->view->bread = $this->functions->T("menu_settings") . "->" . $this->functions->T("menu_settings-filecosts_view");
 
         if ($this->auth->online_rights != 5) {

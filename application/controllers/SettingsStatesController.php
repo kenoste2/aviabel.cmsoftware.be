@@ -5,8 +5,10 @@ require_once 'application/controllers/BaseDebtorController.php';
 class SettingsStatesController extends BaseController
 {
 
-    public function viewAction()
-    {
+    public function viewAction() {
+
+        $this->checkAccessAndRedirect(array('settings-states/view'));
+
         $this->view->bread = $this->functions->T("menu_settings") . "->" . $this->functions->T("menu_settings-states_view");
 
         if ($this->auth->online_rights != 5) {

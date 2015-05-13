@@ -5,8 +5,10 @@ require_once 'application/controllers/BaseDebtorController.php';
 class SettingsTemplatesController extends BaseController
 {
 
-    public function viewAction()
-    {
+    public function viewAction() {
+
+        $this->checkAccessAndRedirect(array('settings-templates/view'));
+
         $this->view->bread = $this->functions->T("menu_settings") . "->" . $this->functions->T("menu_settings-templates_view") . ": " . $this->functions->T('new_c');
         if ($this->auth->online_rights != 5) {
             $this->view->addButtonParent = "/settings-templates/add/index/" . $this->getParam("index");

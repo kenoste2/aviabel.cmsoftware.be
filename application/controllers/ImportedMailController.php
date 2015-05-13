@@ -7,6 +7,8 @@ class ImportedMailController extends BaseController {
     public function overviewAction() {
         global $config;
 
+        $this->checkAccessAndRedirect(array('imported-mail/overview'));
+
         $form = new Application_Form_MailOverview();
 
         if ($this->getRequest()->isPost()) {

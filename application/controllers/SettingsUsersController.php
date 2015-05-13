@@ -7,6 +7,8 @@ class SettingsUsersController extends BaseController
 
     public function viewAction()
     {
+        $this->checkAccessAndRedirect(array('settings-users/view'));
+
         $this->view->bread = $this->functions->T("menu_settings") . "->" . $this->functions->T("menu_settings-users_view");
         if ($this->auth->online_rights != 5) {
             $this->view->addButtonParent = "/settings-users/add/index/" . $this->getParam("index");

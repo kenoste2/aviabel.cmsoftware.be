@@ -7,6 +7,8 @@ class FilesController extends BaseController
 
     public function searchAction()
     {
+        $this->checkAccessAndRedirect(array('files/search'));
+
         $maxRecords = 500;
         $this->view->bread = $this->functions->T("menu_general") . "->" . $this->functions->T("menu_files_search");
 

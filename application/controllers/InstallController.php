@@ -7,6 +7,8 @@ class InstallController extends BaseController
 
     public function indexAction()
     {
+        $this->checkAccessAndRedirect(array('install/recentupdates'));
+
         die("done");
     }
 

@@ -7,6 +7,8 @@ class SettingsCollectorsController extends BaseController
 
     public function viewAction()
     {
+        $this->checkAccessAndRedirect(array('settings-collectors/view'));
+
         $this->view->bread = $this->functions->T("menu_settings") . "->" . $this->functions->T("menu_settings-collectors_view");
 
         if ($this->auth->online_rights != 5) {

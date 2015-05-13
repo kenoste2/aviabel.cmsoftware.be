@@ -6,6 +6,8 @@ class DebtorsController extends BaseController {
 
     public function searchAction() {
 
+        $this->checkAccessAndRedirect(array('debtors/search'));
+
         $obj = new Application_Model_Debtors();
 
         $this->view->bread = $this->functions->T("menu_general") . "->" . $this->functions->T("menu_debtors_search")  ;

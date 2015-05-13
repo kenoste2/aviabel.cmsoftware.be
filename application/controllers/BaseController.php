@@ -38,6 +38,35 @@ class BaseController extends Zend_Controller_Action {
         $this->view->headerTitle = $config->appname;
     }
 
+    public function hasMenuAccess($key) {
+
+        $authNamespace = new Zend_Session_Namespace('Zend_Auth');
+        foreach($authNamespace->menu as $menu) {
+            foreach($menu['SUBMENU'] as $submenu) {
+                if($submenu['NAV'] === $key) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public function checkAccessAndRedirect($menuAccessItems, $accessItems = array()) {
+        foreach($menuAccessItems as $item) {
+            if(!$this->hasMenuAccess($item)) {
+                $this->_redirect('error/error');
+                return;
+            }
+        }
+
+        foreach($accessItems as $item) {
+            if(!$this->hasAccess($item)) {
+                $this->_redirect('error/error');
+                return;
+            }
+        }
+    }
+
     public function hasAccess($resource) {
         $access = new Zend_Config_Ini(
                 APPLICATION_PATH . '/configs/access.ini', APPLICATION_ENV);

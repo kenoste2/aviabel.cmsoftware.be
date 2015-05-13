@@ -5,8 +5,10 @@ require_once 'application/controllers/BaseController.php';
 class ReportController extends BaseController
 {
 
-    public function historyAction()
-    {
+    public function historyAction() {
+
+        $this->checkAccessAndRedirect(array('report/history'));
+
         $this->view->bread = $this->functions->T("menu_reports") . "->" . $this->functions->T("menu_report_history")  ;
 
         $statisticsForClientModel = new Application_Model_StatisticsForClient();
@@ -33,6 +35,8 @@ class ReportController extends BaseController
 
     public function agingAction()
     {
+        $this->checkAccessAndRedirect(array('report/aging'));
+
         $this->view->bread = $this->functions->T("menu_reports") . "->" . $this->functions->T("menu_report_aging")  ;
 
         $statisticsForClientModel = new Application_Model_StatisticsForClient();
@@ -55,8 +59,10 @@ class ReportController extends BaseController
         $this->view->isClient = $this->isClient();
     }
 
-    public function dsoAction()
-    {
+    public function dsoAction() {
+
+        $this->checkAccessAndRedirect(array('report/dso'));
+
         $this->view->bread = $this->functions->T("menu_reports") . "->" . $this->functions->T("menu_report_dso")  ;
         $dsoObj = new Application_Model_Dso();
         $clientModel = new Application_Model_Clients();
@@ -76,8 +82,10 @@ class ReportController extends BaseController
         $this->view->isClient = $this->isClient();
     }
 
-    public function realtimeAction()
-    {
+    public function realtimeAction() {
+
+        $this->checkAccessAndRedirect(array('report/realtime'));
+
         $this->view->bread = $this->functions->T("menu_reports") . "->" . $this->functions->T("menu_report_realtime")  ;
 
         $filesAllInfoModel = new Application_Model_FilesAllInfo();
@@ -92,11 +100,12 @@ class ReportController extends BaseController
     }
 
 
-    public function doubtfullDebtsAction()
-    {
+    public function doubtfullDebtsAction() {
+
+        $this->checkAccessAndRedirect(array('report/doubtfull-debts'));
+
         $this->view->exportButton = true;
         $this->view->addButton = "/report/doubtfull-debts-detail";
-
 
         $obj = new Application_Model_DoubtfullDebts();
         $results  = $obj->getDueClientFileList();
@@ -122,8 +131,10 @@ class ReportController extends BaseController
         $this->view->results = $results;
     }
 
-    public function paymentForecastAction()
-    {
+    public function paymentForecastAction() {
+
+        $this->checkAccessAndRedirect(array('report/payment-forecast'));
+
         $this->view->bread = $this->functions->T("menu_reports") . "->" . $this->functions->T("forecastHistogram_c")  ;
 
         $paymentDelayAverageObj = new Application_Model_PaymentDelayAverage();

@@ -4,8 +4,10 @@ require_once 'application/controllers/BaseController.php';
 
 class TasksController extends BaseController {
 
-    public function searchAction()
-    {
+    public function searchAction() {
+
+        $this->checkAccessAndRedirect(array('tasks/search'));
+
         $this->view->bread = $this->functions->T("menu_general") . "->" . $this->functions->T("menu_tasks_search")  ;
         if ($this->auth->online_rights != 5) {
             $this->view->addButtonParent = "/tasks/add/index/" . $this->getParam("index");

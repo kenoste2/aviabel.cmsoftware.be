@@ -6,6 +6,8 @@ class SettingsClosestatesController extends BaseController
 {
     public function viewAction()
     {
+        $this->checkAccessAndRedirect(array('settings-closestates/view'));
+
         $this->view->bread = $this->functions->T("menu_settings") . "->" . $this->functions->T("menu_settings-closestates_view");
         if ($this->auth->online_rights != 5) {
             $this->view->addButtonParent = "/settings-closestates/add/index/" . $this->getParam("index");

@@ -5,8 +5,10 @@ require_once 'application/controllers/BaseDebtorController.php';
 class SettingsTrajectController extends BaseController
 {
 
-    public function viewAction()
-    {
+    public function viewAction() {
+
+        $this->checkAccessAndRedirect(array('settings-traject/view'));
+
         $this->view->bread = $this->functions->T("menu_settings") . "->" . $this->functions->T("menu_settings-traject_view");
         if ($this->auth->online_rights != 5) {
             $this->view->addButtonParent = "/settings-traject/add/index/" . $this->getParam("index");

@@ -9,6 +9,8 @@ class ImportController extends BaseController
     public function selectAction()
     {
 
+        $this->checkAccessAndRedirect(array('import/select'));
+
         $this->view->bread = $this->functions->T("menu_traject") . "->" . $this->functions->T("menu_import_select");
         $this->view->columns = $this->functions->getUserSetting('IMPORT_COLUMS');
 

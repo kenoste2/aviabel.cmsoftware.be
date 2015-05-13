@@ -4,10 +4,12 @@ require_once 'application/controllers/BaseController.php';
 class DisputedImportController extends BaseController {
 
     public function readCsvAction() {
+
         global $config;
 
-        $this->view->bread = $this->functions->T("menu_traject") . "->" . $this->functions->T("menu_disputed-import_read-csv");
+        $this->checkAccessAndRedirect(array('disputed-import/read-csv'));
 
+        $this->view->bread = $this->functions->T("menu_traject") . "->" . $this->functions->T("menu_disputed-import_read-csv");
 
         $fileNrColumn = 10;
         $dueDateColumn = 40;

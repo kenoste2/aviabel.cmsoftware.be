@@ -5,8 +5,10 @@ require_once 'application/controllers/BaseDebtorController.php';
 class SettingsZipcodesController extends BaseController
 {
 
-    public function viewAction()
-    {
+    public function viewAction() {
+
+        $this->checkAccessAndRedirect(array('settings-zipcodes/view'));
+
         $this->view->bread = $this->functions->T("menu_settings") . "->" . $this->functions->T("menu_settings-zipcodes_view");
         if ($this->auth->online_rights != 5) {
             $this->view->addButtonParent = "/settings-zipcodes/add/index/" . $this->getParam("index");

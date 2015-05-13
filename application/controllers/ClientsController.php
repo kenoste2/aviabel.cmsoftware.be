@@ -5,6 +5,9 @@ require_once 'application/controllers/BaseController.php';
 class ClientsController extends BaseController {
 
     public function searchAction() {
+
+        $this->checkAccessAndRedirect(array('clients/search'));
+
         $obj = new Application_Model_Clients();
         $this->view->addButton = "/client-add/add/clientId/1";
         $this->view->bread = $this->functions->T("menu_general") . "->" . $this->functions->T("menu_clients_search")  ;

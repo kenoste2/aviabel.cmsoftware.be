@@ -6,7 +6,7 @@ class IndexController extends BaseController {
 
     public function indexAction() {
 
-
+        $this->checkAccessAndRedirect(array('index/index'));
 
         $filesAllInfoModel = new Application_Model_FilesAllInfo();
         $filesReferencesModel = new Application_Model_FilesReferences();

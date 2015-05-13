@@ -72,6 +72,7 @@ class PrintController extends BaseController
     {
         $this->view->bread = $this->functions->T("menu_traject") . "->" . $this->functions->T("menu_print_documents");
 
+        $this->checkAccessAndRedirect(array('print/documents'));
 
         $filesActionsObj = new Application_Model_FilesActions();
 

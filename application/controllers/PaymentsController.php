@@ -6,6 +6,7 @@ class PaymentsController extends BaseController {
 
     public function searchAction()
     {
+        $this->checkAccessAndRedirect(array('payments/search'));
 
         $this->view->bread = $this->functions->T("menu_financial") . "->" . $this->functions->T("menu_payments_search")  ;
 
@@ -72,6 +73,8 @@ class PaymentsController extends BaseController {
 
     public function importAction()
     {
+        $this->checkAccessAndRedirect(array('payments/import'));
+
         $this->view->bread = $this->functions->T("menu_financial") . "->" . $this->functions->T("menu_payments_import")  ;
 
         $importForm = new Application_Form_Import();

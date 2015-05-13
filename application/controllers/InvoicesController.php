@@ -5,8 +5,10 @@ require_once 'application/controllers/BaseController.php';
 class InvoicesController extends BaseController
 {
 
-    public function searchAction()
-    {
+    public function searchAction() {
+
+        $this->checkAccessAndRedirect(array('invoices/search'));
+
         $maxRecords = 500;
         $this->view->bread = $this->functions->T("menu_general") . "->" . $this->functions->T("menu_invoices_search");
 

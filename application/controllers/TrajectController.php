@@ -5,6 +5,8 @@ require_once 'application/controllers/BaseController.php';
 class TrajectController extends BaseController {
 
     public function followupAction() {
+        $this->checkAccessAndRedirect(array('traject/followup'));
+
         $this->view->bread = $this->functions->T("menu_traject") . "->" . $this->functions->T("menu_traject_followup")  ;
 
 

@@ -6,6 +6,8 @@ class DisputesController extends BaseController {
 
     public function searchAction() {
 
+        $this->checkAccessAndRedirect(array('disputes/search'));
+
         $form = new Application_Form_Disputes();
 
         if ($this->getRequest()->isPost()) {
