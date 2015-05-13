@@ -225,6 +225,34 @@ class Application_Model_Files extends Application_Model_Base
         return $this->db->get_var("SELECT STATE_ID FROM FILES\$FILES WHERE FILE_ID = {$fileId}");
     }
 
+    /**
+     * @param $auth
+     * @return string
+     */
+    public function extraWhereClauseForUserRights($auth)
+    {
+        if ($auth->online_rights == 7) {
+            return " and A.COLLECTOR_ID = '{$auth->online_collector_id}' AND COLLECTOR_VISIBLE = 1";
+        }
+
+        if ($auth->online_rights == 5) {
+            if (empty($auth->online_subclients)) {
+                return " and A.CLIENT_ID = '{$auth->online_client_id}' ";
+            } else {
+                $query_extra = " AND (A.CLIENT_ID = {$auth->online_client_id} ";
+                foreach ($auth->online_subclients as $value) {
+                    $query_extra .= " OR A.CLIENT_ID = $value";
+                }
+                $query_extra .= ")";
+                return $query_extra;
+            }
+        }
+
+        if ($auth->online_rights == 6) {
+            return " and A.COLLECTOR_ID = '{$auth->online_collector_id}' ";
+        }
+        return "";
+    }
 
 
 }

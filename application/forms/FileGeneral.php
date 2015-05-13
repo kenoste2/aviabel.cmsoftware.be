@@ -112,7 +112,7 @@ class Application_Form_FileGeneral extends Zend_Form
             $this->removeElement('COLLECTOR_VISIBLE');
             //$this->removeElement('INCASSOKOST');
             //$this->removeElement('VERJARING');
-            $this->getElement("CLOSE_STATE_ID")->setAttrib('disabled', 'disabled');
+            //$this->getElement("CLOSE_STATE_ID")->setAttrib('disabled', 'disabled');
             $this->removeElement('submit');
         }
     }

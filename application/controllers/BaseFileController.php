@@ -20,6 +20,9 @@ class BaseFileController extends BaseController {
         $this->view->indexes = $indexes;
 
         $this->loadFile();
+        if(!$this->file) {
+            $this->_redirect('error/noaccess');
+        }
 
         $this->view->headerTitle = "{$this->file->DEBTOR_NAME} - {$this->file->FILE_NR}";
 
@@ -66,10 +69,12 @@ class BaseFileController extends BaseController {
     }
     
     protected function loadFile() {
-        $this->file = $this->db->get_row("SELECT * FROM FILES\$FILES_ALL_INFO 
-            WHERE FILE_ID = {$this->fileId}");
-        $this->file2 = $this->db->get_row("SELECT * FROM FILES\$FILES 
-            WHERE FILE_ID = {$this->fileId}");
+        $filesObj = new Application_Model_Files();
+        $query_extra = $filesObj->extraWhereClauseForUserRights($this->auth);
+        $this->file = $this->db->get_row("SELECT * FROM FILES\$FILES_ALL_INFO A
+            WHERE A.FILE_ID = {$this->fileId} {$query_extra}");
+        $this->file2 = $this->db->get_row("SELECT * FROM FILES\$FILES A
+            WHERE A.FILE_ID = {$this->fileId} {$query_extra}");
         $this->view->file = $this->file;
         $this->view->file2 = $this->file2;
     }

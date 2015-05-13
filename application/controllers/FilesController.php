@@ -163,25 +163,8 @@ class FilesController extends BaseController
             }
         }
 
-        if ($this->auth->online_rights == 7) {
-            $query_extra .= " and A.COLLECTOR_ID = '{$this->auth->online_collector_id}' AND COLLECTOR_VISIBLE = 1";
-        }
-
-        if ($this->auth->online_rights == 5) {
-            if (empty($this->auth->online_subclients)) {
-                $query_extra .= " and A.CLIENT_ID = '{$this->auth->online_client_id}' ";
-            } else {
-                $query_extra .= " AND (A.CLIENT_ID = {$this->auth->online_client_id} ";
-                foreach ($this->auth->online_subclients as $value) {
-                    $query_extra .= " OR A.CLIENT_ID = $value";
-                }
-                $query_extra .= ")";
-            }
-        }
-
-        if ($this->auth->online_rights == 6) {
-            $query_extra .= " and A.COLLECTOR_ID = '{$this->auth->online_collector_id}' ";
-        }
+        $filesObj = new Application_Model_Files();
+        $query_extra .= $filesObj->extraWhereClauseForUserRights($this->auth);
 
         $sql = "SELECT COUNT(*) AS COUNTER,SUM(A.TOTAL+A.INCASSOKOST) AS TOTAL, SUM(A.PAYABLE+A.INCASSOKOST) AS PAYABLE FROM FILES\$FILES_ALL_INFO A
                 LEFT JOIN FILES\$FILES B ON A.FILE_ID = B.FILE_ID
@@ -461,6 +444,7 @@ class FilesController extends BaseController
         $Obj = new Application_Model_Files();
         $queries = $Obj->deleteFile($fileId, true);
     }
+
 
 }
 
