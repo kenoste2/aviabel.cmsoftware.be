@@ -46,6 +46,7 @@ class FileInvoicesController extends BaseFileController
                 $update['INVOICE_DATE'] = $this->functions->date_dbformat($update['INVOICE_DATE']);
                 $update['END_DATE'] = date("Y-m-d");
                 $update['AMOUNT'] = $this->functions->dbBedrag($update['AMOUNT']);
+                $update['DISPUTE_AMOUNT'] = $this->functions->dbBedrag($update['DISPUTE_AMOUNT']);
                 $update['COSTS'] = $this->functions->dbBedrag($update['COSTS']);
                 $update['INTEREST'] = $this->functions->dbBedrag($update['INTEREST']);
                 $update['REFERENCE_TYPE'] = "FACTUUR";
@@ -133,7 +134,7 @@ class FileInvoicesController extends BaseFileController
                 'DISPUTE_STATUS' => $reference->DISPUTE_STATUS,
                 'DISPUTE_ASSIGNEE' => $reference->DISPUTE_ASSIGNEE,
                 'DISPUTE_COMMENT' => $reference->DISPUTE_COMMENT,
-                'DISPUTE_AMOUNT' => $reference->DISPUTE_AMOUNT
+                'DISPUTE_AMOUNT' => $this->functions->amount($reference->DISPUTE_AMOUNT)
             );
         }
         $form->populate($data);

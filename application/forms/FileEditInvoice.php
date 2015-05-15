@@ -33,8 +33,8 @@ class Application_Form_FileEditInvoice extends Zend_Form {
         $disputeStatusses = $this->getSettingsMultiOptions($functions, "setting_dispute_statusses");
         $disputeAssignees = $this->getSettingsMultiOptions($functions, "setting_dispute_assignees");
 
-        $this->addElement('select', 'DISPUTE_ASSIGNEE', array('label' => $functions->T('dispute_assignee_c'), 'required' => false, 'MultiOptions' => $disputeStatusses));
-        $this->addElement('select', 'DISPUTE_STATUS', array('label' => $functions->T('dispute_status_c'), 'required' => false, 'MultiOptions' => $disputeAssignees));
+        $this->addElement('select', 'DISPUTE_ASSIGNEE', array('label' => $functions->T('dispute_assignee_c'), 'required' => false, 'MultiOptions' => $disputeAssignees));
+        $this->addElement('select', 'DISPUTE_STATUS', array('label' => $functions->T('dispute_status_c'), 'required' => false, 'MultiOptions' => $disputeStatusses));
         $this->addElement('text', 'DISPUTE_DATE',array('label' => $functions->T('dispute_date_c'),'size' => 15, 'required' => false,'validators'=>array (array('date', false, array('dd/MM/yyyy'))),));
         $this->addElement('text', 'DISPUTE_DUEDATE',array('label' => $functions->T('dispute_duedate_c'),'size' => 15, 'false' => true,'validators'=>array (array('date', false, array('dd/MM/yyyy'))),));
         $this->addElement('text', 'DISPUTE_ENDED_DATE',array('label' => $functions->T('dispute_ended_date_c'),'size' => 15, 'required' => false,'validators'=>array (array('date', false, array('dd/MM/yyyy'))),));
