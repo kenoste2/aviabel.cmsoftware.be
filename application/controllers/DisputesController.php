@@ -11,8 +11,8 @@ class DisputesController extends BaseController {
         $form = new Application_Form_Disputes();
 
         if ($this->getRequest()->isPost()) {
-            $form->populate($_POST);
-            if ($form->isValid($_POST)) {
+            $form->populate($this->getRequest()->getPost());
+            if ($form->isValid($this->getRequest()->getPost())) {
 
                 $searchArray = array();
                 if($form->DISPUTE_STATUS->getValue())  {
@@ -43,6 +43,24 @@ class DisputesController extends BaseController {
                 $this->view->errors = $form->getErrors();
             }
         }
+
+
+        if ($form->DATE_STARTED_FROM->getValue() == "" && $form->DATE_STARTED_TILL->getValue() == "") {
+            $data = array (
+                'DATE_STARTED_FROM' => date("d/m/Y"),
+                'DATE_STARTED_TILL' => date("d/m/Y"),
+            );
+
+            $disputesObj = new Application_Model_Disputes();
+            $disputedInvoices = $disputesObj->search($data);
+            $this->view->disputedInvoices = $disputedInvoices;
+
+            $form->populate($data);
+
+        }
+
+
+
         $this->view->form = $form;
     }
 }

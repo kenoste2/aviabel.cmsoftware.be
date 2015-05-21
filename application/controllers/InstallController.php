@@ -27,10 +27,21 @@ class InstallController extends BaseController
         $sql =  "UPDATE FILES\$PAYMENTS SET PAYMENT_DATE = PAYMENT_DATE+10";
         print "<br>".$sql;
         $this->db->query($sql);
-        $sql =  "UPDATE FILES\$PAYMENTS SET CREATION_DATE = CREATION_DATE+10";
+        $sql =  "UPDATE FILES\$PAYMENTS SET PAYMENT_DATE = CURRENT_DATE WHERE PAYMENT_ID IN (5071514,5071512,5071522,5071524,5071520,5071561,5071552,5071557,507154,5071567)";
         print "<br>".$sql;
         $this->db->query($sql);
-
+        $sql =  "update imported_mails set creation_date = '".date("Y-m-d")." 09:23:23' where IMPORTED_MAIL_ID  = 1";
+        print "<br>".$sql;
+        $this->db->query($sql);
+        $sql =  "update imported_mails set creation_date = '".date("Y-m-d")." 08:00:05' where IMPORTED_MAIL_ID  = 11";
+        print "<br>".$sql;
+        $this->db->query($sql);
+        $sql =  "update imported_mails set creation_date = '".date("Y-m-d")." 10:20:15' where IMPORTED_MAIL_ID  = 6";
+        print "<br>".$sql;
+        $this->db->query($sql);
+        $sql =  "UPDATE  FILES\$REFERENCES r  SET DISPUTE_DATE=CURRENT_DATE WHERE REFERENCE_ID IN (5070580,5070583,5071506)";
+        print "<br>".$sql;
+        $this->db->query($sql);
     }
 
 
