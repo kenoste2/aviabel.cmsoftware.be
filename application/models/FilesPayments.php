@@ -242,7 +242,7 @@ class Application_Model_FilesPayments extends Application_Model_Base {
             $date = date("Y-m-d");
         }
 
-        $sql = "SELECT SUM(AMOUNT) AS AMOUNT FROM ACCOUNTS\$JOURNAL WHERE VALUTA_DATE = '{$date}'";
+        $sql = "SELECT SUM(AMOUNT) AS AMOUNT FROM FILES\$PAYMENTS WHERE CREATION_DATE = '{$date}'";
         $count = $this->db->get_var($sql);
         return $count;
 

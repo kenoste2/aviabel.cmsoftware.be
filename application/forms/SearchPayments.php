@@ -38,7 +38,7 @@ class Application_Form_SearchPayments extends Zend_Form
             'label' => $functions->T('search_c'),
         ));
 
-        $this->getElement('STARTDATE')->setValue(date('01/m/Y'));
+        $this->getElement('STARTDATE')->setValue(date('d/m/Y'));
         $this->getElement('ENDDATE')->setValue(date('d/m/Y'));
         $this->getElement('FOR')->setValue('-1');
     }
