@@ -57,6 +57,9 @@ class InstallController extends BaseController
         $pass = $this->getParam('pass');
         if ($pass == date("YmdH")) {
             $this->db->query("DELETE FROM TODOS");
+            $this->db->query("DELETE FROM IMPORTED_MAIL_ATTACHMENTS");
+            $this->db->query("DELETE FROM IMPORTED_MAILS");
+            $this->db->query("DELETE FROM SUBDEBTORS");
             $this->db->query("DELETE FROM FILES\$PAYMENTS");
             $this->db->query("DELETE FROM ACCOUNTS\$JOURNAL");
             $this->db->query("DELETE FROM ACCOUNTS\$TRANSACTIONS");
