@@ -141,6 +141,23 @@ class InstallController extends BaseController
         die("<br>System is up to date");
     }
 
+    public function resetClientScoreAction(){
+
+        $debtorsObj = new Application_Model_Debtors();
+
+        $sql = "SELECT * FROM FILES\$DEBTORS";
+        $results = $this->db->get_results($sql);
+        if (!empty($results)){
+            foreach ($results as $row) {
+                $debtorsObj->changeDebtorScore(3,$row->DEBTOR_ID,1);
+            }
+        }
+
+
+        die("done resetClientScoreAction");
+
+    }
+
     public function installDisputeModuleAction() {
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender();
