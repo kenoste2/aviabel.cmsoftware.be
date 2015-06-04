@@ -39,7 +39,7 @@ class InstallController extends BaseController
         $sql =  "update imported_mails set creation_date = '".date("Y-m-d")." 10:20:15' where IMPORTED_MAIL_ID  = 6";
         print "<br>".$sql;
         $this->db->query($sql);
-        $sql =  "UPDATE  FILES\$REFERENCES r  SET DISPUTE_DATE=CURRENT_DATE WHERE REFERENCE_ID IN (5070580,5070583,5071506)";
+        $sql =  "UPDATE  FILES\ $REFERENCES r  SET DISPUTE_DATE=CURRENT_DATE WHERE REFERENCE_ID IN (5070580,5070583,5071506)";
         print "<br>".$sql;
         $this->db->query($sql);
     }
