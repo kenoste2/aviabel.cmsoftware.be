@@ -19,9 +19,44 @@ class BaseFileController extends BaseController {
         $this->fileId = $indexes['currentFileId'];
         $this->view->indexes = $indexes;
 
+
+
+        if ($this->auth->online_rights == 5) {
+            $fileObj = new Application_Model_File();
+            $access = false;
+            if (empty($this->auth->online_subclients)) {
+                $fileClientId = $fileObj->getClientId($this->fileId);
+                if ($this->auth->online_client_id == $fileClientId ) {
+                    $access = true;
+                }
+
+            } else {
+                foreach ($this->auth->online_subclients as $value) {
+                    if ($this->auth->online_client_id == $value ) {
+                        $access = true;
+                    }
+                }
+            }
+
+            if ($access == false ) {
+                $this->_redirect('error/noaccess');
+            }
+        }
+
+        if ($this->auth->online_rights == 7) {
+            $fileCollector =  $this->db->get_var("select COLLECTOR_ID from FILES\$FILES where FILE_ID='{$this->fileId}'");
+            if ($this->auth->online_collector_id != $fileCollector) {
+                $this->_redirect('error/noaccess');
+            }
+        }
+
+
         $this->loadFile();
-        if(!$this->file) {
-            $this->_redirect('error/noaccess');
+
+        if ($this->file->STATE_CODE == "CLOSED") {
+            $this->file->style = "state_closed";
+        } else {
+            $this->file->style = "body";
         }
 
         $this->view->headerTitle = "{$this->file->DEBTOR_NAME} - {$this->file->FILE_NR}";
