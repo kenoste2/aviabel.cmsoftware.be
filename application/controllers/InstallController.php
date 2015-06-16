@@ -13,6 +13,23 @@ class InstallController extends BaseController
     }
 
 
+
+    public function paymentdelayAction(){
+
+        $debtorsObj = new Application_Model_Debtors();
+        $paymentDelayHistoryObj = new Application_Model_PaymentDelayAverage();
+
+        $allDebtors = $debtorsObj->getAllDebtors();
+        if(count($allDebtors) > 0) {
+            foreach($allDebtors as $debtor) {
+                $paymentDelayHistoryObj->addPaymentDelayHistory($debtor->DEBTOR_ID, 80, 1);
+            }
+        }
+
+        die("done");
+    }
+
+
     public function demoupdateAction()
     {
         $sql =  "UPDATE FILES\$REFERENCES SET START_DATE = START_DATE+10, END_DATE = END_DATE+10, INVOICE_DATE = INVOICE_DATE+10";

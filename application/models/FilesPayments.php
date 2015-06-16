@@ -101,7 +101,11 @@ class Application_Model_FilesPayments extends Application_Model_Base {
         if ($paymentFor == "INTERESTS") {
             $paymentFor = "INTEREST";
         }
-        $referenceBaseAmount = $this->db->get_var("SELECT {$paymentFor} FROM FILES\$REFERENCES WHERE REFERENCE_ID = {$referenceId}");
+        if (!empty($referenceId)) {
+            $referenceBaseAmount = $this->db->get_var("SELECT {$paymentFor} FROM FILES\$REFERENCES WHERE REFERENCE_ID = {$referenceId}");
+        } else {
+            $referenceBaseAmount = 0.00;
+        }
 
         if ($amount > 0.00 or ($referenceBaseAmount < 0.00 && $amount < 0.00) ) {
             $payedOrSaldo = "SALDO";

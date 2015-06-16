@@ -55,6 +55,7 @@ class CronController extends BaseController
         die("train has run");
     }
 
+
     public function updatePaymentDelayHistoryAction() {
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender();
@@ -71,7 +72,6 @@ class CronController extends BaseController
             foreach($allDebtors as $debtor) {
                 $info = $debtorsObj->calculatePaymentDelayAndPaymentNrInvoices($debtor->DEBTOR_ID);
                 $history = $debtorsObj->getMostRecentPaymentDelayAndPaymentNrHistory($debtor->DEBTOR_ID);
-
                 $currentDelay = $history->PAYMENT_DELAY;
                 if($info->NR_OF_PAYMENTS > 0
                     && ($info->PAYMENT_DELAY != $history->PAYMENT_DELAY
@@ -79,6 +79,9 @@ class CronController extends BaseController
                     $paymentDelayHistoryObj->addPaymentDelayHistory($debtor->DEBTOR_ID, $info->PAYMENT_DELAY, $info->NR_OF_PAYMENTS);
                     $currentDelay = $info->PAYMENT_DELAY;
                 }
+
+
+
 
                 if($currentDelay) {
                     $references = $debtorsObj->getReferencesOverPaymentDelay($debtor->DEBTOR_ID, $currentDelay);

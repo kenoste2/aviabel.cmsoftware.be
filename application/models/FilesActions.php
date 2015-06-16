@@ -170,9 +170,7 @@ class Application_Model_FilesActions extends Application_Model_Base
         if (!empty($data['BP_NR_PAYMENTS']) && !empty($data['BP_STARTDATE'])) {
             $this->addPaymentPlan($data['FILE_ID'], $data);
         }
-
         $this->handleSendLogic($data['TEMPLATE_ID'], $fileActionId, $data, $data['CONTENT'], $data['SMS_CONTENT'], $data['VIA'], $allowPdfDocuments);
-
         return $fileActionId;
     }
 
@@ -217,6 +215,7 @@ class Application_Model_FilesActions extends Application_Model_Base
             }
 
             if ($communicationType === 'POST' && $allowPdfGeneration) {
+
                 $moduleAccessObj = new Application_Model_ModuleAccess();
                 $interestCostsAccess = $moduleAccessObj->moduleAccess('intrestCosts');
                 $this->createPdfForAction($interestCostsAccess, $fileActionId);
