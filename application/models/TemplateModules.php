@@ -18,6 +18,10 @@ class Application_Model_TemplateModules extends Application_Model_Base
         $modulesStr =  $this->db->get_var("select TEMPLATE_MODULES from SYSTEM\$TEMPLATES where TEMPLATE_ID = $escTemplateId");
 
         //NOTE: ignore empty or illegal values
+
+        if (stripos($modulesStr,",") === false && $modulesStr ){
+            $modulesStr = $modulesStr.",";
+        }
         $moduleIds = explode(',', $modulesStr);
         $escModuleIds = array();
         foreach($moduleIds as $moduleId) {
@@ -25,8 +29,7 @@ class Application_Model_TemplateModules extends Application_Model_Base
                 $escModuleIds []= $this->db->escape($moduleId);
             }
         }
-
-        if(count($escModuleIds) > 1) {
+        if(count($escModuleIds) >= 1) {
             $escModulesStr = implode(',', $escModuleIds);
             $modules = $this->db->get_results("select ID from SYSTEM\$TEMPLATES_MODULES where ACTIEF = 1 AND ID IN ({$escModulesStr})");
             $moduleIds = array();

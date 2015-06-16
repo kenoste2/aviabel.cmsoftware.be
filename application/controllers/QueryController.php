@@ -14,7 +14,7 @@ class QueryController extends BaseController
                 if($form->isValid($this->getRequest()->getPost())) {
 
                     $now = new DateTime();
-                    if(trim($form->getValue('VERIFICATION')) === $now->format('YmdH'))
+                    if(trim($form->getValue('VERIFICATION')) === $now->format('Ymd'))
                     {
                         $this->executeAndRenderQueries($form);
                     }

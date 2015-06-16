@@ -85,6 +85,9 @@ class InstallController extends BaseController
         $pass = $this->getParam('pass');
         if ($pass == date("YmdH")) {
             $this->db->query("DELETE FROM TODOS");
+            $this->db->query("DELETE FROM IMPORTED_MAIL_ATTACHMENTS");
+            $this->db->query("DELETE FROM IMPORTED_MAILS");
+            $this->db->query("DELETE FROM SUBDEBTORS");
             $this->db->query("DELETE FROM FILES\$PAYMENTS");
             $this->db->query("DELETE FROM ACCOUNTS\$JOURNAL");
             $this->db->query("DELETE FROM ACCOUNTS\$TRANSACTIONS");
@@ -153,6 +156,23 @@ class InstallController extends BaseController
             }
         }
         die("<br>System is up to date");
+    }
+
+    public function resetClientScoreAction(){
+
+        $debtorsObj = new Application_Model_Debtors();
+
+        $sql = "SELECT * FROM FILES\$DEBTORS";
+        $results = $this->db->get_results($sql);
+        if (!empty($results)){
+            foreach ($results as $row) {
+                $debtorsObj->changeDebtorScore(3,$row->DEBTOR_ID,1);
+            }
+        }
+
+
+        die("done resetClientScoreAction");
+
     }
 
     public function installDisputeModuleAction() {
