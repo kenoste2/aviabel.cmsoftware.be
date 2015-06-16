@@ -27,7 +27,10 @@ if ($this->pdf > 0) { ?>
     </thead>
     <?php if (!empty($this->results)) { ?>
         <?php foreach ($this->results as $row) { ?>
-            <tr>
+            <?php  if ($row->PRINTED == 'Y') $class="class='printed'"; else {
+                $class = "";
+            } ?>
+            <tr <?php echo $class; ?>>
                 <td><?php echo $this->Date($row->ACTION_DATE) ?></td>
                 <td><?php echo $row->ACTION_CODE ?></td>
                 <td><?php echo $row->VIA ?></td>

@@ -171,16 +171,21 @@ class Application_Model_DebtorExternalAccess extends Application_Model_Base {
      */
     public function replaceReplacementFieldsBasedOnReference($reference, $rawText)
     {
+
+        $disputesObj = new Application_Model_Disputes();
         $debtorsObj = new Application_Model_Debtors();
         $filesObj = new Application_Model_Files();
         $debtor = $debtorsObj->getDebtorByReferenceId($reference->REFERENCE_ID);
         $file = $filesObj->getFileByReferenceId($reference->REFERENCE_ID);
 
+        $disputeData = $disputesObj->getDisputeForReference($reference->REFERENCE_ID);
+
+
         $replacementFields = array(
             'REFERENCE' => $reference->REFERENCE,
             'FILE_NR' => $file->FILE_NR,
             'DEBTOR_NAME' => $debtor->NAME,
-            'MESSAGE' => $reference->DEBTOR_DISPUTE_COMMENT
+            'MESSAGE' => $disputeData->DEBTOR_DISPUTE_COMMENT,
         );
 
         return $this->replaceInText($rawText, $replacementFields);

@@ -67,6 +67,18 @@ class Application_Model_Disputes extends Application_Model_Base {
         }
         return $queryParts;
     }
+    public function getDisputeForReference($referenceId)
+    {
+
+        $sql = "SELECT DISPUTE_DATE,DISPUTE_ENDED_DATE,DEBTOR_DISPUTE_COMMENT,DISPUTE_COMMENT,DISPUTE_STATUS,DISPUTE_ASSIGNEE,DEBTOR_DISPUTE_EMAIL,DEBTOR_DISPUTE_PHONE,DISPUTE_AMOUNT
+                FROM FILES\$REFERENCES WHERE REFERENCE_ID = {$referenceId}";
+        $row = $this->db->get_row($sql);
+        return $row;
+    }
+
 }
+
+
+
 
 ?>
