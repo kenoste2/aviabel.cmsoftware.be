@@ -52,6 +52,8 @@ class CronController extends BaseController
             $filesActions->add($action, true);
         }
 
+        $this->reopenFiles();
+
         die("train has run");
     }
 
@@ -294,5 +296,28 @@ class CronController extends BaseController
         }
         return 'POST';
     }
+
+
+    public function reopenFiles()
+    {
+        $filesActionsObj = new Application_Model_FilesActions();
+        $sql = "SELECT  * FROM FILES\$FILES WHERE DATE_CLOSED IS NOT NULL AND SALDO > 0.5";
+        $results = $this->db->get_results($sql);
+        if (!empty($results)) {
+            foreach ($results as $row)
+            {
+                $data = array(
+                    'ACTION_ID' => 4257852,
+                    'REMARKS' => 'NEW OPEN SALDO',
+                    'PRINTED' => "Y",
+                );
+                $filesActionsObj->addAction($row->FILE_ID, $data, false);
+                $sql =  "UPDATE FILES\$FILES SET DATE_CLOSED = null,  CLOSE_STATE_ID =1 WHERE FILE_ID = {$row->FILE_ID}";
+                $this->db->query($sql);
+            }
+        }
+    }
+
+
 }
 
