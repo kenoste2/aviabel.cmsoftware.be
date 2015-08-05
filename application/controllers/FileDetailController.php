@@ -71,7 +71,7 @@ class FileDetailController extends BaseFileController {
                 unset($update['GENERALFORM']);
 
                 if (empty($update['STATE_ID'])) {
-                    $update['STATE_ID'] = $this->file->STATE_ID;
+                    $update['STATE_ID'] = $this->file2->STATE_ID;
                 }
 
                 $this->saveData('FILES$FILES', $update, "FILE_ID = {$this->fileId}");
@@ -87,6 +87,7 @@ class FileDetailController extends BaseFileController {
                 'REFERENCE' => $this->file->REFERENCE,
                 'COLLECTOR_VISIBLE' => $this->file2->COLLECTOR_VISIBLE,
                 'COLLECTOR_ID' => $this->file->COLLECTOR_ID,
+                'VALUTA' => $this->file2->VALUTA,
             );
         }
 
