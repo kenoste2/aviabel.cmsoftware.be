@@ -16,6 +16,7 @@ class ClientDetailController extends BaseClientController {
         $data = array();
         if ($this->getRequest()->isPost()) {
             if ($generalForm->isValid($_POST)) {
+                
                 $update = $data = $generalForm->getValues();
 
                 $update['CURRENT_INTREST_PERCENT'] = $this->functions->dbBedrag($update['CURRENT_INTREST_PERCENT']);
@@ -71,16 +72,17 @@ class ClientDetailController extends BaseClientController {
                             'RIGHTS' => '5',
                         );
                         $userId = $usersObj->createUser($userData,"USER_ID");
-                        unset($update['PASSWORD']);
-                        unset($update['PASSWORD2']);
                     } else {
                         $usersObj->updatePassword($userId, $update["PASSWORD"]);
                         unset($update['PASSWORD']);
                         unset($update['PASSWORD2']);
                     }
-                    $obj->update($update, $this->clientId);
+
                     $this->view->generalFormSaved = true;
                 }
+                unset($update['PASSWORD']);
+                unset($update['PASSWORD2']);
+                $obj->update($update, $this->clientId);
             } else {
                 $this->view->generalFormError = true;
                 $this->view->errors = $generalForm->getErrors();
