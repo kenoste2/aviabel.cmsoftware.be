@@ -1,4 +1,7 @@
-<?php
+         <div class="aaa-theme-flex-row flex-content-row">
+          <div class="col-1">
+
+            <div class="panel panel-default aaa-theme-content-widget white-bg aaa-theme-overflow-hidden"><?php
 if ($this->formSaved) {
     print $this->Ok($this->G("saved_c"));
 }
@@ -13,22 +16,31 @@ if ($this->codeExistsError) {
 ?>
 
 <?php print $this->form ?>
-<p>
-<?php echo $this->G('field_c')  ?>
-</p>
-<table class="ws_data_table">
-    <thead>
-        <tr>
-            <th><?php $this->T('Field_c') ?></th>
-            <th><?php $this->T('example_value_c') ?></th>
-        </tr>
-    </thead>
-    <tbody>
-        <?php foreach($this->filesAllInfo as $field => $value): ?>
-            <tr>
-                <td><?php echo $field; ?></td>
-                <td><?php echo $value ?></td>
-            </tr>
-        <?php endforeach; ?>
-    </tbody>
-</table>
+
+</div></div></div>
+          <div class="aaa-theme-flex-row flex-content-row">
+            <div class="col-1">
+              <div class="panel panel-default aaa-theme-content-widget white-bg no-padding aaa-theme-overflow-hidden">
+                <div class="panel-heading aaa-theme-position-relative"><h2 class="text-uppercase"><?php echo $this->G('field_c')  ?></h2></div>
+                <div class="table-responsive">
+                  <table class="table table-striped table-bordered">
+                    <thead>
+						<tr>
+							<td><?php $this->T('Field_c') ?></td>
+							<td><?php $this->T('example_value_c') ?></td>
+						</tr>
+                    </thead>
+					<tbody>
+						<?php foreach($this->filesAllInfo as $field => $value): ?>
+							<tr>
+								<td><?php echo $field; ?></td>
+								<td><?php echo $value ?></td>
+							</tr>
+						<?php endforeach; ?>
+                    </tbody>
+                  </table>    
+                </div>                          
+              </div>
+            </div>  
+          </div> <!-- Second row ends -->
+

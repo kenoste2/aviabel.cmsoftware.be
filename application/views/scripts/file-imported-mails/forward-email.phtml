@@ -18,11 +18,13 @@ foreach ($this->form->getElements() as $element) {
     }
 }
 ?>
-
+<div class="aaa-theme-flex-row flex-content-row aaa-theme-overflow-hidden"> <!-- overflow hidden for iPad mini landscape view-->
+            <div class="col-1">              
+              <div class="aaa-theme-content-widget white-bg col-1 ">
 <form method="POST">
-    <table>
-        <tr>
-            <td>
+    <table width=100% class="table">
+        <tr valign="top">
+            <td width=50%>
                 <dl class="Zend_Form">
                     <dt><?php print $this->form->TO->renderLabel() ?></dt>
                     <dd><?php print $this->form->TO->renderViewHelper() ?></dd>
@@ -38,7 +40,7 @@ foreach ($this->form->getElements() as $element) {
                     <dd><?php print $this->form->CONTENT->renderViewHelper() ?></dd>
                 </dl>
             </td>
-            <td>
+            <td width=50%>
                 <h3><?php print $this->T("attachments_c") ?></h3>
                 <h4><?php print $this->T("email_documents_c") ?></h4>
                 <?php if(isset($this->form->EMAIL_DOCUMENTS)) {
@@ -66,7 +68,8 @@ foreach ($this->form->getElements() as $element) {
         <?php print $this->form->SUBMIT ?>
     </dl>
 </form>
-
+</div></div>
+</div>
 <script type="text/javascript">
     $(document).ready(function() {
         $("[data-belongsTo]").hide();

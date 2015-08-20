@@ -12,20 +12,25 @@ if ($this->pdf > 0) { ?>
     newscreen('', '<?php echo $this->location() ?>/print/template/fileActionId/<?php echo $this->pdf ?>');
     </script>
 <?php } ?>
-<table id="data" class="tablesorter ws_data_table" width="100%">
-    <thead>
-    <tr>
-        <th><?php $this->T("action_date_c"); ?></th>
-        <th><?php $this->T("code_c"); ?></th>
-        <th><?php $this->T("via_c"); ?></th>
-        <th><?php $this->T("description_c"); ?></th>
-        <th><?php $this->T("remarks_c"); ?></th>
-        <th><?php $this->T("user_c"); ?></th>
-        <th></th>
-        <th></th>
-    </tr>
-    </thead>
-    <?php if (!empty($this->results)) { ?>
+
+
+		<div class="panel panel-default aaa-theme-content-widget white-bg no-padding aaa-theme-overflow-hidden">
+                <div class="table-responsive">
+                  <table class="table table-striped table-bordered">
+                    <thead>
+                      <tr>
+						<td><?php $this->T("action_date_c"); ?></td>
+						<td><?php $this->T("code_c"); ?></td>
+						<td><?php $this->T("via_c"); ?></td>
+						<td><?php $this->T("description_c"); ?></td>
+						<td><?php $this->T("remarks_c"); ?></td>
+						<td><?php $this->T("user_c"); ?></td>
+						<td></td>
+						<td></td>
+                      </tr>
+                    </thead>
+                    <tbody>
+ <?php if (!empty($this->results)) { ?>
         <?php foreach ($this->results as $row) { ?>
             <?php  if ($row->PRINTED == 'Y') $class="class='printed'"; else {
                 $class = "";
@@ -39,7 +44,7 @@ if ($this->pdf > 0) { ?>
                 <td><?php echo $row->ACTION_USER ?></td>
                 <td><?php if (!empty($row->TEMPLATE_CONTENT) && $this->viewActionContent) { ?>
                     <a href="<?php echo $this->location() ?>/print/template/fileActionId/<?php echo $row->FILE_ACTION_ID ?>"
-                       target="_blank"><span title="<?php $this->T("view_c") ?>" class="ui-icon ui-icon-disk"></span>
+                       target="_blank"><li class="fa fa-floppy-o fa-fw"></li></a>
                         <?php } ?>
                 </td>
                 <td><?php if (!empty($this->mayDelete)) { echo $this->Delete($this->location() . "/file-actions/view/delete/" . $row->FILE_ACTION_ID . "/fileId/" . $this->fileId, $row->ACTION_DESCRIPTION); } ?></td>
@@ -52,6 +57,10 @@ if ($this->pdf > 0) { ?>
                 <?php $this->T("no_results_c"); ?>
             </td>
         </tr>
-    <?php } ?>
-</table>
+    <?php } ?>                
+                    </tbody>
+                  </table>    
+                </div>                          
+              </div>
+
 

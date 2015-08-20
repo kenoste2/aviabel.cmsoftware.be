@@ -3,23 +3,26 @@ if ($this->deleted) {
     print $this->Ok($this->G("deleted_c"));
 }
 ?>
-<table id="data" class="tablesorter ws_data_table" width="100%">
-    <thead>
-        <tr>
-            <th><?php $this->T("date_c"); ?></th>
-            <th><?php $this->T("remark_c"); ?></th>
-            <th><?php $this->T("who_c"); ?></th>
-            <th></th>
-            <th></th>
-        </tr>
-    </thead>
+		<div class="panel panel-default aaa-theme-content-widget white-bg no-padding aaa-theme-overflow-hidden">
+                <div class="table-responsive">
+                  <table class="table table-striped table-bordered">
+                    <thead>
+                      <tr>
+						<td><?php $this->T("date_c"); ?></td>
+						<td><?php $this->T("remark_c"); ?></td>
+						<td><?php $this->T("who_c"); ?></td>
+						<td></td>
+						<td></td>
+                      </tr>
+                    </thead>
+                    <tbody>
     <?php if (!empty($this->results)) { ?>
         <?php foreach ($this->results as $row) { ?>
             <tr>
                 <td><?php echo $this->Date($row->CREATION_DATE) ?></td>
                 <td><?php echo $row->REMARK ?></td>
                 <td><?php echo $row->CREATION_USER ?></td>
-                <td><?php if (!empty($this->manageRemarks)) { ?><a href="<?php echo $this->location() ?>/file-remarks/edit/id/<?php echo $row->REMARK_ID ?>/fileId/<?php echo $this->fileId ?>" ><span title ="<?php $this->T("edit_c") ?>"  class="ui-icon ui-icon-zoomin"></span><?php } ?></td>
+                <td><?php if (!empty($this->manageRemarks)) { ?><a href="<?php echo $this->location() ?>/file-remarks/edit/id/<?php echo $row->REMARK_ID ?>/fileId/<?php echo $this->fileId ?>" ><li class="fa fa-pencil fa-fw"></li></A><?php } ?></td>
                 <td><?php if (!empty($this->manageRemarks) or $this->online_user == $row->CREATION_USER ) { echo $this->Delete($this->location()."/file-remarks/view/delete/".$row->REMARK_ID."/fileId/".$this->fileId, $row->REMARK); } ?></td>
             </tr>
         <?php } ?>
@@ -30,5 +33,9 @@ if ($this->deleted) {
             </td>
         </tr>
     <?php } ?>
-</table>
+ 
+                    </tbody>
+                  </table>    
+                </div>                          
+              </div>
 

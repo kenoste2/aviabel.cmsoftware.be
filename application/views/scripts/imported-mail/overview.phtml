@@ -1,33 +1,77 @@
-<?php  echo $this->form ?>
+		<script>
+		$(document).ready(function(){
+   		$('tr.dossier').bind('click', function(){
+
+        var record_id   = $(this).attr('id');
+
+        var link        = '<?php echo $this->pageRootUrl ?>/file-imported-mails/view/fileId/' + record_id;
+
+        $.fancybox({
+            'width'             : '100%',
+            'height'            : '100%',
+            'autoScale'         : false,
+            'transitionIn'      : 'none',
+            'transitionOut'     : 'none',
+            'type'              : 'iframe',
+            'href'              : link
+				});
+			});
+		});
+		</script>
+          <div class="aaa-theme-flex-row flex-content-row">
+            <div class="aaa-theme-content-widget white-bg col-1 text-center">
+              <?php  echo $this->form ?>
+            </div>
+		</div>
 
 <?php if(count($this->mails) > 0) { ?>
-<table class="ws_data_table" width="100%">
-    <thead>
-        <tr>
-            <th><?php echo $this->T('referenceclient_c') ?></th>
-            <th><?php echo $this->T('debtor_c') ?></th>
-            <th><?php echo $this->T('mail_from_c') ?></th>
-            <th><?php echo $this->T('mail_to_c') ?></th>
-            <th><?php echo $this->T('creation_date_c') ?></th>
-            <th><?php echo $this->T('mail_subject_c') ?></th>
-        </tr>
-    </thead>
-    <tbody>
-        <?php foreach($this->mails as $mail) { ?>
-        <tr onclick="newscreen('<?php echo $mail->FILE_NR ?>', '<?php echo $this->pageRootUrl ?>/file-imported-mails/view/fileId/<?php echo $mail->FILE_ID ?>')">
-            <td><?php echo $mail->REFERENCE ?></td>
-            <td><?php echo $mail->CLIENT_NAME ?></td>
-            <td><?php echo $mail->FROM_EMAIL ?></td>
-            <td><?php echo $mail->TO_EMAIL ?></td>
-            <td><?php echo $mail->CREATION_DATE ?></td>
-            <td><?php echo $mail->MAIL_SUBJECT ?></td>
-        </tr>
-        <?php } ?>
-    </tbody>
-</table>
+
+          <div class="aaa-theme-flex-row flex-content-row">
+            <div class="col-1">
+              <div class="panel panel-default aaa-theme-content-widget white-bg no-padding aaa-theme-overflow-hidden">
+                <div class="panel-heading aaa-theme-position-relative"><h2 class="text-uppercase">&nbsp;</h2></div>
+                <div class="table-responsive">
+                	
+
+                  <table class="table table-striped table-bordered">
+                    <thead>
+						 <tr>
+							<td><?php echo $this->T('referenceclient_c') ?></td>
+							<td><?php echo $this->T('debtor_c') ?></td>
+							<td><?php echo $this->T('mail_from_c') ?></td>
+							<td><?php echo $this->T('mail_to_c') ?></td>
+							<td><?php echo $this->T('creation_date_c') ?></td>
+							<td><?php echo $this->T('mail_subject_c') ?></td>
+						</tr>
+                    </thead>
+                    <tbody>
+ <?php foreach($this->mails as $mail) { ?>
+						<tr class="dossier" style="cursor: pointer" id="<?php echo $mail->FILE_ID ?>">
+							<td><?php echo $mail->REFERENCE ?></td>
+							<td><?php echo $mail->CLIENT_NAME ?></td>
+							<td><?php echo $mail->FROM_EMAIL ?></td>
+							<td><?php echo $mail->TO_EMAIL ?></td>
+							<td><?php echo $mail->CREATION_DATE ?></td>
+							<td><?php echo $mail->MAIL_SUBJECT ?></td>
+						</tr>
+						<?php } ?>
+                    </tbody>
+                  </table>    
+                </div>                          
+              </div>
+            </div>  
+          </div> 
 <?php
 } else { ?>
-    <div><?php echo $this->T('no_mails_found_c') ?></div>
+    
+					  <div class="aaa-theme-flex-row flex-content-row aaa-theme-overflow-hidden"> <!-- overflow hidden for iPad mini landscape view-->
+					<div class="col-1">              
+					  <div class="aaa-theme-content-widget white-bg col-1 text-center">
+<?php echo $this->T('no_mails_found_c') ?>   
+					</div>        
+					</div> 
+				  </div>  
+
 <?php } ?>
 <script type="text/javascript">
     $(function() {
@@ -35,3 +79,9 @@
         $("#FROM_DATE").datepicker({dateFormat: 'dd/mm/yy'});
     });
 </script>
+<!-- Second row ends -->	
+
+
+
+
+

@@ -4,9 +4,9 @@ class Zend_View_Helper_Selection extends Zend_View_Helper_Abstract {
 
     public function Selection($value) {
         if ($value) {
-            $span = "<span class='ui-icon ui-icon-circle-check'></span>";
+            $span = "<li class='fa fa-check-circle fa-fw'></li>";
         } else {
-             $span = "<span class='ui-icon ui-icon-circle-close'></span>";
+             $span = "<li class='fa fa-times-circle fa-fw'></li>";
         }
         return $span;
     }

@@ -27,6 +27,16 @@ class Application_Model_Menu extends Application_Model_Base {
                         );
                     }
                 }
+                $resultMenu[$mainMenu]['NAV'] =  $resultMenu[$mainMenu]['SUBMENU'][0]['NAV'];
+
+
+                if (!empty($menu->menuIcons)) {
+                    foreach ($menu->menuIcons as $key => $value) {
+                        if ($key == $resultMenu[$mainMenu]['NAV'] ) {
+                            $resultMenu[$mainMenu]['ICON'] = $value;
+                        }
+                    }
+                }
             }
         }
 

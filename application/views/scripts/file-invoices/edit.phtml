@@ -1,8 +1,12 @@
-<form enctype="application/x-www-form-urlencoded" action="" method="post">
-    <table style="width: 100%">
-        <tr>
-            <td style="width: 50%" class="windowPart">
-                <span  class="title2"><?php $this->T("edit_ref_c") ?></span>
+
+          <div class="aaa-theme-flex-row flex-content-row">
+          
+		  <div class="col-1">
+            <div class="panel panel-default aaa-theme-content-widget white-bg no-padding aaa-theme-overflow-hidden">
+                <div class="panel-heading aaa-theme-position-relative"><h2 class="text-uppercase"><?php $this->T("edit_ref_c") ?></h2></div>
+                <div class="table-responsive">
+				<div class="table-responsive form-group">
+                 <form action="" class="aaa-theme-login-form" method="post" enctype="application/x-www-form-urlencoded">
                 <?php
                 if ($this->formSaved) {
                     print $this->Ok($this->G("saved_c"));
@@ -33,45 +37,54 @@
                     <?php print $this->form->COST_MINIMUM ?>
                     <?php print $this->form->submit ?>
                 </dl>
-            </td>
-            <td style="width: 50%">
-                <div class="windowPart">
-                    <p><span class="title2"><?php $this->T("dispute_c") ?></span></p>
-                    <dl class="zend_form">
-                        <dt>
-                            <?php $this->T("debtor_dispute_comment_c") ?>
-                        </dt>
-                        <dd>
-                            <?php
+
+                </form>
+              </div>
+              </div>
+            </div>   
+            </div>
+            <div class="col-1"> 
+            <div class="panel panel-default aaa-theme-content-widget white-bg no-padding aaa-theme-overflow-hidden">
+                <div class="panel-heading aaa-theme-position-relative"><h2 class="text-uppercase"><?php $this->T("dispute_c") ?></h2></div>
+              	<div class="table-responsive">
+                <table class="table">
+                  <tbody>
+                    <tr>
+	                  <td><b><?php $this->T("debtor_dispute_comment_c") ?></b></td>
+    	              <td><?php
                             if($this->debtorDisputeComment) {
                                 print $this->debtorDisputeComment;
                             } else {
                                 $this->T("no_debtor_dispute_comment_found_c");
                             } ?>
-                        </dd>
-                        <dt>
-                            <?php $this->T("debtor_dispute_phone_c") ?>
-                        </dt>
-                        <dd>
-                            <?php
+					  </td>                    
+                    </tr> 
+                    <tr>
+	                  <td><b><?php $this->T("debtor_dispute_phone_c") ?></b></td>
+    	              <td>
+                      <?php
                             if($this->debtorDisputePhone) {
                                 print $this->debtorDisputePhone;
                             } else {
                                 $this->T("no_debtor_dispute_phone_found_c");
                             } ?>
-                        </dd>
-                        <dt>
-                            <?php $this->T("debtor_dispute_email_c") ?>
-                        </dt>
-                        <dd>
-                            <?php
+                      </td>                    
+                    </tr> 
+                    <tr>
+	                  <td><b><?php $this->T("debtor_dispute_email_c") ?></b></td>
+    	              <td>
+					   <?php
                             if($this->debtorDisputeEmail) {
                                 print $this->debtorDisputeEmail;
                             } else {
                                 $this->T("no_debtor_dispute_email_found_c");
                             } ?>
-                        </dd>
-                        <?php print $this->form->DISPUTE_STATUS ?>
+					  </td>                    
+                    </tr>
+						
+                    <tr>
+	                  <td colspan="2">
+					   <?php print $this->form->DISPUTE_STATUS ?>
                         <?php print $this->form->DISPUTE ?>
                         <?php print $this->form->DISPUTE_COMMENT ?>
                         <?php print $this->form->DISPUTE_DATE ?>
@@ -80,102 +93,40 @@
                         <?php print $this->form->DISPUTE_ASSIGNEE ?>
                         <?php print $this->form->DISPUTE_AMOUNT ?>
                         <?php print $this->form->submit ?>
-                    </dl>
-                </div>
-                <div class="windowPart" style="margin-top: 5px">
-                    <p><span class="title2"><?php $this->T("related_documents_c") ?></span></p>
-                    <?php if(count($this->documents) > 0) { ?>
-                        <table class="ws_data_table" style="width: 100%">
+					  </td>                    
+                    </tr> 
+
+                  </tbody>
+                </table>
+               </div> 
+
+			  <div class="panel-heading aaa-theme-position-relative"><h2 class="text-uppercase"><?php $this->T("related_documents_c") ?></h2></div>
+              <div class="table-responsive">
+              
+			  <?php if(count($this->documents) > 0) { ?>
+			  <table class="table">
+                    
                             <thead>
                             <tr>
-                                <th><?php $this->T("document_name_c") ?></th>
-                                <th><?php $this->T("document_description_c") ?></th>
+                                <td><?php $this->T("document_name_c") ?></td>
+                                <td><?php $this->T("document_description_c") ?></td>
                             </tr>
                             </thead>
+							<tbody>
                             <?php foreach($this->documents as $document) { ?>
                                 <tr>
                                     <td><?php echo $document->FILENAME ?></td>
                                     <td><?php echo $document->DESCRIPTION ?></td>
                                 </tr>
                             <?php } ?>
+							<tbody>
                         </table>
                     <?php } else { ?>
                         <p><?php $this->T("no_documents_found_c") ?></p>
-                    <?php } ?>
-                </div>
-            </td>
-        </tr>
-    </table>
-</form>
-
-
-
-
-<script language="javascript">
-    function autoCalculate() {
-        var value = $('#AUTO_CALCULATE').val();
-        if (value == 1) {
-            $('#INTEREST-label').hide();
-            $('#INTEREST-element').hide();
-            $('#COSTS-label').hide();
-            $('#COSTS-element').hide();
-            $('#COST_PERCENT-label').show();
-            $('#COST_PERCENT-element').show();
-            $('#INTEREST_PERCENT-label').show();
-            $('#INTEREST_PERCENT-element').show();
-            $('#COST_MINIMUM-label').show();
-            $('#COST_MINIMUM-element').show();
-            $('#INTEREST_MINIMUM-label').show();
-            $('#INTEREST_MINIMUM-element').show();
-
-
-        } else {
-            $('#INTEREST-label').show();
-            $('#INTEREST-element').show();
-            $('#COSTS-label').show();
-            $('#COSTS-element').show();
-            $('#COST_PERCENT-label').hide();
-            $('#COST_PERCENT-element').hide();
-            $('#INTEREST_PERCENT-label').hide();
-            $('#INTEREST_PERCENT-element').hide();
-            $('#COST_MINIMUM-label').hide();
-            $('#COST_MINIMUM-element').hide();
-            $('#INTEREST_MINIMUM-label').hide();
-            $('#INTEREST_MINIMUM-element').hide();
-        }
-
-    }
-    autoCalculate();
-    function dispute()
-    {
-        var disputeList = ['DISPUTE_DATE', 'DISPUTE_DUEDATE', 'DISPUTE_ENDED_DATE', 'DISPUTE_ASSIGNEE'];
-        var value = $('#DISPUTE').val();
-        if (value == 1) {
-            $.each(disputeList, function(i, item) {
-                $('#' + item + '-label').show();
-                $('#' + item + '-element').show();
-            });
-        } else {
-            $.each(disputeList, function(i, item) {
-                $('#' + item + '-label').hide();
-                $('#' + item + '-element').hide().val('');
-            });
-        }
-    }
-    dispute();
-</script>
-<script>
-    $(function() {
-        $("#INVOICE_DATE").datepicker({dateFormat: 'dd/mm/yy', defaultDate: "-30"});
-    });
-    $(function() {
-        $("#START_DATE").datepicker({dateFormat: 'dd/mm/yy', defaultDate: "-30"});
-    });
-   $(function() {
-        $("#END_DATE").datepicker({dateFormat: 'dd/mm/yy'});
-    });    
-   $(function() {
-        $("#DISPUTE_DATE").datepicker({dateFormat: 'dd/mm/yy'});
-        $("#DISPUTE_DUEDATE").datepicker({dateFormat: 'dd/mm/yy'});
-    });
-</script>
+                    <?php } ?>                  
+ 
+              </div> 
+			   
+            </div>
+            </div>
+			</div>

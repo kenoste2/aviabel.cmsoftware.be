@@ -18,14 +18,14 @@ class Application_Form_ClientCosts extends Zend_Form {
         $this->getDisplayGroup('group1')->setDecorators(array(
             'FormElements',
             'Fieldset',
-            array('HtmlTag', array('tag' => 'div', 'style' => 'width:50%;float:left;'))
+            array('HtmlTag', array('tag' => 'div', 'style' => 'width:50%;float:left;padding 10px;'))
         ));
 
         $this->addDisplayGroup(array('UNTIL_DATE'), 'group2', array());
         $this->getDisplayGroup('group2')->setDecorators(array(
             'FormElements',
             'Fieldset',
-            array('HtmlTag', array('tag' => 'div', 'style' => 'width:50%;float:right;'))
+            array('HtmlTag', array('tag' => 'div', 'style' => 'width:50%;float:right;padding 10px;'))
         ));
 
         $this->addElement('submit', 'submit', array(

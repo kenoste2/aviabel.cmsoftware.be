@@ -6,11 +6,15 @@
         });
     })
 </script>
-<div id="general" style="position: relative; width: 100%">
-    <table width="100%">
-        <tr>
-            <td width="33%" class="windowPart">
-                <span class="title"><?php $this->T("debtor_c") ?></span>
+          <div class="aaa-theme-flex-row flex-content-row">
+          <div class="col-1">
+
+            <div class="panel panel-default aaa-theme-content-widget white-bg no-padding aaa-theme-overflow-hidden">
+                <div class="panel-heading aaa-theme-position-relative"><h2 class="text-uppercase"><?php $this->T("debtor_c") ?></h2></div>
+                <div class="table-responsive">
+				<table class="table">
+                  <tbody>
+                    <tr><td>
                 <?php
                 if ($this->generalFormSaved) {
                     print $this->Ok($this->G("saved_c"));
@@ -42,8 +46,8 @@
                 </form>
                 <form enctype="application/x-www-form-urlencoded" action="" method="post">
                     <?php print $this->generalForm->NAME ?>
-                    <dt><?php $this->T("debtor_score_c") ?></dt>
-                    <dd><div data-rater="<?php echo $this->currentRating ?>"></div></dd>
+                    <?php $this->T("debtor_score_c") ?>
+                    <div data-rater="<?php echo $this->currentRating ?>"></div>
                     <?php print $this->generalForm->VATNR ?>
                     <?php print $this->generalForm->SUPER_DEBTOR_NAME ?>
                     <?php print $this->generalForm->SUPER_DEBTOR_ID ?>
@@ -68,9 +72,18 @@
                         $("#BIRTH_DAY").datepicker({dateFormat: 'dd/mm/yy'});
                     });
                 </script>
-            </td>
-            <td width="33%" class="windowPart">
-                <span class="title"><?php $this->T("info_c") ?></span>
+              </td></tr></tbody></table></div>
+              </div>
+            </div>
+			
+			<div class="col-1">
+			 <div class="panel panel-default aaa-theme-content-widget white-bg no-padding aaa-theme-overflow-hidden">
+                <div class="panel-heading aaa-theme-position-relative"><h2 class="text-uppercase"><?php $this->T("info_c") ?></h2></div>
+                <div class="table-responsive">
+				<table class="table">
+                  <tbody>
+                    <tr><td>
+
                 <dd>&nbsp;</dd>
                 <dt><?php $this->T("Created_c") ?> </dt>
                 <dd><?php echo $this->date($this->debtor->CREATION_DATE) ?></dd>
@@ -100,13 +113,24 @@
                 </table>
                 <?php } ?>
 
-            </td>
+                 </td></tr></tbody></table>         </div>
+              </div>
+            </div>
+			
+			
             <?php if ($this->report) {
                 $maxIndex = sizeof($this->report->credit_advice->delay_payment_risk->risk)-1;
                 $riskIndex = (int) $this->report->credit_advice->delay_payment_risk->risk[$maxIndex]->risk_index;
             ?>
-            <td width="33%" class="windowPart">
-                <span class="title"><?php $this->T("general_c") ?></span>
+			<div class="col-1">
+            <div class="panel panel-default aaa-theme-content-widget white-bg no-padding aaa-theme-overflow-hidden">
+                <div class="panel-heading aaa-theme-position-relative"><h2 class="text-uppercase"><?php $this->T("general_c") ?></h2></div>
+                <div class="table-responsive">
+				<table class="table">
+                  <tbody>
+                    <tr><td>
+					
+
                 <dd>&nbsp;</dd>
                 <dt><label><?php $this->T("address_c") ?></label></dt>
                 <dd><?php echo (string) $this->report->descriptive->name; ?><br>
@@ -142,10 +166,11 @@
                     <span title="<?php $this->T("view_c") ?>" class="ui-icon ui-icon-disk"></span></a>
                 <br><br><i><?php $this->T("gegevens_by_eurodb_c") ?></i>
 
-        </td>
+                 </td></tr></tbody></table>                 </div>
+              </div>
+            </div>
             <?php } ?>
-        </tr>
-    </table>
+
 </div>
 <script type="text/javascript">
 $(function () {

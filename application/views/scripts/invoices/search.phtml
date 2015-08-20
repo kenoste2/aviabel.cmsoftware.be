@@ -1,97 +1,164 @@
-<style>
-    #chartdiv {
-        width: 450px;
-        height: 200px;
-        position: absolute;
-        float: right;
-    }
-</style>
-<script type="text/javascript" src="<?php echo $this->location() ?>/public/amcharts/amcharts.js"></script>
-<script type="text/javascript" src="<?php echo $this->location() ?>/public/amcharts/pie.js"></script>
+		<!-- FACTUREN javascript code -->
+		<script type="text/javascript">
+			AmCharts.makeChart("vervallen",
+				{
+					"type": "pie",
+					"balloonText": "",
+					"labelText": "",
+					"titleField": "titel",
+					"valueField": "waarde",
+					"allLabels": [],
+					"balloon": {},
+					"legend": {
+						"align": "center",
+						"markerType": "circle",
+						"position": "right",
+						"valueText": ""
+					},
+					"titles": [],
+					"dataProvider": [
+						{
+							"titel": "<?php echo $this->T("past_due_c") ?>",
+							"waarde": <?php echo $this->totalPastDue ?>
+						},
+						{
+							"titel": "<?php echo $this->T("not_due_c") ?>",
+							"waarde": <?php echo $this->totalNotDue ?>
+						}
+					]
+				}
+			);
+		</script>
+		
+		<script>
+		$(document).ready(function(){
+   		$('tr.dossier').bind('click', function(){
 
+        var record_id   = $(this).attr('id');
 
-<div class="toggler noprint">
-    <div id="searchbox" style="width: 90%;">
-        <form action="<?php echo $this->location() ?>/invoices/search" method="post">
-            <input type="hidden" name='formSubmit' value='1'>
-            <table>
-                <tr>
-                    <td class="ui-widget-content" >
-                      <table width="100%">
-                        <thead>
-                            <tr>
-                                <th colspan="2"><?php print $this->T("search_invoices_c") ?></th>
-                            </tr>
-                        </thead>
-                            <tr>
-                                <?php if (!empty($this->showClient)) { ?>
-                                <td class="label"><?php print $this->T("client_c") ?> </td><td><?php echo $this->SearchBox->client->renderViewHelper(); ?></td>
-                                <?php } ?>
-                                <?php if (!empty($this->showCollector)) { ?>
-                                <td class="label"><?php print $this->T("collector_c") ?> </td><td><?php echo $this->SearchBox->collector->renderViewHelper(); ?></td>
-                                <?php } ?>
-                            </tr>
-                            <tr>
-                                <td class="label"><?php print $this->T("referenceclient_c") ?> </td><td><?php echo $this->SearchBox->client_reference->renderViewHelper(); ?></td>
-                                <td class="label"><?php print $this->T("invoice_c") ?> </td><td><?php echo $this->SearchBox->invoice->renderViewHelper(); ?></td>
-                            </tr>
-                            <tr>
-                                <td class="label"><?php print $this->T("debtor_c") ?> </td><td><?php echo $this->SearchBox->debtor->renderViewHelper(); ?></td>
-                                <td class="label"><?php print $this->T("state_code_c") ?> </td><td><?php echo $this->SearchBox->state_id->renderViewHelper(); ?></td>
-                            </tr>
-                            <tr>
-                                <td class="label"><?php print $this->T("dispute_c") ?> </td><td><?php echo $this->SearchBox->dispute->renderViewHelper(); ?></td>
-                                <td class="label"><?php print $this->T("industrie_c") ?></td><td><?php echo $this->SearchBox->invoice_type->renderViewHelper(); ?></td>
-                            </tr>
-                            <tr>
-                                <td colspan ="4"><?php echo $this->SearchBox->extra_field->renderViewHelper(); ?>
-                                    <?php echo $this->SearchBox->extra_compare->renderViewHelper(); ?>
-                                    <?php echo $this->SearchBox->extra_text->renderViewHelper(); ?>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colspan="3">&nbsp;</td>
-                                <td align="right"><?php echo $this->SearchBox->submit->renderViewHelper(); ?> </td>
-                            </tr>
-                        </table>
-                    </td>
-                    <td>
-                        <div id="chartdiv"></div>
-                    </td>
-                </tr>
-            </table>
-        </form>
-    </div>
-</div>
-<br>
+        var link        = '<?php echo $this->location() ?>/file-detail/view/fileId/' + record_id;
+
+        $.fancybox({
+            'width'             : '100%',
+            'height'            : '100%',
+            'autoScale'         : false,
+            'transitionIn'      : 'none',
+            'transitionOut'     : 'none',
+            'type'              : 'iframe',
+            'href'              : link
+				});
+			});
+		});
+		</script>
+		
+          <div class="aaa-theme-flex-row flex-content-row">
+            <div class="aaa-theme-content-widget white-bg col-1 text-center">
+              <h2 class="text-uppercase"><?php print $this->T("search_invoices_c") ?></h2>
+              <form action="<?php echo $this->location() ?>/invoices/search" class="aaa-theme-login-form" method="post">
+			  <input type="hidden" name='formSubmit' value='1'>
+              <div class="row form-group">
+				<?php if (!empty($this->showClient)) { ?>
+                <div class="col-lg-6 col-md-6 form-group">                  
+                    <label><?php print $this->T("client_c") ?></label>
+                    <?php echo $this->SearchBox->client->renderViewHelper(); ?>
+				</div>
+                <?php } ?>
+
+                <?php if (!empty($this->showCollector)) { ?>
+                <div class="col-lg-6 col-md-6 form-group">                  
+                    <label><?php print $this->T("collector_c") ?></label>
+                    <?php echo $this->SearchBox->collector->renderViewHelper(); ?>       
+                </div> 
+              	<?php } ?>
+              </div>
+              <div class="row form-group">
+                <div class="col-lg-6 col-md-6 form-group">                  
+                    <label><?php print $this->T("referenceclient_c") ?></label>
+                    <?php echo $this->SearchBox->client_reference->renderViewHelper(); ?>                  
+                </div>
+                <div class="col-lg-6 col-md-6 form-group">                  
+                    <label><?php print $this->T("invoice_c") ?></label>
+                    <?php echo $this->SearchBox->invoice->renderViewHelper(); ?>                   
+                </div>			
+              </div>
+              <div class="row form-group">
+                <div class="col-lg-6 col-md-6 form-group">                  
+                    <label><?php print $this->T("debtor_c") ?></label>
+                   <?php echo $this->SearchBox->debtor->renderViewHelper(); ?>                  
+                </div>
+                <div class="col-lg-6 col-md-6 form-group">                  
+                    <label><?php print $this->T("state_code_c") ?></label>
+                    <?php echo $this->SearchBox->state_id->renderViewHelper(); ?>                  
+                </div>                  
+              </div>
+              <div class="row form-group">
+                <div class="col-lg-6 col-md-6 form-group">                  
+                    <label><?php print $this->T("dispute_c") ?></label>
+                    <?php echo $this->SearchBox->dispute->renderViewHelper(); ?>                   
+                </div> 
+                <div class="col-lg-6 col-md-6 form-group">                  
+                    <label><?php print $this->T("industrie_c") ?></label>
+                    <?php echo $this->SearchBox->invoice_type->renderViewHelper(); ?>               
+                </div> 
+              </div>
+              <div class="row form-group">
+                <div class="col-lg-3 col-md-6 form-group">  
+                	<label> </label>                
+                    <?php echo $this->SearchBox->extra_field->renderViewHelper(); ?>                   
+                </div> 
+                <div class="col-lg-3 col-md-6 form-group">
+                	<label></label>
+                    <?php echo $this->SearchBox->extra_compare->renderViewHelper(); ?>                  
+                </div> 
+                <div class="col-lg-6 col-md-6 form-group">
+                	<label for="state_id"></label>
+                    <?php echo $this->SearchBox->extra_text->renderViewHelper(); ?>                 
+                </div> 
+              </div>
+			  <div class="row form-group">
+                <div class="col-lg-6 col-md-6 form-group">                  
+                    <?php echo $this->SearchBox->submit->renderViewHelper(); ?>               
+                </div>                  
+              </div>                       
+            </form>
+            </div>
+            <div class="aaa-theme-content-widget white-bg col-1 text-center">
+              <div id="vervallen" class="aaa-theme-chart"></div>
+            </div>	
+		</div>
+
 <?php if (!empty($this->results)) {
     $index = 0;
     ?>
-    <div class=noprint>
-        <h3>
-            <?php echo $this->totals->COUNTER ?> <?php $this->T("results_found_c") ?>
+
+          <div class="aaa-theme-flex-row flex-content-row">
+            <div class="col-1">
+              <div class="panel panel-default aaa-theme-content-widget white-bg no-padding aaa-theme-overflow-hidden">
+                <div class="panel-heading aaa-theme-position-relative"><h2 class="text-uppercase"> <?php echo $this->totals->COUNTER ?> <?php $this->T("results_found_c") ?>
             <?php if ($this->onlyFirst) { ?>
                 <?php $this->T("only_first_c", $this->onlyFirst) ?>
-    <?php } ?>
-        </h3>
-    </div>
-    <table id="data" class="ws_data_table" width="100%">
-        <thead>
-            <tr>
-                <th><a  class="orderby" href="<?php echo $this->location() ?>/invoices/search/orderby/CLIENT_REFERENCE"><?php print $this->T("referenceclient_c") ?></a></th>
-                <th><a  class="orderby" href="<?php echo $this->location() ?>/invoices/search/orderby/DEBTOR_NAME"><?php print $this->T("debtor_c") ?></a></th>
-                <th><a  class="orderby" href="<?php echo $this->location() ?>/invoices/search/orderby/INVOICE_REFERENCE"><?php print $this->T("invoice_reference_c") ?></a></th>
-                <th><a  class="orderby" href="<?php echo $this->location() ?>/invoices/search/orderby/REFERENCE_TYPE"><?php print $this->T("industrie_c") ?></a></th>
-                <th><a  class="orderby" href="<?php echo $this->location() ?>/invoices/search/orderby/INVOICE_DATE"><?php print $this->T("factuurdatum_c") ?></a></th>
-                <th><a  class="orderby" href="<?php echo $this->location() ?>/invoices/search/orderby/START_DATE"><?php print $this->T("due_date_c") ?></a></th>
-                <th><a  class="orderby" href="<?php echo $this->location() ?>/invoices/search/orderby/CLIENT_NAME"><?php print $this->T("client_c") ?></a></th>
-                <th><a  class="orderby" href="<?php echo $this->location() ?>/invoices/search/orderby/STATE_CODE"><?php print $this->T("State_code_c") ?></a></th>
-                <th align="right"><a  class="orderby" href="<?php echo $this->location() ?>/invoices/search/orderby/TOTAL"><?php print $this->T("total_c") ?></a></th>
-                <th align="right"><a  class="orderby" href="<?php echo $this->location() ?>/invoices/search/orderby/PAYABLE"><?php print $this->T("payable_c") ?></a></th>
-                <th align="right"><a  class="orderby" href="<?php echo $this->location() ?>/invoices/search/orderby/DISPUTE"><?php print $this->T("dispute_c") ?></a></th>
-            </tr>
-        </thead>
-    <?php foreach ($this->results as $row) {
+    <?php } ?></h2></div>
+                <div class="table-responsive">
+                	
+
+                  <table class="table table-striped table-bordered">
+                    <thead>
+                      <tr>
+						<td><a href="<?php echo $this->location() ?>/invoices/search/orderby/CLIENT_REFERENCE"><?php print $this->T("referenceclient_c") ?></a></td>
+						<td><a href="<?php echo $this->location() ?>/invoices/search/orderby/DEBTOR_NAME"><?php print $this->T("debtor_c") ?></a></td>
+						<td><a href="<?php echo $this->location() ?>/invoices/search/orderby/INVOICE_REFERENCE"><?php print $this->T("invoice_reference_c") ?></a></td>
+						<td><a href="<?php echo $this->location() ?>/invoices/search/orderby/REFERENCE_TYPE"><?php print $this->T("industrie_c") ?></a></td>
+						<td><a href="<?php echo $this->location() ?>/invoices/search/orderby/INVOICE_DATE"><?php print $this->T("factuurdatum_c") ?></a></td>
+						<td><a href="<?php echo $this->location() ?>/invoices/search/orderby/START_DATE"><?php print $this->T("due_date_c") ?></a></td>
+						<td><a href="<?php echo $this->location() ?>/invoices/search/orderby/CLIENT_NAME"><?php print $this->T("client_c") ?></a></td>
+						<td><a href="<?php echo $this->location() ?>/invoices/search/orderby/STATE_CODE"><?php print $this->T("State_code_c") ?></a></td>
+						<td align="right"><a href="<?php echo $this->location() ?>/invoices/search/orderby/TOTAL"><?php print $this->T("total_c") ?></a></td>
+						<td align="right"><a href="<?php echo $this->location() ?>/invoices/search/orderby/PAYABLE"><?php print $this->T("payable_c") ?></a></td>
+						<td align="right"><a href="<?php echo $this->location() ?>/invoices/search/orderby/DISPUTE"><?php print $this->T("dispute_c") ?></a></td>
+                      </tr>
+                    </thead>
+                    <tbody>
+   <?php foreach ($this->results as $row) {
         if(!empty($row->DISPUTE)) {
             $class = " class='dispute' ";
         }
@@ -103,52 +170,39 @@
 
 
             ?>
-            <tr <?php echo $class ?> onClick="newscreen('<?php echo $row->DEBTOR_NAME ?>', '<?php echo $this->location() ?>/file-detail/view/fileId/<?php echo $row->FILE_ID ?>')" >
-                <td><?php echo $row->CLIENT_REFERENCE ?></td>
-                <td><?php echo $row->DEBTOR_NAME ?></td>
-                <td><?php echo $row->INVOICE_REFERENCE ?></td>
-                <td><?php echo $row->REFERENCE_TYPE ?></td>
-                <td><?php echo $this->date($row->INVOICE_DATE) ?></td>
-                <td><?php echo $this->date($row->START_DATE) ?></td>
-                <td><?php echo $row->CLIENT_NAME ?></td>
-                <td><?php echo $row->STATE_CODE ?></td>
-                <td align="right"><?php echo $this->amount($row->TOTAL) ?></td>
-                <td align="right"><?php echo $this->amount($row->PAYABLE) ?></td>
-                <td align="center"><?php echo $this->GoodBad(!$row->DISPUTE) ?></td>
-            </tr>
-            <?php $index++;
-        }
-        ?>
-        <tfoot>
-            <tr>
-                <td colspan="8">&nbsp;</td>
-                <td align="right"><?php echo $this->amount($this->totals->TOTAL) ?></td>
-                <td align="right"><?php echo $this->amount($this->totals->PAYABLE) ?></td>
-                <td>&nbsp;</td>
-            </tr>
-        </tfoot>
-    </table>
-
-    <script>
-        var chart = AmCharts.makeChart("chartdiv", {
-            "type": "pie",
-            "theme": "none",
-            "dataProvider": [
-                {
-                    "titel": "<?php echo $this->T("past_due_c") ?>",
-                    "waarde": <?php echo $this->totalPastDue ?>
-                },
-                {
-                    "titel": "<?php echo $this->T("not_due_c") ?>",
-                    "waarde": <?php echo $this->totalNotDue ?>
-                }],
-            "valueField": "waarde",
-            "titleField": "titel",
-        });
-    </script>
-
-
+						<tr class="dossier" style="cursor: pointer" id="<?php echo $row->FILE_ID ?>">
+							<td><?php echo $row->CLIENT_REFERENCE ?></td>
+							<td><?php echo $row->DEBTOR_NAME ?></td>
+							<td><?php echo $row->INVOICE_REFERENCE ?></td>
+							<td><?php echo $row->REFERENCE_TYPE ?></td>
+							<td><?php echo $this->date($row->INVOICE_DATE) ?></td>
+							<td><?php echo $this->date($row->START_DATE) ?></td>
+							<td><?php echo $row->CLIENT_NAME ?></td>
+							<td><?php echo $row->STATE_CODE ?></td>
+							<td align="right"><?php echo $this->amount($row->TOTAL) ?></td>
+							<td align="right"><?php echo $this->amount($row->PAYABLE) ?></td>
+							<td align="center"><?php echo $this->GoodBad(!$row->DISPUTE) ?></td>
+						</tr>
+						<?php $index++;
+					}
+					?>
+                    </tbody>
+                    <thead>
+                        <tr>
+							<td colspan="8">&nbsp;</td>
+							<td align="right"><?php echo $this->amount($this->totals->TOTAL) ?></td>
+							<td align="right"><?php echo $this->amount($this->totals->PAYABLE) ?></td>
+							<td>&nbsp;</td>
+						</tr>
+                    </thead>
+                  </table>    
+                </div>                          
+              </div>
+            </div>  
+          </div> 
 <?php } ?>
+<!-- Second row ends -->	
+
 
 
 

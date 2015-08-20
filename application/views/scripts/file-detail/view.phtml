@@ -1,9 +1,14 @@
-<div id="general"  style="position: relative; width: 100%">
-    <table width="100%">
-        <tr>
-            <td width="33%" class="windowPart">
-                <span class="title"><?php $this->T("file_c") ?></span>
-                <?php
+
+          <div class="aaa-theme-flex-row flex-content-row">
+          <div class="col-1">
+
+            <div class="panel panel-default aaa-theme-content-widget white-bg no-padding aaa-theme-overflow-hidden">
+                <div class="panel-heading aaa-theme-position-relative"><h2 class="text-uppercase"><?php $this->T("file_c") ?></h2></div>
+                <div class="table-responsive">
+				<table class="table">
+                  <tbody>
+                    <tr><td>
+				                <?php
                 if ($this->generalFormSaved) {
                     print $this->Ok($this->G("saved_c"));
                 }
@@ -19,131 +24,163 @@
                     $(function() {
                         $("#VERJARING").datepicker({dateFormat: 'dd/mm/yy'});
                     });
-                </script></td>
-            <td width="33%" class="windowPart">
-                <span class="title"><?php $this->T("debtor_c") ?></span>
-        <dt>&nbsp;</dt>
-        <dd>&nbsp;</dd>
-        <dt><?php $this->T("name_c") ?> </dt>
-        <dd><table><tr><td><?php echo $this->file->DEBTOR_NAME ?></td><td><a class="ui-icon ui-icon-zoomin" href="<?php echo $this->location() ?>/debtor-detail/view/debtorId/<?php echo $this->file->DEBTOR_ID ?>"></a></td></tr></table></dd>
-        <dt><?php $this->T("address_c") ?></dt>
-        <dd><?php echo $this->file->DEBTOR_ADDRESS ?><br><?php echo $this->file->DEBTOR_COUNTRY_CODE ?> - <?php echo $this->file->DEBTOR_ZIP_CODE ?> <?php echo $this->file->DEBTOR_CITY ?></dd>
-        <dt><?php $this->T("vat_c") ?></dt>
-        <dd><?php echo $this->file->DEBTOR_VAT_NR ?></dd>
-        <?php if (!empty($this->file->DEBTOR_TELEPHONE)) { ?>
-            <dt><?php $this->T("telephone_c") ?></dt>
-            <dd><?php echo $this->file->DEBTOR_TELEPHONE ?></dd>
-        <?php } ?>
-        <?php if (!empty($this->file->DEBTOR_TELEFAX)) { ?>
-            <dt><?php $this->T("fax_c") ?></dt>
-            <dd><?php echo $this->file->DEBTOR_TELEFAX ?></dd>
-        <?php } ?>
-        <?php if (!empty($this->file->DEBTOR_GSM)) { ?>
-            <dt><?php $this->T("gsm_c") ?></dt>
-            <dd><?php echo $this->file->DEBTOR_GSM ?></dd>
-        <?php } ?>
-        <?php if (!empty($this->file->DEBTOR_E_MAIL)) { ?>
-            <dt><?php $this->T("email_c") ?></dt>
-            <dd><table><tr><td><?php echo $this->file->DEBTOR_E_MAIL ?></td><td><a class="ui-icon ui-icon-mail-closed" href="mailto:<?php echo $this->file->DEBTOR_E_MAIL ?>"></a></td></tr></table></dd>
-        <?php } ?>
-        <dt><?php $this->T("language_c") ?></dt>
-        <dd><?php echo $this->file->DEBTOR_LANGUAGE_CODE ?></dd>
-        <?php if (!empty($this->file->DEBTOR_BIRTH_DAY)) { ?>
-            <dt><?php $this->T("birthday_c") ?></dt>
-            <dd><?php echo $this->Date($this->file->DEBTOR_BIRTH_DAY) ?></dd>
-        <?php } ?>
-        <?php if ($this->showUseAddress) { ?>
-            <br>
-            <span  class="title2"><?php $this->T("send_letters_to_c") ?></span>
-            <?php
-            if ($this->debtorFormSaved) {
-                print $this->Ok($this->G("saved_c"));
-            }
-            ?>
-            <?php
-            if ($this->debtorFormError) {
-                print $this->Error($this->G("not_all_fields_c"));
-            }
-            ?>
+                </script>
 
-            <?php print $this->debtorForm ?>
-        <?php } ?>
+              </div></td></tr></tbody></table>
+              </div>
+            </div>   
+            </div>
+            <div class="col-1"> 
+            <div class="panel panel-default aaa-theme-content-widget white-bg no-padding aaa-theme-overflow-hidden">
+                <div class="panel-heading aaa-theme-position-relative"><h2 class="text-uppercase"><?php $this->T("debtor_c") ?></h2></div>
+              	<div class="table-responsive">
+                <table class="table">
+                  <tbody>
+                    <tr>
+	                  <td><b><?php $this->T("name_c") ?></b></td>
+    	              <td><a href="<?php echo $this->location() ?>/debtor-detail/view/debtorId/<?php echo $this->file->DEBTOR_ID ?>"><?php echo $this->file->DEBTOR_NAME ?></a></td>                    
+                    </tr> 
+                    <tr>
+	                  <td><b><?php $this->T("address_c") ?></b></td>
+    	              <td>
+                      <?php echo $this->file->DEBTOR_ADDRESS ?><br />
+                      <?php echo $this->file->DEBTOR_COUNTRY_CODE ?> - <?php echo $this->file->DEBTOR_ZIP_CODE ?> <?php echo $this->file->DEBTOR_CITY ?>
+                      </td>                    
+                    </tr> 
+                    <tr>
+	                  <td><b><?php $this->T("vat_c") ?></b></td>
+    	              <td><?php echo $this->file->DEBTOR_VAT_NR ?></td>                    
+                    </tr>
+					<?php if (!empty($this->file->DEBTOR_TELEPHONE)) { ?>
+                    <tr>
+	                  <td><b><?php $this->T("telephone_c") ?></b></td>
+    	              <td><?php echo $this->file->DEBTOR_TELEPHONE ?></td>                    
+                    </tr>
+					<?php } ?>
+					<?php if (!empty($this->file->DEBTOR_TELEFAX)) { ?>					
+                    <tr>
+	                  <td><b><?php $this->T("fax_c") ?></b></td>
+    	              <td<?php echo $this->file->DEBTOR_TELEFAX ?></td>                    
+                    </tr>
+					<?php } ?>	
+					<?php if (!empty($this->file->DEBTOR_GSM)) { ?>					
+                    <tr>
+	                  <td><b><?php $this->T("gsm_c") ?></b></td>
+    	              <td<?php echo $this->file->DEBTOR_GSM ?></td>                    
+                    </tr>
+					<?php } ?>	
+					<?php if (!empty($this->file->DEBTOR_E_MAIL)) { ?>					
+                    <tr>
+	                  <td><b><?php $this->T("email_c") ?></b></td>
+    	              <td><a href="mailto:<?php echo $this->file->DEBTOR_E_MAIL ?>"><?php echo $this->file->DEBTOR_E_MAIL ?></a></td>                    
+                    </tr> 
+					<?php } ?>
+                    <tr>
+	                  <td><b><?php $this->T("language_c") ?></b></td>
+    	              <td><?php echo $this->file->DEBTOR_LANGUAGE_CODE ?></td>                    
+                    </tr> 
+					<?php if (!empty($this->file->DEBTOR_BIRTH_DAY)) { ?>					
+                    <tr>
+	                  <td><b><?php $this->T("birthday_c") ?></b></td>
+    	              <td><?php echo $this->file->DEBTOR_BIRTH_DAY ?></td>                    
+                    </tr> 
+					<?php } ?>
+					
 
-        </td>
-        <td width="33%" class="windowPart">
-            <span class="title"><?php $this->T("amounts_c") ?></span>
-            <dd>&nbsp;</dd>
-        <table>
-            <thead>
-                <tr>
-                    <th>&nbsp;</th>
-                    <th align="right"><?php $this->T("amount_c") ?></th>
-                    <th align="right"><?php $this->T("payed_c") ?></th>
-                    <th align="right"><?php $this->T("saldo_c") ?></th>
-                </tr>
-            </thead>
-            <tr>
-                <td class="label"><?php $this->T("amount_c") ?></td>
-                <td align="right"><?php echo $this->Amount($this->file->AMOUNT) ?></td>
-                <td align="right"><?php echo $this->Amount($this->file->PAYED_AMOUNT) ?></td>
-                <td align="right"><?php echo $this->Amount($this->file->SALDO_AMOUNT) ?></td>
-            </tr>
-            <?php if ($this->showIntrestCosts) {  ?>
-            <tr>
-                <td class="label"><?php $this->T("costs_c") ?></td>
-                <td align="right"><?php echo $this->Amount($this->file->COSTS) ?></td>
-                <td align="right"><?php echo $this->Amount($this->file->PAYED_COSTS) ?></td>
-                <td align="right"><?php echo $this->Amount($this->file->SALDO_COSTS) ?></td>
-            </tr>
-            <tr>
-                <td class="label"><?php $this->T("intrests_c") ?></td>
-                <td align="right"><?php echo $this->Amount($this->file->INTEREST) ?></td>
-                <td align="right"><?php echo $this->Amount($this->file->PAYED_INTEREST) ?></td>
-                <td align="right"><?php echo $this->Amount($this->file->SALDO_INTEREST) ?></td>
-            </tr>
-            <tr>
-                <td class="label"><?php $this->T("incasso_kost_c") ?></td>
-                <td align="right"><?php echo $this->Amount($this->file->INCASSOKOST) ?></td>
-                <td align="right"><?php echo $this->Amount($this->file->PAYED_UNKNOWN) ?></td>
-                <td align="right"><?php echo $this->Amount($this->file->INCASSOKOST - $this->file->PAYED_UNKNOWN) ?></td>
-            </tr>
-            <tfoot>
-                <tr>
-                    <td class="footer"><?php $this->T("total_c") ?></td>
-                    <td align="right"><?php echo $this->Amount($this->file->TOTAL + $this->file->INCASSOKOST) ?></td>
-                    <td align="right"><?php echo $this->Amount($this->file->PAYED_TOTAL) ?></td>
-                    <td align="right"><?php echo $this->Amount($this->file->PAYABLE + $this->file->INCASSOKOST - $this->file->PAYED_UNKNOWN) ?></td>
-                </tr>
-            </tfoot>
-            <?php } ?>
-        </table>
-            <dd>&nbsp;</dd>
-            <span class="title"><?php $this->T("info_c") ?></span>
-            <dd>&nbsp;</dd>
-            <dt><?php $this->T("gem_betalingstermijn_c") ?></dt>
-            <?php if($this->nrOfPayments > 0) { ?>
-                <dd><?php echo $this->paymentDelay ?> (<?php $this->T("based_on_payments_c") ?>: <?php echo $this->nrOfPayments ?>)</dd>
-            <?php } else { ?>
-                <dd><?php echo $this->T("insufficient_data_for_delay_c") ?></dd>
-            <?php } ?>
-            <?php print $this->creditlimiteForm; ?>
-        </td>
-        </tr>
-        <tr>
-            <td class="windowPart">
-                <span class="title"><?php $this->T("laatste_c") ?> <?php $this->T("actions_c") ?></span>
-                <table id="data" class="tablesorter ws_data_table" width="100%">
+                  </tbody>
+                </table>
+               </div>              
+            </div>
+            </div>
+            <div class="col-1">
+            <div class="panel panel-default aaa-theme-content-widget white-bg no-padding aaa-theme-overflow-hidden">
+              <div class="panel-heading aaa-theme-position-relative"><h2 class="text-uppercase"><?php $this->T("amounts_c") ?></h2></div>
+              <div class="table-responsive">
+                <table class="table">
+                  <tbody>
+                    <tr>
+	                  <td><b><?php $this->T("amount_c") ?></b></td>
+    	              <td><?php echo $this->Amount($this->file->AMOUNT) ?></td>                    
+                    </tr> 
+                    <tr>
+	                  <td><b><?php $this->T("payed_c") ?></b></td>
+    	              <td><?php echo $this->Amount($this->file->PAYED_AMOUNT) ?></td>                    
+                    </tr> 
+                    <tr>
+	                  <td><b><?php $this->T("saldo_c") ?></b></td>
+    	              <td><?php echo $this->Amount($this->file->SALDO_AMOUNT) ?></td>                    
+                    </tr> 
+					<?php if ($this->showIntrestCosts) {  ?>
+					<tr>
+						<td class="label"><?php $this->T("costs_c") ?></td>
+						<td align="right"><?php echo $this->Amount($this->file->COSTS) ?></td>
+						<td align="right"><?php echo $this->Amount($this->file->PAYED_COSTS) ?></td>
+						<td align="right"><?php echo $this->Amount($this->file->SALDO_COSTS) ?></td>
+					</tr>
+					<tr>
+						<td class="label"><?php $this->T("intrests_c") ?></td>
+						<td align="right"><?php echo $this->Amount($this->file->INTEREST) ?></td>
+						<td align="right"><?php echo $this->Amount($this->file->PAYED_INTEREST) ?></td>
+						<td align="right"><?php echo $this->Amount($this->file->SALDO_INTEREST) ?></td>
+					</tr>
+					<tr>
+						<td class="label"><?php $this->T("incasso_kost_c") ?></td>
+						<td align="right"><?php echo $this->Amount($this->file->INCASSOKOST) ?></td>
+						<td align="right"><?php echo $this->Amount($this->file->PAYED_UNKNOWN) ?></td>
+						<td align="right"><?php echo $this->Amount($this->file->INCASSOKOST - $this->file->PAYED_UNKNOWN) ?></td>
+					</tr>
+					<tfoot>
+						<tr>
+							<td class="footer"><?php $this->T("total_c") ?></td>
+							<td align="right"><?php echo $this->Amount($this->file->TOTAL + $this->file->INCASSOKOST) ?></td>
+							<td align="right"><?php echo $this->Amount($this->file->PAYED_TOTAL) ?></td>
+							<td align="right"><?php echo $this->Amount($this->file->PAYABLE + $this->file->INCASSOKOST - $this->file->PAYED_UNKNOWN) ?></td>
+						</tr>
+					</tfoot>
+					<?php } ?>
+                  </tbody>
+                </table>
+               </div>
+              <div class="panel-heading aaa-theme-position-relative"><h2 class="text-uppercase"><?php $this->T("info_c") ?></h2></div>
+              <div class="table-responsive">
+                <table class="table">
+                  <tbody>                    
+                    <tr>
+	                  <td><?php $this->T("gem_betalingstermijn_c") ?></td> 
+					<?php if($this->nrOfPayments > 0) { ?>
+						<td><?php echo $this->paymentDelay ?> (<?php $this->T("based_on_payments_c") ?>: <?php echo $this->nrOfPayments ?>)</td>
+					<?php } else { ?>
+						<td><?php echo $this->T("insufficient_data_for_delay_c") ?></td>
+					<?php } ?>
+					</tr>
+					<tr>
+					<td colspan="2">
+					<?php print $this->creditlimiteForm; ?></td>
+					</tr>
+                  </tbody>
+                </table>
+              </div>  
+            </div>
+          </div>
+          </div>
+          <div class="aaa-theme-flex-row flex-content-row">
+          <div class="col-1">
+            <div class="panel panel-default aaa-theme-content-widget white-bg no-padding aaa-theme-overflow-hidden">
+              <div class="panel-heading aaa-theme-position-relative"><h2 class="text-uppercase"><?php $this->T("laatste_c") ?> <?php $this->T("actions_c") ?></h2></div>
+                <div class="table-responsive">
+                  <table class="table table-striped table-bordered">
                     <thead>
-                        <tr>
-                            <th><?php $this->T("action_date_c"); ?></th>
-                            <th><?php $this->T("code_c"); ?></th>
-                            <th><?php $this->T("description_c"); ?></th>
-                            <th>&nbsp;</th>
-                        </tr>
+                      <tr>
+                        <td><?php $this->T("action_date_c"); ?></td>
+                        <td><?php $this->T("code_c"); ?></td>
+                        <td><?php $this->T("description_c"); ?></td>
+						<td>&nbsp;</td>
+                      </tr>
                     </thead>
-                    <?php if (!empty($this->actions)) { ?>
-                        <?php foreach ($this->actions as $row) { ?>
-                            <tr>
+                    <tbody>
+					  <?php if (!empty($this->actions)) { ?>
+                      <?php foreach ($this->actions as $row) { ?>
+                      <tr>
                                 <td><?php echo $this->Date($row->ACTION_DATE) ?></td>
                                 <td><?php echo $row->ACTION_CODE ?></td>
                                 <td><?php echo $row->ACTION_DESCRIPTION ?></td>
@@ -154,26 +191,31 @@
                             </tr>
                         <?php } ?>
                     <?php } else { ?>
-                        <tr>
-                            <td colspan="4" class="no_results">
+					<tr>
+                            <td colspan="4">
                                 <?php $this->T("no_results_c"); ?>
                             </td>
                         </tr>
                     <?php } ?>
-                </table>
-            </td>
-            <td class="windowPart">
-                <span class="title"><?php $this->T("laatste_c") ?> <?php $this->T("remarks_c") ?></span>
-
-                <table id="data" class="tablesorter ws_data_table" width="100%">
+                    </tbody>
+                  </table>      
+                </div>                          
+              </div>
+              </div>
+              <div class="col-1">
+              <div class="panel panel-default aaa-theme-content-widget white-bg no-padding aaa-theme-overflow-hidden">
+              <div class="panel-heading aaa-theme-position-relative"><h2 class="text-uppercase"><?php $this->T("laatste_c") ?> <?php $this->T("remarks_c") ?></h2></div>
+                <div class="table-responsive">
+                  <table class="table table-striped table-bordered">
                     <thead>
-                        <tr>
-                            <th><?php $this->T("date_c"); ?></th>
-                            <th><?php $this->T("remark_c"); ?></th>
-                            <th><?php $this->T("by_c"); ?></th>
-                        </tr>
+                      <tr>
+                        <td><?php $this->T("date_c"); ?></td>
+                        <td><?php $this->T("remark_c"); ?></td>
+                        <td><?php $this->T("by_c"); ?></td>
+                      </tr>
                     </thead>
-                    <?php if (!empty($this->remarks)) { ?>
+                    <tbody>
+                      <?php if (!empty($this->remarks)) { ?>
                         <?php foreach ($this->remarks as $row) { ?>
                             <tr>
                                 <td><?php echo $this->Date($row->CREATION_DATE) ?></td>
@@ -183,24 +225,30 @@
                         <?php } ?>
                     <?php } else { ?>
                         <tr>
-                            <td colspan="3" class="no_results">
+                            <td colspan="3">
                                 <?php $this->T("no_results_c"); ?>
                             </td>
                         </tr>
-                    <?php } ?>
-                </table>
-            </td>
-            <td class="windowPart">
-                <span class="title"><?php $this->T("laatste_c") ?> <?php $this->T("payments_c") ?></span>
-                <table id="data" class="tablesorter ws_data_table" width="100%">
+                    <?php } ?>                               
+                    </tbody>
+                  </table>       
+                </div>                          
+              </div>
+            </div>
+            <div class="col-1">
+            <div class="panel panel-default aaa-theme-content-widget white-bg no-padding aaa-theme-overflow-hidden">
+              <div class="panel-heading aaa-theme-position-relative"><h2 class="text-uppercase"><?php $this->T("laatste_c") ?> <?php $this->T("payments_c") ?></h2></div>
+                <div class="table-responsive">
+                  <table class="table table-striped table-bordered">
                     <thead>
-                        <tr>
-                            <th><?php $this->T("date_c"); ?></th>
-                            <th><?php $this->T("amount_c"); ?></th>
-                            <th><?php $this->T("account_c"); ?></th>
-                        </tr>
+                      <tr>
+                        <td><?php $this->T("date_c"); ?></td>
+                        <td><?php $this->T("amount_c"); ?></td>
+                        <td><?php $this->T("account_c"); ?></td>
+                      </tr>
                     </thead>
-                    <?php if (!empty($this->payments)) { ?>
+                    <tbody>
+                      <?php if (!empty($this->payments)) { ?>
                         <?php foreach ($this->payments as $row) { ?>
                             <tr>
                                 <td><?php echo $this->Date($row->PAYMENT_DATE) ?></td>
@@ -210,13 +258,17 @@
                         <?php } ?>
                     <?php } else { ?>
                         <tr>
-                            <td colspan="3" class="no_results">
+                            <td colspan="3">
                                 <?php $this->T("no_results_c"); ?>
                             </td>
                         </tr>
-                    <?php } ?>
-                </table>
-            </td>
-        </tr>
-    </table>
-</div>
+                    <?php } ?>                    
+                    </tbody>
+                  </table>    
+                </div>                          
+              </div>
+            </div>                        
+          </div> <!-- Second row ends -->
+
+
+

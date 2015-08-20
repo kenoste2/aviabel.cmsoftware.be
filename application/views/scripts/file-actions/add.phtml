@@ -1,3 +1,9 @@
+
+         <div class="aaa-theme-flex-row flex-content-row">
+          <div class="col-1">
+
+            <div class="panel panel-default aaa-theme-content-widget white-bg no-padding aaa-theme-overflow-hidden">
+				<div class="table-responsive form-group">
 <form enctype="application/x-www-form-urlencoded" action="" method="post">
     <input type="hidden" name="index" value="<?php echo $this->index ?>">
     <?php
@@ -11,16 +17,16 @@
     }
     ?>
 
-    <table width="100%">
+                <table class="table">
         <tr>
-            <td class="windowPart" width="50%">
+            <td width="50%">
                 <?php echo $this->form->ACTION_DATE ?>
                 <?php echo $this->form->ACTION_CODE ?>
                 <?php echo $this->form->BP_STARTDATE ?>
                 <?php echo $this->form->BP_NR_PAYMENTS ?>
                 <?php echo $this->form->REMARKS ?>
             </td>
-            <td class="windowPart" width="50%">
+            <td width="50%">
                 <?php echo $this->form->TEMPLATE_ID ?>
                 <?php echo $this->form->VIA ?>
                 <?php echo $this->form->ADDRESS ?>
@@ -33,7 +39,11 @@
             </td>
         </tr>
     </table>
-</form>
+                </form>
+              </div>
+              </div>
+            </div>   
+            </div>
 
 
 <script>

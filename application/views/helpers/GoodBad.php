@@ -6,7 +6,7 @@ class Zend_View_Helper_GoodBad extends Zend_View_Helper_Abstract {
         if ($value) {
             $span = "";
         } else {
-             $span = "<span class='ui-icon-red ui-icon-circle-check'></span>";
+             $span = "<li class='fa fa-check-circle fa-fw'></li>";
         }
         return $span;
     }

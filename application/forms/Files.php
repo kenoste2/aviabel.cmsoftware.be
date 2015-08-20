@@ -15,25 +15,31 @@ class Application_Form_Files extends Zend_Form
         $this->addElement(
             'text', 'debtor', array(
             'required' => false,
+            'class' => 'form-control',
         ));
 
         $this->addElement('text', 'client', array(
             'required' => false,
+            'class' => 'form-control'
         ));
 
         $this->addElement('text', 'client_reference', array(
             'required' => false,
+            'class' => 'form-control',
         ));
 
         $this->addElement('text', 'from_file_nr', array(
             'required' => false,
+            'class' => 'form-control',
         ));
         $this->addElement('text', 'to_file_nr', array(
             'required' => false,
+            'class' => 'form-control',
         ));
 
         $this->addElement('text', 'invoice', array(
             'required' => false,
+            'class' => 'form-control',
         ));
 
         $collectors = $db->get_results("select COLLECTOR_ID,(CODE || ' - ' || NAME  ) AS NAME from SYSTEM\$COLLECTORS where ACTIF='Y' AND COALESCE(EXTERN, 0) = 0 order by NAME", ARRAY_N);
@@ -41,6 +47,7 @@ class Application_Form_Files extends Zend_Form
         $this->addElement('select', 'collector', array(
             'required' => false,
             'MultiOptions' => $functions->db2array($collectors),
+            'class' => 'form-control'
         ));
 
         $externalCollectors = $db->get_results("select COLLECTOR_ID,(CODE || ' - ' || NAME  ) AS NAME from SYSTEM\$COLLECTORS where ACTIF='Y' AND EXTERN = 1 order by NAME", ARRAY_N);
@@ -48,6 +55,7 @@ class Application_Form_Files extends Zend_Form
         $this->addElement('select', 'external_collector', array(
             'required' => false,
             'MultiOptions' => $functions->db2array($externalCollectors),
+            'class' => 'form-control'
         ));
 
         $stateCodes = $db->get_results("select STATE_ID,CODE from FILES\$STATES where ACTIEF='1' order by CODE", ARRAY_N);
@@ -55,6 +63,7 @@ class Application_Form_Files extends Zend_Form
         $this->addElement('select', 'state_id', array(
             'required' => false,
             'MultiOptions' => $functions->db2array($stateCodes),
+            'class' => 'form-control',
         ));
 
         $trainTypes = $db->get_results("select TRAIN_TYPE, TRAIN_TYPE AS DISPLAY from TRAIN group by TRAIN_TYPE order by TRAIN_TYPE", ARRAY_N);
@@ -62,6 +71,7 @@ class Application_Form_Files extends Zend_Form
         $this->addElement('select', 'train_id', array(
             'required' => false,
             'MultiOptions' => $functions->db2array($trainTypes),
+            'class' => 'form-control'
         ));
 
         $functions = new Application_Model_CommonFunctions();
@@ -77,7 +87,8 @@ class Application_Form_Files extends Zend_Form
                 'STATE_CODE' => $functions->T('state_code_c'),
                 'TOTAL' => $functions->T('total_c'),
                 'DEBTOR_SCORE' => $functions->T('nr_of_stars_c')
-            )
+            ),
+            'class' => 'form-control',
         ));
 
         $this->addElement('select', 'extra_compare', array(
@@ -86,11 +97,13 @@ class Application_Form_Files extends Zend_Form
                 '>=' => $functions->T('greater_then_c'),
                 '<=' => $functions->T('smaller_then_c'),
                 'containing' => $functions->T('containing_c'),
-            )
+                'class' => 'form-control'
+            ),
+            'class' => 'form-control',
         ));
 
 
-        $this->addElement('text', 'extra_text', array());
+        $this->addElement('text', 'extra_text', array('class' => 'form-control'));
         $this->addElement('checkbox', 'closed_files', array('value' => 'Y'));
 
 

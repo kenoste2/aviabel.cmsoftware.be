@@ -3,20 +3,23 @@ if ($this->deleted) {
     print $this->Ok($this->G("deleted_c"));
 }
 ?>
-<table id="data" class="tablesorter ws_data_table" width="100%">
-    <thead>
-        <tr>
-            <th><?php $this->T("payment_date_c"); ?></th>
-            <th><?php $this->T("creation_date_c"); ?></th>
-            <th><?php $this->T("amount_c"); ?></th>
-            <th><?php $this->T("invoice_c"); ?></th>
-            <th><?php $this->T("payment_for_c"); ?></th>
-            <th><?php $this->T("account_c"); ?></th>
-            <th><?php $this->T("description_c"); ?></th>
-            <th></th>
-            <th></th>
-        </tr>
-    </thead>
+		<div class="panel panel-default aaa-theme-content-widget white-bg no-padding aaa-theme-overflow-hidden">
+                <div class="table-responsive">
+                  <table class="table table-striped table-bordered">
+                    <thead>
+                      <tr>
+						<td><?php $this->T("payment_date_c"); ?></td>
+						<td><?php $this->T("creation_date_c"); ?></td>
+						<td><?php $this->T("amount_c"); ?></td>
+						<td><?php $this->T("invoice_c"); ?></td>
+						<td><?php $this->T("payment_for_c"); ?></td>
+						<td><?php $this->T("account_c"); ?></td>
+						<td><?php $this->T("description_c"); ?></td>
+						<td></td>
+						<td></td>
+                       </tr>
+                    </thead>
+                    <tbody>
     <?php if (!empty($this->results)) { ?>
         <?php foreach ($this->results as $row) { ?>
             <tr>
@@ -27,7 +30,7 @@ if ($this->deleted) {
                 <td><?php echo $row->PAYMENT_FOR ?></td>
                 <td><?php echo $row->ACCOUNT_CODE ?></td>
                 <td><?php echo $row->JOURNAL_DESCRIPTION ?></td>
-                <td><?php if (!empty($this->managePayments)) { ?><a href="<?php echo $this->location() ?>/file-payments/edit/id/<?php echo $row->PAYMENT_ID ?>/fileId/<?php echo $this->fileId ?>" ><span title ="<?php $this->T("edit_c") ?>"  class="ui-icon ui-icon-zoomin"></span><?php } ?></td>
+                <td><?php if (!empty($this->managePayments)) { ?><a href="<?php echo $this->location() ?>/file-payments/edit/id/<?php echo $row->PAYMENT_ID ?>/fileId/<?php echo $this->fileId ?>" ><li class="fa fa-search-plus fa-fw"></li><?php } ?></td>
                 <td><?php if (!empty($this->managePayments)) { ?><?php echo $this->Delete($this->location()."/file-payments/view/delete/".$row->PAYMENT_ID."/fileId/".$this->fileId, $this->Amount($row->AMOUNT)) ?><?php } ?></td>
             </tr>
         <?php } ?>
@@ -38,5 +41,9 @@ if ($this->deleted) {
             </td>
         </tr>
     <?php } ?>
-</table>
+</tbody>
+                  </table>    
+                </div>                          
+              </div>
+
 

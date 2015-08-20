@@ -1,3 +1,4 @@
+
 <?php
 function formatDate($dateStr) {
     if($dateStr) {
@@ -12,25 +13,30 @@ function formatDate($dateStr) {
 if(count($this->importedMails) > 0) {
     foreach($this->importedMails as $importedMail) {
         ?>
-        <div data-item="mail" class="collapsablePanel">
-            <div class="header">
-                <table>
-                    <tbody>
-                    <tr>
-                        <th colspan="4">
-                            <a href="<?php echo $this->pageRootUrl ?>/file-imported-mails/forward-email/fileId/<?php print $this->fileId ?>?email-id=<?php echo $importedMail['IMPORTED_MAIL_ID'] ?>" title="forward" class="ui-state-default ui-corner-all" style="display: inline-block; vertical-align: middle;"><span class="ui-icon ui-icon-arrowthick-1-e"></span></a>
+
+		<div class="panel panel-default aaa-theme-content-widget white-bg no-padding aaa-theme-overflow-hidden">
+		<div data-item="mail" class="collapsablePanel">
+		<div class="header">
+                <div class="table-responsive" data-item="mail">
+                  <table class="table table-bordered">
+                    <thead>
+                      <tr style="cursor: pointer">
+                        <td colspan="4">
+                            <a href="<?php echo $this->pageRootUrl ?>/file-imported-mails/forward-email/fileId/<?php print $this->fileId ?>?email-id=<?php echo $importedMail['IMPORTED_MAIL_ID'] ?>" title="forward"><li class="fa fa-share fa-fw"></li></a>
                             <?php echo formatDate($importedMail['CREATION_DATE']) ?> : <?php echo $importedMail['MAIL_SUBJECT'] ?>
-                        </th>
+                        </td>
                     </tr>
                     <tr>
-                        <th><?php $this->T('mail_from_c') ?>:</th><td><?php echo $importedMail['FROM_EMAIL'] ?></td>
-                        <th><?php $this->T('mail_to_c') ?>:</th><td><?php echo $importedMail['TO_EMAIL'] ?></td>
+                        <td><?php $this->T('mail_from_c') ?>:</th><td><?php echo $importedMail['FROM_EMAIL'] ?></td>
+                        <td><?php $this->T('mail_to_c') ?>:</th><td><?php echo $importedMail['TO_EMAIL'] ?></td>
                     </tr>
-                    </tbody>
+                    </thead>
                 </table>
             </div>
-            <div class="body">
-                <table width="100%">
+		</div>
+		<div class="body">	
+           <div class="table-responsive">
+                <table class="table table-bordered">
                     <tbody>
                         <tr>
                             <td width="70%"><?php echo preg_replace("/\n/",'</br>', $importedMail['MAIL_BODY']) ?></td>
@@ -48,6 +54,9 @@ if(count($this->importedMails) > 0) {
                 </table>
             </div>
         </div>
+</div>
+</div>
+
     <?php
     }
 } else { ?>

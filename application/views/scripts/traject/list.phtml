@@ -1,16 +1,41 @@
-<table class="ws_data_table" width="100%">
-    <thead>
-        <tr>
-            <th><?php $this->T('referenceclient_c') ?></th>
-            <th><?php $this->T('name_c') ?></th>
-            <th><?php $this->T('state_code_c') ?></th>
-            <th><?php $this->T('amount_c') ?></th>
-            <th><?php $this->T('total_c') ?></th>
-        </tr>
-    </thead>
-    <tbody>
-        <?php foreach ($this->results as $index => $file): ?>
-            <tr onclick="newscreen('<?php echo $file->DEBTOR_NAME ?>', '<?php echo $this->location() ?>/file-detail/view/fileId/<?php echo $file->FILE_ID; ?>')">
+		<script>
+		$(document).ready(function(){
+   		$('tr.dossier').bind('click', function(){
+
+        var record_id   = $(this).attr('id');
+
+        var link        = '<?php echo $this->location() ?>/file-detail/view/fileId/' + record_id;
+
+        $.fancybox({
+            'width'             : '100%',
+            'height'            : '100%',
+            'autoScale'         : false,
+            'transitionIn'      : 'none',
+            'transitionOut'     : 'none',
+            'type'              : 'iframe',
+            'href'              : link
+				});
+			});
+		});
+		</script>
+		
+          <div class="aaa-theme-flex-row flex-content-row">
+            <div class="col-1">
+              <div class="panel panel-default aaa-theme-content-widget white-bg no-padding aaa-theme-overflow-hidden">
+                <div class="table-responsive">
+                 <table class="table table-striped table-bordered">
+                    <thead>
+                      <tr>
+            <td><?php $this->T('referenceclient_c') ?></td>
+            <td><?php $this->T('name_c') ?></td>
+            <td><?php $this->T('state_code_c') ?></td>
+            <td><?php $this->T('amount_c') ?></td>
+            <td><?php $this->T('total_c') ?></td>
+                      </tr>
+                    </thead>
+                    <tbody>
+ <?php foreach ($this->results as $index => $file): ?>
+            <tr  class="dossier" style="cursor: pointer" id="<?php echo $file->FILE_ID; ?>" >
                 <td><?php echo $file->REFERENCE ?></td>
                 <td><?php echo $file->DEBTOR_NAME ?><br><?php echo $file->DEBTOR_ADDRESS ?><br><?php echo $file->DEBTOR_ZIP_CODE . ' ' . $file->DEBTOR_CITY ?>
                     <?php echo ($file->DEBTOR_TELEPHONE) ? '<br>Tel.: ' . $file->DEBTOR_TELEPHONE : ''; ?>
@@ -20,5 +45,9 @@
                 <td class="right"><?php echo number_format($file->PAYABLE, 2, ',', '.') ?></td>
             </tr>
         <?php endforeach; ?>
-    </tbody>
-</table>
+    </table>
+                </div>                          
+              </div>
+            </div>  
+          </div> 
+<!-- Second row ends -->

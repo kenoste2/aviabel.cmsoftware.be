@@ -6,6 +6,10 @@
             });
         })
     </script>
+<div class="aaa-theme-flex-row flex-content-row aaa-theme-overflow-hidden"> <!-- overflow hidden for iPad mini landscape view-->
+            <div class="col-1">              
+              <div class="aaa-theme-content-widget white-bg col-1 text-center">
+			  <br>
     <form method="get">
         <select name="clientId" id="clientId">
             <?php foreach ($this->clients as $client): ?>
@@ -17,6 +21,7 @@
         </select>
     </form>
     <br>
+	<br>
 <?php endif; ?>
 <?php if (!empty($this->aging)): ?>
     <style>
@@ -48,64 +53,21 @@
     <script type="text/javascript" src="<?php echo $this->location() ?>/public/amcharts/amcharts.js"></script>
     <script type="text/javascript" src="<?php echo $this->location() ?>/public/amcharts/pie.js"></script>
 
-            <!--<td width="50%">
-                <table class="ws_data_table">
-                    <thead>
-                    <tr>
-                        <th><?php echo $this->T('type_c') ?></th>
-                        <th><?php echo $this->T('not_due_c') ?></th>
-                        <th>1-90 <?php $this->T("days_c")?></th>
-                        <th>91-100 <?php $this->T("days_c")?></th>
-                        <th>101-365 <?php $this->T("days_c")?></th>
-                        <th>366-.. <?php $this->T("days_c")?></th>
-                        <th><?php echo $this->T('Total_c') ?></th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <?php foreach ($this->aging as $type => $row): ?>
-                        <tr>
-                            <td><?php echo $type ?></td>
-                            <td><?php echo $row['0']->COUNT; ?></td>
-                            <td><?php echo $row['1-90']->COUNT; ?></td>
-                            <td><?php echo $row['91-100']->COUNT; ?></td>
-                            <td><?php echo $row['101-365']->COUNT; ?></td>
-                            <td><?php echo $row['365+']->COUNT; ?></td>
-                            <td class="label"><?php echo $row['0']->COUNT + $row['1-91']->COUNT + $row['91-100']->COUNT + $row['101-365']->COUNT + $row['365+']->COUNT; ?></td>
-                        </tr>
-                        <?php
-                        $count['0'] += $row['0']->COUNT;
-                        $count['1-90'] += $row['1-90']->COUNT;
-                        $count['91-100'] += $row['91-100']->COUNT;
-                        $count['101-365'] += $row['101-365']->COUNT;
-                        $count['365+'] += $row['365+']->COUNT;
-                        ?>
-                    <?php endforeach; ?>
-                    <tfoot>
-                    <tr>
-                        <td><?php echo $this->T('Total_c') ?></td>
-                        <td><?php echo $count['0']*1 ?></td>
-                        <td><?php echo $count['1-90']*1 ?></td>
-                        <td><?php echo $count['91-100']*1 ?></td>
-                        <td><?php echo $count['101-365']*1 ?></td>
-                        <td><?php echo $count['365+']*1 ?></td>
-                        <td><?php echo $count['0'] + $count['1-90'] + $count['91-100'] + $count['101-365'] + $count['365+']; ?></td>
-                    </tr>
-                    </tfoot>
-                    </tbody>
-                </table>
-            -->
-            <table class="ws_data_table" width="100%">
+ <div class="table-responsive">
+					<table class="table table-striped table-bordered">
+					<thead>
+					
                 <thead>
                 <tr>
-                    <th><?php echo $this->T('type_c') ?></th>
-                    <th><?php echo $this->T('not_due_c') ?></th>
-                    <th>< 1 M</th>
-                    <th>< 3 M</th>
-                    <th>< 6 M</th>
-                    <th>< 12 M</th>
-                    <th>< 24 M</th>
-                    <th>> 24 M</th>
-                    <th><?php echo $this->T('Total_c') ?></th>
+                    <td><?php echo $this->T('type_c') ?></td>
+                    <td><?php echo $this->T('not_due_c') ?></td>
+                    <td>< 1 M</td>
+                    <td>< 3 M</td>
+                    <td>< 6 M</td>
+                    <td>< 12 M</td>
+                    <td>< 24 M</td>
+                    <td>> 24 M</td>
+                    <td><?php echo $this->T('Total_c') ?></td>
                 </tr>
                 </thead>
                 <tbody>
@@ -119,7 +81,7 @@
                         <td align="right"><?php echo $this->amount($row['181-365']->SUM); ?></td>
                         <td align="right"><?php echo $this->amount($row['366-730']->SUM); ?></td>
                         <td align="right"><?php echo $this->amount($row['731+']->SUM); ?></td>
-                        <td align="right" class="label"><?php echo $this->amount($row['0']->SUM + $row['1-30']->SUM + $row['31-90']->SUM + $row['91-180']->SUM + $row['181-365']->SUM + $row['366-730']->SUM + $row['731+']->SUM); ?></td>
+                        <td align="right"	><?php echo $this->amount($row['0']->SUM + $row['1-30']->SUM + $row['31-90']->SUM + $row['91-180']->SUM + $row['181-365']->SUM + $row['366-730']->SUM + $row['731+']->SUM); ?></td>
                     </tr>
                     <?php
                     $total['0'] += $row['0']->SUM;
@@ -146,9 +108,16 @@
                 </tfoot>
                 </tbody>
             </table>
-    <table width="100%">
-        <tr>
-            <td>
+			
+	                </div>                          
+              </div>
+            </div>  
+          </div> 
+		  
+		       <div class="aaa-theme-flex-row flex-content-row">
+            <div class="col-1">
+              <div class="panel panel-default aaa-theme-content-widget white-bg no-padding aaa-theme-overflow-hidden">	  
+  
                 <script>
                     var chart = AmCharts.makeChart("chartdiv2", {
                         "type": "pie",
@@ -168,10 +137,10 @@
                 </script>
 
                 <div id="chartdiv2"></div>
-
-            </td>
-        </tr>
-    </table>
+              </div>
+            </div>  
+          </div> 
+   
 <?php else: ?>
     <?php echo $this->Message($this->G("no_results_c")); ?>
 <?php endif; ?>

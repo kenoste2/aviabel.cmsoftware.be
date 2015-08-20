@@ -1,91 +1,94 @@
-<!-- application/layouts/scripts/layout.phtml -->
 <?php echo $this->doctype() ?>
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-        <title><?php echo $this->headerTitle ?></title>
-        <?php echo $this->headLink()->appendStylesheet(BASE_URL . 'css/global.css') ?>
-        <?php echo $this->headLink()->appendStylesheet(BASE_URL . 'css/start/jquery-ui-1.10.4.custom.css') ?>
-        <?php echo $this->headScript()->appendFile(BASE_URL . 'js/jquery-1.10.2.js') ?>
-        <?php echo $this->headScript()->appendFile(BASE_URL . 'js/jquery-ui-1.10.4.custom.js') ?>
-        <?php //echo $this->headScript()->appendFile(BASE_URL . 'js/jquery.tablesorter.js') ?>
+        <title><?php echo $this->headerTitle?></title>
+        <?php echo $this->headLink()->appendStylesheet(BASE_URL . 'css/font-awesome.min.css') ?>
+        <?php echo $this->headLink()->appendStylesheet(BASE_URL . 'css/bootstrap.min.css') ?>
+        <?php echo $this->headLink()->appendStylesheet(BASE_URL . 'css/aaa-theme-style.css') ?>
+        <?php echo $this->headScript()->appendFile(BASE_URL . 'js/jquery-1.11.2.min.js') ?>
+        <?php echo $this->headScript()->appendFile(BASE_URL . 'js/jquery-migrate-1.2.1.min.js') ?>
+        <?php echo $this->headScript()->appendFile(BASE_URL . 'js/aaa-theme-script.js') ?>
         <?php echo $this->headScript()->appendFile(BASE_URL . 'js/app.js') ?>
-        <style>
-            div#addButton{
-                position:absolute;
-                right: 5px;
-                z-index: 100;
-                top : 40px;
-            }     
-        </style>
-        <style type="text/css">
-            @media print {
-                .noprint { display: none; }
-            }
-        </style>
-        <style>
-            .ui-autocomplete-loading { background: white url('images/ui-anim_basic_16x16.gif') right center no-repeat; }
-        </style>
-    </head>
-    <body>
-        <div id="addButton"  class="noprint">
-            <?php if ($this->addButton) { ?><div onClick=location.href="<?php echo $this->Location() ?><?php echo $this->addButton ?>"  class="ui-state-default ui-corner-all" title="<?php $this->T("add_c") ?>"><span class="ui-icon ui-icon-plus"></span></div><?php } ?>
-            <?php if ($this->exportButton) { ?><div onClick=location.href="<?php echo $this->Location() ?>/export/csv" class="ui-state-default ui-corner-all" title="<?php $this->T("export_csv_c") ?>"><span class="ui-icon ui-icon-disk"></span></div><?php } ?>
-            <?php if ($this->printButton) { ?><div onClick="window.print()" class="ui-state-default ui-corner-all" title="<?php $this->T("print_content_c") ?>"><span class="ui-icon ui-icon-print"></span></div><?php } ?>
-        </div>        
+        
 
-        <div id="content">
-            <script>
-                $(function() {
-                    $(".menu").menu({position: {my: "left top", at: "left-2"}});
-                });
-            </script>
-            <div class="title" style="text-align:center; width: 100%">
-                <?php if (!empty($this->client->NAME)) { ?>
-                <?php echo $this->client->NAME ?>
-                <?php } else { ?>
-                    <?php echo $this->T("new_client_c"); ?>
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    
+    <!-- amCharts javascript sources -->
+    	
+        <?php echo $this->headScript()->appendFile(BASE_URL . 'js/amcharts.js') ?>
+		<?php echo $this->headScript()->appendFile(BASE_URL . 'js/am/pie.js') ?>
+		<?php echo $this->headScript()->appendFile(BASE_URL . 'js/am/gauge.js') ?>
+		<?php echo $this->headScript()->appendFile(BASE_URL . 'js/am/serial.js') ?>
+		
+	<!-- FancyBox -->
+		<?php echo $this->headScript()->appendFile(BASE_URL . 'js/fancybox/source/jquery.fancybox.pack.js') ?>
+		<?php echo $this->headLink()->appendStylesheet(BASE_URL . 'js/fancybox/source/jquery.fancybox.css') ?>
+        
+  </head>
+  <body>  
+<!-- Left column not needed -->
+    <div class="aaa-theme-flex-row">      
+      <!-- Main content --> 
+      <div class="aaa-theme-content col-1 light-gray-bg">
+        <div class="aaa-theme-top-nav-container">
+          <div class="row">
+		  
+				<?php if (!empty($this->client->NAME)) { ?>
+				<h2 class="text-uppercase"><?php echo $this->client->NAME ?></h2><br /><br />
+			    <?php } else { ?>
+                <h2 class="text-uppercase"><?php echo $this->T("new_client_c"); ?></h2><br /><br />
                 <?php } ?>
-            </div>
+			
+			<nav class="aaa-theme-top-nav col-lg-12 col-md-12">
+              <ul class="text-uppercase">
+                <li><a  href="<?php echo $this->location() ?>/client-detail/view/clientId/<?php echo $this->clientId ?>"><?php print $this->T("general_c") ?></a></li>
+				<?php if (!empty($this->showAllMenu)) { ?>
+					<li><a href="<?php echo $this->location() ?>/client-costs/view/clientId/<?php echo $this->clientId ?>"><?php print $this->T("invoiceable_costs_c") ?></a></li>
+					<?php if ($this->viewInvoices) { ?>
+					<li><a href="<?php echo $this->location() ?>/client-invoices/view/clientId/<?php echo $this->clientId ?>"><?php print $this->T("menu_invoices_c") ?></a></li>
+					<?php } ?>
+					<li><a href="<?php echo $this->location() ?>/client-contacts/view/clientId/<?php echo $this->clientId ?>"><?php print $this->T("contacts_c") ?></a></li>
+                <?php } ?>
+              </ul>  
+            </nav> 
+          </div>
+        </div>
 
+       <!-- main content -->
+		
+               <div class="aaa-theme-content-container">
+			   <?php if (($this->printButton) OR ($this->addButton) OR ($this->printButton)) { ?>
+				  <div class="aaa-theme-flex-row flex-content-row aaa-theme-overflow-hidden"> <!-- overflow hidden for iPad mini landscape view-->
+					<div class="col-1">              
+					  <div class="aaa-theme-content-widget no-padding light-gray-bg col-1 text-center">
+					  <table class="responsive" width="100%">
+					  <tr bg>
+						<td align="left">&nbsp;</td>
+						<td align="right"><?php if (!empty($this->bread)) { ?><i><?php echo $this->bread ?></i><?php } ?>
+						
+							<?php if ($this->addButton) { ?><a style="cursor: pointer" href="<?php echo $this->Location() ?><?php echo $this->addButton ?>" title="<?php $this->T("add_c") ?>"><li class="fa fa-plus-square-o fa-fw"></li></a><?php } ?>
+							<?php if ($this->exportButton) { ?><a style="cursor: pointer" href="<?php echo $this->Location() ?>/export/csv"><li class="fa fa-floppy-o fa-fw"></li></a><?php } ?>
+							<?php if ($this->printButton) { ?><a style="cursor: pointer" onclick="window.print()"><li class="fa fa-print fa-fw"></li></a><?php } ?>
+						
+						</td>
+					  </tr>
+					  </table>	   
+					</div>        
+					</div> 
+				  </div>  
+				<?php } ?>	
 
-            <div id="header" style="position: relative; width: 100%;" >
-                <div id="menu">
-                    <table>
-                        <tr>
-                            <td>
-                                <ul id="menu1" class="menu">
-                                    <li><a  href="<?php echo $this->location() ?>/client-detail/view/clientId/<?php echo $this->clientId ?>"><?php print $this->T("general_c") ?></a></li>
-                                </ul>
-                            </td>
-                            <?php if (!empty($this->showAllMenu)) { ?>
-                            <td>
-                                <ul id="menu4" class="menu">
-                                    <li><a href="<?php echo $this->location() ?>/client-costs/view/clientId/<?php echo $this->clientId ?>"><?php print $this->T("invoiceable_costs_c") ?></a></li>
-                                </ul>
-                            </td>
-                            <?php if ($this->viewInvoices) { ?>
-                            <td>
-                                <ul id="menu5" class="menu">
-                                    <li><a href="<?php echo $this->location() ?>/client-invoices/view/clientId/<?php echo $this->clientId ?>"><?php print $this->T("menu_invoices_c") ?></a></li>
-                                </ul>
-                            </td>
-                            <?php } ?>
-                            <td>
-                                <ul id="menu6" class="menu">
-                                    <li><a href="<?php echo $this->location() ?>/client-contacts/view/clientId/<?php echo $this->clientId ?>"><?php print $this->T("contacts_c") ?></a></li>
-                                </ul>
-                            </td>
-                            <?php } ?>
-                        </tr>
-                    </table>
-                </div>
-
-            </div>
-            <br><br>
-                    <div id="actioncontent">
-                        <?php echo $this->layout()->content ?>
-                    </div>
+				
+					  <?php echo $this->layout()->content ?>
+						
+						
+						
                     <script>
 <?php
 if (!empty($this->errors)) {
@@ -98,7 +101,19 @@ if (!empty($this->errors)) {
     }
 }
 ?>
-                    </script>
-                    </div>
-                    </body>
-                    </html>
+                   </script>
+                    <footer class="text-right">
+            <p>&copy; Triple-A Solutions</p>
+          </footer>         
+        </div>
+      </div>
+    </div>
+<script type="text/javascript">
+    $('input').addClass('form-control');
+    $('select').addClass('form-control');
+    $('checkbox').addClass('form-control');
+    $('input[type=submit]').addClass('aaa-theme-orange-button');
+</script>
+  </body>
+</html>
+

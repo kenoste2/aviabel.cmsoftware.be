@@ -3,6 +3,7 @@
         $("#tabs").tabs();
     });
 </script>
+
 <div id="tabs" class="tabs">
 <ul>
     <li><a href="#debtorTab"><?php print $this->T("select_debtor_c") ?></a></li>
@@ -10,29 +11,34 @@
     <li><a href="#invoicesTab"><?php print $this->T("input_invoices_c") ?></a></li>
     <li><a href="#createTab"><?php print $this->T("confirm_create_file_c") ?></a></li>
 </ul>
+
 <div id="debtorTab">
-    <?php
-    if ($this->showDebtorError) {
-        print $this->Error($this->G("not_all_fields_c"));
-    }
-    ?>
-    <?php
-    if ($this->showDebtorSaved) {
-        print $this->Ok($this->G("saved_c"));
-    }
-    ?>
-    <?php
-    if ($this->showBinfoNoReport) {
-        print $this->Ok($this->G("report_not_available"));
-    }
-    ?>
-    <table width="100%">
-        <tr>
-            <td class="windowPart" width="50%">
+				  
+          <div class="aaa-theme-flex-row flex-content-row">
+            <div class="col-1">
+              <div class="panel panel-default aaa-theme-content-widget white-bg no-padding aaa-theme-overflow-hidden">
+					  <div class="panel-heading aaa-theme-position-relative"><h2 class="text-uppercase"> <?php print $this->T("select_debtor_c") ?> </h2></div>
+					  <table class="table"><tbody><tr><td>
+
+					<?php
+					if ($this->showDebtorError) {
+						print $this->Error($this->G("not_all_fields_c"));
+					}
+					?>
+					<?php
+					if ($this->showDebtorSaved) {
+						print $this->Ok($this->G("saved_c"));
+					}
+					?>
+					<?php
+					if ($this->showBinfoNoReport) {
+						print $this->Ok($this->G("report_not_available"));
+					}
+					?>
+
                 <form method=post action='<?php echo $this->Location(); ?>/files/add'>
                     <input type="hidden" name="sessionId" value="<?php echo $this->sessionId ?>">
                     <input type="hidden" name="debtorForm" value="1">
-                    <span class="title"><?php print $this->T("select_debtor_c") ?></span>
                     <?php echo $this->debtorForm->DEBTOR_ID ?>
                     <?php echo $this->debtorForm->NAME ?>
                     <?php echo $this->debtorForm->VATNR ?>
@@ -51,19 +57,28 @@
                     <?php echo $this->debtorForm->submit ?>
 
                 </form>
-            </td>
-            <?php if (!empty($this->binfo)) { ?>
-                <td class="windowPart" width="50%" id="binfoPart" name="binfoPart">
-                    <span class='title'><?php print $this->T("search_on_binformation") ?></span>
+        
+					
+					</td></tr></tbody></table>
+				  </div>	</div> 
+
+				  
+            <div class="col-1">
+                <?php if (!empty($this->binfo)) { ?>
+              <div class="panel panel-default aaa-theme-content-widget white-bg no-padding aaa-theme-overflow-hidden">
+					  <div class="panel-heading aaa-theme-position-relative"><h2 class="text-uppercase"> <?php print $this->T("search_on_binformation") ?> </h2></div>
+
+					  <table class="table"><tbody><tr><td>
+            
+               
                         <?php echo $this->bInfoForm ?>
                         <table id="binfoContent">
                             <binfoPart>
                             </binfoPart>
                         </table>
-                </td>
-            <?php } ?>
-        </tr>
-    </table>
+               
+            
+
     <script>
         function SearchBinformation() {
 
@@ -130,8 +145,24 @@
             $("#BIRTH_DAY").datepicker({dateFormat: 'dd/mm/yy', defaultDate: "-30y"});
         });
     </script>
+	
+	</td></tr></tbody></table>
+
 </div>
+
+						</div>
+              <?php } ?>
+					</div> 
+			  
+</div>
+
 <div id="clientTab">
+         <div class="aaa-theme-flex-row flex-content-row">
+            <div class="col-1">
+              <div class="panel panel-default aaa-theme-content-widget white-bg no-padding aaa-theme-overflow-hidden">
+					  <div class="panel-heading aaa-theme-position-relative"><h2 class="text-uppercase"> <?php print $this->T("select_client_c") ?> </h2></div>	
+					  <table class="table"><tbody><tr><td>
+
     <?php
     if ($this->showIncorrectClientError) {
         print $this->Error($this->G("incorrect_client_c"));
@@ -149,7 +180,6 @@
     <form method=post action='<?php echo $this->Location(); ?>/files/add'>
         <input type="hidden" name="sessionId" value="<?php echo $this->sessionId ?>">
         <input type="hidden" name="clientForm" value="1">
-        <span class="title"><?php print $this->T("select_client_c") ?></span>
         <?php echo $this->clientForm->client_id ?>
         <?php echo $this->clientForm->client_name ?>
         <?php echo $this->clientForm->client_reference ?>
@@ -186,8 +216,19 @@
             });
         });
     </script>
+	</td></tr></table>
 </div>
+</div>
+</div>
+</div>
+
 <div id="invoicesTab">
+         <div class="aaa-theme-flex-row flex-content-row">
+            <div class="col-1">
+              <div class="panel panel-default aaa-theme-content-widget white-bg no-padding aaa-theme-overflow-hidden">
+					  <div class="panel-heading aaa-theme-position-relative"><h2 class="text-uppercase"> <?php print $this->T("input_invoices_c") ?></h2></div>
+
+
     <?php
     if ($this->showInvoiceError) {
         print $this->Error($this->G("not_all_fields_c"));
@@ -208,10 +249,9 @@
         <input type="hidden" name="invoiceForm" value="1">
         <input type="hidden" name="sessionId" value="<?php echo $this->sessionId ?>">
         <input type="hidden" name="invoiceForm" value="1">
-        <table id="Invoices">
+        <table id="Invoices" class="table">
             <tr>
                 <td>
-                    <span class="title"><?php print $this->T("input_invoices_c") ?></span>
                     <table>
                         <tr>
                             <td>
@@ -233,7 +273,7 @@
                 <td>
 
                     <?php if (!empty($this->invoices)) { ?>
-                        <table id="data" class="tablesorter ws_data_table" width="100%">
+                        <table id="data" class="table table-striped table-bordered" width="100%">
                             <thead>
                             <tr>
                                 <th><?php $this->T("factuurnummer_c"); ?></th>
@@ -250,9 +290,8 @@
                                     <td><?php echo $this->Date($invoice['start_date']) ?></td>
                                     <td><?php echo $this->Amount($invoice['amount']) ?></td>
                                     <td>
-                                        <a href="<?php echo $this->Location(); ?>/files/add/deleteInvoice/<?php echo $key; ?>/sessionId/<?php echo $this->sessionId ?>/deleteForm/1"><span
-                                                title="<?php $this->T("delete_c") ?>"
-                                                class="ui-icon ui-icon-trash"></span></a></td>
+                                        <a href="<?php echo $this->Location(); ?>/files/add/deleteInvoice/<?php echo $key; ?>/sessionId/<?php echo $this->sessionId ?>/deleteForm/1">
+										<li class="fa fa-trash-o fa-fw"></li></a></td>
                                 </tr>
                             <?php } ?>
                         </table>
@@ -269,26 +308,32 @@
             $("#start_date").datepicker({dateFormat: 'dd/mm/yy', defaultDate: "-30"});
         });
     </script>
-</div>
+</div></div></div></div>
+
 <div id="createTab">
+         <div class="aaa-theme-flex-row flex-content-row">
+            <div class="col-1">
+              <div class="panel panel-default aaa-theme-content-widget white-bg no-padding aaa-theme-overflow-hidden">
+					  <div class="panel-heading aaa-theme-position-relative"><h2 class="text-uppercase"> <?php $this->T("file_will_be_created_c"); ?></h2></div>
+						<table class="table"><tbody><tr><td>
+
     <form method=post action='<?php echo $this->Location(); ?>/files/create'>
         <input type="hidden" name="sessionId" value="<?php echo $this->sessionId ?>">
-        <?php $this->T("file_will_be_created_c"); ?>
         <br><br>
         <table>
             <tr>
-                <td class="label"><?php $this->T("client_c"); ?></td>
+                <td><?php $this->T("client_c"); ?></td>
                 <td><?php echo $this->session->client['client_name'] ?></td>
             </tr>
             <tr>
-                <td class="label"><?php $this->T("debtor_c"); ?></td>
+                <td><?php $this->T("debtor_c"); ?></td>
                 <td><?php echo $this->session->debtor['NAME'] ?>
                     <br><?php echo $this->session->debtor['ADDRESS'] ?>
                     <br><?php echo $this->session->debtor['ZIP_CODE'] ?> <?php echo $this->session->debtor['CITY'] ?>
                 </td>
             </tr>
             <tr>
-                <td class="label"><?php $this->T("total_c"); ?></td>
+                <td><?php $this->T("total_c"); ?></td>
                 <td><?php echo $this->Amount($this->session->totalAmount) ?></td>
             </tr>
             <tr>
@@ -296,8 +341,9 @@
                                                      value='<?php $this->T("confirm_create_c"); ?>'></td>
             </tr>
         </table>
+		</form></td></tr></tbody></table>
 </div>
-</div>
+</div></div></div></div>
 <script>
     $(function () {
         $("#tabs").tabs({active: <?php echo $this->activeTab ?> <?php echo $this->disabledTab; ?> });

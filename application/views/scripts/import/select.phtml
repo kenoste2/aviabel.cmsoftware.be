@@ -1,32 +1,45 @@
-<?php if ($this->imported): ?>
-    <p><?php echo $this->Message($this->G('files_processed_c')); // $this->imported; ?></p>
-<?php endif; ?>
+          <div class="aaa-theme-flex-row flex-content-row">
+            <div class="aaa-theme-content-widget white-bg col-4 text-center">
+              <?php if ($this->imported): ?>
+					<p><?php echo $this->Message($this->G('files_processed_c')); // $this->imported; ?></p>
+				<?php endif; ?>
 
-<?php if ($this->showForm): ?>
-<?php echo $this->importFilesForm; ?>
+				<?php if ($this->showForm): ?>
+				<?php echo $this->importFilesForm; ?>
+            </div>  
+          </div>
+	
+          <div class="aaa-theme-flex-row flex-content-row">
+            <div class="aaa-theme-content-widget white-bg col-1">
+				<div>
+				<?php print str_replace("\n",",",$this->columns); ?>
+				</div>
+            </div>  
+          </div>
 
-<br><h1>formaat</h1>
-<div>
-<pre>
-<?php print_r($this->columns); ?>
-</pre>
-</div>
+
+
 <?php endif; ?>
 <?php if ($this->showList): ?>
 
 <?php if(count($this->tempImports) || count($this->tempImportsNieuw)): ?>
-<div>
-    <table class="ws_data_table" style="width: 100%">
-        <thead>
-        <tr>
-                <th><?php $this->T('reference_c') ?></th>
-                <th><?php $this->T('debtor_c') ?></th>
-                <th><?php $this->T('amount_c') ?></th>
-                <th><?php $this->T('Email_c') ?></th>
-                <th><?php $this->T('references_c') ?></th>
-            </tr>
-        </thead>
-        <tbody>
+          <div class="aaa-theme-flex-row flex-content-row">
+            <div class="col-1">
+              <div class="panel panel-default aaa-theme-content-widget white-bg no-padding aaa-theme-overflow-hidden">
+                <div class="panel-heading aaa-theme-position-relative"><h2 class="text-uppercase"></h2></div>
+                <div class="table-responsive">
+				                  <table class="table table-striped table-bordered">
+                    <thead>
+                      <tr>
+						<td><?php $this->T('reference_c') ?></td>
+						<td><?php $this->T('debtor_c') ?></td>
+						<td><?php $this->T('amount_c') ?></td>
+						<td><?php $this->T('Email_c') ?></td>
+						<td><?php $this->T('references_c') ?></td>
+                    
+                      </tr>
+                    </thead>
+                    <tbody>
         <?php if(count($this->tempImports)): ?>
             <?php foreach ($this->tempImports as $row):
                 $sum_amount += $row->TOTAL_AMOUNT;
@@ -113,7 +126,6 @@
     <form method="post" action="<?php echo $this->location() ?>/import/process">
         <input type="submit" name="submit"  class="submit" value="<?php $this->T('bestanden_importeren_c') ?>" />
     </form>
-</div>
 <?php endif; ?>
 <?php endif; ?>
 <script>
@@ -148,3 +160,7 @@
         });
     });
 </script>
+                </div>                          
+              </div>
+            </div>  
+          </div> <!-- Second row ends -->

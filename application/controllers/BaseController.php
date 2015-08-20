@@ -25,6 +25,10 @@ class BaseController extends Zend_Controller_Action {
         }
 
         $controllerName = $this->getRequest()->getControllerName();
+        $actionName = $this->getRequest()->getActionName();
+
+        $this->nav = $controllerName."/".$actionName;
+        $this->view->nav = $this->nav ;
 
         if (!$auth->hasIdentity() &&  $controllerName != 'cron' &&  $controllerName != 'download' ) {
             $this->redirect('/Auth/Login');
@@ -34,6 +38,8 @@ class BaseController extends Zend_Controller_Action {
         $this->auth = $authNamespace;
 
         $this->view->menu = $authNamespace->menu;
+
+        $this->view->currentMenu = $this->getSubmenu();
 
         $this->view->headerTitle = $config->appname;
     }
@@ -50,6 +56,25 @@ class BaseController extends Zend_Controller_Action {
         }
         return false;
     }
+
+    public function getSubmenu() {
+
+        $authNamespace = new Zend_Session_Namespace('Zend_Auth');
+
+        $menu = array();
+
+        if (!empty($authNamespace->menu)) {
+            foreach ($authNamespace->menu as $menu) {
+
+                foreach ($menu['SUBMENU'] as $submenu) {
+                    if ($this->nav == $submenu['NAV']) {
+                        return $menu;
+                    }
+                }
+            }
+        }
+    }
+
 
     public function checkAccessAndRedirect($menuAccessItems, $accessItems = array()) {
         foreach($menuAccessItems as $item) {

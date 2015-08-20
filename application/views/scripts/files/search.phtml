@@ -1,160 +1,223 @@
-<style>
-    #chartdiv {
-        width: 450px;
-        height: 200px;
-        position: absolute;
-        float: right;
-    }
-</style>
-<script type="text/javascript" src="<?php echo $this->location() ?>/public/amcharts/amcharts.js"></script>
-<script type="text/javascript" src="<?php echo $this->location() ?>/public/amcharts/pie.js"></script>
+		<!-- FACTUREN javascript code -->
+		<script type="text/javascript">
+			AmCharts.makeChart("vervallen",
+				{
+					"type": "pie",
+					"balloonText": "",
+					"labelText": "",
+					"titleField": "titel",
+					"valueField": "waarde",
+					"allLabels": [],
+					"balloon": {},
+					"legend": {
+						"align": "center",
+						"markerType": "circle",
+						"position": "right",
+						"valueText": ""
+					},
+					"titles": [],
+					"dataProvider": [
+						{
+							"titel": "<?php echo $this->T("past_due_c") ?>",
+							"waarde": <?php echo $this->totalPastDue ?>
+						},
+						{
+							"titel": "<?php echo $this->T("not_due_c") ?>",
+							"waarde": <?php echo $this->totalNotDue ?>
+						}
+					]
+				}
+			);
+		</script>
+		
+		<script>
+		$(document).ready(function(){
+   		$('tr.dossier').bind('click', function(){
 
-<script>
-    var chart = AmCharts.makeChart("chartdiv", {
-        "type": "pie",
-        "theme": "none",
-        "dataProvider": [
-            {
-                "titel": "<?php echo $this->T("past_due_c") ?>",
-                "waarde": <?php echo $this->totalPastDue ?>
-            },
-            {
-                "titel": "<?php echo $this->T("not_due_c") ?>",
-                "waarde": <?php echo $this->totalNotDue ?>
-            }],
-        "valueField": "waarde",
-        "titleField": "titel",
-    });
-</script>
+        var record_id   = $(this).attr('id');
 
+        var link        = '<?php echo $this->location() ?>/file-detail/view/fileId/' + record_id;
+
+        $.fancybox({
+            'width'             : '100%',
+            'height'            : '100%',
+            'autoScale'         : false,
+            'transitionIn'      : 'none',
+            'transitionOut'     : 'none',
+            'type'              : 'iframe',
+            'href'              : link
+				});
+			});
+		});
+		</script>
 <?php
 if ($this->deleted) {
     print $this->Ok($this->G("deleted_c"));
 }
 ?>
 
-<div class="toggler noprint">
-    <div id="searchbox"  style="width: 600px;">
-        <form action="<?php echo $this->location() ?>/files/search" method="post">
-            <input type="hidden" name='formSubmit' value='1'>
-            <table>
-                <tr>
-                    <td class="ui-widget-content" >
-                        <table width="100%">
-                            <thead>
-                                <tr>
-                                    <th colspan="2"><?php print $this->T("search_files_c") ?></th>
-                                </tr>
-                            </thead>
-                            <tr>
-                                <?php if (!empty($this->showClient)) { ?>
-                                <td class="label"><?php print $this->T("client_c") ?> </td><td><?php echo $this->SearchBox->client->renderViewHelper(); ?></td>
-                                <?php } ?>
-                                <?php if (!empty($this->showCollector)) { ?>
-                                <td class="label"><?php print $this->T("collector_c") ?> </td><td><?php echo $this->SearchBox->collector->renderViewHelper(); ?></td>
-                                <?php } ?>
-                            </tr>
-                            <tr>
-                                <td class="label"><?php print $this->T("reference_c") ?> </td><td><?php echo $this->SearchBox->client_reference->renderViewHelper(); ?></td>
-                                <?php if (!empty($this->showCollector)) { ?>
-                                    <td class="label"><?php print $this->T("external_collector_c") ?> </td><td><?php echo $this->SearchBox->external_collector->renderViewHelper(); ?></td>
-                                <?php } ?>
-                            </tr>
-                            <tr>
-                                <td class="label"><?php print $this->T("debtor_c") ?> </td><td><?php echo $this->SearchBox->debtor->renderViewHelper(); ?></td>
-                                <td class="label"><?php print $this->T("invoice_c") ?> </td><td><?php echo $this->SearchBox->invoice->renderViewHelper(); ?></td>
-                            </tr>
-                            <tr>
-                                <td class="label"><?php print $this->T("train_type_c") ?> </td><td><?php echo $this->SearchBox->train_id->renderViewHelper(); ?></td>
-                                <td class="label"><?php print $this->T("state_code_c") ?> </td><td><?php echo $this->SearchBox->state_id->renderViewHelper(); ?></td>
-                            </tr>
-                            <tr>
-                                <td colspan ="4"><?php echo $this->SearchBox->extra_field->renderViewHelper(); ?>
-                                    <?php echo $this->SearchBox->extra_compare->renderViewHelper(); ?>
-                                    <?php echo $this->SearchBox->extra_text->renderViewHelper(); ?>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colspan="3"><?php echo $this->SearchBox->closed_files->renderViewHelper(); ?> <?php print $this->T("Include_c") ?></td>
-                                <td align="right"><?php echo $this->SearchBox->submit->renderViewHelper(); ?> </td>
-                            </tr>
-                        </table>
-                    </td>
-                    <td>
-                        <div id="chartdiv"></div>
-                    </td>
-                </tr>
-            </table>
-        </form>
-    </div>
-</div>
-<br>
+          <div class="aaa-theme-flex-row flex-content-row">
+            <div class="aaa-theme-content-widget white-bg col-1 text-center">
+              <h2 class="text-uppercase"><?php print $this->T("search_files_c") ?></h2>
+              <form action="<?php echo $this->location() ?>/files/search" class="aaa-theme-login-form" method="post">
+			  <input type="hidden" name='formSubmit' value='1'>
+              <div class="row form-group">
+              	<?php if (!empty($this->showClient)) { ?>
+                <div class="col-lg-6 col-md-6 form-group">                  
+                    <label><?php print $this->T("client_c") ?></label>
+                    <?php echo $this->SearchBox->client->renderViewHelper(); ?>
+                                     
+                </div>
+                <?php } ?> 
+                <?php if (!empty($this->showCollector)) { ?>
+                <div class="col-lg-6 col-md-6 form-group">                  
+                    <label><?php print $this->T("collector_c") ?></label>
+                    <?php echo $this->SearchBox->collector->renderViewHelper(); ?>      
+                </div> 
+              	<?php } ?>
+              </div>
+              <div class="row form-group">
+                <div class="col-lg-6 col-md-6 form-group">                  
+                    <label><?php print $this->T("reference_c") ?></label>
+                    <?php echo $this->SearchBox->client_reference->renderViewHelper(); ?>                  
+                </div>
+				<?php if (!empty($this->showCollector)) { ?>
+                <div class="col-lg-6 col-md-6 form-group">                  
+                    <label><?php print $this->T("external_collector_c") ?></label>
+                    <?php echo $this->SearchBox->external_collector->renderViewHelper(); ?>                   
+                </div>
+				<?php } ?>				
+              </div>
+              <div class="row form-group">
+                <div class="col-lg-6 col-md-6 form-group">                  
+                    <label><?php print $this->T("debtor_c") ?></label>
+                   <?php echo $this->SearchBox->debtor->renderViewHelper(); ?>                  
+                </div>
+                <div class="col-lg-6 col-md-6 form-group">                  
+                    <label><?php print $this->T("invoice_c") ?></label>
+                    <?php echo $this->SearchBox->invoice->renderViewHelper(); ?>                  
+                </div>                  
+              </div>
+              <div class="row form-group">
+                <div class="col-lg-6 col-md-6 form-group">                  
+                    <label><?php print $this->T("train_type_c") ?></label>
+                    <?php echo $this->SearchBox->train_id->renderViewHelper(); ?>                   
+                </div> 
+                <div class="col-lg-6 col-md-6 form-group">                  
+                    <label><?php print $this->T("state_code_c") ?></label>
+                    <?php echo $this->SearchBox->state_id->renderViewHelper(); ?>                
+                </div> 
+              </div>
+              <div class="row form-group">
+                <div class="col-lg-3 col-md-6 form-group">  
+                	<label> </label>                
+                    <?php echo $this->SearchBox->extra_field->renderViewHelper(); ?>                   
+                </div> 
+                <div class="col-lg-3 col-md-6 form-group">
+                	<label></label>
+                    <?php echo $this->SearchBox->extra_compare->renderViewHelper(); ?>                  
+                </div> 
+                <div class="col-lg-6 col-md-6 form-group">
+                	<label for="state_id"></label>
+                    <?php echo $this->SearchBox->extra_text->renderViewHelper(); ?>                 
+                </div> 
+              </div>
+              <div class="row form-group">
+                <div class="col-lg-6 col-md-6 form-group">                  
+                    <div class="aaa-theme-block margin-bottom-5">
+                        <div class="aaa-theme-block margin-bottom-5">
+                            <?php echo $this->SearchBox->closed_files->renderViewHelper(); ?>
+                            <label for="closed_files" class="font-weight-400"><span></span><?php print $this->T("Include_c") ?></label>
+                        </div>
+
+                    </div>                 
+                </div>
+                <div class="col-lg-6 col-md-6 form-group">                  
+                    <?php echo $this->SearchBox->submit->renderViewHelper(); ?>               
+                </div>                  
+              </div>                       
+            </form>
+            </div>
+            <div class="aaa-theme-content-widget white-bg col-1 text-center">
+              <div id="vervallen" class="aaa-theme-chart"></div>
+            </div>
+          </div>
+		  
 <?php if (!empty($this->results)) {
     $index = 0;
     ?>
-    <div class=noprint>
-        <h3>
-            <?php echo $this->totals->COUNTER ?> <?php $this->T("results_found_c") ?>
+	
+          <div class="aaa-theme-flex-row flex-content-row">
+            <div class="col-1">
+              <div class="panel panel-default aaa-theme-content-widget white-bg no-padding aaa-theme-overflow-hidden">
+                <div class="panel-heading aaa-theme-position-relative"><h2 class="text-uppercase"> <?php echo $this->totals->COUNTER ?> <?php $this->T("results_found_c") ?>
             <?php if ($this->onlyFirst) { ?>
                 <?php $this->T("only_first_c", $this->onlyFirst) ?>
-    <?php } ?>
-        </h3>
-    </div>
-    <table id="data" class="ws_data_table" width="100%">
-        <thead>
-            <tr>
-                <th><a class="orderby" href="<?php echo $this->location() ?>/files/search/orderby/REFERENCE"><?php print $this->T("referenceclient_c") ?></a></th>
-                <th><a class="orderby" href="<?php echo $this->location() ?>/files/search/orderby/DEBTOR_NAME"><?php print $this->T("debtor_c") ?></a></th>
-                <th><a class="orderby" href="<?php echo $this->location() ?>/files/search/orderby/CREATION_DATE"><?php print $this->T("creationdate_c") ?></a></th>
-                <th><a class="orderby" href="<?php echo $this->location() ?>/files/search/orderby/CLIENT_NAME"><?php print $this->T("client_c") ?></a></th>
-                <th><a class="orderby" href="<?php echo $this->location() ?>/files/search/orderby/STATE_CODE"><?php print $this->T("state_code_c") ?></a></th>
-                <th><a class="orderby" href="<?php echo $this->location() ?>/files/search/orderby/COLLECTOR_CODE"><?php print $this->T("collector_c") ?></a></th>
-                <th><a class="orderby" href="<?php echo $this->location() ?>/files/search/orderby/DEBTOR_SCORE"><?php print $this->T("debtor_score_c") ?></a></th>
-                <th align="right"><a class="orderby" href="<?php echo $this->location() ?>/files/search/orderby/TOTAL"><?php print $this->T("total_c") ?></a></th>
-                <th align="right"><a class="orderby" href="<?php echo $this->location() ?>/files/search/orderby/PAYABLE"><?php print $this->T("payable_c") ?></a></th>
-                <?php if (!empty($this->deleteRight)) { ?><th>&nbsp;</th><?php } ?>
-            </tr>
-        </thead>
-    <?php foreach ($this->results as $row) {
+    <?php } ?></h2></div>
+                <div class="table-responsive">
+                	
+
+                  <table class="table table-striped table-bordered">
+                    <thead>
+                      <tr>
+                        <td><a href="<?php echo $this->location() ?>/files/search/orderby/REFERENCE"><?php print $this->T("referenceclient_c") ?></a></td>
+                        <td><a href="<?php echo $this->location() ?>files/search/orderby/DEBTOR_NAME"><?php print $this->T("debtor_c") ?></a></td>
+                        <td><a href="<?php echo $this->location() ?>iles/search/orderby/CREATION_DATE"><?php print $this->T("creationdate_c") ?></a></td>
+                        <td><a href="<?php echo $this->location() ?>files/search/orderby/CLIENT_NAME"><?php print $this->T("client_c") ?></a></td>
+                        <td><a href="<?php echo $this->location() ?>files/search/orderby/STATE_CODE"><?php print $this->T("state_code_c") ?></a></td>
+                        <td><a href="<?php echo $this->location() ?>files/search/orderby/COLLECTOR_CODE"><?php print $this->T("collector_c") ?></a></td>
+                        <td><a href="<?php echo $this->location() ?>files/search/orderby/DEBTOR_SCORE"><?php print $this->T("debtor_score_c") ?></a></td>
+                        <td><a href="<?php echo $this->location() ?>files/search/orderby/TOTAL"><?php print $this->T("total_c") ?></a></td>
+                        <td><a href="<?php echo $this->location() ?>files/search/orderby/PAYABLE"><?php print $this->T("payable_c") ?></a></td>
+                      </tr>
+                    </thead>
+                    <tbody>
+		<?php foreach ($this->results as $row) {
         if (!empty($this->agendaStates) && stripos($this->agendaStates,$row->STATE_CODE) !== false ) {
-            $class = " class='due' ";
+            $class = "";
         } else {
             $class = "";
         }
         ?>
-            <tr <?php echo $class ?> onClick="newscreen('<?php echo $row->DEBTOR_NAME ?>', '<?php echo $this->location() ?>/file-detail/view/fileId/<?php echo $row->FILE_ID ?>')">
-                <td><?php echo $row->REFERENCE ?></td>
-                <td><?php echo $row->DEBTOR_NAME ?></td>
-                <td><?php echo $this->date($row->CREATION_DATE) ?></td>
-                <td><?php echo $row->CLIENT_NAME ?></td>
-                <td><?php echo $row->STATE_CODE ?></td>
-                <td><?php echo $row->COLLECTOR_CODE ?></td>
-                <td>
-                    <?php for($i = 1; $i <= 5; $i++) {
-                        if ($i <= $row->DEBTOR_SCORE) {?>
-                            <img alt="<?php echo $i ?>" class="tiny-image" src="<?php echo $this->location() ?>/public/js/images/star-on.png" title="<?php echo $i ?>">
-                        <?php } else { ?>
-                            <img alt="<?php echo $i ?>" class="tiny-image" src="<?php echo $this->location() ?>/public/js/images/star-off.png" title="<?php echo $i ?>">
-                    <?php }} ?>
-                </td>
-                <td align="right"><?php echo $this->amount($row->TOTAL) ?></td>
-                <td align="right"><?php echo $this->amount($row->PAYABLE) ?></td>
-                <?php if (!empty($this->deleteRight)) { ?>
-                <td>
-                    <?php echo $this->Delete($this->location() . "/files/search/delete/" . $row->FILE_ID, "$row->FILE_NR $row->DEBTOR_NAME") ?>
-                </td>
-                <?php } ?>
-            </tr>
-            <?php $index++;
-        }
-        ?>
-        <tfoot>
-            <tr>
-                <td colspan="7">&nbsp;</td>
-                <td align="right"><?php echo $this->amount($this->totals->TOTAL) ?></td>
-                <td align="right"><?php echo $this->amount($this->totals->PAYABLE) ?></td>
-                <?php if (!empty($this->deleteRight)) { ?> <td>&nbsp;</td> <?php } ?>
-            </tr>
-        </tfoot>
-    </table>
+						<tr class="dossier" style="cursor: pointer" id="<?php echo $row->FILE_ID ?>">
+							<td><?php echo $row->REFERENCE ?></td>
+							<td><?php echo $row->DEBTOR_NAME ?></td>
+							<td><?php echo $this->date($row->CREATION_DATE) ?></td>
+							<td><?php echo $row->CLIENT_NAME ?></td>
+							<td><?php echo $row->STATE_CODE ?></td>
+							<td><?php echo $row->COLLECTOR_CODE ?></td>
+							<td>
+								<?php for($i = 1; $i <= 5; $i++) {
+									if ($i <= $row->DEBTOR_SCORE) {?>
+										<img alt="<?php echo $i ?>" class="tiny-image" src="<?php echo $this->location() ?>/public/js/images/star-on.png" title="<?php echo $i ?>">
+									<?php } else { ?>
+										<img alt="<?php echo $i ?>" class="tiny-image" src="<?php echo $this->location() ?>/public/js/images/star-off.png" title="<?php echo $i ?>">
+								<?php }} ?>
+							</td>
+							<td align="right"><?php echo $this->amount($row->TOTAL) ?></td>
+							<td align="right"><?php echo $this->amount($row->PAYABLE) ?></td>
+							<?php if (!empty($this->deleteRight)) { ?>
+							<td>
+								<?php echo $this->Delete($this->location() . "/files/search/delete/" . $row->FILE_ID, "$row->FILE_NR $row->DEBTOR_NAME") ?>
+							</td>
+							<?php } ?>
+						</tr>
+						<?php $index++;
+						}
+						?>
+                    </tbody>
+                    <thead>
+                      <tr>       
+                      	<td colspan="7">&nbsp;</td>       
+                        <td align="right"><?php echo $this->amount($this->totals->TOTAL) ?></td>
+						<td align="right"><?php echo $this->amount($this->totals->PAYABLE) ?></td>
+						<?php if (!empty($this->deleteRight)) { ?> <td>&nbsp;</td> <?php } ?>
+                      </tr>
+                    </thead>
+                  </table>    
+                </div>                          
+              </div>
+            </div>  
+          </div> 
 <?php } ?>
+<!-- Second row ends -->

@@ -1,4 +1,10 @@
-<div>
+
+
+
+				  <div class="aaa-theme-flex-row flex-content-row aaa-theme-overflow-hidden"> <!-- overflow hidden for iPad mini landscape view-->
+					<div class="col-1">              
+					  <div class="aaa-theme-content-widget white-bg col-1">
+
     <?php if($this->success) { ?>
         <div><?php print $this->Ok('Het bestand werd correct ingelezen.') ?></div>
     <?php } ?>
@@ -14,10 +20,21 @@
     <?php
     }
     ?>
-</div>
 
 <?php print $this->form ?>
+					  
+					</div>        
+					</div> 
+				  </div>
 
-<div>
-    <?php print $this->explanation ?>
-</div>
+
+				  <div class="aaa-theme-flex-row flex-content-row aaa-theme-overflow-hidden"> <!-- overflow hidden for iPad mini landscape view-->
+					<div class="col-1">              
+					  <div class="aaa-theme-content-widget white-bg col-1">
+
+<?php print $this->explanation ?>
+					  
+					</div>        
+					</div> 
+				  </div>
+

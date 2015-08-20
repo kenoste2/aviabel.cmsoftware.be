@@ -25,7 +25,7 @@ class Application_Form_SearchClients extends Zend_Form {
         $group1->setDecorators(array(
             'FormElements',
             'Fieldset',
-            array('HtmlTag', array('tag' => 'div', 'style' => 'width:50%;float:left;'))
+            array('HtmlTag', array('tag' => 'div', 'style' => 'width:50%;float:left;padding:10px;'))
         ));
         $this->addDisplayGroup(array(
             'VAT_NO',
@@ -36,7 +36,7 @@ class Application_Form_SearchClients extends Zend_Form {
         $group2->setDecorators(array(
             'FormElements',
             'Fieldset',
-            array('HtmlTag', array('tag' => 'div', 'style' => 'width:50%;float:right;'))
+            array('HtmlTag', array('tag' => 'div', 'style' => 'width:50%;float:right;padding:10px;'))
         ));
 
 

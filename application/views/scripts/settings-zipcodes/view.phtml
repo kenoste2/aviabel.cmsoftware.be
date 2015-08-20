@@ -5,9 +5,14 @@ if ($this->deleted) {
     print $this->Error($this->G("cant_be_deleted_c"));
 }
 ?>
-<h3><?php echo count($this->results) ?> resultaten gevonden</h3>
-<table id="data" class="tablesorter ws_data_table" width="100%">
-    <thead>
+
+         <div class="aaa-theme-flex-row flex-content-row">
+            <div class="col-1">
+              <div class="panel panel-default aaa-theme-content-widget white-bg no-padding aaa-theme-overflow-hidden">
+                <div class="panel-heading aaa-theme-position-relative"><h2 class="text-uppercase"><?php echo count($this->results) ?> resultaten gevonden</h2></div>
+                <div class="table-responsive">
+                  <table class="table table-striped table-bordered">
+                    <thead>
     <tr>
         <th><?php $this->T("Code_c"); ?></th>
         <th><?php $this->T("Dutch_c"); ?></th>
@@ -16,8 +21,9 @@ if ($this->deleted) {
         <th><?php $this->T("country_code_c"); ?></th>
         <th></th>
         <th></th>
-    </tr>
-    </thead>
+    </tr>				
+                    </thead>
+					<tbody>
     <?php if (!empty($this->results)) { ?>
         <?php foreach ($this->results as $row) { ?>
             <?php $class = (empty($row->POPULATION_PLACE_ID) && $row->COUNTRY_CODE=='BE' ) ? "no-population-place" : '';?>
@@ -27,7 +33,7 @@ if ($this->deleted) {
                 <td><?php echo $row->CITY_FRENCH ?></td>
                 <td><?php echo $row->CITY_ENGLISH ?></td>
                 <td><?php echo $row->COUNTRY_CODE ?></td>
-                <td><a href="<?php echo $this->location() ?>/settings-zipcodes/edit/id/<?php echo $row->ZIP_CODE_ID ?>" ><span title ="<?php $this->T("edit_c") ?>"  class="ui-icon ui-icon-zoomin"></span></td>
+                <td><a href="<?php echo $this->location() ?>/settings-zipcodes/edit/id/<?php echo $row->ZIP_CODE_ID ?>" ><li class="fa fa-search-plus fa-fw"></li></td>
                 <td>
                     <?php echo $this->Delete($this->location()."/settings-zipcodes/view/delete/" . $row->ZIP_CODE_ID , $row->CODE) ?>
                 </td>
@@ -41,4 +47,10 @@ if ($this->deleted) {
             </td>
         </tr>
     <?php } ?>
-</table>
+                    </tbody>
+                  </table>    
+                </div>                          
+              </div>
+            </div>  
+          </div> <!-- Second row ends -->
+

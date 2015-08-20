@@ -13,29 +13,30 @@ class Application_Form_SearchPayments extends Zend_Form
         $this->addElement('text', 'STARTDATE', array('label' => $functions->T('aanmaakdatum_c'), 'size' => 20));
         $this->addElement('text', 'ENDDATE', array('label' => $functions->T('tot_c'), 'size' => 20));
         $this->addElement('text', 'CLIENT', array('label' => $functions->T('client_c'), 'size' => 20));
-        $this->addElement('radio', 'FOR', array('label' => $functions->T('voor_c'), 'MultiOptions' => $this->getFor($functions)));
+        $this->addElement('select', 'FOR', array('label' => $functions->T('voor_c'), 'MultiOptions' => $this->getFor($functions)));
         $this->addElement('select', 'ACCOUNT_ID', array('label' => $functions->T('rekening_c'), 'MultiOptions' => $this->getAccounts($functions)));
 
         $this->addElement('hidden', 'search_payment', array('value' => 1));
 
 
-        $this->addDisplayGroup(array('STARTDATE', 'CLIENT', 'COMMISSION', 'ACCOUNT_ID'), 'group1');
+
+
+         $this->addDisplayGroup(array('STARTDATE', 'CLIENT', 'COMMISSION', 'ACCOUNT_ID'), 'group1');
         $this->getDisplayGroup('group1')->setDecorators(array(
             'FormElements',
             'Fieldset',
-            array('HtmlTag', array('tag' => 'div', 'style' => 'width:50%;float:left;'))
-        ));
-
-        $this->addDisplayGroup(array('ENDDATE', 'FOR'), 'group2');
-        $this->getDisplayGroup('group2')->setDecorators(array(
-            'FormElements',
-            'Fieldset',
-            array('HtmlTag', array('tag' => 'div', 'style' => 'width:50%;float:right;'))
+            array('HtmlTag', array('tag' => 'div', 'style' => 'width:50%;float:left;padding:10px;'))
         ));
 
         $this->addElement('submit', 'submit', array(
             'ignore' => true,
             'label' => $functions->T('search_c'),
+        ));
+        $this->addDisplayGroup(array('ENDDATE', 'FOR','submit'), 'group2');
+        $this->getDisplayGroup('group2')->setDecorators(array(
+            'FormElements',
+            'Fieldset',
+            array('HtmlTag', array('tag' => 'div', 'style' => 'width:50%;float:right;padding:10px;'))
         ));
 
         $this->getElement('STARTDATE')->setValue(date('d/m/Y'));

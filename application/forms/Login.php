@@ -8,20 +8,23 @@ class Application_Form_Login extends Zend_Form {
 
         $this->addElement(
                 'text', 'username', array(
-            'label' => 'Username:',
-            'required' => true,
+            'label' => '',
+            'required' => false,
             'filters' => array('StringTrim'),
         ));
 
         $this->addElement('password', 'password', array(
-            'label' => 'Password:',
-            'required' => true,
+            'label' => '',
+            'required' => false,
         ));
 
         $this->addElement('submit', 'submit', array(
             'ignore' => true,
             'label' => 'Login',
         ));
+
+        $this->username->removeDecorator('label');
+        $this->password->removeDecorator('label');
     }
 
 }
