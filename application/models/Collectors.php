@@ -41,7 +41,7 @@ class Application_Model_Collectors extends Application_Model_Base
         if (empty($data['ZIP_CODE_ID'])) {
             $data = $this->setZipcodeId($data);
         }
-        return $this->addData("SYSTEM\$COLLECTORS", $data);
+        return $this->addData("SYSTEM\$COLLECTORS", $data,'COLLECTOR_ID');
     }
 
     public function save($data, $where)
