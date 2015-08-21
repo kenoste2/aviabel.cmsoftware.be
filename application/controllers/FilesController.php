@@ -181,7 +181,7 @@ class FilesController extends BaseController
               WHERE 1=1 {$query_extra} order by {$session->orderby} {$session->order}";
 
         if ($totals->COUNTER > $maxRecords) {
-            $sql = str_replace("SELECT ", "SELECT FIRST {$maxRecords} ", $sql);
+            $sql = str_replace("SELECT DISTINCT ", "SELECT FIRST {$maxRecords} DISTINCT ", $sql);
             $this->view->onlyFirst = $maxRecords;
         }
         $results = $this->db->get_results($sql);

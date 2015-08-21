@@ -38,8 +38,9 @@ class Application_Model_Collectors extends Application_Model_Base
         $data['COMMISSION'] = '0';
         $data['FORFAIT'] = '0';
 
-        $data = $this->setZipcodeId($data);
-
+        if (empty($data['ZIP_CODE_ID'])) {
+            $data = $this->setZipcodeId($data);
+        }
         return $this->addData("SYSTEM\$COLLECTORS", $data);
     }
 
