@@ -83,12 +83,14 @@ class Application_Form_FileGeneral extends Zend_Form
             'separator' => ' ',
         ));
 
-        $this->addElement('radio', 'EXTERNAL_COLLECTOR_ID', array(
+        /*
+         $this->addElement('radio', 'EXTERNAL_COLLECTOR_ID', array(
             'label' => $functions->T('external_collector_c'),
             'required' => false,
             'MultiOptions' => $functions->db2array($collectorObj->getExternalCollectorsForSelect(), false),
             'separator' => ' ',
         ));
+        */
         $confirm = array(1 => $functions->T('yes_c'), 0 => $functions->T('no_c'));
         //$this->addElement('radio', 'COLLECTOR_VISIBLE', array(
         //    'label' => $functions->T('visible_for_collector_c'),

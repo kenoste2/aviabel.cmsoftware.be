@@ -249,6 +249,17 @@ class Application_Model_CommonFunctions
         return $code;
     }
 
+
+    public function moduleAccess($resource) {
+        $access = new Zend_Config_Ini(
+            APPLICATION_PATH . '/configs/access.ini', APPLICATION_ENV);
+
+        if ($access->modules->$resource == 'N') {
+            return false;
+        } else return true;
+    }
+
+
 }
 
 ?>

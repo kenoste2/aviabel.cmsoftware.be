@@ -67,12 +67,15 @@ class QueryController extends BaseController
                         $rows .= "<tr><td>{$result}</td></tr>";
                     }
 
-                    $content .= "<table class=\"ws_data_table\">
+
+
+
+                    $content .= "<div class=\"table-responsive\"><table class=\"table table-striped table-bordered\">
                                             <thead><tr><th>{$columns}</th></tr></thead>
                                             <tbody>
                                                 {$rows}
                                             </tbody>
-                                           </table>";
+                                           </table></div>";
                     echo $content;
                 }
             }

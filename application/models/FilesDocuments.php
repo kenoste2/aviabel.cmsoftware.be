@@ -44,7 +44,7 @@ class Application_Model_FilesDocuments extends Application_Model_Base {
 
         if (!empty($originalFilename)) {
             $matches = array();
-            if (preg_match('/^(.*?)\.(.*)$/', $originalFilename, &$matches)) {
+            if (preg_match('/^(.*?)\.(.*)$/', $originalFilename, $matches)) {
                 $originalFilename = $matches[1];
                 $extension = $matches[2];
             }
@@ -87,6 +87,7 @@ class Application_Model_FilesDocuments extends Application_Model_Base {
 
         $sql = "SELECT * FROM FILE_DOCUMENTS WHERE REFERENCE_ID={$escReferenceId} ORDER BY FILENAME";
         $results = $this->db->get_results($sql);
+
         return $results;
     }
 
