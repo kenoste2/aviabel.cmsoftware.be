@@ -216,8 +216,7 @@ class Application_Model_FilesActions extends Application_Model_Base
 
             if ($communicationType === 'POST' && $allowPdfGeneration) {
 
-                $moduleAccessObj = new Application_Model_ModuleAccess();
-                $interestCostsAccess = $moduleAccessObj->moduleAccess('intrestCosts');
+                $interestCostsAccess = $this->functions->moduleAccess('intrestCosts');
                 $this->createPdfForAction($interestCostsAccess, $fileActionId);
             }
         }

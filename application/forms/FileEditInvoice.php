@@ -16,6 +16,10 @@ class Application_Form_FileEditInvoice extends Zend_Form {
         $this->addElement('text', 'REFERENCE', array('label' => $functions->T('factuurnummer_c') ,'size' => 15, 'required' => true));
         $this->addElement('select', 'STATE_ID', array('label' => $functions->T('State_c'), 'required' => true, 'MultiOptions' => $functions->db2array($stateModel->getStatesForSelect())));
         $this->addElement('text', 'REFUND_STATEMENT', array('label' => $functions->T('Refund_statement_c') ,'size' => 15));
+        $this->addElement('text', 'CONTRACT_UY', array('label' => $functions->T('contract_uy') ,'size' => 15));
+        $this->addElement('text', 'CONTRACT_INSURED', array('label' => $functions->T('contract_insured') ,'size' => 15));
+        $this->addElement('text', 'CONTRACT_UNDERWRITER', array('label' => $functions->T('contract_underwriter') ,'size' => 15));
+        $this->addElement('text', 'CONTRACT_NUMBER', array('label' => $functions->T('contract_number') ,'size' => 15));
         $this->addElement('text', 'INVOICE_DATE',array('label' => $functions->T('factuurdatum_c'),'size' => 15, 'required' => true,'validators'=>array (array('date', false, array('dd/MM/yyyy'))),));
         $this->addElement('text', 'START_DATE',array('label' => $functions->T('vervaldatum_c'),'size' => 15, 'required' => true,'validators'=>array (array('date', false, array('dd/MM/yyyy'))),));
         $this->addElement('text', 'END_DATE',array('label' => $functions->T('end_date_c'),'size' => 15, 'required' => true,'validators'=>array (array('date', false, array('dd/MM/yyyy'))),));

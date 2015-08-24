@@ -61,6 +61,10 @@ class Application_Form_Invoices extends Zend_Form {
                 'DISPUTE_DATE' => $functions->T('dispute_date_c'),
                 'DISPUTE_DUEDATE' => $functions->T('dispute_duedate_c'),
                 'DISPUTE_ENDED_DATE' => $functions->T('dispute_ended_date_c'),
+                'CONTRACT_NUMBER' => $functions->T('contract_number'),
+                'CONTRACT_UY' => $functions->T('contract_uy'),
+                'CONTRACT_INSURED' => $functions->T('contract_insured'),
+                'CONTRACT_UNDERWRITER' => $functions->T('contract_underwriter'),
                 )
             ));
 

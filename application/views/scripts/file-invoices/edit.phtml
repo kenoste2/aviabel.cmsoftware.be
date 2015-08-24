@@ -1,11 +1,10 @@
-
           <div class="aaa-theme-flex-row flex-content-row">
           
 		  <div class="col-1">
             <div class="panel panel-default aaa-theme-content-widget white-bg no-padding aaa-theme-overflow-hidden">
                 <div class="panel-heading aaa-theme-position-relative"><h2 class="text-uppercase"><?php $this->T("edit_ref_c") ?></h2></div>
                 <div class="table-responsive">
-				<div class="table-responsive form-group">
+				<div class="table-responsive form-group"><table class="table"><tr><td>
                  <form action="" class="aaa-theme-login-form" method="post" enctype="application/x-www-form-urlencoded">
                 <?php
                 if ($this->formSaved) {
@@ -38,7 +37,7 @@
                     <?php print $this->form->submit ?>
                 </dl>
 
-                </form>
+				</td></tr></table>
               </div>
               </div>
             </div>   
@@ -125,8 +124,16 @@
                         <p><?php $this->T("no_documents_found_c") ?></p>
                     <?php } ?>                  
  
-              </div> 
-			   
-            </div>
-            </div>
+              </div>
+                <div class="panel-heading aaa-theme-position-relative"><h2 class="text-uppercase"><?php $this->T("police") ?></h2></div>
+                <div class="table-responsive">
+                    <?php print $this->form->CONTRACT_NUMBER ?>
+                    <?php print $this->form->CONTRACT_INSURED ?>
+                    <?php print $this->form->CONTRACT_UY ?>
+                    <?php print $this->form->CONTRACT_UNDERWRITER ?>
+                    <?php print $this->form->submit ?>
+                </div>
+                </div>
+                </div>
 			</div>
+          </form>

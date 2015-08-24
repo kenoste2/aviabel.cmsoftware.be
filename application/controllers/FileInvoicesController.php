@@ -134,7 +134,11 @@ class FileInvoicesController extends BaseFileController
                 'DISPUTE_STATUS' => $reference->DISPUTE_STATUS,
                 'DISPUTE_ASSIGNEE' => $reference->DISPUTE_ASSIGNEE,
                 'DISPUTE_COMMENT' => $reference->DISPUTE_COMMENT,
-                'DISPUTE_AMOUNT' => $this->functions->amount($reference->DISPUTE_AMOUNT)
+                'DISPUTE_AMOUNT' => $this->functions->amount($reference->DISPUTE_AMOUNT),
+                'CONTRACT_NUMBER' => $reference->CONTRACT_NUMBER,
+                'CONTRACT_UNDERWRITER' => $reference->CONTRACT_UNDERWRITER,
+                'CONTRACT_UY' => $reference->CONTRACT_UY,
+                'CONTRACT_INSURED' => $reference->CONTRACT_INSURED,
             );
         }
         $form->populate($data);

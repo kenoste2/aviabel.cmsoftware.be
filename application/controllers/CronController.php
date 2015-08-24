@@ -319,5 +319,21 @@ class CronController extends BaseController
     }
 
 
+
+    public function importAction()
+    {
+        global $config;
+
+        $this->_helper->layout->disableLayout();
+        $this->_helper->viewRenderer->setNoRender();
+
+        $importObj = new Application_Model_Custom_Aviabel();
+        $importObj->import();
+
+
+        die("<br>done importAction");
+    }
+
+
 }
 
