@@ -232,8 +232,7 @@ class InstallController extends BaseController
 
     public function installSearchGraphUpdateAction() {
 
-        $this->_helper->layout->disableLayout();
-        $this->_helper->viewRenderer->setNoRender();
+
 
         $sql = "INSERT INTO TEKSTEN (CODE,NAV,NL,FR,EN,SETTINGS) VALUES ('past_due_c', 'all', 'Vervallen', 'Échu', 'Due', 0)";
         $this->db->query($sql);
@@ -252,5 +251,17 @@ class InstallController extends BaseController
         }
         die("<br>System is up to date");
     }
+
+    public function cleanupZipAction() {
+        $this->_helper->layout->disableLayout();
+        $this->_helper->viewRenderer->setNoRender();
+
+        $sql = 'delete from support$zip_codes  where zip_code_id >1  and zip_code_id not in (SELECT ZIP_CODE_ID FROM FILES$FILES_ALL_INFO F WHERE F.DEBTOR_ZIP_CODE_ID = support$zip_codes.zip_code_id)  and zip_code_id not in (SELECT ZIP_CODE_ID FROM SYSTEM$USERS U WHERE U.ZIP_CODE_ID = support$zip_codes.zip_code_id) and zip_code_id not in (SELECT ZIP_CODE_ID FROM SYSTEM$COLLECTORS C WHERE C.ZIP_CODE_ID = support$zip_codes.zip_code_id) and zip_code_id not in (SELECT ZIP_CODE_ID FROM CLIENTS$CLIENTS CL WHERE CL.ZIP_CODE_ID = support$zip_codes.zip_code_id)  and zip_code_id not in (SELECT INVOICE_ZIP_ID FROM CLIENTS$CLIENTS CL2 WHERE CL2.INVOICE_ZIP_ID = support$zip_codes.zip_code_id)';
+        $this->db->query($sql);
+
+        die("zip codes database cleaned");
+    }
+
+
 }
 
