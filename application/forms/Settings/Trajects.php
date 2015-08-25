@@ -34,6 +34,7 @@ class Application_Form_Settings_Trajects extends Zend_Form {
         $this->addElement('select', 'STATE_ID', array('label' => $functions->T('Set_state_code_c'), 'required' => false, 'MultiOptions' => $functions->db2array($stateModel->getStatesForSelect())));
         $this->addElement('select', 'TEMPLATE_ID', array('label' => $functions->T('Set_template_c'), 'required' => false, 'MultiOptions' => $functions->db2array($templateModel->getTemplatesForSelect())));
         $this->addElement('select', 'ACTIEF', array('label' => $functions->T('actief_c'), 'required' => false, 'MultiOptions' => array("1" =>$functions->T('yes_c'), "0" => $functions->T('no_c'))));
+        $this->addElement('note', 'SQL', array('label' => 'SQL :', 'rows' => 5, 'cols' => 50, 'disabled' => true));
 
         $this->addElement('submit', 'submit', array(
             'ignore' => true,
@@ -66,7 +67,7 @@ class Application_Form_Settings_Trajects extends Zend_Form {
             array('HtmlTag', array('tag' => 'div'))
         ));
 
-        $this->addDisplayGroup(array('submit'), 'group3');
+        $this->addDisplayGroup(array('submit', 'SQL'), 'group3');
         $group3 = $this->getDisplayGroup('group3');
         $group3->setDecorators(array(
             'FormElements',

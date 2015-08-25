@@ -58,6 +58,7 @@ class SettingsTrajectController extends BaseController
         $obj = new Application_Model_Train();
 
         $data = array();
+        $row = $obj->getTrain($this->getParam('id'));
         if ($this->getRequest()->isPost()) {
             if ($form->isValid($this->getRequest()->getPost())) {
                 $data = $update = $form->getValues();
@@ -68,7 +69,6 @@ class SettingsTrajectController extends BaseController
                 $this->view->errors = $form->getErrors();
             }
         } else {
-            $row = $obj->getTrain($this->getParam('id'));
             $data = array();
             $data['CODE'] = $row->CODE;
             $data['DESCRIPTION'] = $row->DESCRIPTION;
@@ -87,6 +87,8 @@ class SettingsTrajectController extends BaseController
             $data['STATEBOX'] = explode(',', $row->STATEBOX);
         }
         // Populating form
+
+        $data['SQL'] = str_replace("`","'",$row->SQL);
         $form->populate($data);
 
         $this->view->form = $form;
