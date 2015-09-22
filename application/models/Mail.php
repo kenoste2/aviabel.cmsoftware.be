@@ -5,7 +5,7 @@ require_once 'application/models/Base.php';
 
 class Application_Model_Mail extends Application_Model_Base {
 
-    private $smtpServer = "";
+    private $smtpServer = "aviabel-s17.aviabel.be";
     private $tr;
     private $cc = "";
     private $bcc = "";
@@ -13,7 +13,7 @@ class Application_Model_Mail extends Application_Model_Base {
     private $fromEmail = '';
 
     function __construct() {
-        //$this->tr = new Zend_Mail_Transport_Smtp($this->smtpServer);
+        $this->tr = new Zend_Mail_Transport_Smtp($this->smtpServer);
         $config = Zend_Registry::get('config');
 
         if (!empty($config->fromEmail)) {
@@ -92,7 +92,7 @@ class Application_Model_Mail extends Application_Model_Base {
         $mail->setBodyText($content);
         $contentHtml = nl2br($content);
         $mail->setBodyHtml($contentHtml);
-        //$mail->setDefaultTransport($this->tr);
+        $mail->setDefaultTransport($this->tr);
         if (!empty($attachments)) {
             if (array_key_exists('content', $attachments)){
                 $at = $mail->createAttachment($attachments['content']);

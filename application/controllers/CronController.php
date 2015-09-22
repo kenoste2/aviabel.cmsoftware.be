@@ -324,14 +324,34 @@ class CronController extends BaseController
     {
         global $config;
 
+        $mail = new Application_Model_Mail();
+
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender();
 
         $importObj = new Application_Model_Custom_Aviabel();
-        $importObj->import();
+        $result = $importObj->import();
 
-
+        if (empty($result)) {
+            return $mail->sendMail('software@aaa.be','Aviabel CronImport error','see subject',false,false);
+        }
+        if (!empty($result)) {
+            return $mail->sendMail('software@aaa.be','Aviabel CronImport OK','see subject',false,false);
+        }
         die("<br>done importAction");
+    }
+
+
+    public function testMailAction()
+    {
+        global $config;
+
+        $mail = new Application_Model_Mail();
+
+        $this->_helper->layout->disableLayout();
+        $this->_helper->viewRenderer->setNoRender();
+        $mail->sendMail('web-ngFrnL@mail-tester.com','Aviabel testmail','Dit is een testmail. Verzonden vanaf de server van Aviabel.',false,false);
+        die("<br>done testMail");
     }
 
 

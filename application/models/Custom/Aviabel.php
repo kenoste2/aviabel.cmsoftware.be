@@ -36,12 +36,34 @@ class Application_Model_Custom_Aviabel extends Application_Model_Base
             $this->handleInvoiceLine($data);
         }
 
-        $this->linkClients();
-        $this->linkCollectors();
-        $this->linkDebtors();
-        $this->linkFiles();
-        $this->linkInvoices();
-        $this->CloseInvoices();
+
+        $checkImport = $this->checkImport();
+
+        if ($checkImport) {
+            $this->linkClients();
+            $this->linkCollectors();
+            $this->linkDebtors();
+            $this->linkFiles();
+            $this->linkInvoices();
+            $this->closeInvoices();
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private function checkImport() {
+
+        $count = $this->db->get_var("SELECT COUNT(*) FROM IMPORT\$INVOICES");
+        $amount = $this->db->get_var("SELECT SUM(INVOICE_AMOUNT) FROM IMPORT\$INVOICES");
+
+        $currentAmounts = $this->db->get_var("SELECT SUM(AMOUNT) FROM FILES\$REFERENCES");
+
+        if ($amount >= ($currentAmounts/2) && $count>=1 ) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
 
@@ -85,11 +107,6 @@ class Application_Model_Custom_Aviabel extends Application_Model_Base
             'CONTRACT_NUMBER' => $line[$columns['CONTRACT_NUMBER']],
         );
         $this->addData("IMPORT\$INVOICES", $data);
-        
-        print "<pre>";
-        print_r($data);
-        print "</pre>";
-
         return true;
     }
 
@@ -247,7 +264,7 @@ class Application_Model_Custom_Aviabel extends Application_Model_Base
                         'CONTRACT_UY' => $invoice->CONTRACT_UY,
                         'CONTRACT_INSURED' => $invoice->CONTRACT_INSURED,
                         'CONTRACT_UNDERWRITER' => $invoice->CONTRACT_UNDERWRITER,
-                        'CONTRACT_NUMBER' => $invoice->CONTRACT_NUMBER,
+                        'CONTRACT_NUMBER' =>     $invoice->CONTRACT_NUMBER,
                     );
                     $referencesObj->create($data);
                 }
@@ -258,7 +275,7 @@ class Application_Model_Custom_Aviabel extends Application_Model_Base
     protected function closeInvoices()
     {
         $referenceObj = new Application_Model_FilesReferences();
-        $sql = "SELECT REFERENCE_ID FROM FILES\$REFERENCES WHERE REFERENCE NOT IN (SELECT INVOICE_NUMBER FROM IMPORT\$INVOICES)";
+        $sql = "SELECT REFERENCE_ID FROM FILES\$REFERENCES WHERE REFERENCE NOT IN (SELECT INVOICE_NUMBER FROM IMPORT\$INVOICES)  AND STATE_ID!= 40";
         $results = $this->db->get_results($sql);
         foreach ($results as $row) {
             $referenceObj->close($row->REFERENCE_ID);
