@@ -120,5 +120,12 @@ class BaseController extends Zend_Controller_Action {
         return $this->functions->saveData($tableName, $data, $where, $returnField);
     }
 
+
+    public function log($remark, $logtype = 'default')
+    {
+        $obj = new Application_Model_Base();
+        $obj->log($remark, $logtype);
+    }
+
 }
 

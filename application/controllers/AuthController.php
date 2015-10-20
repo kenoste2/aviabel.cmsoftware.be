@@ -35,10 +35,15 @@ class AuthController extends Zend_Controller_Action {
             }
 
             if ($adapter->isValid()) {
+
+                $obj = new Application_Model_Base();
+                $obj->log("{$loginForm->getValue('username')} logged in from {$_SERVER['REMOTE_ADDR']} at ".date("H:i"), "auth");
                 $this->_redirect('/index/index');
                 return;
             } else {
                 $this->view->showError = true;
+                $obj = new Application_Model_Base();
+                $obj->log("login error for user {$loginForm->getValue('username')} from {$_SERVER['REMOTE_ADDR']} at ".date("H:i"), "auth");
             }
         }
 

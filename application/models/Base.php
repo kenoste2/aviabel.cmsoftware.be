@@ -46,6 +46,31 @@ class Application_Model_Base {
         return true;
     }
 
+    protected function clearEmptyValues ($data) {
+
+        foreach ($data as $key => $value) {
+            if ($value == '') {
+                unset($data[$key]);
+            }
+        }
+
+        return $data;
+
+    }
+
+
+    public function log($remark, $logtype = 'default')
+    {
+        $data = array (
+            'LOGTYPE' => $logtype,
+            'REMARK' => $remark,
+            'CREATION_USER' => $this->online_user,
+            'CREATION_DATE' => date("Y-m-d"),
+        );
+        $this->saveData('LOGGING', $data);
+    }
+
+
 }
 
 ?>
