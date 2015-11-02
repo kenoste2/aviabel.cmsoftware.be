@@ -29,6 +29,15 @@ class FileDetailController extends BaseFileController {
             $generalForm->disablePartner();
         }
 
+        if ($this->moduleAccess('valuta')) {
+            $this->view->valuteModule = true;
+
+            $refObj = new Application_Model_FilesReferences();
+            $this->view->valutaAmounts = $refObj->getFileAmountsByValute($this->fileId);
+        }
+
+
+
 
         $debtorForm = new Application_Form_FileGeneralDebtor();
         $fileActionsObj = new Application_Model_FilesActions();

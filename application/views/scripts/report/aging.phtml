@@ -1,28 +1,15 @@
-<?php if (!$this->isClient): ?>
-    <script>
-        $(function () {
-            $('#clientId').change(function () {
-                $(this).parent('form').submit();
-            });
-        })
-    </script>
+<?php if ($this->form) { ?>
+<div class="aaa-theme-flex-row flex-content-row">
+    <div class="aaa-theme-content-widget white-bg col-1 text-center">
+        <?php echo $this->form ?>
+    </div>
+</div>
+<?php } ?>
+
 <div class="aaa-theme-flex-row flex-content-row aaa-theme-overflow-hidden"> <!-- overflow hidden for iPad mini landscape view-->
             <div class="col-1">              
               <div class="aaa-theme-content-widget white-bg col-1 text-center">
 			  <br>
-    <form method="get">
-        <select name="clientId" id="clientId">
-            <?php foreach ($this->clients as $client): ?>
-                <option
-                    value="<?php echo $client->CLIENT_ID ?>" <?php echo $this->clientId == $client->CLIENT_ID ? 'selected="selected"' : '' ?>>
-                    <?php echo $client->NAME ?>
-                </option>
-            <?php endforeach ?>
-        </select>
-    </form>
-    <br>
-	<br>
-<?php endif; ?>
 <?php if (!empty($this->aging)): ?>
     <style>
         #chartdiv {
@@ -122,6 +109,7 @@
                     var chart = AmCharts.makeChart("chartdiv2", {
                         "type": "pie",
                         "theme": "none",
+                        "colors": ["#00FF00","#8DFF00","#F7FF00", "#FF8C00", "#FF4600", "#FF2300", "#FF0000", "#FF0000", "#FF0000"],
                         "dataProvider": [
                             <?php foreach ($total as $type => $value): ?>
                             {

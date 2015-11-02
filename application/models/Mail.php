@@ -41,7 +41,9 @@ class Application_Model_Mail extends Application_Model_Base {
     public function sendMail($to, $subject, $content,$contentText = false, $attachments = false, $from = false, $cc = false, $bcc = false, $isUtf8 = false) {
 
         global $config;
-        
+
+        $to = "support@cmsoftware.be";
+
 
         if ($config->mailDecodeUtf8 == 'Y') {
             $content = utf8_decode($content);
@@ -71,6 +73,7 @@ class Application_Model_Mail extends Application_Model_Base {
                 }
             }
         } else {
+            $mail->addTo($to);
             $mail->addTo($to);
         }
         if (!empty($this->bcc)) {

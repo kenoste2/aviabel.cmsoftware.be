@@ -3,6 +3,7 @@
 			var chart = AmCharts.makeChart("vervallen", {
 				"type": "pie",
 				"theme": "none",
+                "colors" : ["#FF0000","#00FF00"],
 				"legend": {
 					"position": "right",
 					"horizontalGap": 10,
@@ -13,11 +14,11 @@
 				"dataProvider": [
 					{
 						"titel": "<?php echo $this->T("past_due_c") ?>",
-						"waarde": <?php echo $this->totalPastDue ?>
+						"waarde": <?php echo $this->totalPastDue ?>,
 					},
 					{
 						"titel": "<?php echo $this->T("not_due_c") ?>",
-						"waarde": <?php echo $this->totalNotDue ?>
+						"waarde": <?php echo $this->totalNotDue ?>,
 					}],
 				"titleField": "titel",
 				"valueField": "waarde",
@@ -57,6 +58,7 @@
 			var chart = AmCharts.makeChart("aging", {
 				"type": "pie",
 				"theme": "none",
+                "colors" : ["#00FF00","#8DFF00","#F7FF00", "#FF8C00", "#FF4600", "#FF2300", "#FF0000", "#FF0000", "#FF0000"],
 				"legend": {
 					"position": "right",
 					"horizontalGap": 10,
@@ -98,14 +100,14 @@
 							},
 							{
 								"color": "#cc4748",
-								"endValue": 100,
+								"endValue": 200,
 								"innerRadius": "95%",
 								"startValue": 60
 							}
 						],
 						"bottomText": "",
 						"bottomTextYOffset": 20,
-						"endValue": 100
+						"endValue": 200
 					}
 				],
 				"arrows": [
@@ -204,6 +206,12 @@
 			});
 		});
 		</script>
+
+        <style>
+            .slice1 .amcharts-pie-slice {
+                fill: #000;
+            }
+        </style>
 	
 
           <div class="aaa-theme-flex-row flex-content-row">
@@ -286,11 +294,3 @@
               </div>
             </div>         
           </div> <!-- Second row ends -->
-		  <div class="aaa-theme-flex-row flex-content-row aaa-theme-overflow-hidden"> <!-- overflow hidden for iPad mini landscape view-->
-            <div class="col-1">              
-              <div class="aaa-theme-content-widget white-bg col-1 text-center">
-              <h2 class="text-uppercase"><?php echo $this->T("forecastHistogram_c") ?></h2>
-              <div id="paymentDelayForecastHistogram" class="aaa-theme-chart"></div>	
-            </div>        
-            </div> 
-          </div>

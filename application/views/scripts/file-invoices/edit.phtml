@@ -34,21 +34,50 @@
                     <?php print $this->form->COST_PERCENT ?>
                     <?php print $this->form->INTEREST_MINIMUM ?>
                     <?php print $this->form->COST_MINIMUM ?>
-                    <?php print $this->form->submit ?>
                 </dl>
 
 				</td></tr></table>
               </div>
               </div>
-            </div>   
+                    <div class="panel-heading aaa-theme-position-relative"><h2 class="text-uppercase"><?php $this->T("police") ?></h2></div>
+                    <div class="table-responsive">
+                        <table class="table"><tr><td>
+                        <?php print $this->form->CONTRACT_NUMBER ?>
+                        <?php print $this->form->CONTRACT_INSURED ?>
+                        <?php print $this->form->CONTRACT_UY ?>
+                        <?php print $this->form->CONTRACT_UNDERWRITER ?>
+                        <?php print $this->form->CONTRACT_INCEPTIONDATE ?>
+                        <?php print $this->form->CONTRACT_LINEOFBUSINESS ?>
+                        <?php print $this->form->LEDGER_ACCOUNT ?>
+                        <?php print $this->form->INVOICE_FROMDATE ?>
+                        <?php print $this->form->INVOICE_TODATE ?>
+                        </td></tr></table>
+                    </div>
+                </div>
             </div>
-            <div class="col-1"> 
+            <div class="col-1">
             <div class="panel panel-default aaa-theme-content-widget white-bg no-padding aaa-theme-overflow-hidden">
                 <div class="panel-heading aaa-theme-position-relative"><h2 class="text-uppercase"><?php $this->T("dispute_c") ?></h2></div>
               	<div class="table-responsive">
                 <table class="table">
                   <tbody>
-                    <tr>
+                  <tr>
+                      <td colspan="2">
+                          <?php print $this->form->DISPUTE ?>
+                          <?php if ($this->showDisputeContent === true) { ?>
+                          <?php print $this->form->DISPUTE_STATUS ?>
+                          <?php print $this->form->DISPUTE_COMMENT ?>
+                          <?php print $this->form->DISPUTE_DATE ?>
+                          <?php print $this->form->DISPUTE_DUEDATE ?>
+                          <?php print $this->form->DISPUTE_ENDED_DATE ?>
+                          <?php print $this->form->DISPUTE_ASSIGNEE ?>
+                          <?php print $this->form->DISPUTE_AMOUNT ?>
+                          <?php } ?>
+                          <?php print $this->form->submit ?>
+                      </td>
+                  </tr>
+                  <?php if ($this->showDisputeContent === true) { ?>
+                  <tr>
 	                  <td><b><?php $this->T("debtor_dispute_comment_c") ?></b></td>
     	              <td><?php
                             if($this->debtorDisputeComment) {
@@ -80,29 +109,17 @@
                             } ?>
 					  </td>                    
                     </tr>
-						
-                    <tr>
-	                  <td colspan="2">
-					   <?php print $this->form->DISPUTE_STATUS ?>
-                        <?php print $this->form->DISPUTE ?>
-                        <?php print $this->form->DISPUTE_COMMENT ?>
-                        <?php print $this->form->DISPUTE_DATE ?>
-                        <?php print $this->form->DISPUTE_DUEDATE ?>
-                        <?php print $this->form->DISPUTE_ENDED_DATE ?>
-                        <?php print $this->form->DISPUTE_ASSIGNEE ?>
-                        <?php print $this->form->DISPUTE_AMOUNT ?>
-                        <?php print $this->form->submit ?>
-					  </td>                    
-                    </tr> 
-
+                  <?php } ?>
                   </tbody>
                 </table>
                </div> 
 
 			  <div class="panel-heading aaa-theme-position-relative"><h2 class="text-uppercase"><?php $this->T("related_documents_c") ?></h2></div>
               <div class="table-responsive">
+
               
 			  <?php if(count($this->documents) > 0) { ?>
+              <table class="table"><tr><td>
 			  <table class="table">
                     
                             <thead>
@@ -120,20 +137,12 @@
                             <?php } ?>
 							<tbody>
                         </table>
+                          </td></tr></table>
                     <?php } else { ?>
+                  <table class="table"><tr><td>
                         <p><?php $this->T("no_documents_found_c") ?></p>
+                          </td></tr></table>
                     <?php } ?>                  
- 
               </div>
-                <div class="panel-heading aaa-theme-position-relative"><h2 class="text-uppercase"><?php $this->T("police") ?></h2></div>
-                <div class="table-responsive">
-                    <?php print $this->form->CONTRACT_NUMBER ?>
-                    <?php print $this->form->CONTRACT_INSURED ?>
-                    <?php print $this->form->CONTRACT_UY ?>
-                    <?php print $this->form->CONTRACT_UNDERWRITER ?>
-                    <?php print $this->form->submit ?>
-                </div>
-                </div>
-                </div>
 			</div>
           </form>

@@ -169,6 +169,28 @@ class Application_Model_TemplatesContent extends Application_Model_Base
         return $fields;
     }
 
+    public function getCollectorContent($collectorId)
+    {
+        $obj = new Application_Model_Clients();
+        $row = $this->db->get_row("SELECT * FROM SYSTEM\$COLLECTORS WHERE COLLECTOR_ID = '{$collectorId}'");
+
+        $fields = array(
+            'COLLECTOR_NAME' => $row->NAME,
+            'COLLECTOR_EMAIL' => $row->EMAIL,
+            'COLLECTOR_TELEPHONE' => $row->TELEPHONE,
+        );
+
+
+        return $fields;
+    }
+
+
+    public function getPoliceContent($text, $fileId) {
+        $obj = new Application_Model_Custom_Aviabel();
+        $fields = $obj->getTemplateContent($text, $fileId);
+        return $fields;
+    }
+
     public function getDatesContent($text)
     {
 

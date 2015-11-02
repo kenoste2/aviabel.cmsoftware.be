@@ -46,7 +46,7 @@
 			</td>
 			<td align="center">
             <h2 class="text-uppercase">
-			<?php print $this->T("file_c") ?> : <?php echo $this->file->DEBTOR_NAME ?>
+			<?php echo $this->file->DEBTOR_NAME ?> - <?php echo $this->file->REFERENCE ?>
 			</h2>
 			</td>
 			<td align="right">
@@ -62,7 +62,6 @@
                 <li><a href="<?php echo $this->location() ?>/file-documents/view/fileId/<?php echo $this->fileId ?>"><?php print $this->T("documents_c") ?></a></li>
                  <?php if ($this->showFileRemarks === true) { ?>
 				<li><a href="<?php echo $this->location() ?>/file-remarks/view/fileId/<?php echo $this->fileId ?>"><?php print $this->T("remarks_c") ?></a></li>
-                <li><a href="<?php echo $this->location() ?>/file-imported-mails/view/fileId/<?php echo $this->fileId ?>"><?php print $this->T("imported_mails_c") ?></a></li>
                 <?php } ?>
                 <?php if ($this->showFileTodos === true) { ?> 
 				<li><a href="<?php echo $this->location() ?>/file-todos/view/fileId/<?php echo $this->fileId ?>"><?php print $this->T("todos_c") ?></a></li>

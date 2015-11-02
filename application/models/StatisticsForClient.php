@@ -21,7 +21,7 @@ class Application_Model_StatisticsForClient extends Application_Model_Base
           from REPORTS\$STATISTICTS_FOR_CLIENT($client_id)");
     }
 
-    public function getAging($clientId)
+    public function getAging($clientId = false, $collectorId = false)
     {
 
         $refObj = new Application_Model_FilesReferences();
@@ -37,61 +37,75 @@ class Application_Model_StatisticsForClient extends Application_Model_Base
 
                 $type = $row->REFERENCE_TYPE;
 
+                if ($clientId) {
+                    $clientExtra = "AND F.CLIENT_ID = {$clientId}";
+                }
+                if ($collectorId) {
+                    $collectorExtra = "AND F.COLLECTOR_ID = {$collectorId}";
+                }
+                
                 $aging[$type]['0'] = $this->db->get_row("select COUNT(*),SUM(R.AMOUNT)
                   from files\$references R
                   JOIN FILES\$FILES F ON F.FILE_ID = R.FILE_ID WHERE
-                  F.CLIENT_ID = {$clientId} AND
                   (CURRENT_DATE - R.START_DATE) <1
                   AND REFERENCE_TYPE = '{$type}'
+                  {$clientExtra}
+                  {$collectorExtra}
                   GROUP BY REFERENCE_TYPE");
 
 
                 $aging[$type]['1-30'] = $this->db->get_row("select COUNT(*),SUM(R.AMOUNT)
                   from files\$references R
                   JOIN FILES\$FILES F ON F.FILE_ID = R.FILE_ID WHERE
-                  F.CLIENT_ID = {$clientId} AND
                   (CURRENT_DATE - R.START_DATE) >=1 AND (CURRENT_DATE - R.START_DATE) <=30
                   AND REFERENCE_TYPE = '{$type}'
+                  {$clientExtra}
+                  {$collectorExtra}
                   GROUP BY REFERENCE_TYPE");
 
                 $aging[$type]['31-90'] = $this->db->get_row("select COUNT(*),SUM(R.AMOUNT)
                   from files\$references R
                   JOIN FILES\$FILES F ON F.FILE_ID = R.FILE_ID WHERE
-                  F.CLIENT_ID = {$clientId} AND
                   (CURRENT_DATE - R.START_DATE) >=31 AND (CURRENT_DATE - R.START_DATE) <=90
                   AND REFERENCE_TYPE = '{$type}'
+                  {$clientExtra}
+                  {$collectorExtra}
                   GROUP BY REFERENCE_TYPE");
 
                 $aging[$type]['91-180'] = $this->db->get_row("select COUNT(*),SUM(R.AMOUNT)
                   from files\$references R
                   JOIN FILES\$FILES F ON F.FILE_ID = R.FILE_ID WHERE
-                  F.CLIENT_ID = {$clientId} AND
                   (CURRENT_DATE - R.START_DATE) >=91 AND (CURRENT_DATE - R.START_DATE) <= 180
                   AND REFERENCE_TYPE = '{$type}'
+                  {$clientExtra}
+                  {$collectorExtra}
                   GROUP BY REFERENCE_TYPE");
 
                 $aging[$type]['181-365'] = $this->db->get_row("select COUNT(*),SUM(R.AMOUNT)
                   from files\$references R
                   JOIN FILES\$FILES F ON F.FILE_ID = R.FILE_ID WHERE
-                  F.CLIENT_ID = {$clientId} AND
                   (CURRENT_DATE - R.START_DATE) >=181 AND (CURRENT_DATE - R.START_DATE) <= 365
                   AND REFERENCE_TYPE = '{$type}'
+                  {$clientExtra}
+                  {$collectorExtra}
                   GROUP BY REFERENCE_TYPE");
 
                 $aging[$type]['366-730'] = $this->db->get_row("select COUNT(*),SUM(R.AMOUNT)
                   from files\$references R
                   JOIN FILES\$FILES F ON F.FILE_ID = R.FILE_ID WHERE
-                  F.CLIENT_ID = {$clientId} AND
                   (CURRENT_DATE - R.START_DATE) >=366 AND (CURRENT_DATE - R.START_DATE) <= 730
                   AND REFERENCE_TYPE = '{$type}'
+                  {$clientExtra}
+                  {$collectorExtra}
                   GROUP BY REFERENCE_TYPE");
 
                 $aging[$type]['731+'] = $this->db->get_row("select COUNT(*),SUM(R.AMOUNT)
                   from files\$references R
                   JOIN FILES\$FILES F ON F.FILE_ID = R.FILE_ID WHERE
-                  F.CLIENT_ID = {$clientId} AND
                   (CURRENT_DATE - R.START_DATE) >=731
                   AND REFERENCE_TYPE = '{$type}'
+                  {$clientExtra}
+                  {$collectorExtra}
                   GROUP BY REFERENCE_TYPE");
             }
             return $aging;

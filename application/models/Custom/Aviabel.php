@@ -2,7 +2,7 @@
 
 class Application_Model_Custom_Aviabel extends Application_Model_Base
 {
-    private $file = "/var/www/html/public/documents/imported_files/tripleA.csv";
+    private $file = "/home/aaa/files/tripleA.csv";
 
     protected $reference_array = array();
 
@@ -24,6 +24,10 @@ class Application_Model_Custom_Aviabel extends Application_Model_Base
 
     public function import() {
 
+
+        $this->log(date("Y-m-d H:i")." : start import",'import');
+
+
         $this->truncate();
 
         $handle = $this->loadFile();
@@ -37,15 +41,26 @@ class Application_Model_Custom_Aviabel extends Application_Model_Base
         }
 
 
-        $checkImport = $this->checkImport();
+        $this->log(date("Y-m-d H:i")." : csv loaded",'import');
 
+        $checkCounter = $counter-1;
+        $checkImport = $this->checkImport();
         if ($checkImport) {
+
+            $this->log(date("Y-m-d H:i")." : check OK",'import');
             $this->linkClients();
+            $this->log(date("Y-m-d H:i")." : linkClients done",'import');
             $this->linkCollectors();
+            $this->log(date("Y-m-d H:i")." : linkCollectors done",'import');
             $this->linkDebtors();
+            $this->log(date("Y-m-d H:i")." : linkDebtors done",'import');
             $this->linkFiles();
+            $this->log(date("Y-m-d H:i")." : linkFiles done",'import');
             $this->linkInvoices();
+            $this->log(date("Y-m-d H:i")." : linkInvoices done",'import');
             $this->closeInvoices();
+            $this->log(date("Y-m-d H:i")." : closeInvoices done",'import');
+            $this->log(date("Y-m-d H:i")." : end import",'import');
             return true;
         } else {
             return false;
@@ -57,9 +72,7 @@ class Application_Model_Custom_Aviabel extends Application_Model_Base
         $count = $this->db->get_var("SELECT COUNT(*) FROM IMPORT\$INVOICES");
         $amount = $this->db->get_var("SELECT SUM(INVOICE_AMOUNT) FROM IMPORT\$INVOICES");
 
-        $currentAmounts = $this->db->get_var("SELECT SUM(AMOUNT) FROM FILES\$REFERENCES");
-
-        if ($amount >= ($currentAmounts/2) && $count>=1 ) {
+        if ($amount >= 0.00 && $count>=10 ) {
             return true;
         } else {
             return false;
@@ -83,28 +96,61 @@ class Application_Model_Custom_Aviabel extends Application_Model_Base
 
         $columns = $this->_getColums();
 
+        $inceptionDate = trim($line[$columns['CONTRACT_INCEPTIONDATE']]);
+        if ($inceptionDate == '') {
+            $inceptionDate = date("Y-m-d");
+        }
+        $fromDate = trim($line[$columns['INVOICE_FROMDATE']]);
+        if ($fromDate == '') {
+            $fromDate = date("Y-m-d");
+        }
+        $toDate = trim($line[$columns['INVOICE_TODATE']]);
+        if ($toDate == '') {
+            $toDate = date("Y-m-d");
+        }
+
+
+        $reference = trim($line[$columns['CLIENT_NUMBER']]);
+        if (!empty($line[$columns['CONTRACT_NUMBER']])) {
+            $reference .= "/" . trim($line[$columns['CONTRACT_NUMBER']]);
+        }
+
+
+
+
         $data = array(
-            'DEVISION_CODE' => $line[$columns['DEVISION_CODE']],
-            'CLIENT_NUMBER' => $line[$columns['CLIENT_NUMBER']],
-            'CLIENT_NAME' => $line[$columns['CLIENT_NAME']],
-            'CLIENT_ADDRESS' => $line[$columns['CLIENT_ADDRESS']],
-            'CLIENT_ZIPCODE' => $line[$columns['CLIENT_ZIPCODE']],
-            'CLIENT_PLACE' => $line[$columns['CLIENT_PLACE']],
-            'CLIENT_COUNTRY' => $line[$columns['CLIENT_COUNTRY']],
-            'CLIENT_LANGUAGE' => $line[$columns['CLIENT_LANGUAGE']],
-            'CLIENT_TEL' => $line[$columns['CLIENT_TEL']],
-            'CLIENT_EMAIL' => $line[$columns['CLIENT_EMAIL']],
-            'CLIENT_VAT' => $line[$columns['CLIENT_VAT']],
-            'INVOICE_AMOUNT' => $line[$columns['INVOICE_AMOUNT']],
-            'INVOICE_NUMBER' => $line[$columns['INVOICE_NUMBER']],
-            'INVOICE_DATE' => $line[$columns['INVOICE_DATE']],
-            'INVOICE_DUEDATE' => $line[$columns['INVOICE_DUEDATE']],
-            'INVOICE_TYPE' => $line[$columns['INVOICE_TYPE']],
+            'DEVISION_CODE' => trim($line[$columns['DEVISION_CODE']]),
+            'CLIENT_NUMBER' => $reference,
+            'CLIENT_NAME' => trim($line[$columns['CLIENT_NAME']]),
+            'CLIENT_ADDRESS' => trim($line[$columns['CLIENT_ADDRESS']]),
+            'CLIENT_ZIPCODE' => trim($line[$columns['CLIENT_ZIPCODE']]),
+            'CLIENT_PLACE' => trim($line[$columns['CLIENT_PLACE']]),
+            'CLIENT_COUNTRY' => trim($line[$columns['CLIENT_COUNTRY']]),
+            'CLIENT_LANGUAGE' => trim($line[$columns['CLIENT_LANGUAGE']]),
+            'CLIENT_TEL' => trim($line[$columns['CLIENT_TEL']]),
+            'CLIENT_EMAIL' => trim($line[$columns['CLIENT_EMAIL']]),
+            'CLIENT_VAT' => trim($line[$columns['CLIENT_VAT']]),
+            'INVOICE_AMOUNT' => trim($line[$columns['INVOICE_AMOUNT']]),
+            'INVOICE_NUMBER' => trim($line[$columns['INVOICE_NUMBER']]),
+            'INVOICE_DATE' => trim($line[$columns['INVOICE_DATE']]),
+            'INVOICE_DUEDATE' => trim($line[$columns['INVOICE_DUEDATE']]),
+            'INVOICE_TYPE' => trim($line[$columns['INVOICE_TYPE']]),
             'CREATION_DATE' => date("Y-m-d"),
-            'CONTRACT_UY' => $line[$columns['CONTRACT_UY']],
-            'CONTRACT_INSURED' => $line[$columns['CONTRACT_INSURED']],
-            'CONTRACT_UNDERWRITER' => $line[$columns['CONTRACT_UNDERWRITER']],
-            'CONTRACT_NUMBER' => $line[$columns['CONTRACT_NUMBER']],
+            'CONTRACT_UY' => trim($line[$columns['CONTRACT_UY']]),
+            'CONTRACT_INSURED' => trim($line[$columns['CONTRACT_INSURED']]),
+            'CONTRACT_UNDERWRITER' => trim($line[$columns['CONTRACT_UNDERWRITER']]),
+            'CONTRACT_NUMBER' => trim($line[$columns['CONTRACT_NUMBER']]),
+            'VALUTA' => trim($line[$columns['VALUTA']]),
+            'INVOICE_DOCCODE' => trim($line[$columns['INVOICE_DOCCODE']]),
+            'INVOICE_DOCLINENUM' => trim($line[$columns['INVOICE_DOCLINENUM']]),
+            'INVOICE_FROMDATE' => $fromDate,
+            'INVOICE_TODATE' => $toDate,
+            'INVOICE_ACNUM' => trim($line[$columns['INVOICE_ACNUM']]),
+            'COLLECTOR_CODE' => trim($line[$columns['COLLECTOR_CODE']]),
+            'CONTRACT_INCEPTIONDATE' => $inceptionDate,
+            'CONTRACT_LINEOFBUSINESS' => trim($line[$columns['CONTRACT_LINEOFBUSINESS']]),
+            'CONTRACT_LEAD' => trim($line[$columns['CONTRACT_LEAD']]),
+            'LEDGER_ACCOUNT' => trim($line[$columns['LEDGER_ACCOUNT']]),
         );
         $this->addData("IMPORT\$INVOICES", $data);
         return true;
@@ -135,7 +181,7 @@ class Application_Model_Custom_Aviabel extends Application_Model_Base
         foreach ($results as $row) {
             $clientId = $clientObj->getClientIdByCode($row->DEVISION_CODE);
             if (!empty($clientId)) {
-                $sql = "UPDATE IMPORT\$INVOICES SET CLIENT_ID = $clientId WHERE DEVISION_CODE = '{$row->DEVISION_CODE}' ";
+                $sql = "UPDATE IMPORT\$INVOICES SET CLIENT_ID = $clientId  WHERE DEVISION_CODE = '{$row->DEVISION_CODE}' ";
                 $this->db->query($sql);
             }
         }
@@ -162,13 +208,18 @@ class Application_Model_Custom_Aviabel extends Application_Model_Base
     {
         $debtorsObj = new Application_Model_Debtors();
 
-        $baseTrainType = $this->functions->getUserSetting('BASE_TRAIN_TYPE');
-
         $results = $this->db->get_results("SELECT CLIENT_NUMBER FROM IMPORT\$INVOICES GROUP BY CLIENT_NUMBER");
         foreach ($results as $row) {
-            $debtorId = $this->db->get_var("SELECT DEBTOR_ID FROM FILES\$FILES WHERE REFERENCE = '{$row->CLIENT_NUMBER}'");
+
+            $reference = $row->CLIENT_NUMBER;
+            if (stripos($reference,"/")!== false) {
+                list($reference,$contractNumber) = explode("/",$reference);
+            }
+
+
+            $debtorId = $this->db->get_var("SELECT DEBTOR_ID FROM FILES\$FILES WHERE REFERENCE like  ''");
             if (empty($debtorId)) {
-                $dataRow = $this->db->get_row("SELECT FIRST 1 *  FROM IMPORT\$INVOICES WHERE CLIENT_NUMBER = '{$row->CLIENT_NUMBER}'");
+                $dataRow = $this->db->get_row("SELECT FIRST 1 *  FROM IMPORT\$INVOICES WHERE CLIENT_NUMBER like '{$reference}%'");
 
                 $countryObj = new Application_Model_Countries();
                 $countryId = $countryObj->getCountryByCode($dataRow->CLIENT_COUNTRY);
@@ -178,10 +229,11 @@ class Application_Model_Custom_Aviabel extends Application_Model_Base
 
                 $languagesObj = new Application_Model_Languages();
 
-                $trainType = $this->db->get_var("select TRAIN_TYPE  from CLIENTS\$CLIENTS WHERE CODE = '{$dataRow->DEVISION_CODE}'");
+                $trainType = $this->db->get_var("select TRAIN_TYPE  from CLIENTS\$CLIENTS WHERE CLIENT_ID = '{$dataRow->CLIENT_ID}'");
                 if (empty($trainType)) {
-                    $trainType = $baseTrainType;
+                    $trainType = $this->functions->getUserSetting('BASE_TRAIN_TYPE');
                 }
+
 
                 $data = array(
                     'NAME' => $dataRow->CLIENT_NAME,
@@ -246,7 +298,7 @@ class Application_Model_Custom_Aviabel extends Application_Model_Base
             $invoicesForFile = $this->db->get_results("SELECT * FROM IMPORT\$INVOICES WHERE FILE_ID = {$row->FILE_ID} ");
             foreach ($invoicesForFile as $invoice) {
 
-                $invoiceExists = $this->db->get_row("SELECT REFERENCE_ID,AMOUNT FROM FILES\$REFERENCES WHERE REFERENCE = '{$invoice->INVOICE_NUMBER}' AND AMOUNT = $invoice->INVOICE_AMOUNT ");
+                $invoiceExists = $this->db->get_var("SELECT REFERENCE_ID FROM FILES\$REFERENCES WHERE REFERENCE = '{$invoice->INVOICE_NUMBER}' AND AMOUNT = {$invoice->INVOICE_AMOUNT} AND INVOICE_DOCCODE = '{$invoice->INVOICE_DOCCODE}' AND INVOICE_DOCLINENUM = '{$invoice->INVOICE_DOCLINENUM}'  ");
                 if (empty($invoiceExists)) {
                     $debtorId = $filesObj->getDebtorId($row->FILE_ID);
                     $trainType = $debtorsObj->getTrajectType($debtorId);
@@ -265,8 +317,24 @@ class Application_Model_Custom_Aviabel extends Application_Model_Base
                         'CONTRACT_INSURED' => $invoice->CONTRACT_INSURED,
                         'CONTRACT_UNDERWRITER' => $invoice->CONTRACT_UNDERWRITER,
                         'CONTRACT_NUMBER' =>     $invoice->CONTRACT_NUMBER,
+                        'VALUTA' => $invoice->VALUTA,
+                        'INVOICE_DOCCODE' => $invoice->INVOICE_DOCCODE,
+                        'INVOICE_DOCLINENUM' => $invoice->INVOICE_DOCLINENUM,
+                        'INVOICE_FROMDATE' => $invoice->INVOICE_FROMDATE,
+                        'INVOICE_TODATE' => $invoice->INVOICE_TODATE,
+                        'INVOICE_ACNUM' => $invoice->INVOICE_ACNUM,
+                        'COLLECTOR_CODE' => $invoice->COLLECTOR_CODE,
+                        'CONTRACT_INCEPTIONDATE' => $invoice->CONTRACT_INCEPTIONDATE,
+                        'CONTRACT_LINEOFBUSINESS' => $invoice->CONTRACT_LINEOFBUSINESS,
+                        'CONTRACT_LEAD' => $invoice->CONTRACT_LEAD,
+                        'LEDGER_ACCOUNT' => $invoice->LEDGER_ACCOUNT,
+                        'LAST_IMPORT' => 1,
+
                     );
                     $referencesObj->create($data);
+                } else {
+                    $sql = "UPDATE FILES\$REFERENCES SET LAST_IMPORT = 1 WHERE REFERENCE_ID = {$invoiceExists}";
+                    $this->db->query($sql);
                 }
             }
         }
@@ -275,10 +343,14 @@ class Application_Model_Custom_Aviabel extends Application_Model_Base
     protected function closeInvoices()
     {
         $referenceObj = new Application_Model_FilesReferences();
-        $sql = "SELECT REFERENCE_ID FROM FILES\$REFERENCES WHERE REFERENCE NOT IN (SELECT INVOICE_NUMBER FROM IMPORT\$INVOICES)  AND STATE_ID!= 40";
-        $results = $this->db->get_results($sql);
-        foreach ($results as $row) {
-            $referenceObj->close($row->REFERENCE_ID);
+
+        $results = $this->db->get_results("SELECT  R.REFERENCE_ID  FROM FILES\$REFERENCES R
+         WHERE LAST_IMPORT = 0 AND R.STATE_ID != 40");
+        if (!empty($results))
+        {
+            foreach ($results as $row) {
+                $referenceObj->close($row->REFERENCE_ID);
+            }
         }
     }
 
@@ -286,6 +358,30 @@ class Application_Model_Custom_Aviabel extends Application_Model_Base
     protected function truncate()
     {
         $this->db->query("delete from IMPORT\$INVOICES");
+        $this->db->query("UPDATE FILES\$REFERENCES SET LAST_IMPORT=0");
+        return true;
+    }
+
+
+    public function getTemplateContent($text, $fileId) {
+        $sql = "SELECT FIRST 1
+            CONTRACT_INCEPTIONDATE, INVOICE_ACNUM, INVOICE_FROMDATE, INVOICE_TODATE, CONTRACT_NUMBER, CONTRACT_INSURED
+            FROM FILES\$REFERENCES WHERE FILE_ID = {$fileId} AND CONTRACT_NUMBER != '' ORDER BY CONTRACT_INCEPTIONDATE DESC";
+
+        $fields = array();
+
+        $row = $this->db->get_row($sql);
+        if (!empty($row)) {
+            $fields['INCEPTIONDATE'] = $this->functions->dateformat($row->CONTRACT_INCEPTIONDATE);
+            $fields['FROM_DATE'] = $this->functions->dateformat($row->INVOICE_FROMDATE);
+            $fields['TO_DATE'] = $this->functions->dateformat($row->INVOICE_TODATE);
+            $fields['CONTRACT_NUMBER'] = $row->CONTRACT_NUMBER;
+            $fields['INSURED'] = $row->CONTRACT_INSURED;
+        }
+
+        return $fields;
+
+
     }
 
 

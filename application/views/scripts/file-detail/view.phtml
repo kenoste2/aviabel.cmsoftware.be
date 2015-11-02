@@ -1,4 +1,3 @@
-
           <div class="aaa-theme-flex-row flex-content-row">
           <div class="col-1">
 
@@ -98,9 +97,31 @@
               <div class="table-responsive">
                 <table class="table">
                   <tbody>
-                    <tr>
+                  <?php if ($this->valutaAmounts) {
+                      ?>
+                        <table class="table table-striped table-bordered">
+                          <thead>
+                            <tr>
+                              <td><?php $this->T("amount_c") ?></td>
+                              <td><?php $this->T("payed_c") ?></td>
+                              <td><?php $this->T("saldo_c") ?></td>
+                          </tr>
+                          </thead>
+                      <?php
+                      foreach ($this->valutaAmounts as $amount) {
+                          ?>
+                          <tr>
+                              <td><?php echo $this->Amount($amount->AMOUNT,$amount->VALUTA ) ?></td>
+                              <td><?php echo $this->Amount($amount->PAYED_AMOUNT,$amount->VALUTA) ?></td>
+                              <td><?php echo $this->Amount($amount->SALDO_AMOUNT,$amount->VALUTA) ?></td>
+                          </tr>
+                      <?php } ?>
+                            </table>
+                      <?php } else { ?>
+                  <tr>
 	                  <td><b><?php $this->T("amount_c") ?></b></td>
-    	              <td><?php echo $this->Amount($this->file->AMOUNT) ?></td>                    
+    	              <td>
+                          <?php echo $this->Amount($this->file->AMOUNT) ?></td>
                     </tr> 
                     <tr>
 	                  <td><b><?php $this->T("payed_c") ?></b></td>
@@ -109,7 +130,8 @@
                     <tr>
 	                  <td><b><?php $this->T("saldo_c") ?></b></td>
     	              <td><?php echo $this->Amount($this->file->SALDO_AMOUNT) ?></td>                    
-                    </tr> 
+                    </tr>
+                  <?php } ?>
 					<?php if ($this->showIntrestCosts) {  ?>
 					<tr>
 						<td class="label"><?php $this->T("costs_c") ?></td>

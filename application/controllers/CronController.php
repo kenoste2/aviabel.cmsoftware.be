@@ -329,6 +329,8 @@ class CronController extends BaseController
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender();
 
+        $mail->sendMail('software@aaa.be','Aviabel CronImport started','see subject',false,false);
+
         $importObj = new Application_Model_Custom_Aviabel();
         $result = $importObj->import();
 

@@ -16,6 +16,9 @@ class Application_Model_FilesReferences extends Application_Model_Base {
             $escReferenceId = $this->db->escape($reference['REFERENCE_ID']);
             $where = "REFERENCE_ID = {$escReferenceId}";
         }
+
+        $data = $this->clearEmptyValues($data);
+
         $this->saveData('FILES$REFERENCES', $data, $where);
     }
 
@@ -62,6 +65,7 @@ class Application_Model_FilesReferences extends Application_Model_Base {
 
     public function update($data) {
         $fileObj = new Application_Model_File();
+
         if ($data['AUTO_CALCULATE'] == 1) {
             $data['INTEREST'] = $this->calculateIntrest($data['START_DATE'], $data['END_DATE']
                     , $data['AMOUNT'], $data['INTEREST_PERCENT'], $data['INTEREST_MINIMUM']);
@@ -72,15 +76,8 @@ class Application_Model_FilesReferences extends Application_Model_Base {
             }
         }
 
-        if (empty($data['DISPUTE_DATE'])) {
-            unset ($data['DISPUTE_DATE']);
-        }
-        if (empty($data['DISPUTE_DUEDATE'])) {
-            unset ($data['DISPUTE_DUEDATE']);
-        }
-        if (empty($data['DISPUTE_ENDED_DATE'])) {
-            unset ($data['DISPUTE_ENDED_DATE']);
-        }
+
+        $data = $this->clearEmptyValues($data);
 
         $referenceId = $this->saveData('FILES$REFERENCES', $data, "REFERENCE_ID = {$data['REFERENCE_ID']}");
         return true;
@@ -148,7 +145,7 @@ class Application_Model_FilesReferences extends Application_Model_Base {
         return $this->db->get_results($sql, "ARRAY_N");
     }
 
-    public function getReferencesByFileId($fileId, $excludeDisputes = false , $due = 'A')
+    public function getReferencesByFileId($fileId, $excludeDisputes = false , $due = 'A', $valuta = false)
     {
         $disputeExtra = $excludeDisputes ? "AND DISPUTE = 0" : "";
 
@@ -164,10 +161,15 @@ class Application_Model_FilesReferences extends Application_Model_Base {
                 break;
         }
 
-        $sql = "select REFERENCE_ID,REFERENCE,CREATION_DATE,START_DATE,END_DATE,INVOICE_DATE,REFUND_STATEMENT,AUTO_CALCULATE,INTEREST_PERCENT,INTEREST_MINIMUM,COST_PERCENT,COST_MINIMUM,AMOUNT,COSTS
-                ,INTEREST,(AMOUNT+INTEREST+COSTS) as TOTAL,(SALDO_AMOUNT+SALDO_INTEREST+SALDO_COSTS) as SALDO, DISPUTE,I.STATE_ID, S.CODE AS STATE_CODE, I.TRAIN_TYPE from FILES\$REFERENCES I
+        if (!empty($valuta)) {
+            $valutaExtra = " AND VALUTA = '{$valuta}'";
+        } else {
+            $valutaExtra = "";
+        }
+
+        $sql = "select I.*,(AMOUNT+INTEREST+COSTS) as TOTAL,(SALDO_AMOUNT+SALDO_INTEREST+SALDO_COSTS) as SALDO, DISPUTE,I.STATE_ID, S.CODE AS STATE_CODE, I.TRAIN_TYPE, I.VALUTA, I.INVOICE_DOCCODE, I.INVOICE_DOCLINENUM, I.INVOICE_FROMDATE, I.INVOICE_TODATE from FILES\$REFERENCES I
                  JOIN FILES\$STATES S ON S.STATE_ID = I.STATE_ID
-                 where FILE_ID='{$fileId}' {$disputeExtra} {$dueExtra}
+                 where FILE_ID='{$fileId}' {$disputeExtra} {$dueExtra} {$valutaExtra}
                  order by START_DATE DESC ,REFERENCE_ID DESC";
 
         $results = $this->db->get_results($sql);
@@ -309,6 +311,22 @@ class Application_Model_FilesReferences extends Application_Model_Base {
         }
 
     }
+
+    public function getFileAmountsByValute($fileId) {
+        $sql = "SELECT VALUTA, SUM(AMOUNT) AS AMOUNT, SUM(PAYED_AMOUNT) AS PAYED_AMOUNT, SUM(SALDO_AMOUNT) AS SALDO_AMOUNT
+                FROM FILES\$REFERENCES WHERE FILE_ID = {$fileId} GROUP BY VALUTA";
+        $results = $this->db->get_results($sql);
+        return $results;
+    }
+
+    public function getFileReferenceValutas($fileId) {
+        $sql = "SELECT VALUTA
+                FROM FILES\$REFERENCES WHERE FILE_ID = {$fileId} GROUP BY VALUTA";
+        $results = $this->db->get_results($sql);
+        return $results;
+    }
+
+
 
 
 

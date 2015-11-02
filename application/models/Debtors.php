@@ -275,7 +275,7 @@ class Application_Model_Debtors extends Application_Model_Base {
     }
 
     function getMeanPaymentDelay() {
-        $sql = "SELECT AVG(COALESCE((SELECT PAYMENT_DATE FROM FILES\$PAYMENTS WHERE REFERENCE_ID = R.REFERENCE_ID),CURRENT_DATE)- R.INVOICE_DATE) AS DELAY_PAYMENT
+        $sql = "SELECT AVG(COALESCE((SELECT PAYMENT_DATE FROM FILES\$PAYMENTS WHERE REFERENCE_ID = R.REFERENCE_ID),CURRENT_DATE)- R.START_DATE) AS DELAY_PAYMENT
                 FROM FILES\$REFERENCES R
                     JOIN FILES\$FILES F ON F.FILE_ID = R.FILE_ID";
         $value = $this->db->get_var($sql);

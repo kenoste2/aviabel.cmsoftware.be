@@ -6,7 +6,6 @@
         <title><?php echo $this->headerTitle?></title>
         <?php echo $this->headLink()->appendStylesheet(BASE_URL . 'css/font-awesome.min.css') ?>
         <?php echo $this->headLink()->appendStylesheet(BASE_URL . 'css/bootstrap.min.css') ?>
-        <?php echo $this->headLink()->appendStylesheet(BASE_URL . 'css/aaa-theme-style.css') ?>
         <?php echo $this->headScript()->appendFile(BASE_URL . 'js/jquery-1.11.2.min.js') ?>
         <?php echo $this->headScript()->appendFile(BASE_URL . 'js/jquery-migrate-1.2.1.min.js') ?>
         <?php echo $this->headScript()->appendFile(BASE_URL . 'js/aaa-theme-script.js') ?>
@@ -34,9 +33,10 @@
 		<?php echo $this->headScript()->appendFile(BASE_URL . 'js/fancybox/source/jquery.fancybox.pack.js') ?>
 		<?php echo $this->headLink()->appendStylesheet(BASE_URL . 'js/fancybox/source/jquery.fancybox.css') ?>
 
+        <?php echo $this->headLink()->appendStylesheet(BASE_URL . 'css/aaa-theme-style.css') ?>
 
 
-  </head>
+    </head>
   <body>  
 <!-- Left column -->
     <div class="aaa-theme-flex-row">
@@ -71,7 +71,7 @@
                   $active = "";
               }
               ?>
-              <li> <a  href="<?php echo $this->Location() ?>/<?php echo $this->menu[$id]['NAV']?>" <?php echo $active?>><?php if (!empty($menu['ICON'])) { ?><i class="fa fa-<?php echo $menu['ICON']?> fa-fw"><?php } ?></i><?php echo $menu['TITEL'] ?></a></li>
+              <?php if (!empty($this->menu[$id]['NAV'])) { ?><li> <a  href="<?php echo $this->Location() ?>/<?php echo $this->menu[$id]['NAV']?>" <?php echo $active?>><?php if (!empty($menu['ICON'])) { ?><i class="fa fa-<?php echo $menu['ICON']?> fa-fw"><?php } ?></i><?php echo $menu['TITEL'] ?></a></li><?php } ?>
           <?php 
 		  }}		  
 		  ?>

@@ -19,7 +19,7 @@ class ReportController extends BaseController
         if ($this->isClient()) {
             $clientId = $this->auth->online_client_id;
         } else {
-            $clientId = $this->getRequest()->getParam('clientId', $this->getSelectedClientId($clients));
+            $clientId = $this->getRequest()->getParam('clientId');
         }
 
 
@@ -37,7 +37,9 @@ class ReportController extends BaseController
     {
         $this->checkAccessAndRedirect(array('report/aging'));
 
-        $this->view->bread = $this->functions->T("menu_reports") . "->" . $this->functions->T("menu_report_aging")  ;
+        $this->view->bread = $this->functions->T("menu_reports") . "->" . $this->functions->T("menu_report_aging");
+
+        $form = new Application_Form_SearchReport();
 
         $statisticsForClientModel = new Application_Model_StatisticsForClient();
         $clientModel = new Application_Model_Clients();
@@ -47,15 +49,18 @@ class ReportController extends BaseController
         if ($this->isClient()) {
             $clientId = $this->auth->online_client_id;
         } else {
-            $clientId = $this->getRequest()->getParam('clientId', $this->getSelectedClientId($clients));
+            $formArray = array
+            (
+                'CLIENT_ID' => $this->getRequest()->getParam('CLIENT_ID'),
+                'COLLECTOR_ID' => $this->getRequest()->getParam('COLLECTOR_ID'),
+            );
+            $form->populate($formArray);
+            $this->view->form = $form;
         }
 
-
-        $aging = $statisticsForClientModel->getAging($clientId);
+        $aging = $statisticsForClientModel->getAging($this->getRequest()->getParam('CLIENT_ID'),$this->getRequest()->getParam('COLLECTOR_ID') );
 
         $this->view->aging = $aging;
-        $this->view->clients = $clients;
-        $this->view->clientId = $clientId;
         $this->view->isClient = $this->isClient();
     }
 

@@ -19,19 +19,22 @@ class Application_Model_Print extends Application_Model_Base
         $lang = $this->getLang($fileId,$templateId);
 
         $clientId = $fileObj->getFileField($fileId, 'CLIENT_ID');
-
+        $collectorId = $fileObj->getFileField($fileId, 'COLLECTOR_ID');
 
         $template = $templateObj->getTemplateContent($templateId, $lang);
         $text = $template['CONTENT'];
         $smsText = $template['SMS_CONTENT'];
         $fileFields = $templateContentObj->getFileContent($text, $fileId, $templateId);
         $clientFields = $templateContentObj->getClientContent($text, $clientId);
+        $collectorFields = $templateContentObj->getCollectorContent($collectorId);
         $dateFields = $templateContentObj->getDatesContent($text);
         $prevActions = $templateContentObj->getPrevActionsDates($text, $fileId);
         $invoices = $templateContentObj->getInvoices($fileId,$lang);
         $invoicesDetailed = $templateContentObj->getInvoicesDetail($fileId,$lang);
         $fileDocuments = $templateContentObj->getDocuments($fileId);
         $rpv = $templateContentObj->getRPV($fileId);
+        $police = $templateContentObj->getPoliceContent($text,$fileId);
+
 
 
         if (!empty($startDate) && !empty($nrOfPayments)) {
@@ -62,7 +65,7 @@ class Application_Model_Print extends Application_Model_Base
 
         $fields = array_merge($fileFields,$clientFields,$dateFields
             ,$ppFields,$actionDateField,$prevActions,$inlineFooter
-            ,$invoices,$invoicesDetailed,$rpv,$fileDocuments);
+            ,$invoices,$invoicesDetailed,$rpv,$fileDocuments,$police,$collectorFields);
         $newText = $this->replaceFields($fields, $text);
         $smsNewText = $this->replaceFields($fields, $smsText);
 

@@ -65,6 +65,13 @@ class Application_Form_Invoices extends Zend_Form {
                 'CONTRACT_UY' => $functions->T('contract_uy'),
                 'CONTRACT_INSURED' => $functions->T('contract_insured'),
                 'CONTRACT_UNDERWRITER' => $functions->T('contract_underwriter'),
+                'CONTRACT_INCEPTIONDATE' => $functions->T('contract_inceptiondate'),
+                'CONTRACT_LINEOFBUSINESS' => $functions->T('contract_lineofbusiness'),
+                'INVOICE_DOCCODE' => $functions->T('invoice_doccode'),
+                'INVOICE_DOCLINENUM' => $functions->T('invoice_doclinenum'),
+                'INVOICE_FROMDATE' => $functions->T('invoice_fromdate'),
+                'INVOICE_TODATE' => $functions->T('invoice_todate'),
+                'LEDGER_ACCOUNT' => $functions->T('ledger_account'),
                 )
             ));
 
