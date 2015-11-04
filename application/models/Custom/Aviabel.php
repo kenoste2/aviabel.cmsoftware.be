@@ -114,7 +114,9 @@ class Application_Model_Custom_Aviabel extends Application_Model_Base
         if (!empty($line[$columns['CONTRACT_NUMBER']])) {
             $reference .= "/" . trim($line[$columns['CONTRACT_NUMBER']]);
         }
-
+        if (!empty($line[$columns['VALUTA']])) {
+            $reference .= "/" . trim($line[$columns['VALUTA']]);
+        }
 
 
 

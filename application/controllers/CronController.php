@@ -333,14 +333,7 @@ class CronController extends BaseController
 
         $importObj = new Application_Model_Custom_Aviabel();
         $result = $importObj->import();
-
-        if (empty($result)) {
-            return $mail->sendMail('software@aaa.be','Aviabel CronImport error','see subject',false,false);
-        }
-        if (!empty($result)) {
-            return $mail->sendMail('software@aaa.be','Aviabel CronImport OK','see subject',false,false);
-        }
-        die("<br>done importAction");
+        die("done importAction");
     }
 
 
