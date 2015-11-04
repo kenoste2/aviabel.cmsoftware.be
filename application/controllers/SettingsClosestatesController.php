@@ -29,6 +29,7 @@ class SettingsClosestatesController extends BaseController
     public function addAction()
     {
         $this->view->bread = $this->functions->T("menu_settings") . "->" . $this->functions->T("menu_settings-closestates_view") .": " . $this->functions->T('new_c') ;
+        $this->view->nav = 'settings-closestates/view';
         $form = new Application_Form_Settings_Closestates();
         $settingsModel = new Application_Model_Closestates();
 //
@@ -53,7 +54,7 @@ class SettingsClosestatesController extends BaseController
     public function editAction()
     {
         $this->view->bread = $this->functions->T("menu_settings") . "->" . $this->functions->T("menu_settings-closestates_view") .": " . $this->functions->T('edit_c') ;
-
+        $this->view->nav = 'settings-closestates/view';
         $form = new Application_Form_Settings_Closestates();
         $obj = new Application_Model_Closestates();
 

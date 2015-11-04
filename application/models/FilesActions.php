@@ -398,7 +398,7 @@ class Application_Model_FilesActions extends Application_Model_Base
         $sql = "SELECT A.TEMPLATE_ID,B.DESCRIPTION,COUNT(*) AS COUNTER FROM FILES\$FILE_ACTIONS A
                   JOIN SYSTEM\$TEMPLATES B ON A.TEMPLATE_ID = B.TEMPLATE_ID
                 WHERE A.TEMPLATE_ID > 0 AND A.TEMPLATE_CONTENT !='' AND A.PRINTED != 'Y' AND A.ADDRESS != ''
-                      AND B.VISIBLE = 'Y'
+                      AND B.VISIBLE = 'Y' AND A.ACTION_DATE <= CURRENT_DATE
                   GROUP BY A.TEMPLATE_ID, B.DESCRIPTION";
         $results = $this->db->get_results($sql);
         return $results;
@@ -419,7 +419,7 @@ class Application_Model_FilesActions extends Application_Model_Base
         $sql = "SELECT FILE_ACTION_ID,ACTION_DATE FROM FILES\$FILE_ACTIONS A
                   JOIN SYSTEM\$TEMPLATES B ON A.TEMPLATE_ID = B.TEMPLATE_ID
                 WHERE A.TEMPLATE_ID = $templateId AND A.TEMPLATE_CONTENT !='' AND A.PRINTED != 'Y' AND A.ADDRESS != ''
-                      AND B.VISIBLE = 'Y'";
+                      AND B.VISIBLE = 'Y' AND ACTION_DATE<=CURRENT_DATE";
         $results = $this->db->get_results($sql);
         return $results;
     }

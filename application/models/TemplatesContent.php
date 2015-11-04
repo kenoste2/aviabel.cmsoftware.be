@@ -191,13 +191,19 @@ class Application_Model_TemplatesContent extends Application_Model_Base
         return $fields;
     }
 
-    public function getDatesContent($text)
+    public function getDatesContent($text, $actionDate = false)
     {
 
         $fields = array();
 
+        if (empty($actionDate)) {
+            $date = date("d/m/Y");
+        } else {
+            $date = $actionDate;
+        }
+
         if (stripos($text, "xTHISDATEx") !== false) {
-            $fields['THISDATE'] = date("Y-m-d");
+            $fields['THISDATE'] = $date;
         }
 
         return $fields;

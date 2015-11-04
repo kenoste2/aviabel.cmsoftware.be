@@ -30,6 +30,7 @@ class SettingsUsersController extends BaseController
     public function addAction()
     {
         $this->view->bread = $this->functions->T("menu_settings") . "->" . $this->functions->T("menu_settings-users_view") . ": " . $this->functions->T('new_c');
+        $this->view->nav = 'settings-users/view';
         $form = new Application_Form_Settings_Users();
         $userModel = new Application_Model_Users();
         $data = array();
@@ -66,6 +67,7 @@ class SettingsUsersController extends BaseController
     public function editAction()
     {
         $this->view->bread = $this->functions->T("menu_settings") . "->" . $this->functions->T("menu_settings-users_view") . ": " . $this->functions->T('edit_c');
+        $this->view->nav = 'settings-users/view';
         $form = new Application_Form_Settings_Users();
         $obj = new Application_Model_Users();
         $userRightsModel = new Application_Model_UserRights();

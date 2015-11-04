@@ -31,7 +31,7 @@ class SettingsAccountsController extends BaseController
     public function addAction()
     {
         $this->view->bread = $this->functions->T("menu_settings") . "->" . $this->functions->T("menu_settings-accounts_view") .": " . $this->functions->T('new_c') ;
-
+        $this->view->nav = 'settings-accounts/view';
         $form = new Application_Form_Settings_Accounts();
         $settingsModel = new Application_Model_Accounts();
 //
@@ -64,7 +64,7 @@ class SettingsAccountsController extends BaseController
     public function editAction()
     {
         $this->view->bread = $this->functions->T("menu_settings") . "->" . $this->functions->T("menu_settings-accounts_view") .": " . $this->functions->T('edit_c') ;
-
+        $this->view->nav = 'settings-accounts/view';
         $form = new Application_Form_Settings_Accounts();
         $obj = new Application_Model_Accounts();
 

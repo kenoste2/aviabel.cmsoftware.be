@@ -31,7 +31,7 @@ class SettingsFilecostsController extends BaseController
     public function addAction()
     {
         $this->view->bread = $this->functions->T("menu_settings") . "->" . $this->functions->T("menu_settings-filecosts_view") .": " . $this->functions->T('new_c') ;
-
+        $this->view->nav = 'settings-filecosts/view';
         $form = new Application_Form_Settings_Filecosts();
         $settingsModel = new Application_Model_Filecosts();
 //
@@ -56,7 +56,7 @@ class SettingsFilecostsController extends BaseController
     public function editAction()
     {
         $this->view->bread = $this->functions->T("menu_settings") . "->" . $this->functions->T("menu_settings-filecosts_view") .": " . $this->functions->T('edit_c') ;
-
+        $this->view->nav = 'settings-filecosts/view';
         $form = new Application_Form_Settings_Filecosts();
         $obj = new Application_Model_Filecosts();
 

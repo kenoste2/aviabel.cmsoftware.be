@@ -27,7 +27,7 @@ class Application_Model_Print extends Application_Model_Base
         $fileFields = $templateContentObj->getFileContent($text, $fileId, $templateId);
         $clientFields = $templateContentObj->getClientContent($text, $clientId);
         $collectorFields = $templateContentObj->getCollectorContent($collectorId);
-        $dateFields = $templateContentObj->getDatesContent($text);
+        $dateFields = $templateContentObj->getDatesContent($text, $actionDate);
         $prevActions = $templateContentObj->getPrevActionsDates($text, $fileId);
         $invoices = $templateContentObj->getInvoices($fileId,$lang);
         $invoicesDetailed = $templateContentObj->getInvoicesDetail($fileId,$lang);

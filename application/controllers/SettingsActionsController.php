@@ -31,6 +31,7 @@ class SettingsActionsController extends BaseController
     public function addAction()
     {
         $this->view->bread = $this->functions->T("menu_settings") . "->" . $this->functions->T("menu_settings-actions_view") . ": " . $this->functions->T('new_c');
+        $this->view->nav = 'settings-actions/view';
         $form = new Application_Form_Settings_Actions();
         $actionsModel = new Application_Model_Actions();
 //
@@ -60,6 +61,7 @@ class SettingsActionsController extends BaseController
     public function editAction()
     {
         $this->view->bread = $this->functions->T("menu_settings") . "->" . $this->functions->T("menu_settings-actions_view") . ": " . $this->functions->T('edit_c');
+        $this->view->nav = 'settings-actions/view';
         $form = new Application_Form_Settings_Actions();
         $obj = new Application_Model_Actions();
 

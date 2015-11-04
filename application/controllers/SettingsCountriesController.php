@@ -30,7 +30,7 @@ class SettingsCountriesController extends BaseController
     public function addAction()
     {
         $this->view->bread = $this->functions->T("menu_settings") . "->" . $this->functions->T("menu_settings-countries_view") .": " . $this->functions->T('new_c') ;
-
+        $this->view->nav = 'settings-countries/view';
         $form = new Application_Form_Settings_Country();
         $settingsModel = new Application_Model_Countries();
 //
@@ -55,6 +55,7 @@ class SettingsCountriesController extends BaseController
     public function editAction()
     {
         $this->view->bread = $this->functions->T("menu_settings") . "->" . $this->functions->T("menu_settings-countries_view") .": " . $this->functions->T('edit_c') ;
+        $this->view->nav = 'settings-countries/view';
 
         $form = new Application_Form_Settings_Country();
         $obj = new Application_Model_Countries();

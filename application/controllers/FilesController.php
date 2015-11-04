@@ -67,6 +67,9 @@ class FilesController extends BaseController
 
         if ($this->getParam('agenda')) {
             $session->data['state_id'] = $this->getParam('agenda');
+            $session->data['extra_field'] = 'LAST_ACTION_DATE';
+            $session->data['extra_compare'] = "<=";
+            $session->data['extra_text'] = date("d/m/Y");
         }
 
 
@@ -136,17 +139,17 @@ class FilesController extends BaseController
                 $query_extra = "AND 1=1";
             }
 
-            if ($data['extra_text'] != "") {
+            if ($session->data['extra_text'] != "") {
 
-                if($data['extra_field'] === "DEBTOR_SCORE") {
-                    $scorePart = $this->getDebtorScorePart($data['extra_compare'], $data['extra_text']);
+                if($session->data['extra_field'] === "DEBTOR_SCORE") {
+                    $scorePart = $this->getDebtorScorePart($session->data['extra_compare'], $session->data['extra_text']);
                     if($scorePart) {
                         $query_extra .= $scorePart;
                     } else {
                         //TODO: handle incorrect data
                     }
                 } else{
-                    if (stripos($data['extra_field'], "DATE") !== false) {
+                    if (stripos($session->data['extra_field'], "DATE") !== false) {
                         $session->data['extra_text'] = $this->functions->date_dbformat($session->data['extra_text']);
                     }
                     if (is_numeric($this->functions->dbBedrag($session->data['extra_text']))) {

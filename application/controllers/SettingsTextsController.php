@@ -27,6 +27,7 @@ class SettingsTextsController extends BaseController
     public function addAction()
     {
         $this->view->bread = $this->functions->T("menu_settings") . "->" . $this->functions->T("menu_settings-texts_view") .": " . $this->functions->T('new_c') ;
+        $this->view->nav = 'settings-texts/view';
         $form = new Application_Form_Settings_Texts();
         $settingsModel = new Application_Model_Texts();
 //
@@ -51,6 +52,7 @@ class SettingsTextsController extends BaseController
     public function editAction()
     {
         $this->view->bread = $this->functions->T("menu_settings") . "->" . $this->functions->T("menu_settings-texts_view") .": " . $this->functions->T('edit_c') ;
+        $this->view->nav = 'settings-texts/view';
         $form = new Application_Form_Settings_Texts();
         $obj = new Application_Model_Texts();
 

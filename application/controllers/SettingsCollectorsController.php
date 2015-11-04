@@ -81,6 +81,7 @@ class SettingsCollectorsController extends BaseController
             $data['COUNTRY_ID'] = $row->COUNTRY_ID;
             $data['LANGUAGE_ID'] = $row->LANGUAGE_ID;
             $data['EMAIL'] = $row->EMAIL;
+            $data['TELEPHONE'] = $row->TELEPHONE;
         }
         // Populating form
         $form->populate($data);

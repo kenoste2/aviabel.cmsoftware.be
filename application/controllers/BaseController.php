@@ -63,11 +63,13 @@ class BaseController extends Zend_Controller_Action {
 
         $menu = array();
 
+        $controllerName = $this->getRequest()->getControllerName();
+
         if (!empty($authNamespace->menu)) {
             foreach ($authNamespace->menu as $menu) {
-
                 foreach ($menu['SUBMENU'] as $submenu) {
-                    if ($this->nav == $submenu['NAV']) {
+                    list($subControllername) = explode("/",$submenu['NAV']);
+                    if ($controllerName == $subControllername) {
                         return $menu;
                     }
                 }

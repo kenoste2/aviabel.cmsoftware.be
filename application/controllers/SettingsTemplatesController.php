@@ -30,7 +30,7 @@ class SettingsTemplatesController extends BaseController
     public function addAction()
     {
         $this->view->bread = $this->functions->T("menu_settings") . "->" . $this->functions->T("menu_settings-templates_view") . ": " . $this->functions->T('new_c');
-
+        $this->view->nav = 'settings-templates/view';
         $form = new Application_Form_Settings_Templates();
         $settingsModel = new Application_Model_Templates();
         $filesAllInfoModel = new Application_Model_FilesAllInfo();
@@ -62,7 +62,7 @@ class SettingsTemplatesController extends BaseController
     public function editAction()
     {
         $this->view->bread = $this->functions->T("menu_settings") . "->" . $this->functions->T("menu_settings-templates_view") . ": " . $this->functions->T('edit_c');
-
+        $this->view->nav = 'settings-templates/view';
         $form = new Application_Form_Settings_Templates();
         $obj = new Application_Model_Templates();
         $filesAllInfoModel = new Application_Model_FilesAllInfo();
