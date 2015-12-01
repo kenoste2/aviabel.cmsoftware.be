@@ -416,13 +416,16 @@ class Application_Model_FilesActions extends Application_Model_Base
     }
     public function getToBePrinted($templateId)
     {
-        $sql = "SELECT FILE_ACTION_ID,ACTION_DATE FROM FILES\$FILE_ACTIONS A
+        $sql = "SELECT FIRST 500 FILE_ACTION_ID,ACTION_DATE FROM FILES\$FILE_ACTIONS A
                   JOIN SYSTEM\$TEMPLATES B ON A.TEMPLATE_ID = B.TEMPLATE_ID
                 WHERE A.TEMPLATE_ID = $templateId AND A.TEMPLATE_CONTENT !='' AND A.PRINTED != 'Y' AND A.ADDRESS != ''
-                      AND B.VISIBLE = 'Y' AND ACTION_DATE<=CURRENT_DATE";
+                      AND B.VISIBLE = 'Y' AND ACTION_DATE<=CURRENT_DATE ORDER BY FILE_ACTION_ID";
         $results = $this->db->get_results($sql);
         return $results;
     }
+
+
+
 
 
     public function setPrinted($templateId)

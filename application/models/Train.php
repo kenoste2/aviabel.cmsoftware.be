@@ -141,6 +141,12 @@ class Application_Model_Train extends Application_Model_Base
                     $counter = 0;
                 }
 
+                if ($row->DAYS == 0) {
+                    if ($i != 1) {
+                        $counter = 0;
+                    }
+                }
+
                 $counters[$row->CODE][$i] = $counter;
             }
         }
@@ -236,6 +242,12 @@ class Application_Model_Train extends Application_Model_Base
 
         if (!empty($data['TRAIN_TYPE'])) {
             $query .= " AND (SELECT TRAIN_TYPE FROM FILES\$DEBTORS D WHERE D.DEBTOR_ID = I.DEBTOR_ID) = '{$data['TRAIN_TYPE']}'";
+        }
+
+
+        if ($data['DAYS'] == 0) {
+            $query = str_replace("{$action_date}=CURRENT_DATE-{$data['DAYS']}","1=1",$query);
+            $query = str_replace("ACTION_DATE>=CURRENT_DATE-{$data['DAYS']}","1=1",$query);
         }
 
 

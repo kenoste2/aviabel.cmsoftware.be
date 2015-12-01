@@ -276,6 +276,7 @@ class Application_Model_Custom_Aviabel extends Application_Model_Base
                     'REFERENCE' => $row->CLIENT_NUMBER,
                     'COLLECTOR_ID' => $dataRow->COLLECTOR_ID,
                     'STATE_ID' => $stateId,
+                    'VALUTA' => $dataRow->VALUTA,
                 );
                 $filesObj = new Application_Model_Files();
                 $fileId = $filesObj->create($data);
