@@ -71,6 +71,7 @@ class Application_Model_Print extends Application_Model_Base
 
         $result['CONTENT'] = $newText;
         $result['SMS_CONTENT'] = $smsNewText;
+        $result['ADAPTABLE'] = $template['ADAPTABLE'];
         return json_encode($result);
     }
 

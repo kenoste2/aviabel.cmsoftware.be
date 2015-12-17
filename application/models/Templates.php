@@ -83,6 +83,7 @@ class Application_Model_Templates extends Application_Model_Base
 
         $data['CONTENT'] = str_replace("€","EURO",$data['CONTENT']);
         $data['CONTENT'] = str_replace("&'128;","EURO",$data['CONTENT']);
+        $data['ADAPTABLE'] = $this->db->get_var("SELECT ADAPTABLE FROM SYSTEM\$TEMPLATES WHERE TEMPLATE_ID = {$templateId} ");
         return $data;
     }
 

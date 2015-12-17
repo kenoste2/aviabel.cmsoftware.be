@@ -93,6 +93,7 @@ class SettingsTemplatesController extends BaseController
             $data['TEXT_FR'] = $row->TEXT_FR;
             $data['TEXT_EN'] = $row->TEXT_EN;
             $data['TEXT_DE'] = $row->TEXT_DE;
+            $data['ADAPTABLE'] = $row->ADAPTABLE;
             $data['TEXT_SMS_NL'] = $row->TEXT_SMS_NL;
             $data['TEXT_SMS_FR'] = $row->TEXT_SMS_FR;
             $data['TEXT_SMS_EN'] = $row->TEXT_SMS_EN;

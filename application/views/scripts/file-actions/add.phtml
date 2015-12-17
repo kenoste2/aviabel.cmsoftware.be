@@ -32,6 +32,8 @@
                 <?php echo $this->form->CONTENT ?>
                 <?php echo $this->form->SMS_CONTENT ?>
                 <?php echo $this->form->submit ?>
+                <?php echo $this->form->CONTENT_HIDDEN ?>
+                <?php echo $this->form->SMS_CONTENT_HIDDEN ?>
                 </form>
                     </td></tr></table>
               </div>
@@ -217,8 +219,20 @@
         savePaymentPlan();
         var value = $('#TEMPLATE_ID').val();
         $.getJSON("<?php echo $this->Location() ?>/print/get-template-content/templateId/" + value + "/fileId/<?php echo $this->fileId ?>", {ajax: 'true'}, function (j) {
+            $("#CONTENT_HIDDEN").val(j.CONTENT);
             $("#CONTENT").val(j.CONTENT);
-            $("#SMS_CONTENT").val(j.SMS_CONTENT)
+            $("#SMS_CONTENT").val(j.SMS_CONTENT);
+            $("#SMS_CONTENT_HIDDEN").val(j.SMS_CONTENT);
+
+            if (j.ADAPTABLE == '0') {
+                $("#CONTENT").attr('disabled','disabled');
+                $("#SMS_CONTENT").attr('disabled','disabled');
+            } else {
+                $("#CONTENT").removeAttr('disabled');
+                $("#SMS_CONTENT").removeAttr('disabled');
+
+            }
+
             if (value > 0) {
                 via();
             }

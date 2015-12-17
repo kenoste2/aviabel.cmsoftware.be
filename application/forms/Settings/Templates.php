@@ -14,6 +14,15 @@ class Application_Form_Settings_Templates extends Zend_Form {
         $this->addElement('text', 'DESCRIPTION', array('label' => $functions->T('Description_c'), 'required' => true, 'maxlength' => 100, 'size' => 50));
         $this->addElement('select', 'ACTION_ID', array('label' => $functions->T('Action_c'), 'required' => false, 'MultiOptions' => $functions->db2array($actionModel->getActionsForSelect())));
 
+        $confirm = array(1 => $functions->T('yes_c'), 0 => $functions->T('no_c'));
+        $this->addElement('radio', 'ADAPTABLE', array(
+            'label' => $functions->T('content_adabtable_c'),
+            'MultiOptions' => $confirm,
+        ));
+
+
+
+
         $this->addElement('select', 'TEMPLATE_FOR', array('label' => $functions->T('template_for_c'), 'required' => false, 'MultiOptions' => $this->getTemplateFor($functions)));
         $this->addElement('multiCheckbox', 'TEMPLATE_MODULES', array('label' => $functions->T('Activated_modules_c'), 'required' => false, 'MultiOptions' => $this->getModules()));
 

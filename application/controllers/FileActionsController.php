@@ -41,6 +41,8 @@ class FileActionsController extends BaseFileController
     public function addAction()
     {
         $form = new Application_Form_FileAddAction();
+
+
         $obj = new Application_Model_FilesActions();
         $fileObj = new Application_Model_File();
         $this->view->fileId = $this->fileId;
@@ -75,9 +77,12 @@ class FileActionsController extends BaseFileController
                     $update['ADDRESS'] = '';
                 }
 
-
-
-                //$update['CONTENT'] = utf8_decode($update['CONTENT']);
+                if (empty($update['CONTENT']) && !empty($update['CONTENT_HIDDEN'])) {
+                    $update['CONTENT'] = $update['CONTENT_HIDDEN'];
+                }
+                if (empty($update['SMS_CONTENT']) && !empty($update['SMS_CONTENT_HIDDEN'])) {
+                    $update['SMS_CONTENT'] = $update['SMS_CONTENT_HIDDEN'];
+                }
 
                 $actionId = $obj->add($update);
 
