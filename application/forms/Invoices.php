@@ -15,8 +15,13 @@ class Application_Form_Invoices extends Zend_Form {
             'required' => false,
         ));
 
-        $this->addElement('text', 'client', array(
+        $clientsObj = new Application_Model_Clients();
+        $clients = $clientsObj->getArrayClients();
+
+        $this->addElement('select', 'client', array(
             'required' => false,
+            'MultiOptions' => $functions->db2array($clients),
+            'class' => 'form-control'
         ));
 
         $this->addElement('text', 'client_reference', array(

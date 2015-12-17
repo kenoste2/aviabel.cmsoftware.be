@@ -9,6 +9,7 @@
                   <table class="table table-striped table-bordered">
                     <thead>
                       <tr>
+                        <td><?php $this->T("collector_c"); ?></td>
                         <td><?php $this->T("description_c"); ?></td>
                         <td><?php $this->T("number_c"); ?></td>
                         <td></td>
@@ -19,11 +20,12 @@
 					<?php if (!empty($this->toBePrinted)) { ?>
 					<?php foreach ($this->toBePrinted as $template) { ?>
 						<tr>
+							<td><?php echo $template->COLLECTOR_NAME ?></td>
 							<td><?php echo $template->DESCRIPTION ?></td>
 							<td><?php echo $template->COUNTER ?></td>
-							<td><a href="<?php echo $this->location() ?>/print/to-be-printed/templateId/<?php echo $template->TEMPLATE_ID ?>"
+							<td><a href="<?php echo $this->location() ?>/print/to-be-printed/templateId/<?php echo $template->TEMPLATE_ID ?>/collectorId/<?php echo $template->COLLECTOR_ID ?>"
                target="_blank"><li class="fa fa-floppy-o fa-fw"></li></td>
-							<td><?php echo $this->Delete($this->location() . "/print/documents/setPrinted/1/templateId/" . $template->TEMPLATE_ID, $template->DESCRIPTION) ?></td>
+							<td><?php echo $this->Delete($this->location() . "/print/documents/setPrinted/1/templateId/" . $template->TEMPLATE_ID . "/collectorId/".$template->COLLECTOR_ID, $template->DESCRIPTION) ?></td>
 						</tr>
 						<?php } } else { ?>
 							<tr>

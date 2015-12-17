@@ -35,6 +35,16 @@ class DisputesController extends BaseController {
                     $searchArray['EXPIRY_DATE'] = array('from' => $form->EXPIRY_DATE_FROM->getValue(), 'till' => $form->EXPIRY_DATE_TILL->getValue());
                 }
 
+                if($form->DEBTOR_NAME->getValue()) {
+                    $searchArray['DEBTOR_NAME'] = $form->DEBTOR_NAME->getValue();
+                }
+
+                if($form->FILE_REFERENCE->getValue()) {
+                    $searchArray['FILE_REFERENCE'] = $form->FILE_REFERENCE->getValue();
+                }
+
+
+
                 $disputesObj = new Application_Model_Disputes();
                 $disputedInvoices = $disputesObj->search($searchArray);
 
@@ -46,10 +56,7 @@ class DisputesController extends BaseController {
 
 
         if ($form->DATE_STARTED_FROM->getValue() == "" && $form->DATE_STARTED_TILL->getValue() == "") {
-            $data = array (
-                'DATE_STARTED_FROM' => date("d/m/Y"),
-                'DATE_STARTED_TILL' => date("d/m/Y"),
-            );
+            $data = array ();
 
             $disputesObj = new Application_Model_Disputes();
             $disputedInvoices = $disputesObj->search($data);

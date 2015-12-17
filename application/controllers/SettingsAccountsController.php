@@ -91,6 +91,8 @@ class SettingsAccountsController extends BaseController
             $data['DESCRIPTION'] = $row->DESCRIPTION;
             $data['ACCOUNT_NR'] = $row->ACCOUNT_NR;
             $data['IN_HOUSE'] = $row->IN_HOUSE;
+            $data['VALUTA'] = $row->VALUTA;
+            $data['BIC'] = $row->BIC;
         }
         // Populating form
         $form->populate($data);

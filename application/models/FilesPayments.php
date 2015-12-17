@@ -89,8 +89,8 @@ class Application_Model_FilesPayments extends Application_Model_Base {
         $refObj->closeReferencesFromFileIfPayed($fileId);
 
         $fileObj = new Application_Model_Files();
-        $fileObj->setHighestState($fileId);
-
+        $fileObj->setHighestStateAfterPayment($fileId);
+        $fileObj->CheckAndCloseFile($fileId);
     }
 
     private function _addAmount($journalId, $paymentFor, $referenceId, $amount, $valutaDate) {

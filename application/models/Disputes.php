@@ -24,22 +24,32 @@ class Application_Model_Disputes extends Application_Model_Base {
                 $queryParts []= " r.DISPUTE_ASSIGNEE = '{$escDisputeOwner}'";
             }
 
+            if($key === 'DEBTOR_NAME' && !empty($values)) {
+                $queryParts [] = "f.DEBTOR_NAME CONTAINING '{$values}'";
+            }
+
+            if($key === 'FILE_REFERENCE' && !empty($values)) {
+                $queryParts [] = "f.REFERENCE CONTAINING '{$values}'";
+            }
+
+
             $queryParts = $this->addDateRangePart($key, 'DATE_STARTED', $values, "DISPUTE_DATE", $queryParts);
             $queryParts = $this->addDateRangePart($key, 'DATE_ENDED', $values, "DISPUTE_ENDED_DATE", $queryParts);
             $queryParts = $this->addDateRangePart($key, 'EXPIRY_DATE', $values, "DISPUTE_DUEDATE", $queryParts);
         }
 
-        $queryParts []= "r.DISPUTE = 1";
+
+
+        $queryParts[]= "r.DISPUTE = 1";
 
         $extendedWhere = implode(" AND ", $queryParts);
-        $sql = "SELECT r.*,
-                    (SELECT d.NAME FROM FILES\$DEBTORS d
-                     WHERE d.DEBTOR_ID IN
-                        (SELECT f.DEBTOR_ID FROM FILES\$FILES f
-                         WHERE f.FILE_ID = r.FILE_ID)) AS DEBTOR_NAME,
-                    (SELECT f.REFERENCE FROM FILES\$FILES f
-                     WHERE f.FILE_ID = r.FILE_ID) AS DEBTOR_NUMBER
-                FROM FILES\$REFERENCES r WHERE {$extendedWhere}";
+
+        
+        $sql = "SELECT r.*,f.DEBTOR_NAME,f.REFERENCE AS DEBTOR_NUMBER
+                FROM FILES\$REFERENCES r
+                JOIN FILES\$FILES_ALL_INFO f ON f.FILE_ID = r.FILE_ID
+                WHERE $extendedWhere ";
+
         return $this->db->get_results($sql);
     }
 

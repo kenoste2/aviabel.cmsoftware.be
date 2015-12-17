@@ -14,36 +14,45 @@ class Application_Model_PaymentsAllInfo extends Application_Model_Base
         return $this->_sql;
     }
 
-    public function searchPaymentsAllInfo($startDate, $endDate, $client, $for, $commission, $account_id)
+    public function searchPaymentsAllInfo($startDate, $endDate, $client, $for, $commission, $account_id,$collector_id,$file_reference)
     {
-        $add_query = $this->getAddQuery($client, $for, $commission, $account_id);
+        $add_query = $this->getAddQuery($client, $for, $commission, $account_id,$collector_id,$file_reference);
 
-        $this->_sql = "select FILE_ID,DEBTOR_NAME, FILE_NR,PAYMENT_ID, CREATION_DATE, PAYMENT_DATE,AMOUNT, PAYMENT_FOR,REFERENCE,REFUND_STATEMENT, INVOICEABLE,WITH_COMMISSION, ACCOUNT_CODE, JOURNAL_DESCRIPTION,ACCOUNT_ID,CLIENT_CODE from FILES\$PAYMENTS_ALL_INFO where CREATION_DATE>='".$this->dateDbFormat($startDate)."' and CREATION_DATE<='".$this->dateDbFormat($endDate)."'    $add_query order by CREATION_DATE DESC";
+        $this->_sql = "select A.*,F.COLLECTOR_CODE from FILES\$PAYMENTS_ALL_INFO A
+        JOIN FILES\$FILES_ALL_INFO F ON A.FILE_ID = F.FILE_ID
+        where A.CREATION_DATE>='".$this->dateDbFormat($startDate)."' and A.CREATION_DATE<='".$this->dateDbFormat($endDate)."'    $add_query order by A.CREATION_DATE DESC";
         return $this->db->get_results($this->_sql);
     }
 
-    public function searchCountPaymentsAllInfo($startDate, $endDate, $client, $for, $commission, $account_id)
+    public function searchCountPaymentsAllInfo($startDate, $endDate, $client, $for, $commission, $account_id,$collector_id,$file_reference)
     {
-        $add_query = $this->getAddQuery($client, $for, $commission, $account_id);
+        $add_query = $this->getAddQuery($client, $for, $commission, $account_id,$collector_id,$file_reference);
 
-        return $this->db->get_var("select SUM(AMOUNT) from FILES\$PAYMENTS_ALL_INFO where CREATION_DATE>='".$this->dateDbFormat($startDate)."' and CREATION_DATE<='".$this->dateDbFormat($endDate)."' $add_query");
+        return $this->db->get_var("select SUM(A.AMOUNT) from FILES\$PAYMENTS_ALL_INFO A
+         JOIN FILES\$FILES F ON A.FILE_ID = F.FILE_ID where A.CREATION_DATE>='".$this->dateDbFormat($startDate)."' and A.CREATION_DATE<='".$this->dateDbFormat($endDate)."' $add_query");
     }
 
-    protected function getAddQuery($client, $for, $commission, $account_id)
+    protected function getAddQuery($client, $for, $commission, $account_id,$collector_id,$file_reference)
     {
         $add_query = '';
 
         if (!empty($client)) {
-            $add_query .= ' AND CLIENT_CODE = \'' . $client . '\'';
+            $add_query .= ' AND A.CLIENT_ID = \'' . $client . '\'';
         }
         if ($for != '-1') {
-            $add_query .= ' AND PAYMENT_FOR = \'' . $for . '\'';
+            $add_query .= ' AND A.PAYMENT_FOR = \'' . $for . '\'';
         }
         if ($commission != '-1') {
-            $add_query .= ' AND WITH_COMMISSION = \'' . $commission . '\'';
+            $add_query .= ' AND A.WITH_COMMISSION = \'' . $commission . '\'';
         }
         if (!empty($account_id)) {
-            $add_query .= ' AND ACCOUNT_ID = \'' . $account_id . '\'';
+            $add_query .= ' AND A.ACCOUNT_ID = \'' . $account_id . '\'';
+        }
+        if (!empty($collector_id)) {
+            $add_query .= ' AND F.COLLECTOR_ID = \'' . $collector_id . '\'';
+        }
+        if (!empty($file_reference)) {
+            $add_query .= ' AND F.REFERENCE CONTAINING \'' . $file_reference . '\'';
         }
 
         return $add_query;

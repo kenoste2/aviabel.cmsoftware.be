@@ -15,6 +15,8 @@ class Application_Form_Disputes extends Zend_Form
 
         $disputeAssignees = $this->getSettingsMultiOptions($functions, "setting_dispute_assignees");
 
+        $this->addElement('text', 'FILE_REFERENCE', array('label' => $functions->T('relationCode_c'), 'size' => 25, 'required' => false));
+        $this->addElement('text', 'DEBTOR_NAME', array('label' => $functions->T('debtor_c'), 'size' => 25, 'required' => false));
 
         $this->addElement('select', 'DISPUTE_STATUS',
             array('label' => $functions->T('dispute_status_c'), 'MultiOptions' => $disputeStatusses));

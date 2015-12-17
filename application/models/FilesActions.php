@@ -395,11 +395,13 @@ class Application_Model_FilesActions extends Application_Model_Base
 
     public function getToBePrintedCount()
     {
-        $sql = "SELECT A.TEMPLATE_ID,B.DESCRIPTION,COUNT(*) AS COUNTER FROM FILES\$FILE_ACTIONS A
+        $sql = "SELECT A.TEMPLATE_ID,B.DESCRIPTION,F.COLLECTOR_NAME,F.COLLECTOR_ID,COUNT(*) AS COUNTER FROM FILES\$FILE_ACTIONS A
                   JOIN SYSTEM\$TEMPLATES B ON A.TEMPLATE_ID = B.TEMPLATE_ID
+                  JOIN FILES\$FILES_ALL_INFO F ON A.FILE_ID = F.FILE_ID
                 WHERE A.TEMPLATE_ID > 0 AND A.TEMPLATE_CONTENT !='' AND A.PRINTED != 'Y' AND A.ADDRESS != ''
                       AND B.VISIBLE = 'Y' AND A.ACTION_DATE <= CURRENT_DATE
-                  GROUP BY A.TEMPLATE_ID, B.DESCRIPTION";
+                  GROUP BY F.COLLECTOR_NAME,F.COLLECTOR_ID,A.TEMPLATE_ID, B.DESCRIPTION
+                  ORDER BY F.COLLECTOR_NAME ASC, B.DESCRIPTION";
         $results = $this->db->get_results($sql);
         return $results;
     }
@@ -414,12 +416,13 @@ class Application_Model_FilesActions extends Application_Model_Base
         return $count;
 
     }
-    public function getToBePrinted($templateId)
+    public function getToBePrinted($templateId , $collectorId)
     {
         $sql = "SELECT FIRST 500 FILE_ACTION_ID,ACTION_DATE FROM FILES\$FILE_ACTIONS A
                   JOIN SYSTEM\$TEMPLATES B ON A.TEMPLATE_ID = B.TEMPLATE_ID
-                WHERE A.TEMPLATE_ID = $templateId AND A.TEMPLATE_CONTENT !='' AND A.PRINTED != 'Y' AND A.ADDRESS != ''
-                      AND B.VISIBLE = 'Y' AND ACTION_DATE<=CURRENT_DATE ORDER BY FILE_ACTION_ID";
+                  JOIN FILES\$FILES_ALL_INFO F ON A.FILE_ID = F.FILE_ID
+                WHERE A.TEMPLATE_ID = {$templateId} AND A.TEMPLATE_CONTENT !='' AND A.PRINTED != 'Y' AND A.ADDRESS != ''
+                      AND B.VISIBLE = 'Y' AND ACTION_DATE<=CURRENT_DATE AND F.COLLECTOR_ID = {$collectorId} ORDER BY FILE_ACTION_ID";
         $results = $this->db->get_results($sql);
         return $results;
     }
@@ -428,9 +431,9 @@ class Application_Model_FilesActions extends Application_Model_Base
 
 
 
-    public function setPrinted($templateId)
+    public function setPrinted($templateId, $collectorId)
     {
-        $results = $this->getToBePrinted($templateId);
+        $results = $this->getToBePrinted($templateId, $collectorId);
         if (!empty($results)) {
             foreach ($results as $row) {
                 $this->_setActionAsPrinted($row->FILE_ACTION_ID);

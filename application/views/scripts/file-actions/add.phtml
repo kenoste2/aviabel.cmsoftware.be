@@ -3,7 +3,8 @@
           <div class="col-1">
 
             <div class="panel panel-default aaa-theme-content-widget white-bg no-padding aaa-theme-overflow-hidden">
-				<div class="table-responsive form-group">
+            <div class="panel-heading aaa-theme-position-relative"><h2 class="text-uppercase"><?php $this->T("add_action_c") ?></h2></div>
+            <table class="table"><tr><td>
 <form enctype="application/x-www-form-urlencoded" action="" method="post">
     <input type="hidden" name="index" value="<?php echo $this->index ?>">
     <?php
@@ -17,16 +18,11 @@
     }
     ?>
 
-                <table class="table">
-        <tr>
-            <td width="50%">
                 <?php echo $this->form->ACTION_DATE ?>
                 <?php echo $this->form->ACTION_CODE ?>
                 <?php echo $this->form->BP_STARTDATE ?>
                 <?php echo $this->form->BP_NR_PAYMENTS ?>
                 <?php echo $this->form->REMARKS ?>
-            </td>
-            <td width="50%">
                 <?php echo $this->form->TEMPLATE_ID ?>
                 <?php echo $this->form->VIA ?>
                 <?php echo $this->form->ADDRESS ?>
@@ -36,16 +32,13 @@
                 <?php echo $this->form->CONTENT ?>
                 <?php echo $this->form->SMS_CONTENT ?>
                 <?php echo $this->form->submit ?>
-            </td>
-        </tr>
-    </table>
                 </form>
+                    </td></tr></table>
               </div>
               </div>
-            </div>   
             </div>
 
-
+            </div>
 <script>
     $(function () {
         var cache = {},
@@ -255,4 +248,5 @@
         $("#BP_STARTDATE").datepicker({dateFormat: 'dd/mm/yy'});
     });
 </script>
+</dl>
 

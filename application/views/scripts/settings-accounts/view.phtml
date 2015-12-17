@@ -15,8 +15,10 @@ if ($this->deleted) {
                     <thead>
     <tr>
         <th><?php $this->T("code_c"); ?></th>
+        <th><?php $this->T("valuta"); ?></th>
         <th><?php $this->T("description_c"); ?></th>
         <th><?php $this->T("account_nr_c"); ?></th>
+        <th>BIC</th>
         <th><?php $this->T("in_house_c"); ?></th>
         <th></th>
         <th></th>
@@ -27,8 +29,10 @@ if ($this->deleted) {
         <?php foreach ($this->results as $row) { ?>
             <tr>
                 <td><?php echo $row->CODE ?></td>
+                <td><?php echo $row->VALUTA ?></td>
                 <td><?php echo $row->DESCRIPTION ?></td>
                 <td><?php echo $row->ACCOUNT_NR ?></td>
+                <td><?php echo $row->BIC ?></td>
                 <td><input type="checkbox" name="inhouse" value="1" <?php echo ($row->IN_HOUSE ? 'checked="checked"' : '') ?> disabled="disabled" /></td>
                 <td><a href="<?php echo $this->location() ?>/settings-accounts/edit/id/<?php echo $row->ACCOUNT_ID ?>" ><li class="fa fa-search-plus fa-fw"></li></td>
                 <td>

@@ -18,12 +18,12 @@
 					"titles": [],
 					"dataProvider": [
 						{
-							"titel": "<?php echo $this->T("past_due_c") ?>",
-							"waarde": <?php echo $this->totalPastDue ?>
+							"titel": "<?php echo $this->T("total_c") ?>",
+							"waarde": <?php echo $this->totals->TOTAL ?>
 						},
 						{
-							"titel": "<?php echo $this->T("not_due_c") ?>",
-							"waarde": <?php echo $this->totalNotDue ?>
+							"titel": "<?php echo $this->T("payable_c") ?>",
+							"waarde": <?php echo $this->totals->PAYABLE ?>
 						}
 					]
 				}
@@ -78,7 +78,7 @@ if ($this->deleted) {
               </div>
               <div class="row form-group">
                 <div class="col-lg-6 col-md-6 form-group">                  
-                    <label><?php print $this->T("reference_c") ?></label>
+                    <label><?php print $this->T("relationCode_c") ?></label>
                     <?php echo $this->SearchBox->client_reference->renderViewHelper(); ?>                  
                 </div>
 				<?php if (!empty($this->showCollector)) { ?>
@@ -160,7 +160,7 @@ if ($this->deleted) {
                   <table class="table table-striped table-bordered">
                     <thead>
                       <tr>
-                        <td><a href="<?php echo $this->location() ?>/files/search/orderby/REFERENCE"><?php print $this->T("referenceclient_c") ?></a></td>
+                        <td><a href="<?php echo $this->location() ?>/files/search/orderby/REFERENCE"><?php print $this->T("relationCode_c") ?></a></td>
                         <td><a href="<?php echo $this->location() ?>/files/search/orderby/DEBTOR_NAME"><?php print $this->T("debtor_c") ?></a></td>
                         <td><a href="<?php echo $this->location() ?>/files/search/orderby/CLIENT_NAME"><?php print $this->T("client_c") ?></a></td>
                         <td><a href="<?php echo $this->location() ?>/files/search/orderby/STATE_CODE"><?php print $this->T("state_code_c") ?></a></td>

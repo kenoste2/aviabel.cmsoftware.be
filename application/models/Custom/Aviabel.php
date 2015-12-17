@@ -305,6 +305,11 @@ class Application_Model_Custom_Aviabel extends Application_Model_Base
                 if (empty($invoiceExists)) {
                     $debtorId = $filesObj->getDebtorId($row->FILE_ID);
                     $trainType = $debtorsObj->getTrajectType($debtorId);
+
+                    if (empty($trainType)) {
+                        $trainType = $this->functions->getUserSetting('BASE_TRAIN_TYPE');
+                    }
+
                     $data = array(
                         'FILE_ID' => $invoice->FILE_ID,
                         'REFERENCE' => $invoice->INVOICE_NUMBER,

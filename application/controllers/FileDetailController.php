@@ -114,6 +114,7 @@ class FileDetailController extends BaseFileController {
         }
         $data['REFERENCE'] = $this->file->REFERENCE;
         $data['STATE_ID'] = $this->file->STATE_ID;
+        $data['COLLECTOR_ID'] = $this->file->COLLECTOR_ID;
 
         $generalForm->populate($data);
 

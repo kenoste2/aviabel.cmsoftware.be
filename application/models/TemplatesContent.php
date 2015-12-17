@@ -36,6 +36,15 @@ class Application_Model_TemplatesContent extends Application_Model_Base
             }
         }
 
+
+        // replace Account
+        $accountsObj = new Application_Model_Accounts();
+        $account = $accountsObj->getRecieveAccount($fileContent->VALUTA);
+
+        $fields['BANK_ACCOUNT_IBAN'] = $account->ACCOUNT_NR;
+        $fields['BANK_ACCOUNT_BIC'] = $account->BIC;
+
+
         return $fields;
     }
     public function getPrevActionsDates($text, $fileId)
@@ -58,7 +67,7 @@ class Application_Model_TemplatesContent extends Application_Model_Base
     public function getInvoices($fileId,$lang)
     {
         $fileReferencesObj = new Application_Model_FilesReferences();
-        $invoices = $fileReferencesObj->getReferencesByFileId($fileId);
+            $invoices = $fileReferencesObj->getReferencesByFileId($fileId);
         $factuurnummer_c = $this->functions->T("factuurnummer_c",$lang);
         if (!empty($invoices)) {
             $text = "";

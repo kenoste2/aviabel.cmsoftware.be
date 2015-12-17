@@ -116,6 +116,8 @@ class Application_Form_FileGeneral extends Zend_Form
             //$this->removeElement('VERJARING');
             //$this->getElement("CLOSE_STATE_ID")->setAttrib('disabled', 'disabled');
             $this->removeElement('submit');
+        } else {
+            $this->getElement("COLLECTOR_ID")->setAttrib('disabled', 'disabled');
         }
     }
 

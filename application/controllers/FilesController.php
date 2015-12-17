@@ -82,7 +82,8 @@ class FilesController extends BaseController
 
 
         if (!empty($session->data)) {
-            $form->populate($session->data);
+            $formData = $session->data;
+            $form->populate($formData);
         }
 
         $query_extra = "";
@@ -95,10 +96,10 @@ class FilesController extends BaseController
                 $closed_query = "";
             }
             if ($session->data['client'] != "") {
-                $query_extra = " and A.CLIENT_NAME CONTAINING  '{$session->data['client']}'";
+                $query_extra = " and A.CLIENT_ID =  '{$session->data['client']}'";
             }
             if ($session->agenda != "") {
-                $query_extra = " and A.CLIENT_NAME CONTAINING  '{$session->data['client']}'";
+                $query_extra = " and A.CLIENT_ID =  '{$session->data['client']}'";
             }
             if (!empty($session->data['debtor_name'])) {
                 $query_extra .= " and A.DEBTOR_NAME CONTAINING '" . $session->data['debtor_name'] . "'";
@@ -150,16 +151,16 @@ class FilesController extends BaseController
                     }
                 } else{
                     if (stripos($session->data['extra_field'], "DATE") !== false) {
-                        $session->data['extra_text'] = $this->functions->date_dbformat($session->data['extra_text']);
+                        $extra_text = $this->functions->date_dbformat($session->data['extra_text']);
                     }
                     if (is_numeric($this->functions->dbBedrag($session->data['extra_text']))) {
-                        $session->data['extra_text'] = $this->functions->dbBedrag($session->data['extra_text']);
+                        $extra_text = $this->functions->dbBedrag($session->data['extra_text']);
                     }
 
                     if (!isset($extra_compare_query)) {
                         $extra_compare_query = "";
                     }
-                    $extra_compare_query .= " and A.{$session->data['extra_field']} {$session->data['extra_compare']} '{$session->data['extra_text']}' ";
+                    $extra_compare_query .= " and A.{$session->data['extra_field']} {$session->data['extra_compare']} '{$extra_text}' ";
                     $query_extra .= "$extra_compare_query";
                 }
 

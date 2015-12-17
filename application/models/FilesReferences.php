@@ -314,7 +314,7 @@ class Application_Model_FilesReferences extends Application_Model_Base {
 
     public function getFileAmountsByValute($fileId) {
         $sql = "SELECT VALUTA, SUM(AMOUNT) AS AMOUNT, SUM(PAYED_AMOUNT) AS PAYED_AMOUNT, SUM(SALDO_AMOUNT) AS SALDO_AMOUNT
-                FROM FILES\$REFERENCES WHERE FILE_ID = {$fileId} GROUP BY VALUTA";
+                FROM FILES\$REFERENCES WHERE FILE_ID = {$fileId} AND START_DATE<CURRENT_DATE GROUP BY VALUTA";
         $results = $this->db->get_results($sql);
         return $results;
     }
@@ -335,7 +335,10 @@ class Application_Model_FilesReferences extends Application_Model_Base {
 
         $paymentsObj = new Application_Model_FilesPayments();
         $accountsObj = new Application_Model_Accounts();
-        $internalAccount = $accountsObj->getInternalAccountId();
+
+        $valuta = $this->db->get_var("SELECT VALUTA FROM FILES\$REFERENCES WHERE REFERENCE_ID = {$referenceId}");
+
+        $internalAccount = $accountsObj->getRecieveAccount($valuta);
 
 
         $sql =  "SELECT FILE_ID,REFERENCE,(SALDO_AMOUNT + SALDO_INTEREST + SALDO_COSTS) AS SALDO FROM FILES\$REFERENCES WHERE REFERENCE_ID = {$referenceId}";

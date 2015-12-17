@@ -61,7 +61,10 @@ class Application_Model_File extends Application_Model_Base {
     }
 
     function getFileViewData($fileId) {
-        $sql = "SELECT * FROM FILES\$FILES_ALL_INFO WHERE FILE_ID = $fileId";
+        $sql = "SELECT F.*, F2.VALUTA FROM FILES\$FILES_ALL_INFO F
+        JOIN FILES\$FILES F2 ON F2.FILE_ID = F.FILE_ID
+        WHERE F.FILE_ID = $fileId
+        ";
         $row = $this->db->get_row($sql);
         if (!empty($row)) {
             return $row;

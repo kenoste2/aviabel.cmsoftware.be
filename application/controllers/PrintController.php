@@ -47,8 +47,9 @@ class PrintController extends BaseController
         $this->_helper->viewRenderer->setNoRender();
         $fileActionsObj = new Application_Model_FilesActions();
         $templateId = $this->getParam('templateId');
+        $collectorId = $this->getParam('collectorId');
 
-        $toBePrinted = $fileActionsObj->getToBePrinted($templateId);
+        $toBePrinted = $fileActionsObj->getToBePrinted($templateId, $collectorId);
 
         $interestCostsAccess = $this->moduleAccess('intrestCosts');
         $pdfDoc = new Application_Model_PdfDocument($interestCostsAccess);
@@ -77,8 +78,10 @@ class PrintController extends BaseController
         $filesActionsObj = new Application_Model_FilesActions();
 
         $templateId = $this->getParam('templateId');
-        if ($this->getParam("setPrinted") && $templateId) {
-            $filesActionsObj->setPrinted($templateId);
+        $collectorId = $this->getParam('collectorId');
+
+        if ($this->getParam("setPrinted") && $templateId && $collectorId) {
+            $filesActionsObj->setPrinted($templateId, $collectorId);
         }
 
         $tobePrinted = $filesActionsObj->getToBePrintedCount();

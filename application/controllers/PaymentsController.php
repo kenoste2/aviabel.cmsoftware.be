@@ -31,7 +31,9 @@ class PaymentsController extends BaseController {
             $searchForm->getValue('CLIENT'),
             $searchForm->getValue('FOR'),
             -1,
-            $searchForm->getValue('ACCOUNT_ID')
+            $searchForm->getValue('ACCOUNT_ID'),
+            $searchForm->getValue('COLLECTOR_ID'),
+            $searchForm->getValue('FILE_REFERENCE')
         );
         $paymentsAllInfoTotal = $paymentsAllInfoModel->searchCountPaymentsAllInfo(
             $searchForm->getValue('STARTDATE'),
@@ -39,7 +41,10 @@ class PaymentsController extends BaseController {
             $searchForm->getValue('CLIENT'),
             $searchForm->getValue('FOR'),
             -1,
-            $searchForm->getValue('ACCOUNT_ID'));
+            $searchForm->getValue('ACCOUNT_ID'),
+            $searchForm->getValue('COLLECTOR_ID'),
+            $searchForm->getValue('FILE_REFERENCE')
+        );
 
         $this->view->searchForm = $searchForm;
         $this->view->paymentsAllInfo = is_null($paymentsAllInfo) ? array() : $paymentsAllInfo;

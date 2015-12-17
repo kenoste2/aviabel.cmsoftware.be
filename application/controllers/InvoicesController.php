@@ -63,7 +63,7 @@ class InvoicesController extends BaseController
 
         if (!empty($session->data)) {
             if ($session->data['client'] != "") {
-                $query_extra = " and F.CLIENT_NAME CONTAINING  '{$session->data['client']}'";
+                $query_extra = " and F.CLIENT_ID =  '{$session->data['client']}'";
             }
             if (!empty($session->data['debtor_name'])) {
                 $query_extra .= " and F.DEBTOR_NAME CONTAINING '" . $session->data['debtor_name'] . "'";
@@ -101,17 +101,17 @@ class InvoicesController extends BaseController
 
             if ($data['extra_text'] != "") {
                 if (stripos($data['extra_field'], "DATE") !== false) {
-                    $session->data['extra_text'] = $this->functions->date_dbformat($session->data['extra_text']);
+                    $text = $this->functions->date_dbformat($session->data['extra_text']);
                 }
                 if (is_numeric($this->functions->dbBedrag($session->data['extra_text']))) {
-                    $session->data['extra_text'] = $this->functions->dbBedrag($session->data['extra_text']);
+                    $text = $this->functions->dbBedrag($session->data['extra_text']);
                 }
 
 
                 if (!isset($extra_compare_query)) {
                     $extra_compare_query = "";
                 }
-                $extra_compare_query .= " and I.{$session->data['extra_field']} {$session->data['extra_compare']} '{$session->data['extra_text']}' ";
+                $extra_compare_query .= " and I.{$session->data['extra_field']} {$session->data['extra_compare']} '{$text}' ";
                 $query_extra .= "$extra_compare_query";
             }
         }

@@ -74,6 +74,22 @@ class Application_Model_Accounts extends Application_Model_Base
     }
 
 
+    public function getRecieveAccount($valuta = false) {
+
+        $account = false;
+
+
+        if (!empty($valuta))  {
+            $account = $this->db->get_row("SELECT FIRST 1 *  FROM ACCOUNTS\$ACCOUNTS WHERE IN_HOUSE = 1 AND VISIBLE='Y' AND VALUTA='{$valuta}' ORDER BY ACCOUNT_ID");
+        }
+
+        if (empty($account)) {
+            $account = $this->db->get_row("SELECT FIRST 1 *  FROM ACCOUNTS\$ACCOUNTS WHERE IN_HOUSE = 1 AND VISIBLE='Y' ORDER BY ACCOUNT_ID");
+        }
+        return $account;
+    }
+
+
     public function checkIsDeletable($id)
     {
         if ($id > 3) {

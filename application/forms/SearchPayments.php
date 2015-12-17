@@ -10,9 +10,20 @@ class Application_Form_SearchPayments extends Zend_Form
         $this->setMethod('post');
         $functions = new Application_Model_CommonFunctions();
 
-        $this->addElement('text', 'STARTDATE', array('label' => $functions->T('aanmaakdatum_c'), 'size' => 20));
+
+        $clientsObj = new Application_Model_Clients();
+
+        $this->addElement('text', 'FILE_REFERENCE', array('label' => $functions->T('relationCode_c'), 'size' => 25, 'required' => false));
+        $collectorObj = new Application_Model_Collectors();
+        $this->addElement('select', 'COLLECTOR_ID', array(
+            'label' => $functions->T('collector_c'),
+            'required' => false,
+            'MultiOptions' => $functions->db2array($collectorObj->getCollectorsForSelect(), true),
+            'separator' => ' ',
+        ));        $this->addElement('text', 'STARTDATE', array('label' => $functions->T('aanmaakdatum_c'), 'size' => 20));
         $this->addElement('text', 'ENDDATE', array('label' => $functions->T('tot_c'), 'size' => 20));
-        $this->addElement('text', 'CLIENT', array('label' => $functions->T('client_c'), 'size' => 20));
+        //$this->addElement('text', 'CLIENT', array('label' => $functions->T('client_c'), 'size' => 20));
+        $this->addElement('select', 'CLIENT', array('label' => $functions->T('client_c'), 'MultiOptions' =>$functions->db2array($clientsObj->getArrayClients())));
         $this->addElement('select', 'FOR', array('label' => $functions->T('voor_c'), 'MultiOptions' => $this->getFor($functions)));
         $this->addElement('select', 'ACCOUNT_ID', array('label' => $functions->T('rekening_c'), 'MultiOptions' => $this->getAccounts($functions)));
 
@@ -21,7 +32,7 @@ class Application_Form_SearchPayments extends Zend_Form
 
 
 
-         $this->addDisplayGroup(array('STARTDATE', 'CLIENT', 'COMMISSION', 'ACCOUNT_ID'), 'group1');
+         $this->addDisplayGroup(array('FILE_REFERENCE','STARTDATE', 'CLIENT', 'COMMISSION', 'ACCOUNT_ID'), 'group1');
         $this->getDisplayGroup('group1')->setDecorators(array(
             'FormElements',
             'Fieldset',
@@ -32,7 +43,7 @@ class Application_Form_SearchPayments extends Zend_Form
             'ignore' => true,
             'label' => $functions->T('search_c'),
         ));
-        $this->addDisplayGroup(array('ENDDATE', 'FOR','submit'), 'group2');
+        $this->addDisplayGroup(array('COLLECTOR_ID','ENDDATE', 'FOR','submit'), 'group2');
         $this->getDisplayGroup('group2')->setDecorators(array(
             'FormElements',
             'Fieldset',

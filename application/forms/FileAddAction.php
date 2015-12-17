@@ -10,7 +10,7 @@ class Application_Form_FileAddAction extends Zend_Form
         $this->addPrefixPath('Application_Forms_Decorator', 'Application/Forms/Decorator', 'decorator');
         $functions = new Application_Model_CommonFunctions();
         $this->addElement('text', 'ACTION_DATE', array('label' => $functions->T('Action_date_c'), 'size' => 15, 'required' => true,'onChange' => 'saveActionDate();', 'validators' => array(array('date', false, array('dd/MM/yyyy'))),));
-        $this->addElement('text', 'ACTION_CODE', array('label' => $functions->T('Action_code_c'), 'size' => 30,'onchange' => 'bp();'));
+        $this->addElement('text', 'ACTION_CODE', array('label' => $functions->T('Action_code_c'),'description' => $functions->T('action_code_forAll_c'), 'size' => 30,'onchange' => 'bp();'));
         $this->addElement('text', 'BP_STARTDATE', array('label' => $functions->T('First_payment_c'), 'size' => 15,'class' => 'BP','onchange' => 'savePaymentPlan();', 'validators' => array(array('date', false, array('dd/MM/yyyy')))));
         $this->addElement('text', 'BP_NR_PAYMENTS', array('label' => $functions->T('Nr_of_payments_c'), 'size' => 15,'class' => 'BP','onchange' => 'savePaymentPlan();' ));
         $this->addElement('textarea', 'REMARKS', array('label' => $functions->T('Remarks_c'), 'size' => 15, 'rows' => 5, 'cols' => 30));
@@ -41,8 +41,8 @@ class Application_Form_FileAddAction extends Zend_Form
             'MultiOptions' => $confirm,
         ));
 
-        $this->addElement('textarea', 'CONTENT', array('label' => $functions->T('inhoud_c'), 'size' => 15, 'rows' => 30, 'cols' => 60));
-        $this->addElement('textarea', 'SMS_CONTENT', array('label' => $functions->T('inhoud_sms_c'), 'size' => 15, 'rows' => 10, 'cols' => 60));
+        $this->addElement('textarea', 'CONTENT', array('label' => $functions->T('inhoud_c'), 'size' => 15, 'rows' => 30, 'cols' => 120));
+        $this->addElement('textarea', 'SMS_CONTENT', array('label' => $functions->T('inhoud_sms_c'), 'size' => 15, 'rows' => 10, 'cols' => 120));
 
         $this->addElement('submit', 'submit', array(
             'ignore' => true,

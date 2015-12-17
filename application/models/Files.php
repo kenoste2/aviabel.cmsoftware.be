@@ -187,27 +187,15 @@ class Application_Model_Files extends Application_Model_Base
         return $this->db->get_var("SELECT DEBTOR_ID FROM FILES\$FILES WHERE FILE_ID = {$fileId}");
     }
 
-    public function setHighestState($fileId)
+    public function setHighestStateAfterPayment($fileId)
     {
         $refObj = new Application_Model_FilesReferences();
         $oldRef = $refObj->getOldestReferenceFromFile($fileId);
         $currentStateId = $this->getFileStateId($fileId);
 
-        if ($oldRef->STATE_ID !=  $currentStateId)
-        {
-            $actionsObj = new Application_Model_Actions();
-            $actionId = $actionsObj->getActionByStateId($oldRef->STATE_ID);
-
-            if ($actionId) {
-                $filesActionsObj = new Application_Model_FilesActions();
-
-                $data = array(
-                    'ACTION_ID' => $actionId,
-                    'REMARKS' => 'PAYMENT RECIEVED',
-                    'PRINTED' => "Y",
-                );
-                $filesActionsObj->addAction($fileId, $data, false);
-            }
+        if ($oldRef->STATE_ID !=  $currentStateId) {
+            $sql = "UPDATE FILES\$FILES SET STATE_ID = {$oldRef->STATE_ID} WHERE FILE_ID = {$fileId}";
+            $this->db->query($sql);
         }
     }
 
@@ -252,6 +240,37 @@ class Application_Model_Files extends Application_Model_Base
             return " and A.COLLECTOR_ID = '{$auth->online_collector_id}' ";
         }
         return "";
+    }
+
+
+    public function CheckAndCloseFile($fileId) {
+
+        $stateId = $this->db->get_var("SELECT STATE_ID FROM FILES\$FILES WHERE FILE_ID = {$fileId}");
+        $openAmount = $this->db->get_var("SELECT SALDO FROM FILES\$FILES WHERE FILE_ID = {$fileId}");
+
+        if ($stateId != 40 && $openAmount <= 0.00) {
+
+            $filesActionsObj = new Application_Model_FilesActions();
+
+            $action = array(
+                'FILE_ID' => $fileId,
+                'ACTION_ID' => 4257876,
+                'REMARKS' => '',
+                'VIA' => '',
+                'ADDRESS' => '',
+                'E_MAIL' => '',
+                'GSM' => '',
+                'PRINTED' => 0,
+                'ACTION_DATE' => date("Y-m-d"),
+                'TEMPLATE_ID' => 0,
+                'FILE_STATE_ID' => 40,
+                'CONTENT' => '',
+                'SMS_CONTENT' => ''
+            );
+            $filesActionsObj->add($action, true);
+        }
+
+        return true;
     }
 
 

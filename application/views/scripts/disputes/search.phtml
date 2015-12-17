@@ -27,12 +27,22 @@
               <div class="row form-group">				
                 <div class="col-lg-6 col-md-6 form-group">                  
                     <label></label>
-                    <?php print $this->form->DISPUTE_STATUS ?>
+                    <?php print $this->form->DEBTOR_NAME ?>
 				</div>
                 <div class="col-lg-6 col-md-6 form-group">                  
                     <label></label>
-                    <?php print $this->form->DISPUTE_ASSIGNEE ?>       
+                    <?php print $this->form->FILE_REFERENCE ?>
                 </div> 
+              </div>
+              <div class="row form-group">
+                <div class="col-lg-6 col-md-6 form-group">
+                    <label></label>
+                    <?php print $this->form->DISPUTE_STATUS ?>
+				</div>
+                <div class="col-lg-6 col-md-6 form-group">
+                    <label></label>
+                    <?php print $this->form->DISPUTE_ASSIGNEE ?>
+                </div>
               </div>
               <div class="row form-group">
                 <div class="col-lg-6 col-md-6 form-group">                  
@@ -84,7 +94,7 @@
                     <thead>
                       <tr>
 						<td><?php $this->T('invoice_number_c') ?></td>
-						<td><?php $this->T('reference_c') ?></td>
+						<td><?php $this->T('relationCode_c') ?></td>
 						<td><?php $this->T('debtor_c') ?></td>
 						<td><?php $this->T('dispute_status_c') ?></td>
 						<td><?php $this->T('dispute_assignee_c') ?></td>

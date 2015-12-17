@@ -123,10 +123,14 @@ class Application_Model_CommonFunctions
 
     protected  function _dbBedragEu($bedrag)
     {
-        $bedrag = str_replace(".", "", $bedrag);
-        $bedrag = str_replace(",", ".", $bedrag);
+
+        if (stripos($bedrag,",") !== false && stripos($bedrag,".") === false) {
+            $bedrag = str_replace(",", ".", $bedrag);
+        }
+
         $bedrag = str_replace("€", "", $bedrag);
         $bedrag = str_replace(" ", "", $bedrag);
+
         if ($bedrag == "") {
             $bedrag = 0;
         }

@@ -206,21 +206,21 @@ class Application_Model_PdfDocument extends Application_Model_Base {
         if (!empty($bp)) {
             $amount = $bp->MONTHLY_AMOUNT;
         }
-        $iban = $this->functions->getUserSetting('setting_iban_general', 'NL');
-        $bic = $this->functions->getUserSetting('setting_bic_general', 'NL');
-        $name = $this->functions->getUserSetting('setting_address_client', 'NL');
+
         $this->pdf->SetFont($this->lettertype, '', $this->sizeSmall);
 
 
-        $name = explode("\n", $name);
-        $this->pdf->Text(35, 288, $name[0]);
-        $this->pdf->Text(35, 292, $name[1]);
-        $this->pdf->Text(35, 296, $name[2]);
+        $this->pdf->Text(35, 288, $fileObj->getFileField($fileId, 'CLIENT_NAME'));
+        $this->pdf->Text(35, 292, $fileObj->getFileField($fileId, 'CLIENT_ADDRESS'));
+        $this->pdf->Text(35, 296, $fileObj->getFileField($fileId, 'CLIENT_ZIP_CODE') . " " . $fileObj->getFileField($fileId, 'CLIENT_CITY'));
+
+        $accountsObj = new Application_Model_Accounts();
+        $account = $accountsObj->getRecieveAccount();
 
 
-        $this->pdf->Text(35, 269, $iban);
+        $this->pdf->Text(35, 269, $account->ACCOUNT_NR);
 
-        $this->pdf->Text(35, 278, $bic);
+        $this->pdf->Text(35, 278, $account->BIC);
 
         $value = "+" . number_format($amount, 2, ',', '') . "+";
         $this->pdf->Text(170, 220, $value);
@@ -252,9 +252,9 @@ class Application_Model_PdfDocument extends Application_Model_Base {
 
         $file = $fileObj->getFileViewData($fileId);
 
-        $address = $this->functions->T('client_c', $lang, $config->convertUTF8) . ': ' . $file->CLIENT_NAME . "\n{$file->DEBTOR_NAME}\n{$file->DEBTOR_ADDRESS}\n{$file->DEBTOR_COUNTRY_CODE} - {$file->DEBTOR_ZIP_CODE}  {$file->DEBTOR_CITY}";
+        $address = $file->CLIENT_NAME . ": {$file->REFERENCE}\n{$file->DEBTOR_NAME}\n{$file->DEBTOR_ADDRESS}\n{$file->DEBTOR_COUNTRY_CODE} - {$file->DEBTOR_ZIP_CODE}  {$file->DEBTOR_CITY}";
 
-        $this->pdf->AddPage();
+        $this->pdf->AddPage('L');
         $this->pdf->SetX(0);
         $this->pdf->SetY($letterSettings['MARGIN_LEFT']);
         $this->pdf->SetFont($this->lettertype, '', $this->sizeSmall);
@@ -290,6 +290,8 @@ class Application_Model_PdfDocument extends Application_Model_Base {
             $this->pdf->SetFont($this->lettertype, 'B', $this->sizeSmall);
             $this->pdf->Cell(28, $letterSettings['LINE_HEIGHT'], $this->functions->T("factuurdatum_c", $lang, $config->decodeInPdf), 'TLRB', 0, 'L');
             $this->pdf->Cell(28, $letterSettings['LINE_HEIGHT'], $this->functions->T("vervaldatum_c", $lang, $config->decodeInPdf), 'TLRB', 0, 'L');
+            $this->pdf->Cell(45, $letterSettings['LINE_HEIGHT'], $this->functions->T("contract_number", $lang, $config->decodeInPdf), 'TLRB', 0, 'L');
+            $this->pdf->Cell(55, $letterSettings['LINE_HEIGHT'], $this->functions->T("contract_insured", $lang, $config->decodeInPdf), 'TLRB', 0, 'L');
             $this->pdf->Cell(45, $letterSettings['LINE_HEIGHT'], $this->functions->T("reference_c", $lang, $config->decodeInPdf), 'TLRB', 0, 'L');
             $this->pdf->Cell(35, $letterSettings['LINE_HEIGHT'], $this->functions->T("amount_c", $lang, $config->decodeInPdf), 'TLRB', 0, 'R');
             if ($this->interestAccess) {
@@ -312,7 +314,9 @@ class Application_Model_PdfDocument extends Application_Model_Base {
                 }
                 $this->pdf->Cell(28, $letterSettings['LINE_HEIGHT'], $this->functions->dateformat($invoice->INVOICE_DATE), 'LRB', 0, 'L');
                 $this->pdf->Cell(28, $letterSettings['LINE_HEIGHT'], $this->functions->dateformat($invoice->START_DATE), 'LRB', 0, 'L');
-                $this->pdf->Cell(45, $letterSettings['LINE_HEIGHT'], utf8_decode($invoice->INVOICE_DOCCODE."/".$invoice->REFERENCE."/".$invoice->INVOICE_DOCLINENUM), 'LRB', 0, 'L');
+                $this->pdf->Cell(45, $letterSettings['LINE_HEIGHT'], $invoice->CONTRACT_NUMBER, 'LRB', 0, 'L');
+                $this->pdf->Cell(55, $letterSettings['LINE_HEIGHT'], $invoice->CONTRACT_INSURED, 'LRB', 0, 'L');
+                $this->pdf->Cell(45, $letterSettings['LINE_HEIGHT'], $invoice->REFERENCE, 'LRB', 0, 'L');
                 $this->pdf->Cell(35, $letterSettings['LINE_HEIGHT'], $this->functions->amount($invoice->AMOUNT) . " {$valuta}", 'LRB', 0, 'R');
                 if ($this->interestAccess) {
                     $this->pdf->Cell(21, $letterSettings['LINE_HEIGHT'], $this->functions->amount($invoice->INTEREST) . " {$valuta}", 'LRB', 0, 'R');
@@ -326,10 +330,10 @@ class Application_Model_PdfDocument extends Application_Model_Base {
             }
             $this->pdf->SetFont($this->lettertype, 'B', $this->sizeSmall);
             if ($this->interestAccess) {
-                $this->pdf->Cell(147, $letterSettings['LINE_HEIGHT'], $this->functions->T("total_c", $lang, $config->decodeInPdf), 'T', 0, 'R');
+                $this->pdf->Cell(268, $letterSettings['LINE_HEIGHT'], $this->functions->T("total_c", $lang, $config->decodeInPdf), 'T', 0, 'R');
                 $this->pdf->Cell(25, $letterSettings['LINE_HEIGHT'], $this->functions->amount($total) . " {$valuta}", 'LRB', 0, 'R');
             } else {
-                $this->pdf->Cell(101, $letterSettings['LINE_HEIGHT'], $this->functions->T("total_c", $lang, $config->decodeInPdf), 'T', 0, 'R');
+                $this->pdf->Cell(201, $letterSettings['LINE_HEIGHT'], $this->functions->T("total_c", $lang, $config->decodeInPdf), 'T', 0, 'R');
                 $this->pdf->Cell(35, $letterSettings['LINE_HEIGHT'], $this->functions->amount($total) . " {$valuta}", 'LRB', 0, 'R');
             }
             $this->pdf->SetFont($this->lettertype, '', $this->sizeSmall);
