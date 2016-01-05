@@ -48,7 +48,12 @@ class Application_Model_PdfDocument extends Application_Model_Base {
 
         $letterSettings = $printObj->getSettings();
 
+        $fileObj = new Application_Model_File();
+
         $fileId = $fileActionsObj->getActionField($fileActionId, 'FILE_ID');
+
+        $collectorCode = $fileObj->getFileField($fileId,'COLLECTOR_CODE');
+
         $templateId = $fileActionsObj->getActionField($fileActionId, 'TEMPLATE_ID');
         $actionId = $fileActionsObj->getActionField($fileActionId, 'ACTION_ID');
 
@@ -103,6 +108,10 @@ class Application_Model_PdfDocument extends Application_Model_Base {
 
         $first = true;
 
+        $templateId = $fileActionsObj->getActionField($fileActionId, 'TEMPLATE_ID');
+        $templateModules = $templatesObj->getTemplateModules($templateId);
+
+
         if (stripos($templateContent, '<newpage>') !== false) {
             $pieces = explode('<newpage>', $templateContent);
             foreach ($pieces as $piece) {
@@ -113,24 +122,35 @@ class Application_Model_PdfDocument extends Application_Model_Base {
                 }
                 $this->pdf->MultiCellTag(0, $letterSettings['LINE_HEIGHT'], $piece, 0, "J", 0, 0, 0, 0, 0);
                 if ($first) {
-                    $this->setSign();
+                    if (in_array(12, $templateModules)) {
+                        $this->setSign($collectorCode);
+                    } else {
+                        $this->setSign();
+                    }
+
                     $this->setFooter($lang);
                     $first = false;
                 }
             }
         } else {
             $this->pdf->MultiCellTag(0, $letterSettings['LINE_HEIGHT'], $templateContent, 0, "J", 0, 0, 0, 0, 0);
-            $this->setSign();
+
+            if (in_array(12, $templateModules)) {
+                $this->setSign($collectorCode);
+            } else {
+                $this->setSign();
+            }
+
             $this->setFooter($lang);
         }
 
-        $templateId = $fileActionsObj->getActionField($fileActionId, 'TEMPLATE_ID');
-        $templateModules = $templatesObj->getTemplateModules($templateId);
 
-        if (in_array('PaymentForm', $templateModules)) {
+
+
+        if (in_array(5, $templateModules)) {
             $this->loadPaymentForm($fileActionId);
         }
-        if (in_array('Invoices', $templateModules)) {
+        if (in_array(6, $templateModules)) {
             $this->loadInvoices($fileActionId);
         }
 
@@ -170,11 +190,16 @@ class Application_Model_PdfDocument extends Application_Model_Base {
     }
 
 
-    public function setSign()
+    public function setSign($prefix = false)
     {
         $printObj = new Application_Model_Print();
         $letterSettings = $printObj->getSettings();
-        $signUrl = '././public/images/' . $letterSettings['SIGNFILE'] . '.jpg';
+        if (!empty($prefix)) {
+            $signUrl = '././public/images/' . $prefix ."_".$letterSettings['SIGNFILE'] . '.jpg';
+        } else {
+            $signUrl = '././public/images/' . $letterSettings['SIGNFILE'] . '.jpg';
+        }
+
         if (file_exists($signUrl)) {
             $x = $this->pdf->getX();
             $y = $this->pdf->getY() - $letterSettings['SIGN_ABOVE_TEXT'];

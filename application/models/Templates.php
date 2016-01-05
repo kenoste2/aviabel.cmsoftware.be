@@ -91,26 +91,7 @@ class Application_Model_Templates extends Application_Model_Base
     {
         $templateModules = $this->db->get_var("select TEMPLATE_MODULES from SYSTEM\$TEMPLATES where TEMPLATE_ID={$templateId}");
         $templateModules = explode(",", $templateModules);
-        $data = array();
-        if ($templateModules) {
-            foreach ($templateModules as $module) {
-                 switch ($module) {
-                    case '5':
-                        $type = "PaymentForm";
-                        break;
-                    case '6':
-                        $type = "Invoices";
-                        break;
-                    default :
-                        $type = "";
-
-                }
-                if (!empty($type)) {
-                    $data[] = $type;
-                }
-            }
-        }
-        return $data;
+        return $templateModules;
     }
     public function checkIsDeletable($id)
     {
