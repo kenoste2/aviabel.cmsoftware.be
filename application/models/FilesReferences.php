@@ -238,10 +238,18 @@ class Application_Model_FilesReferences extends Application_Model_Base {
     }
 
 
-    public function getReferenceTypes($clientId = false) {
+    public function getReferenceTypes($clientId = false,  $underwriter = false , $lob = false) {
 
         if ($clientId != false) {
             $clientQuery = "AND F.CLIENT_ID = {$clientId}";
+        }
+
+        if ($underwriter != false) {
+            $clientQuery = "AND R.CONTRACT_UNDERWRITER = '{$underwriter}'";
+        }
+
+        if ($lob != false) {
+            $clientQuery = "AND R.CONTRACT_LINEOFBUSINESS = '{$lob}'";
         }
 
         $sql = "SELECT REFERENCE_TYPE FROM FILES\$REFERENCES R

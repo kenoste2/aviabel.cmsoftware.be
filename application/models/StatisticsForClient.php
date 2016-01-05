@@ -21,13 +21,13 @@ class Application_Model_StatisticsForClient extends Application_Model_Base
           from REPORTS\$STATISTICTS_FOR_CLIENT($client_id)");
     }
 
-    public function getAging($clientId = false, $collectorId = false)
+    public function getAging($underwriter = false, $collectorId = false, $lob = false)
     {
 
         $refObj = new Application_Model_FilesReferences();
 
 
-        $refTypes = $refObj->getReferenceTypes($clientId);
+        $refTypes = $refObj->getReferenceTypes(false,$underwriter, $lob);
 
 
         $aging = array();
@@ -37,75 +37,86 @@ class Application_Model_StatisticsForClient extends Application_Model_Base
 
                 $type = $row->REFERENCE_TYPE;
 
-                if ($clientId) {
-                    $clientExtra = "AND F.CLIENT_ID = {$clientId}";
+                if ($underwriter) {
+                    $underwriterExtra = "AND R.CONTRACT_UNDERWRITER = '{$underwriter}'";
                 }
                 if ($collectorId) {
                     $collectorExtra = "AND F.COLLECTOR_ID = {$collectorId}";
                 }
-                
-                $aging[$type]['0'] = $this->db->get_row("select COUNT(*),SUM(R.AMOUNT)
+
+                if ($lob) {
+                    $lobExtra = "AND R.CONTRACT_LINEOFBUSINESS = '{$lob}'";
+                }
+
+                $aging[$type]['1Q'] = $this->db->get_row("select COUNT(*),SUM(R.AMOUNT)
                   from files\$references R
                   JOIN FILES\$FILES F ON F.FILE_ID = R.FILE_ID WHERE
-                  (CURRENT_DATE - R.START_DATE) <1
+                  (CURRENT_DATE - R.START_DATE) <=90
                   AND REFERENCE_TYPE = '{$type}'
-                  {$clientExtra}
+                  {$underwriterExtra}
                   {$collectorExtra}
+                  {$lobExtra}
                   GROUP BY REFERENCE_TYPE");
 
 
-                $aging[$type]['1-30'] = $this->db->get_row("select COUNT(*),SUM(R.AMOUNT)
+                $aging[$type]['2Q'] = $this->db->get_row("select COUNT(*),SUM(R.AMOUNT)
                   from files\$references R
                   JOIN FILES\$FILES F ON F.FILE_ID = R.FILE_ID WHERE
-                  (CURRENT_DATE - R.START_DATE) >=1 AND (CURRENT_DATE - R.START_DATE) <=30
+                  (CURRENT_DATE - R.START_DATE) >90 AND (CURRENT_DATE - R.START_DATE) <=180
                   AND REFERENCE_TYPE = '{$type}'
-                  {$clientExtra}
+                  {$underwriterExtra}
                   {$collectorExtra}
+                  {$lobExtra}
                   GROUP BY REFERENCE_TYPE");
 
-                $aging[$type]['31-90'] = $this->db->get_row("select COUNT(*),SUM(R.AMOUNT)
+                $aging[$type]['3Q'] = $this->db->get_row("select COUNT(*),SUM(R.AMOUNT)
                   from files\$references R
                   JOIN FILES\$FILES F ON F.FILE_ID = R.FILE_ID WHERE
-                  (CURRENT_DATE - R.START_DATE) >=31 AND (CURRENT_DATE - R.START_DATE) <=90
+                  (CURRENT_DATE - R.START_DATE) >180 AND (CURRENT_DATE - R.START_DATE) <=270
                   AND REFERENCE_TYPE = '{$type}'
-                  {$clientExtra}
+                  {$underwriterExtra}
                   {$collectorExtra}
+                  {$lobExtra}
                   GROUP BY REFERENCE_TYPE");
 
-                $aging[$type]['91-180'] = $this->db->get_row("select COUNT(*),SUM(R.AMOUNT)
+                $aging[$type]['4Q'] = $this->db->get_row("select COUNT(*),SUM(R.AMOUNT)
                   from files\$references R
                   JOIN FILES\$FILES F ON F.FILE_ID = R.FILE_ID WHERE
-                  (CURRENT_DATE - R.START_DATE) >=91 AND (CURRENT_DATE - R.START_DATE) <= 180
+                  (CURRENT_DATE - R.START_DATE) >270 AND (CURRENT_DATE - R.START_DATE) <= 360
                   AND REFERENCE_TYPE = '{$type}'
-                  {$clientExtra}
+                  {$underwriterExtra}
                   {$collectorExtra}
+                  {$lobExtra}
                   GROUP BY REFERENCE_TYPE");
 
-                $aging[$type]['181-365'] = $this->db->get_row("select COUNT(*),SUM(R.AMOUNT)
+                $aging[$type]['1Y'] = $this->db->get_row("select COUNT(*),SUM(R.AMOUNT)
                   from files\$references R
                   JOIN FILES\$FILES F ON F.FILE_ID = R.FILE_ID WHERE
-                  (CURRENT_DATE - R.START_DATE) >=181 AND (CURRENT_DATE - R.START_DATE) <= 365
+                  (CURRENT_DATE - R.START_DATE) >360 AND (CURRENT_DATE - R.START_DATE) <= 730
                   AND REFERENCE_TYPE = '{$type}'
-                  {$clientExtra}
+                  {$underwriterExtra}
                   {$collectorExtra}
+                  {$lobExtra}
                   GROUP BY REFERENCE_TYPE");
 
-                $aging[$type]['366-730'] = $this->db->get_row("select COUNT(*),SUM(R.AMOUNT)
+                $aging[$type]['2Y'] = $this->db->get_row("select COUNT(*),SUM(R.AMOUNT)
                   from files\$references R
                   JOIN FILES\$FILES F ON F.FILE_ID = R.FILE_ID WHERE
-                  (CURRENT_DATE - R.START_DATE) >=366 AND (CURRENT_DATE - R.START_DATE) <= 730
+                  (CURRENT_DATE - R.START_DATE) >730 AND (CURRENT_DATE - R.START_DATE) <= 1095
                   AND REFERENCE_TYPE = '{$type}'
-                  {$clientExtra}
+                  {$underwriterExtra}
                   {$collectorExtra}
+                  {$lobExtra}
                   GROUP BY REFERENCE_TYPE");
 
-                $aging[$type]['731+'] = $this->db->get_row("select COUNT(*),SUM(R.AMOUNT)
+                $aging[$type]['3Y'] = $this->db->get_row("select COUNT(*),SUM(R.AMOUNT)
                   from files\$references R
                   JOIN FILES\$FILES F ON F.FILE_ID = R.FILE_ID WHERE
-                  (CURRENT_DATE - R.START_DATE) >=731
+                  (CURRENT_DATE - R.START_DATE) >1095
                   AND REFERENCE_TYPE = '{$type}'
-                  {$clientExtra}
+                  {$underwriterExtra}
                   {$collectorExtra}
+                  {$lobExtra}
                   GROUP BY REFERENCE_TYPE");
             }
             return $aging;
@@ -117,45 +128,41 @@ class Application_Model_StatisticsForClient extends Application_Model_Base
     {
         $aging = array();
 
-        $aging['0'] = $this->db->get_row("select COUNT(*),SUM(R.AMOUNT)
+        $aging['1Q'] = $this->db->get_row("select COUNT(*),SUM(R.AMOUNT)
                   from files\$references R
                   JOIN FILES\$FILES F ON F.FILE_ID = R.FILE_ID WHERE
-                  (CURRENT_DATE - R.START_DATE) <1");
+                  (CURRENT_DATE - R.START_DATE) <=90");
 
 
-        $aging['1-30'] = $this->db->get_row("select COUNT(*),SUM(R.AMOUNT)
+        $aging['2Q'] = $this->db->get_row("select COUNT(*),SUM(R.AMOUNT)
                   from files\$references R
                   JOIN FILES\$FILES F ON F.FILE_ID = R.FILE_ID WHERE
-                  (CURRENT_DATE - R.START_DATE) >=1 AND (CURRENT_DATE - R.START_DATE) <=30");
+                  (CURRENT_DATE - R.START_DATE) >90 AND (CURRENT_DATE - R.START_DATE) <=180");
 
-        $aging['31-90'] = $this->db->get_row("select COUNT(*),SUM(R.AMOUNT)
+        $aging['3Q'] = $this->db->get_row("select COUNT(*),SUM(R.AMOUNT)
                   from files\$references R
                   JOIN FILES\$FILES F ON F.FILE_ID = R.FILE_ID WHERE
-                  (CURRENT_DATE - R.START_DATE) >=31 AND (CURRENT_DATE - R.START_DATE) <=90");
+                  (CURRENT_DATE - R.START_DATE) >180 AND (CURRENT_DATE - R.START_DATE) <=270");
 
-        $aging['91-180'] = $this->db->get_row("select COUNT(*),SUM(R.AMOUNT)
+        $aging['4Q'] = $this->db->get_row("select COUNT(*),SUM(R.AMOUNT)
                   from files\$references R
                   JOIN FILES\$FILES F ON F.FILE_ID = R.FILE_ID WHERE
-                  (CURRENT_DATE - R.START_DATE) >=91 AND (CURRENT_DATE - R.START_DATE) <= 180");
+                  (CURRENT_DATE - R.START_DATE) >270 AND (CURRENT_DATE - R.START_DATE) <= 360");
 
-        $aging['181-365'] = $this->db->get_row("select COUNT(*),SUM(R.AMOUNT)
+        $aging['1Y'] = $this->db->get_row("select COUNT(*),SUM(R.AMOUNT)
                   from files\$references R
                   JOIN FILES\$FILES F ON F.FILE_ID = R.FILE_ID WHERE
-                  (CURRENT_DATE - R.START_DATE) >=181 AND (CURRENT_DATE - R.START_DATE) <= 365");
+                  (CURRENT_DATE - R.START_DATE) >360 AND (CURRENT_DATE - R.START_DATE) <= 730");
 
-        $aging['366-730'] = $this->db->get_row("select COUNT(*),SUM(R.AMOUNT)
+        $aging['2Y'] = $this->db->get_row("select COUNT(*),SUM(R.AMOUNT)
                   from files\$references R
                   JOIN FILES\$FILES F ON F.FILE_ID = R.FILE_ID WHERE
-                  (CURRENT_DATE - R.START_DATE) >=366 AND (CURRENT_DATE - R.START_DATE) <= 730");
+                  (CURRENT_DATE - R.START_DATE) >730 AND (CURRENT_DATE - R.START_DATE) <= 1095");
 
-        $aging['731+'] = $this->db->get_row("select COUNT(*),SUM(R.AMOUNT)
+        $aging['3Y'] = $this->db->get_row("select COUNT(*),SUM(R.AMOUNT)
                   from files\$references R
                   JOIN FILES\$FILES F ON F.FILE_ID = R.FILE_ID WHERE
-                  (CURRENT_DATE - R.START_DATE) >=731");
-        if (empty($aging['731+']->SUM)) {
-            unset ($aging['731+']);
-        }
-
+                  (CURRENT_DATE - R.START_DATE) >1095");
         return $aging;
 
     }

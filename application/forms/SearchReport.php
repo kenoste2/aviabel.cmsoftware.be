@@ -19,17 +19,25 @@ class Application_Form_SearchReport extends Zend_Form
             'class' => 'form-control'
         ));
 
-        $collectors = $db->get_results("select CLIENT_ID,(CODE || ' - ' || NAME  ) AS NAME from CLIENTS\$CLIENTS where IS_ACTIVE= 1 order by NAME", ARRAY_N);
+        $underwriters = $db->get_results("select CONTRACT_UNDERWRITER AS ID, CONTRACT_UNDERWRITER  from FILES\$REFERENCES group by CONTRACT_UNDERWRITER order by CONTRACT_UNDERWRITER", ARRAY_N);
 
-        $this->addElement('select', 'CLIENT_ID', array(
+        $this->addElement('select', 'CONTRACT_UNDERWRITER', array(
             'required' => false,
-            'MultiOptions' => $functions->db2array($collectors),
+            'MultiOptions' => $functions->db2array($underwriters),
+            'class' => 'form-control'
+        ));
+
+        $lob = $db->get_results("select CONTRACT_LINEOFBUSINESS AS ID, CONTRACT_LINEOFBUSINESS  from FILES\$REFERENCES group by CONTRACT_LINEOFBUSINESS order by CONTRACT_LINEOFBUSINESS", ARRAY_N);
+
+        $this->addElement('select', 'CONTRACT_LINEOFBUSINESS', array(
+            'required' => false,
+            'MultiOptions' => $functions->db2array($lob),
             'class' => 'form-control'
         ));
 
 
 
-        $this->addDisplayGroup(array('CLIENT_ID'), 'group1');
+        $this->addDisplayGroup(array('CONTRACT_UNDERWRITER', 'CONTRACT_LINEOFBUSINESS' ), 'group1');
         $this->getDisplayGroup('group1')->setDecorators(array(
             'FormElements',
             'Fieldset',

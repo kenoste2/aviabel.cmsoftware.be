@@ -3,9 +3,9 @@
 			var chart = AmCharts.makeChart("vervallen", {
 				"type": "pie",
 				"theme": "none",
-                "colors" : ["#FF0000","#00FF00"],
+                "colors" : ["#C0605D","#598CB4"],
 				"legend": {
-					"position": "right",
+					"position": "bottom",
 					"horizontalGap": 10,
 					"markerSize": 10,
 					"useGraphSettings": false,
@@ -31,8 +31,9 @@
 			var chart = AmCharts.makeChart("realtime", {
 				"type": "pie",
 				"theme": "none",
-				"legend": {
-					"position": "right",
+                "colors": ["#598CB4","#C0605D","#9DB370", "#8B74A0", "#4CACBD", "#E69A5F", "#A5BBD6", "#FF0000", "#FF0000"],
+                "legend": {
+					"position": "bottom",
 					"horizontalGap": 10,
 					"markerSize": 10,
 					"useGraphSettings": false,
@@ -48,7 +49,7 @@
 				],
 				"valueField": "waarde",
 				"titleField": "titel",
-				"labelText": ""
+                "labelText": ""
 			});
 			var legend = new AmCharts.AmLegend();
 		</script>
@@ -58,9 +59,9 @@
 			var chart = AmCharts.makeChart("aging", {
 				"type": "pie",
 				"theme": "none",
-                "colors" : ["#00FF00","#8DFF00","#F7FF00", "#FF8C00", "#FF4600", "#FF2300", "#FF0000", "#FF0000", "#FF0000"],
+                "colors": ["#598CB4","#C0605D","#9DB370", "#8B74A0", "#4CACBD", "#E69A5F", "#A5BBD6", "#FF0000", "#FF0000"],
 				"legend": {
-					"position": "right",
+					"position": "bottom",
 					"horizontalGap": 10,
 					"markerSize": 10,
 					"useGraphSettings": false,
@@ -69,14 +70,13 @@
 				"dataProvider": [
 					<?php foreach ($this->aging as $type => $value): ?>
 					{
-						"titel": "<?php echo $type ?> <?php $this->T("days_c")?>",
+						"titel": "<?php echo $type ?>",
 						"waarde": <?php echo ($value->SUM) ? $value->SUM : 0;  ?>
 					},
 					<?php endforeach ?>
 				],
 				"valueField": "waarde",
-				"titleField": "titel",
-				"labelText": ""
+				"titleField": "titel"
 			});
 			var legend = new AmCharts.AmLegend();
 		</script>
