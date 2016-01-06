@@ -708,3 +708,13 @@ input[type="radio"] {
 	padding: 1em 1.4em;
 	background: none;
 }
+
+.slice1 .amcharts-pie-slice {
+    fill: #FFF;
+}
+
+.tiny-image {
+    height: 5px;
+    width: 5px;
+}
+

@@ -40,7 +40,7 @@ $db = new db($config->db->user, $config->db->password, $config->db->dbfile, $con
 if (!empty($_COOKIE['lang'])) {
     $lang = $_COOKIE['lang'];
 } else {
-    $lang = 'NL';
+    $lang = 'FR';
 }
 
 

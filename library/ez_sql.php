@@ -180,6 +180,9 @@ class db {
         if (ibase_errmsg ()) {
 
             // If there is an error then take note of it..
+            //require_once("application/models/Base.php");
+            //$obj = new Application_Model_Base();
+            //$obj->log($this->escape($this->last_query), "sql_error");
             $this->print_error();
         } else {
 
