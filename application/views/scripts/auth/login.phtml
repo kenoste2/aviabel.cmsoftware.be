@@ -19,8 +19,11 @@
 					<?php echo $this->loginForm->submit ?>
 				</div>
 	        </form>
-    <?php if ($this->showError) {
+    <?php if ($this->showError && !$this->attemptsError) {
         print "<br>".$this->Error($this->G('incorrect_login_c'));
+    } ?>
+    <?php if ($this->attemptsError) {
+        print "<br>".$this->Error($this->G('Too many login attempts . Try again in 15 minutes'));
     } ?>
 
 </div>
