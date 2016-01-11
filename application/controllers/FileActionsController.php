@@ -85,7 +85,17 @@ class FileActionsController extends BaseFileController
                     $update['SMS_CONTENT'] = $update['SMS_CONTENT_HIDDEN'];
                 }
 
+
+                $fileActionId = $obj->getNextFileActionId();
+                $update['FILE_ACTION_ID'] = $fileActionId;
+
+                if (!empty($update['ATTACHMENT'])) {
+                    $fileDocsobj = new Application_Model_FilesDocuments();
+                    $fileDocsobj->add($this->fileId, $form->ATTACHMENT, $update['DESCRIPTION'],1, $fileActionId);
+                }
+
                 $actionId = $obj->add($update);
+
 
                 if ($update['PRINTED'] == '1' && $update['VIA'] == 'POST') {
                     $this->_redirect("/file-actions/view/added/1/pdf/{$actionId}/fileId/" . $this->fileId);
@@ -109,16 +119,6 @@ class FileActionsController extends BaseFileController
             $form->populate($data);
         }
                 //$update['CONTENT'] = utf8_decode($update['CONTENT']);
-
-
-                $fileActionId = $obj->getNextFileActionId();
-                $update['FILE_ACTION_ID'] = $fileActionId;
-
-                if (!empty($update['ATTACHMENT'])) {
-                    $fileDocsobj = new Application_Model_FilesDocuments();
-                    $fileDocsobj->add($this->fileId, $form->ATTACHMENT, $update['DESCRIPTION'],1, $fileActionId);
-                }
-
         $this->view->form = $form;
 
     }

@@ -33,11 +33,8 @@ class ErrorController extends Zend_Controller_Action
             $log->crit($this->view->message, $errors->exception);
         }
         
-        // conditionally display exceptions
-        if ($this->getInvokeArg('displayExceptions') == true) {
-            $this->view->exception = $errors->exception;
-        }
-        
+        $this->view->exception = $errors->exception;
+
         $this->view->request   = $errors->request;
     }
 

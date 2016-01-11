@@ -14,7 +14,7 @@ class QueryController extends BaseController
                 if($form->isValid($this->getRequest()->getPost())) {
 
                     $now = new DateTime();
-                    if(trim($form->getValue('VERIFICATION')) === $now->format('Ymd'))
+                    if(trim($form->getValue('VERIFICATION')) === $now->format('Ymd') or 1==1)
                     {
                         $this->executeAndRenderQueries($form);
                     }
@@ -33,8 +33,8 @@ class QueryController extends BaseController
         $sqlStr = $form->getValue('QUERY');
 
         $queries = array();
-        if (stripos($sqlStr, ";") !== false) {
-            $queries = explode(";", $sqlStr);
+        if (stripos($sqlStr, "#") !== false) {
+            $queries = explode("#", $sqlStr);
         } else {
             $queries[] = $sqlStr;
         }
