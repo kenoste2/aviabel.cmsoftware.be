@@ -64,8 +64,15 @@ class FilesController extends BaseController
             }
         }
 
+        if ($form->isValid($_POST) && $this->getParam('formSubmit')) {
+            $data = $form->getValues();
+            $session->data = $data;
+        } else {
+            $session->data = array();
+        }
 
         if ($this->getParam('agenda')) {
+            $session->data['collector'] = $this->getParam('collector');
             $session->data['state_id'] = $this->getParam('agenda');
             $session->data['extra_field'] = 'LAST_ACTION_DATE';
             $session->data['extra_compare'] = "<=";
@@ -73,18 +80,8 @@ class FilesController extends BaseController
         }
 
 
-
-        if ($form->isValid($_POST) && $this->getParam('formSubmit')) {
-            $data = $form->getValues();
-            $session->data = $data;
-        }
-
-
-
-        if (!empty($session->data)) {
-            $formData = $session->data;
-            $form->populate($formData);
-        }
+        $formData = $session->data;
+        $form->populate($formData);
 
         $query_extra = "";
         $query_files = "";
@@ -188,24 +185,26 @@ class FilesController extends BaseController
             $sql = str_replace("SELECT DISTINCT ", "SELECT FIRST {$maxRecords} DISTINCT ", $sql);
             $this->view->onlyFirst = $maxRecords;
         }
-        $results = $this->db->get_results($sql);
-        if (!empty($results)) {
-            $this->export->sql = $sql;
-            $fileList = array();
-            foreach ($results as $row) {
-                $fileList[] = array(
-                    "FILE_ID" => $row->FILE_ID,
-                    "FILE_NR" => $row->FILE_NR,
-                    "DEBTOR_NAME" => $row->DEBTOR_NAME,
-                );
-            }
-            $session->fileList = $fileList;
-            $this->view->results = $results;
-        } else {
-            $this->export->sql = "";
-            $this->view->exportButton = false;
-        }
 
+        if ($this->getParam('formSubmit') or $this->getParam('agenda')) {
+            $results = $this->db->get_results($sql);
+            if (!empty($results)) {
+                $this->export->sql = $sql;
+                $fileList = array();
+                foreach ($results as $row) {
+                    $fileList[] = array(
+                        "FILE_ID" => $row->FILE_ID,
+                        "FILE_NR" => $row->FILE_NR,
+                        "DEBTOR_NAME" => $row->DEBTOR_NAME,
+                    );
+                }
+                $session->fileList = $fileList;
+                $this->view->results = $results;
+            } else {
+                $this->export->sql = "";
+                $this->view->exportButton = false;
+            }
+        }
         $filesReferencesModel = new Application_Model_FilesReferences();
         $this->view->totalNotDue = $filesReferencesModel->getTotalNotDue();
         $this->view->totalPastDue = $filesReferencesModel->getTotalPastDue();

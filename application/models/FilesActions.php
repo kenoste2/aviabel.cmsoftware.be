@@ -393,25 +393,39 @@ class Application_Model_FilesActions extends Application_Model_Base
         return $filteredActions;
     }
 
-    public function getToBePrintedCount()
+    public function getToBePrintedCount($collectorId = false)
     {
+
+        $queryExtra =  "";
+        if (!empty($collectorId)) {
+            $queryExtra .= "AND F.COLLECTOR_ID = {$collectorId}";
+        }
+
         $sql = "SELECT A.TEMPLATE_ID,B.DESCRIPTION,F.COLLECTOR_NAME,F.COLLECTOR_ID,COUNT(*) AS COUNTER FROM FILES\$FILE_ACTIONS A
                   JOIN SYSTEM\$TEMPLATES B ON A.TEMPLATE_ID = B.TEMPLATE_ID
                   JOIN FILES\$FILES_ALL_INFO F ON A.FILE_ID = F.FILE_ID
                 WHERE A.TEMPLATE_ID > 0 AND A.TEMPLATE_CONTENT !='' AND A.PRINTED != 'Y' AND A.ADDRESS != ''
                       AND B.VISIBLE = 'Y' AND A.ACTION_DATE <= CURRENT_DATE
+                      {$queryExtra}
                   GROUP BY F.COLLECTOR_NAME,F.COLLECTOR_ID,A.TEMPLATE_ID, B.DESCRIPTION
                   ORDER BY F.COLLECTOR_NAME ASC, B.DESCRIPTION";
         $results = $this->db->get_results($sql);
         return $results;
     }
 
-    public function getToBePrintedAllCount()
+    public function getToBePrintedAllCount($collectorId = false)
     {
+        $extraQuery = "";
+        if (!empty($collectorId)) {
+            $extraQuery .= " AND  F.COLLECTOR_ID = {$collectorId}";
+        }
+
+
         $sql = "SELECT COUNT(*) AS COUNTER FROM FILES\$FILE_ACTIONS A
                   JOIN SYSTEM\$TEMPLATES B ON A.TEMPLATE_ID = B.TEMPLATE_ID
+                  JOIN FILES\$FILES F ON F.FILE_ID = A.FILE_ID
                 WHERE A.TEMPLATE_ID > 0 AND A.TEMPLATE_CONTENT !='' AND A.PRINTED != 'Y' AND A.ADDRESS != ''
-                      AND B.VISIBLE = 'Y'";
+                      AND B.VISIBLE = 'Y' $extraQuery";
         $count = $this->db->get_var($sql);
         return $count;
 

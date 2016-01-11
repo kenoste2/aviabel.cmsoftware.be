@@ -30,7 +30,6 @@ class Application_Model_AuthAdapterDbTable {
 
                 $authNamespace->online_user_id = $userId;
                 $authNamespace->online_rights = $this->db->get_var("select RIGHTS from SYSTEM\$USERS where CODE='{$this->username}'");
-
                 if ($authNamespace->online_rights == 5) {
                     $authNamespace->online_client_id = $this->db->get_var("select CLIENT_ID from SYSTEM\$USERS where CODE='{$this->username}'");
                     $results = $this->db->get_results("SELECT ID FROM SUBCLIENTS WHERE KLANTID = '$authNamespace->online_client_id'");
@@ -44,9 +43,10 @@ class Application_Model_AuthAdapterDbTable {
                         $authNamespace->online_subclients = array();
                     }
                 }
-                if ($authNamespace->online_rights == 6) {
+                if ($authNamespace->online_rights == 6 or $authNamespace->online_rights == 3 ) {
                     $authNamespace->online_collector_id = $this->db->get_var("select COLLECTOR_ID from SYSTEM\$USERS where CODE='{$this->username}'");
-                }
+                    $authNamespace->online_collector_name = $this->db->get_var("select NAME from SYSTEM\$COLLECTORS where COLLECTOR_ID='{$authNamespace->online_collector_id}'");
+                 }
 
                 $authNamespace->online_type = "INTERNAL";
                 $authNamespace->online_user = $this->username;

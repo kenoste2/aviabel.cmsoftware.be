@@ -79,7 +79,7 @@ class Application_Model_Train extends Application_Model_Base
         return $rootSql;
     }
 
-    public function performTrainSql($row, $i)
+    public function performTrainSql($row, $i, $collectorId = false)
     {
         $sql = "select DISTINCT I.FILE_ID,I.REFERENCE,I.DEBTOR_TELEPHONE,I.DEBTOR_GSM,I.FILE_NR,I.CREATION_DATE,I.DEBTOR_NAME,I.DEBTOR_ADDRESS,I.DEBTOR_ZIP_CODE,I.DEBTOR_CITY,I.STATE_CODE,I.AMOUNT,I.INTEREST,I.COSTS,I.TOTAL,I.PAYABLE $row->SQL";
         if ($row->DAYS > $i) {
@@ -90,6 +90,10 @@ class Application_Model_Train extends Application_Model_Base
 
         $sql = str_replace("-$row->DAYS", $days, $sql);
         $sql = str_replace("`","'",$sql);
+
+        if (!empty($collectorId)) {
+            $sql = str_replace("WHERE", "WHERE F.COLLECTOR_ID = {$collectorId} AND ", $sql);
+        }
 
 
         return $this->db->get_results($sql);
@@ -121,7 +125,7 @@ class Application_Model_Train extends Application_Model_Base
         return $mappedTrainModules;
     }
 
-    public function getCountersForFollowup(array $results, $numberOfDays = 15)
+    public function getCountersForFollowup(array $results, $numberOfDays = 15, $collectorId = false)
     {
         $counters = array();
         foreach ($results as $row) {
@@ -135,6 +139,10 @@ class Application_Model_Train extends Application_Model_Base
                 $sql = str_replace("-$row->DAYS", $days, $sql);
                 $sql = utf8_decode($sql);
                 $sql = str_replace("`","'",$sql);
+
+                if (!empty($collectorId)) {
+                    $sql = str_replace("WHERE", "WHERE F.COLLECTOR_ID = {$collectorId} AND ", $sql);
+                }
 
                 $counter = $this->db->get_var($sql);
                 if (!$counter) {

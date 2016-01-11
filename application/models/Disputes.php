@@ -4,9 +4,16 @@ require_once 'application/models/Base.php';
 
 class Application_Model_Disputes extends Application_Model_Base {
 
-    public function countForToday() {
+    public function countForToday($collectorId = false) {
+
+        $extraQuery = "";
+        if (!empty($collectorId)) {
+            $extraQuery .= " AND f.COLLECTOR_ID = {$collectorId}";
+        }
+
         $sql = "SELECT COUNT(*) FROM FILES\$REFERENCES r
-                WHERE r.DISPUTE_DATE = CURRENT_DATE AND r.DISPUTE = 1";
+                JOIN FILES\$FILES f ON f.FILE_ID = r.FILE_ID
+                WHERE r.DISPUTE_DATE = CURRENT_DATE AND r.DISPUTE = 1 $extraQuery";
         return $this->db->get_var($sql);
     }
 

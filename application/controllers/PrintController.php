@@ -75,6 +75,18 @@ class PrintController extends BaseController
 
         $this->checkAccessAndRedirect(array('print/documents'));
 
+
+        $selectedCollectorId = false;
+        if ($this->auth->online_rights == 3 && !empty($this->auth->online_collector_id) && !$this->getParam('showall')) {
+            $selectedCollectorId  = $this->auth->online_collector_id;
+            $this->view->showCollectorSelector = true;
+            $this->view->bread .= " - " . $this->auth->online_collector_name . " <a href=" . $this->config->rootLocation. "/print/documents/showall/1><li class='fa fa-search-minus fa-fw'></li></a>" ;
+        }
+        $this->view->selectedCollector = $selectedCollectorId;
+
+
+
+
         $filesActionsObj = new Application_Model_FilesActions();
 
         $templateId = $this->getParam('templateId');
@@ -84,7 +96,7 @@ class PrintController extends BaseController
             $filesActionsObj->setPrinted($templateId, $collectorId);
         }
 
-        $tobePrinted = $filesActionsObj->getToBePrintedCount();
+        $tobePrinted = $filesActionsObj->getToBePrintedCount($selectedCollectorId);
         $this->view->toBePrinted = $tobePrinted;
 
     }

@@ -82,10 +82,16 @@ class Application_Model_ImportedMails extends Application_Model_Base
         return array();
     }
 
-    public function getTodayCount()
+    public function getTodayCount($collectorId = false)
     {
-        $sql = "SELECT COUNT(*) AS COUNTER FROM IMPORTED_MAILS
-                WHERE CREATION_DATE LIKE '".date("Y-m-d")."%'";
+        $extraQuery = "";
+        if (!empty($collectorId)) {
+            $extraQuery .= " AND F.COLLECTOR_ID = {$collectorId}";
+        }
+
+        $sql = "SELECT COUNT(*) AS COUNTER FROM IMPORTED_MAILS M
+                JOIN FILES\$FILES F ON F.FILE_ID = M.FILE_ID
+                WHERE M.CREATION_DATE LIKE '".date("Y-m-d")."%' $extraQuery";
         $count = $this->db->get_var($sql);
         return $count;
 

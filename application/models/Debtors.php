@@ -274,12 +274,27 @@ class Application_Model_Debtors extends Application_Model_Base {
         return $delay;
     }
 
-    function getMeanPaymentDelay() {
-        $sql = "SELECT AVG(COALESCE((SELECT PAYMENT_DATE FROM FILES\$PAYMENTS WHERE REFERENCE_ID = R.REFERENCE_ID),CURRENT_DATE)- R.START_DATE) AS DELAY_PAYMENT
+    function getMeanPaymentDelay($collectorId = false) {
+
+        $extraQuery = "WHERE 1=1";
+        if (!empty($collectorId)) {
+            $extraQuery .= " AND F.COLLECTOR_ID = {$collectorId}";
+        }
+
+
+        $total = $this->db->get_var("SELECT SUM(AMOUNT) FROM FILES\$REFERENCES");
+
+
+        $sql = "SELECT SUM((COALESCE((SELECT PAYMENT_DATE FROM FILES\$PAYMENTS WHERE REFERENCE_ID = R.REFERENCE_ID),CURRENT_DATE)- R.START_DATE)*R.AMOUNT)  AS DELAY_PAYMENT
                 FROM FILES\$REFERENCES R
-                    JOIN FILES\$FILES F ON F.FILE_ID = R.FILE_ID";
+                    JOIN FILES\$FILES F ON F.FILE_ID = R.FILE_ID
+                    $extraQuery";
+
         $value = $this->db->get_var($sql);
-        return $value;
+
+        $return = $value / $total ;
+
+        return $return;
     }
 
     public function getAllFiles($debtorId) {

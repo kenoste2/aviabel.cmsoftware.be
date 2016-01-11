@@ -39,6 +39,16 @@ class ReportController extends BaseController
 
         $this->view->bread = $this->functions->T("menu_reports") . "->" . $this->functions->T("menu_report_aging");
 
+
+        $selectedCollectorId = false;
+        if ($this->auth->online_rights == 3 && !empty($this->auth->online_collector_id) && !$this->getParam('showall')) {
+            $selectedCollectorId  = $this->auth->online_collector_id;
+            $this->view->showCollectorSelector = true;
+            $this->view->bread .= " - " . $this->auth->online_collector_name . " <a href=" . $this->config->rootLocation. "/report/realtime/showall/1><li class='fa fa-search-minus fa-fw'></li></a>" ;
+        }
+        $this->view->selectedCollector = $selectedCollectorId;
+
+
         $form = new Application_Form_SearchReport();
 
         $statisticsForClientModel = new Application_Model_StatisticsForClient();
@@ -94,11 +104,20 @@ class ReportController extends BaseController
 
         $this->view->bread = $this->functions->T("menu_reports") . "->" . $this->functions->T("menu_report_realtime")  ;
 
+        $selectedCollectorId = false;
+        if ($this->auth->online_rights == 3 && !empty($this->auth->online_collector_id) && !$this->getParam('showall')) {
+            $selectedCollectorId  = $this->auth->online_collector_id;
+            $this->view->showCollectorSelector = true;
+            $this->view->bread .= " - " . $this->auth->online_collector_name . " <a href=" . $this->config->rootLocation. "/report/realtime/showall/1><li class='fa fa-search-minus fa-fw'></li></a>" ;
+        }
+        $this->view->selectedCollector = $selectedCollectorId;
+
+
         $filesAllInfoModel = new Application_Model_FilesAllInfo();
 
 
-        $realtimeSummary = $filesAllInfoModel->getRealtimeSummary();
-        $realtimeSummaryTotal = $filesAllInfoModel->getRealtimeSummaryTotal();
+        $realtimeSummary = $filesAllInfoModel->getRealtimeSummary($selectedCollectorId);
+        $realtimeSummaryTotal = $filesAllInfoModel->getRealtimeSummaryTotal($selectedCollectorId);
 
         $this->view->realtimeSummary = $realtimeSummary;
         $this->view->realtimeSummaryTotal = $realtimeSummaryTotal;

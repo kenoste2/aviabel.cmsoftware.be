@@ -9,9 +9,15 @@ class Application_Model_FilesAllInfo extends Application_Model_Base
         return $this->db->get_row("select FIRST 1  * from FILES\$FILES_ALL_INFO", ARRAY_A);
     }
 
-    public function getRealtimeSummary()
+    public function getRealtimeSummary($collectorId = false)
     {
         $client_query = $this->getClientQuery();
+
+        $extraQuery = "";
+        if (!empty($collectorId)) {
+            $extraQuery .= " AND COLLECTOR_ID = {$collectorId}";
+        }
+
 
         return $this->db->get_results("select STATE_CODE,count(DISTINCT FILE_ID) as COUNTER
           ,sum(AMOUNT) as AMOUNT
@@ -22,12 +28,18 @@ class Application_Model_FilesAllInfo extends Application_Model_Base
           ,sum(PAYED_INTEREST) as PAYED_INTEREST
           ,sum(PAYED_COSTS) as PAYED_COSTS
           ,sum(PAYED_AMOUNT+PAYED_INTEREST+PAYED_COSTS) as PAYED_TOTAL
-          from files\$files_all_info  WHERE DATE_CLOSED IS null AND STATE_CODE NOT IN ('NEW') $client_query group by state_code order by PAYED_AMOUNT DESC");
+          from files\$files_all_info  WHERE DATE_CLOSED IS null AND STATE_CODE NOT IN ('NEW') $client_query $extraQuery group by state_code order by PAYED_AMOUNT DESC");
     }
 
-    public function getRealtimeSummaryTotal()
+    public function getRealtimeSummaryTotal($collectorId = false)
     {
         $client_query = $this->getClientQuery();
+
+        $extraQuery = "";
+        if (!empty($collectorId)) {
+            $extraQuery .= " AND COLLECTOR_ID = {$collectorId}";
+        }
+
 
         return $this->db->get_row("select count(*) as COUNTER
             ,sum(AMOUNT) as AMOUNT
@@ -38,7 +50,7 @@ class Application_Model_FilesAllInfo extends Application_Model_Base
             ,sum(PAYED_INTEREST) as PAYED_INTEREST
             ,sum(PAYED_COSTS) as PAYED_COSTS
             ,sum(PAYED_AMOUNT+PAYED_INTEREST+PAYED_COSTS) as PAYED_TOTAL
-            from files\$files_all_info WHERE DATE_CLOSED IS null AND STATE_CODE NOT IN ('NEW') $client_query");
+            from files\$files_all_info WHERE DATE_CLOSED IS null AND STATE_CODE NOT IN ('NEW') $client_query $extraQuery ");
     }
 
     protected function getClientQuery()

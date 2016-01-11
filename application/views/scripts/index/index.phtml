@@ -266,7 +266,7 @@
             </div>  
             <div class="col-1">              
               <div class="aaa-theme-content-widget white-bg col-1 text-center">
-              <h2 class="text-uppercase"><?php echo $this->T("gem_betalingstermijn_c") ?></h2>
+              <h2 class="text-uppercase">ACT</h2>
               <div id="paymentdelay" class="aaa-theme-chart"></div>	
             </div>        
             </div> 
@@ -284,7 +284,7 @@
                     </thead>
                     <tbody>
 					<?php foreach ($this->agenda as $agenda) {  ?>
-                      <tr  style="cursor: pointer" <?php echo $this->onclick("{$this->location()}/files/search/agenda/{$agenda->STATE_ID}"); ?>>
+                      <tr  style="cursor: pointer" <?php echo $this->onclick("{$this->location()}/files/search/agenda/{$agenda->STATE_ID}/collector/$this->selectedCollector"); ?>>
                         <td><?php echo $agenda->STATE_DESCRIPTION ?></td>
                         <td><?php echo $agenda->COUNTER?></td>
                       </tr>

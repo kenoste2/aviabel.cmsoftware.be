@@ -23,7 +23,7 @@
 								<?php foreach ($this->counters[$followUp->CODE] as $j => $counter): ?>
 									<td>
 										<?php if ($counter > 0) : ?>
-											<a href="<?php echo $this->location() ?>/traject/list/i/<?php echo $j ?>/serie/1/type/<?php echo $followUp->CODE ?>"><?php echo $counter; ?></a>
+											<a href="<?php echo $this->location() ?>/traject/list/i/<?php echo $j ?>/serie/1/type/<?php echo $followUp->CODE ?>/collector/<?php echo $this->selectedCollector ?>"><?php echo $counter; ?></a>
 										<?php else: ?>
 											<?php echo $counter; ?>
 										<?php endif; ?>

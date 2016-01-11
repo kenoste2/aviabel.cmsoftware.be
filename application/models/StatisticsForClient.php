@@ -124,45 +124,51 @@ class Application_Model_StatisticsForClient extends Application_Model_Base
         return false;
     }
 
-    public function getGeneralAging()
+    public function getGeneralAging($collectorId = false)
     {
         $aging = array();
+
+        $collectorExtra = "";
+        if ($collectorId) {
+            $collectorExtra = "AND F.COLLECTOR_ID = {$collectorId}";
+        }
+
 
         $aging['1Q'] = $this->db->get_row("select COUNT(*),SUM(R.AMOUNT)
                   from files\$references R
                   JOIN FILES\$FILES F ON F.FILE_ID = R.FILE_ID WHERE
-                  (CURRENT_DATE - R.START_DATE) <=90");
+                  (CURRENT_DATE - R.START_DATE) <=90 $collectorExtra");
 
 
         $aging['2Q'] = $this->db->get_row("select COUNT(*),SUM(R.AMOUNT)
                   from files\$references R
                   JOIN FILES\$FILES F ON F.FILE_ID = R.FILE_ID WHERE
-                  (CURRENT_DATE - R.START_DATE) >90 AND (CURRENT_DATE - R.START_DATE) <=180");
+                  (CURRENT_DATE - R.START_DATE) >90 AND (CURRENT_DATE - R.START_DATE) <=180 $collectorExtra");
 
         $aging['3Q'] = $this->db->get_row("select COUNT(*),SUM(R.AMOUNT)
                   from files\$references R
                   JOIN FILES\$FILES F ON F.FILE_ID = R.FILE_ID WHERE
-                  (CURRENT_DATE - R.START_DATE) >180 AND (CURRENT_DATE - R.START_DATE) <=270");
+                  (CURRENT_DATE - R.START_DATE) >180 AND (CURRENT_DATE - R.START_DATE) <=270 $collectorExtra");
 
         $aging['4Q'] = $this->db->get_row("select COUNT(*),SUM(R.AMOUNT)
                   from files\$references R
                   JOIN FILES\$FILES F ON F.FILE_ID = R.FILE_ID WHERE
-                  (CURRENT_DATE - R.START_DATE) >270 AND (CURRENT_DATE - R.START_DATE) <= 360");
+                  (CURRENT_DATE - R.START_DATE) >270 AND (CURRENT_DATE - R.START_DATE) <= 360 $collectorExtra");
 
         $aging['1Y'] = $this->db->get_row("select COUNT(*),SUM(R.AMOUNT)
                   from files\$references R
                   JOIN FILES\$FILES F ON F.FILE_ID = R.FILE_ID WHERE
-                  (CURRENT_DATE - R.START_DATE) >360 AND (CURRENT_DATE - R.START_DATE) <= 730");
+                  (CURRENT_DATE - R.START_DATE) >360 AND (CURRENT_DATE - R.START_DATE) <= 730 $collectorExtra");
 
         $aging['2Y'] = $this->db->get_row("select COUNT(*),SUM(R.AMOUNT)
                   from files\$references R
                   JOIN FILES\$FILES F ON F.FILE_ID = R.FILE_ID WHERE
-                  (CURRENT_DATE - R.START_DATE) >730 AND (CURRENT_DATE - R.START_DATE) <= 1095");
+                  (CURRENT_DATE - R.START_DATE) >730 AND (CURRENT_DATE - R.START_DATE) <= 1095 $collectorExtra");
 
         $aging['3Y'] = $this->db->get_row("select COUNT(*),SUM(R.AMOUNT)
                   from files\$references R
                   JOIN FILES\$FILES F ON F.FILE_ID = R.FILE_ID WHERE
-                  (CURRENT_DATE - R.START_DATE) >1095");
+                  (CURRENT_DATE - R.START_DATE) >1095 $collectorExtra");
         return $aging;
 
     }

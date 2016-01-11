@@ -10,6 +10,9 @@ class IndexController extends BaseController {
             $this->_redirect('files/search');
         }
 
+        $this->view->bread = "Dashboard";
+
+
         $filesAllInfoModel = new Application_Model_FilesAllInfo();
         $filesReferencesModel = new Application_Model_FilesReferences();
         $filesActionsObj = new Application_Model_FilesActions();
@@ -19,42 +22,51 @@ class IndexController extends BaseController {
         $agendaStatesObj = new Application_Model_AgendaStates();
         $debtorsObj = new Application_Model_Debtors();
 
-        $this->view->totalNotDue = $filesReferencesModel->getTotalNotDue();
-        $this->view->totalPastDue = $filesReferencesModel->getTotalPastDue();
+        $selectedCollectorId = false;
+        if ($this->auth->online_rights == 3 && !empty($this->auth->online_collector_id) && !$this->getParam('showall')) {
+            $selectedCollectorId  = $this->auth->online_collector_id;
+            $this->view->showCollectorSelector = true;
+            $this->view->bread .= " - " . $this->auth->online_collector_name . " <a href=" . $this->config->rootLocation. "/index/index/showall/1><li class='fa fa-search-minus fa-fw'></li></a>" ;
+        }
+        $this->view->selectedCollector = $selectedCollectorId;
 
 
-        $realtimeSummary = $filesAllInfoModel->getRealtimeSummary();
-        $realtimeSummaryTotal = $filesAllInfoModel->getRealtimeSummaryTotal();
+
+        $this->view->totalNotDue = $filesReferencesModel->getTotalNotDue($selectedCollectorId);
+        $this->view->totalPastDue = $filesReferencesModel->getTotalPastDue($selectedCollectorId);
+
+
+        $realtimeSummary = $filesAllInfoModel->getRealtimeSummary($selectedCollectorId);
+        $realtimeSummaryTotal = $filesAllInfoModel->getRealtimeSummaryTotal($selectedCollectorId);
 
         $this->view->realtimeSummary = $realtimeSummary;
         $this->view->realtimeSummaryTotal = $realtimeSummaryTotal;
 
-        $tobePrinted = $filesActionsObj->getToBePrintedAllCount();
+        $tobePrinted = $filesActionsObj->getToBePrintedAllCount($selectedCollectorId);
         $this->view->toBePrinted = $tobePrinted;
 
 
-        $payedToday = $filesPaymentsObj->getDayPayments();
+        $payedToday = $filesPaymentsObj->getDayPayments(date("Y-m-d"), $selectedCollectorId);
         $this->view->payedToday = $payedToday;
 
-        $importedMailsToday = $importedMailsObj->getTodayCount();
+        $importedMailsToday = $importedMailsObj->getTodayCount($selectedCollectorId);
         $this->view->emailsToday = $importedMailsToday;
 
-
-        $agendaStates = $agendaStatesObj->getList();
+        $agendaStates = $agendaStatesObj->getList($selectedCollectorId);
         $this->view->agenda = $agendaStates;
 
-        $paymentDelay = $debtorsObj->getMeanPaymentDelay();
+        $paymentDelay = $debtorsObj->getMeanPaymentDelay($selectedCollectorId);
         $this->view->paymentDelay = $paymentDelay;
 
 
-        $aging = $statisticsForClientModel->getGeneralAging();
+        $aging = $statisticsForClientModel->getGeneralAging($selectedCollectorId);
         $this->view->aging = $aging;
 
         $paymentDelayAverageObj = new Application_Model_PaymentDelayAverage();
-        $this->view->paymentForecast = $paymentDelayAverageObj->getPaymentForecast();
+        $this->view->paymentForecast = $paymentDelayAverageObj->getPaymentForecast(null, $selectedCollectorId);
 
         $disputesObj = new Application_Model_Disputes();
-        $this->view->disputesToday = $disputesObj->countForToday();
+        $this->view->disputesToday = $disputesObj->countForToday($selectedCollectorId);
     }
 
 }

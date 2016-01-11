@@ -240,13 +240,21 @@ class Application_Model_FilesPayments extends Application_Model_Base {
         }
     }
 
-    public function getDayPayments($date = false)
+    public function getDayPayments($date = false, $collectorId = false)
     {
         if (empty($date)) {
             $date = date("Y-m-d");
         }
 
-        $sql = "SELECT SUM(AMOUNT) AS AMOUNT FROM FILES\$PAYMENTS WHERE CREATION_DATE = '{$date}'";
+
+        $extraQuery = "";
+        if (!empty($collectorId)) {
+            $extraQuery .= " AND F.COLLECTOR_ID = {$collectorId}";
+        }
+
+
+        $sql = "SELECT SUM(P.AMOUNT) AS AMOUNT FROM FILES\$PAYMENTS P
+         JOIN FILES\$FILES F ON F.FILE_ID = P.FILE_ID WHERE P.CREATION_DATE = '{$date}' $extraQuery";
         $count = $this->db->get_var($sql);
         return $count;
 

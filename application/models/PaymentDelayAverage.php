@@ -20,10 +20,14 @@ class Application_Model_PaymentDelayAverage extends Application_Model_Base {
         $this->saveData("PAYMENT_DELAY_AVERAGE", $data);
     }
 
-    public function getPaymentForecast($clientId = null) {
+    public function getPaymentForecast($clientId = null, $collectorId = null) {
         $where = "";
         if($clientId) {
-            $where = "AND F.CLIENT_ID = {$clientId}";
+            $where .= "AND F.CLIENT_ID = {$clientId}";
+        }
+
+        if($collectorId) {
+            $where .= "AND F.COLLECTOR_ID = {$collectorId}";
         }
 
         $sql = "SELECT FORECAST_DAY, COUNT(*) AS FORECAST_VALUE

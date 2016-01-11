@@ -196,12 +196,21 @@ class Application_Model_FilesReferences extends Application_Model_Base {
     }
 
 
-    public function getTotalPastDue() {
+    public function getTotalPastDue($collectorId = false) {
 
-        $sql = "SELECT SUM(AMOUNT+INTEREST+COSTS) FROM FILES\$REFERENCES
-            WHERE START_DATE <= CURRENT_DATE
-            AND FILE_ID IN (SELECT FILE_ID FROM FILES\$FILES WHERE DATE_CLOSED IS NULL)
-            AND DISPUTE != 1";
+        $extraQuery = "";
+        if (!empty($collectorId)) {
+            $extraQuery .= " AND F.COLLECTOR_ID = {$collectorId}";
+        }
+
+
+        $sql = "SELECT SUM(R.AMOUNT+R.INTEREST+R.COSTS) FROM FILES\$REFERENCES R
+                JOIN FILES\$FILES F ON F.FILE_ID = R.FILE_ID
+                WHERE R.START_DATE <= CURRENT_DATE
+                AND F.DATE_CLOSED IS NULL
+                AND R.DISPUTE != 1
+                {$extraQuery}";
+
         $value = $this->db->get_var($sql);
         if (empty($value)) {
             $value = 0.00;
@@ -209,12 +218,20 @@ class Application_Model_FilesReferences extends Application_Model_Base {
         return $value;
     }
 
-    public function getTotalNotDue() {
+    public function getTotalNotDue($collectorId  = false) {
 
-        $sql = "SELECT SUM(AMOUNT+INTEREST+COSTS) FROM FILES\$REFERENCES
-            WHERE START_DATE > CURRENT_DATE
-            AND FILE_ID IN (SELECT FILE_ID FROM FILES\$FILES WHERE DATE_CLOSED IS NULL)
-            AND DISPUTE != 1";
+
+        $extraQuery = "";
+        if (!empty($collectorId)) {
+            $extraQuery .= " AND F.COLLECTOR_ID = {$collectorId}";
+        }
+
+        $sql = "SELECT SUM(R.AMOUNT+R.INTEREST+R.COSTS) FROM FILES\$REFERENCES R
+                JOIN FILES\$FILES F ON F.FILE_ID = R.FILE_ID
+                WHERE R.START_DATE > CURRENT_DATE
+                AND F.DATE_CLOSED IS NULL
+                AND R.DISPUTE != 1
+                {$extraQuery}";
 
         $value = $this->db->get_var($sql);
         if (empty($value)) {
