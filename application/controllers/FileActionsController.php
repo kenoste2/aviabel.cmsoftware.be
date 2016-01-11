@@ -41,6 +41,7 @@ class FileActionsController extends BaseFileController
     public function addAction()
     {
         $form = new Application_Form_FileAddAction();
+        $form->setFileId($this->fileId);
 
 
         $obj = new Application_Model_FilesActions();
@@ -107,7 +108,16 @@ class FileActionsController extends BaseFileController
             $data['BP_STARTDATE'] = date("d/m/Y");
             $form->populate($data);
         }
+                //$update['CONTENT'] = utf8_decode($update['CONTENT']);
 
+
+                $fileActionId = $obj->getNextFileActionId();
+                $update['FILE_ACTION_ID'] = $fileActionId;
+
+                if (!empty($update['ATTACHMENT'])) {
+                    $fileDocsobj = new Application_Model_FilesDocuments();
+                    $fileDocsobj->add($this->fileId, $form->ATTACHMENT, $update['DESCRIPTION'],1, $fileActionId);
+                }
 
         $this->view->form = $form;
 

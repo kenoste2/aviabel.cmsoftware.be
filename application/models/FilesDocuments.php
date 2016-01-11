@@ -25,8 +25,9 @@ class Application_Model_FilesDocuments extends Application_Model_Base {
         $this->saveData('FILE_DOCUMENTS', $data, $where);
     }
 
-    public function add($fileId, $file, $description, $visible) {
+    public function add($fileId, $file, $description, $visible, $fileActionId = 0) {
         global $config;
+
 
         $sql = "SELECT MAX(FILE_DOCUMENTS_ID) FROM FILE_DOCUMENTS";
         $last_id = $this->db->get_var($sql);
@@ -68,6 +69,7 @@ class Application_Model_FilesDocuments extends Application_Model_Base {
                     'DESCRIPTION' => $description,
                     'VISIBLE' => $visible,
                     'FILENAME' => $filenameUrl,
+                    'FILE_ACTION_ID' => $fileActionId,
                     'CREATED' => date("Y-m-d"),
                     'CREATEDBY' => $this->online_user,
                 );
@@ -118,6 +120,14 @@ class Application_Model_FilesDocuments extends Application_Model_Base {
         $sql = "SELECT * FROM FILE_DOCUMENTS WHERE FILE_DOCUMENTS_ID IN ({$escDocumentIdsStr})";
         return $this->db->get_results($sql);
     }
+
+    public function getDocumentsByFileActionId($fileActionId) {
+        $sql = "SELECT * FROM FILE_DOCUMENTS WHERE FILE_ACTION_ID = {$fileActionId}";
+        return $this->db->get_results($sql);
+    }
+
+
+
 
     public function getNextId()
     {

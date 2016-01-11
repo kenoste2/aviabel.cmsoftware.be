@@ -207,7 +207,7 @@ class Application_Model_FilesActions extends Application_Model_Base
         if ($templateId > 0) {
 
             if ($communicationType === 'EMAIL') {
-                $this->sendFileActionMail($templateId, $data["E_MAIL"], $content, $data['FILE_ID']);
+                $this->sendFileActionMail($templateId, $data["E_MAIL"], $content, $data['FILE_ID'], $fileActionId);
             }
 
             if ($communicationType === 'SMS') {
@@ -297,7 +297,7 @@ class Application_Model_FilesActions extends Application_Model_Base
      * @param $content
      * @return bool|\Email
      */
-    public function sendFileActionMail($templateId, $emailAddress, $content , $fileId = false) {
+    public function sendFileActionMail($templateId, $emailAddress, $content , $fileId = false, $fileActionId = false) {
 
         global $config;
 
@@ -328,7 +328,18 @@ class Application_Model_FilesActions extends Application_Model_Base
             $from = false;
         }
 
-        return $mail->sendMail($emailAddress,$subject,$content,false,false, $from);
+        $filesDocumentsObj = new Application_Model_FilesDocuments();
+        $filesDocuments = $filesDocumentsObj->getDocumentsByFileActionId($fileActionId);
+
+
+        $attachments = array();
+        if (count($filesDocuments) > 0) {
+            foreach ($filesDocuments as $filesDocument) {
+                $filename = "{$config->rootFileDocuments}/{$filesDocument->FILENAME}";
+                $attachments[] = array('content' => file_get_contents($filename), 'filename' => basename($filesDocument->DESCRIPTION));
+            }
+        }
+        return $mail->sendMail($emailAddress,$subject,$content,false,$attachments, $from);
     }
 
     public function sendSmsFileActionMail($templateId, $phoneNumber, $smsContent) {
@@ -477,6 +488,13 @@ class Application_Model_FilesActions extends Application_Model_Base
       JOIN FILES\$ACTIONS B ON A.ACTION_ID = B.ACTION_ID
   	    where FILE_ID='{$fileId}' order by FILE_ACTION_ID DESC");
         return $results;
+    }
+
+
+    public function getNextFileActionId(){
+        $id  = $this->db->get_var("SELECT MAX(FILE_ACTION_ID) FROM FILES\$FILE_ACTIONS");
+        $id++;
+        return $id;
     }
 
 

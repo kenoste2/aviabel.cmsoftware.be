@@ -37,7 +37,7 @@ class Application_Model_Users extends Application_Model_Base {
 
     public function getUsers()
     {
-        return $this->db->get_results("SELECT USER_ID FROM SYSTEM\$USERS");
+        return $this->db->get_results("SELECT USER_ID FROM SYSTEM\$USERS WHERE ACTIF = 'Y' AND VISIBLE= 'Y'");
     }
 
     public function getUser($user_id)

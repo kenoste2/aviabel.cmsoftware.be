@@ -3,9 +3,12 @@
 class Application_Form_FileAddAction extends Zend_Form
 {
 
-    public function init($fileId = false)
+    protected $_fileId;
+
+    public function init()
     {
         global $db;
+
 
         $this->addPrefixPath('Application_Forms_Decorator', 'Application/Forms/Decorator', 'decorator');
         $functions = new Application_Model_CommonFunctions();
@@ -24,7 +27,7 @@ class Application_Form_FileAddAction extends Zend_Form
         ));
 
 
-        $this->addElement('text', 'E_MAIL', array('label' => $functions->T('email_c'), 'size' => 50, 'validators' => array(array('EmailAddress')),));
+        //$this->addElement('text', 'E_MAIL', array('label' => $functions->T('email_c'), 'size' => 50, 'validators' => array(array('EmailAddress')),));
         $this->addElement('textarea', 'ADDRESS', array('label' => $functions->T('bestemming_c'), 'size' => 15, 'rows' => 3, 'cols' => 30));
         $this->addElement('text', 'GSM', array('label' => $functions->T('gsm_c'), 'size' => 50));
         $options = array("POST" => $functions->T('post_c'), "EMAIL" => $functions->T('email_c'), "SMS" => $functions->T('sms_c'));
@@ -46,10 +49,27 @@ class Application_Form_FileAddAction extends Zend_Form
         $this->addElement('hidden', 'SMS_CONTENT_HIDDEN', array('label' => ''));
         $this->addElement('textarea', 'SMS_CONTENT', array('label' => $functions->T('inhoud_sms_c'), 'size' => 15, 'rows' => 10, 'cols' => 120));
 
+        $this->addElement('file', 'ATTACHMENT', array('label' => $functions->T('attachments_c') . "1", 'required' => true));
+
+
         $this->addElement('submit', 'submit', array(
             'ignore' => true,
             'label' => $functions->T('save_c'),
         ));
+    }
+
+    public function setFileId($fileId) {
+        $allowedMailsObj = new Application_Model_AllowedMails();
+        $functions = new Application_Model_CommonFunctions();
+
+        $emails = $allowedMailsObj->getFileAllowedMails($fileId);
+        $this->addElement('select', 'E_MAIL', array(
+            'MultiOptions' => $emails,
+            'label' => $functions->T('email_c'),
+            'required' => false,
+        ));
+
+        return $this;
     }
 
 }

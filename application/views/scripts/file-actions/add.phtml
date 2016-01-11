@@ -1,12 +1,12 @@
-
          <div class="aaa-theme-flex-row flex-content-row">
           <div class="col-1">
 
             <div class="panel panel-default aaa-theme-content-widget white-bg no-padding aaa-theme-overflow-hidden">
             <div class="panel-heading aaa-theme-position-relative"><h2 class="text-uppercase"><?php $this->T("add_action_c") ?></h2></div>
             <table class="table"><tr><td>
-<form enctype="application/x-www-form-urlencoded" action="" method="post">
-    <input type="hidden" name="index" value="<?php echo $this->index ?>">
+            <form enctype="multipart/form-data" action="" method="post">
+                <input type="hidden" name="MAX_FILE_SIZE" value="8388608" id="MAX_FILE_SIZE">
+                <input type="hidden" name="index" value="<?php echo $this->index ?>">
     <?php
     if ($this->formError) {
         print $this->Error($this->G("not_all_fields_c"));
@@ -27,6 +27,7 @@
                 <?php echo $this->form->VIA ?>
                 <?php echo $this->form->ADDRESS ?>
                 <?php echo $this->form->E_MAIL ?>
+                <?php echo $this->form->ATTACHMENT ?>
                 <?php echo $this->form->GSM ?>
                 <?php echo $this->form->PRINTED ?>
                 <?php echo $this->form->CONTENT ?>
@@ -139,12 +140,18 @@
         var value = $("input[name=VIA]:checked").val();
         if (value == 'EMAIL') {
             hideThings(step2Items);
+            $('#ATTACHMENT').css("visibility", "visible");
+            $("#ATTACHMENT-label").show();
+            $("#ATTACHMENT-element").show();
             $('#E_MAIL-label').show();
             $('#E_MAIL-element').show();
             $('#CONTENT-label').show();
             $('#CONTENT-element').show();
         } else if (value == 'POST'){
             hideThings(step2Items);
+            $('#ATTACHMENT').css("visibility", "hidden");
+            $("#ATTACHMENT-label").hide();
+            $("#ATTACHMENT-element").hide();
             $('#PRINTED-label').show();
             $('#PRINTED-element').show();
             $('#ADDRESS-label').show();
@@ -153,6 +160,9 @@
             $('#CONTENT-element').show();
         } else if (value == 'SMS') {
             hideThings(step2Items);
+            $('#ATTACHMENT').css("visibility", "hidden");
+            $("#ATTACHMENT-label").hide();
+            $("#ATTACHMENT-element").hide();
             $('#GSM-label').show();
             $('#GSM-element').show();
             $('#SMS_CONTENT-label').show();
@@ -261,6 +271,7 @@
     $(function() {
         $("#BP_STARTDATE").datepicker({dateFormat: 'dd/mm/yy'});
     });
+
 </script>
 </dl>
 
