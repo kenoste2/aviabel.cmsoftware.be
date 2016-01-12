@@ -49,7 +49,7 @@ class Application_Form_FileAddAction extends Zend_Form
         $this->addElement('hidden', 'SMS_CONTENT_HIDDEN', array('label' => ''));
         $this->addElement('textarea', 'SMS_CONTENT', array('label' => $functions->T('inhoud_sms_c'), 'size' => 15, 'rows' => 10, 'cols' => 120));
 
-        $this->addElement('file', 'ATTACHMENT', array('label' => $functions->T('attachments_c') . "1", 'required' => true));
+        $this->addElement('file', 'ATTACHMENT', array('label' => $functions->T('attachments_c') . "1", 'required' => false));
 
 
         $this->addElement('submit', 'submit', array(

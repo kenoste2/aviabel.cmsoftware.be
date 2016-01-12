@@ -14,6 +14,17 @@ class Application_Model_Actions extends Application_Model_Base
         return $this->db->get_row("SELECT * FROM FILES\$ACTIONS WHERE ACTION_ID = " . $action_id);
     }
 
+    public function confirmationNeeded($action_id)
+    {
+        $confirmationNeeded = $this->db->get_var("SELECT CONFIRMATION_NEEDED FROM FILES\$ACTIONS WHERE ACTION_ID = " . $action_id);
+        if ($confirmationNeeded == '1') {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+
     public function add($data)
     {
         $data['ACTIEF'] = "1";

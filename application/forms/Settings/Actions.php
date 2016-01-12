@@ -16,6 +16,12 @@ class Application_Form_Settings_Actions extends Zend_Form {
         $this->addElement('text', 'DESCRIPTION', array('label' => $functions->T('Description_c'), 'required' => true, 'maxlength' => 100, 'size' => 50));
         $this->addElement('select', 'FILE_STATE_ID', array('label' => $functions->T('State_c'), 'required' => false, 'MultiOptions' => $functions->db2array($stateModel->getStatesForSelect())));
         $this->addElement('select', 'COST_ID', array('label' => $functions->T('costs_c'), 'required' => false, 'MultiOptions' => $functions->db2array($costsModel->getFilecostsForSelect())));
+        $confirm = array(1 => $functions->T('yes_c'), 0 => $functions->T('no_c'));
+        $this->addElement('radio', 'CONFIRMATION_NEEDED', array(
+            'label' => $functions->T('confirmation_needed_c'),
+            'MultiOptions' => $confirm,
+        ));
+
         $this->addElement('select', 'VISIBLE', array('label' => $functions->T('pos_add_c'), 'required' => false,'MultiOptions' => array("1" =>$functions->T('yes_c'), "0" => $functions->T('no_c'))));
         $this->addElement('submit', 'submit', array(
             'ignore' => true,

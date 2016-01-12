@@ -87,6 +87,7 @@ class SettingsActionsController extends BaseController
             $data['DESCRIPTION'] = $row->DESCRIPTION;
             $data['FILE_STATE_ID'] = $row->FILE_STATE_ID;
             $data['VISIBLE'] = $row->VISIBLE;
+            $data['CONFIRMATION_NEEDED'] = $row->CONFIRMATION_NEEDED;
         }
         // Populating form
         $form->populate($data);

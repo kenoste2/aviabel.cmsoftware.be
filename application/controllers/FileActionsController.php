@@ -34,6 +34,9 @@ class FileActionsController extends BaseFileController
         if ($this->getParam("added")) {
             $this->view->added = true;
         }
+        if ($this->getParam("confirmationNeeded")) {
+            $this->view->confirmationNeeded = true;
+        }
         $this->view->results = $obj->getActionsByFileId($this->fileId);
     }
 
@@ -96,12 +99,19 @@ class FileActionsController extends BaseFileController
 
                 $actionId = $obj->add($update);
 
-
-                if ($update['PRINTED'] == '1' && $update['VIA'] == 'POST') {
-                    $this->_redirect("/file-actions/view/added/1/pdf/{$actionId}/fileId/" . $this->fileId);
-                } else {
-                    $this->_redirect('/file-actions/view/added/1/fileId/' . $this->fileId);
+                if (is_numeric($actionId) && $actionId!='NEED_CONFIRMATION') {
+                    if ($update['PRINTED'] == '1' && $update['VIA'] == 'POST') {
+                        $this->_redirect("/file-actions/view/added/1/pdf/{$actionId}/fileId/" . $this->fileId);
+                    } else {
+                        $this->_redirect('/file-actions/view/added/1/fileId/' . $this->fileId);
+                    }
                 }
+
+                if ($actionId == 'NEED_CONFIRMATION') {
+                    $this->_redirect("/file-actions/view/confirmationNeeded/1/pdf/{$actionId}/fileId/" . $this->fileId);
+                }
+
+
             } else {
                 if (empty($actionId)) {
                     $this->view->actionCodeError = true;

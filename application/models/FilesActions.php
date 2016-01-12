@@ -13,7 +13,7 @@ class Application_Model_FilesActions extends Application_Model_Base
         }
     }
 
-    public function addAction($fileId, $action, $cost = true)
+    public function addAction($fileId, $action, $cost = true, $confirm = false)
     {
 
         $filesObj = new Application_Model_Files();
@@ -21,11 +21,24 @@ class Application_Model_FilesActions extends Application_Model_Base
 
         $orderCycleBefore = $this->getOrderCycle($fileId);
 
+        if ($confirm === false) {
+            $confirmActionsObj = new Application_Model_ConfirmActions();
+            $confirmationNeeded = $confirmActionsObj->confirmationNeeded($action['ACTION_ID']);
+            if ($confirmationNeeded === true) {
+                $confirmed = 0;
+            } else {
+                $confirmed = 1;
+            }
+        } else {
+            $confirmed = 1;
+        }
+
 
         $data = array(
             'FILE_ID' => $fileId,
             'ACTION_ID' => $action['ACTION_ID'],
             'REMARKS' => $action['REMARKS'],
+            'CONFIRMED' => $confirmed,
             'ACTION_USER' => $this->online_user,
         );
 
@@ -68,38 +81,47 @@ class Application_Model_FilesActions extends Application_Model_Base
         if (empty($data['FILE_ID'])) {
             $data['FILE_ID'] = $fileId;
         }
-        $actionId = $this->addData('FILES$FILE_ACTIONS', $data, 'FILE_ACTION_ID');
+        if ($confirmed == 1) {
 
-        if ($cost === true) {
-            $costId = $this->getActionCost($action['ACTION_ID']);
-            if (!empty($costId)) {
-                $costObj = new Application_Model_FilesCosts();
-                $costData = array(
-                    'FILE_ID' => $data['FILE_ID'],
-                    'AMOUNT' => $fileObj->getActionCost($data['FILE_ID'], $costId),
-                    'FILE_ACTION_ID' => $actionId,
-                    'INVOICEABLE' => 1,
-                    'COST_ID' => $costId,
-                );
-                $costObj->add($costData);
+            $actionId = $this->addData('FILES$FILE_ACTIONS', $data, 'FILE_ACTION_ID');
+
+            if ($cost === true) {
+                $costId = $this->getActionCost($action['ACTION_ID']);
+                if (!empty($costId)) {
+                    $costObj = new Application_Model_FilesCosts();
+                    $costData = array(
+                        'FILE_ID' => $data['FILE_ID'],
+                        'AMOUNT' => $fileObj->getActionCost($data['FILE_ID'], $costId),
+                        'FILE_ACTION_ID' => $actionId,
+                        'INVOICEABLE' => 1,
+                        'COST_ID' => $costId,
+                    );
+                    $costObj->add($costData);
+                }
             }
+
+            if (!empty($action['FILE_STATE_ID'])) {
+                $filesObj->setState($fileId, $action['FILE_STATE_ID']);
+            }
+            $stateId = $this->getState($action['ACTION_ID']);
+            if ($stateId) {
+                $filesObj->setState($fileId, $stateId);
+            }
+
+            $orderCycleAfter = $this->getOrderCycle($fileId);
+
+            if ($orderCycleAfter >= $orderCycleBefore) {
+                $this->setInvoicesOrderCycle($fileId, $orderCycleAfter);
+            }
+
+            return $actionId;
+
+        } else {
+            $data['CREATION_DATE'] = date("Y-m-d");
+            $agendaId = $this->addData('FILES$FILE_AGENDA', $data, 'FILE_AGENDA_ID');
+            return "NEED_CONFIRMATION";
         }
 
-        if (!empty($action['FILE_STATE_ID'])) {
-            $filesObj->setState($fileId, $action['FILE_STATE_ID']);
-        }
-        $stateId = $this->getState($action['ACTION_ID']);
-        if ($stateId) {
-            $filesObj->setState($fileId, $stateId);
-        }
-
-        $orderCycleAfter = $this->getOrderCycle($fileId);
-
-        if ($orderCycleAfter >= $orderCycleBefore) {
-            $this->setInvoicesOrderCycle($fileId, $orderCycleAfter);
-        }
-
-        return $actionId;
     }
 
     public function getOrderCycle($fileId)
@@ -153,7 +175,7 @@ class Application_Model_FilesActions extends Application_Model_Base
         return true;
     }
 
-    public function add($data, $allowPdfDocuments = false)
+    public function add($data, $allowPdfDocuments = false, $confirm = false)
     {
         global $config;
 
@@ -163,15 +185,22 @@ class Application_Model_FilesActions extends Application_Model_Base
         }
         $data['CONTENT'] = str_replace("'","`",$data['CONTENT']);
 
-        $fileActionId = $this->addAction($data['FILE_ID'], $data);
 
-        $data['FILE_ACTION_ID'] = $fileActionId;
+        $fileActionId = $this->addAction($data['FILE_ID'], $data, true ,$confirm);
 
-        if (!empty($data['BP_NR_PAYMENTS']) && !empty($data['BP_STARTDATE'])) {
-            $this->addPaymentPlan($data['FILE_ID'], $data);
+        if (is_numeric($fileActionId) && $fileActionId != 'NEED_CONFIRMATION') {
+            $data['FILE_ACTION_ID'] = $fileActionId;
+
+            if (!empty($data['BP_NR_PAYMENTS']) && !empty($data['BP_STARTDATE'])) {
+                $this->addPaymentPlan($data['FILE_ID'], $data);
+            }
+            $this->handleSendLogic($data['TEMPLATE_ID'], $fileActionId, $data, $data['CONTENT'], $data['SMS_CONTENT'], $data['VIA'], $allowPdfDocuments);
+            return $fileActionId;
+
+        } else {
+            return 'NEED_CONFIRMATION';
         }
-        $this->handleSendLogic($data['TEMPLATE_ID'], $fileActionId, $data, $data['CONTENT'], $data['SMS_CONTENT'], $data['VIA'], $allowPdfDocuments);
-        return $fileActionId;
+
     }
 
     /**
@@ -283,7 +312,7 @@ class Application_Model_FilesActions extends Application_Model_Base
 
     public function getActionsByFileId($fileId)
     {
-        $sql = "select A.PRINTED,A.FILE_ACTION_ID,A.ACTION_DATE,A.DUE_DATE,A.ACTION_ID,A.ACTION_CODE,B.VIA,A.ACTION_DESCRIPTION,A.TEMPLATE_ID,A.REMARKS,A.ACTION_USER,B.TEMPLATE_CONTENT,A.FILE_ID
+        $sql = "select A.PRINTED,B.CONFIRMED,A.FILE_ACTION_ID,A.ACTION_DATE,A.DUE_DATE,A.ACTION_ID,A.ACTION_CODE,B.VIA,A.ACTION_DESCRIPTION,A.TEMPLATE_ID,A.REMARKS,A.ACTION_USER,B.TEMPLATE_CONTENT,A.FILE_ID
                 from FILES\$FILE_ACTIONS_ALL_INFO A
                 JOIN FILES\$FILE_ACTIONS B ON A.FILE_ACTION_ID = B.FILE_ACTION_ID
                 where A.FILE_ID='$fileId' order by A.ACTION_DATE DESC ,A.FILE_ACTION_ID DESC";
