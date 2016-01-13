@@ -57,13 +57,7 @@ class DisputesController extends BaseController {
 
         if ($form->DATE_STARTED_FROM->getValue() == "" && $form->DATE_STARTED_TILL->getValue() == "") {
             $data = array ();
-
-            $disputesObj = new Application_Model_Disputes();
-            $disputedInvoices = $disputesObj->search($data);
-            $this->view->disputedInvoices = $disputedInvoices;
-
             $form->populate($data);
-
         }
 
 

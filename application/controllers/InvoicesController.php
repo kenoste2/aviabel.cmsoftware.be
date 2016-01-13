@@ -48,14 +48,16 @@ class InvoicesController extends BaseController
             }
         }
 
-
         if ($form->isValid($_POST) && $this->getParam('formSubmit')) {
             $data = $form->getValues();
             $session->data = $data;
+        } else {
+            $session->data = array();
         }
-        if (!empty($session->data)) {
-            $form->populate($session->data);
-        }
+
+
+        $formData = $session->data;
+        $form->populate($formData);
 
 
         $query_extra = "";
@@ -151,16 +153,19 @@ class InvoicesController extends BaseController
             $sql = str_replace("SELECT ", "SELECT FIRST {$maxRecords} ", $sql);
             $this->view->onlyFirst = $maxRecords;
         }
-        $results = $this->db->get_results($sql);
-        if (!empty($results)) {
-            $sqlExport = str_replace("SELECT FIRST {$maxRecords} ","SELECT ", $sql);
-            $this->export->sql = $sqlExport;
-            $sql = "SELECT FILE_ID,FILE_NR,DEBTOR_NAME FROM FILES\$FILES_ALL_INFO A WHERE 1=1 {$query_extra} order by {$session->orderby} {$session->order}";
-            //$session->fileList = $this->db->get_results($sql, ARRAY_A);
-            $this->view->results = $results;
-        } else {
-            $this->export->sql = "";
-            $this->view->exportButton = false;
+
+        if ($this->getParam('formSubmit')) {
+            $results = $this->db->get_results($sql);
+            if (!empty($results)) {
+                $sqlExport = str_replace("SELECT FIRST {$maxRecords} ","SELECT ", $sql);
+                $this->export->sql = $sqlExport;
+                $sql = "SELECT FILE_ID,FILE_NR,DEBTOR_NAME FROM FILES\$FILES_ALL_INFO A WHERE 1=1 {$query_extra} order by {$session->orderby} {$session->order}";
+                //$session->fileList = $this->db->get_results($sql, ARRAY_A);
+                $this->view->results = $results;
+            } else {
+                $this->export->sql = "";
+                $this->view->exportButton = false;
+            }
         }
 
         $filesReferencesModel = new Application_Model_FilesReferences();
