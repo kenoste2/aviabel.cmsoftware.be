@@ -16,7 +16,7 @@ class Application_Form_FileAddDocuments extends Zend_Form {
             'MultiOptions' => $confirm,
         ));
 
-        $this->addElement('text', 'DESCRIPTION', array('label' => $functions->T('description_c'), 'required' => false, 'size' => 50));
+        //$this->addElement('text', 'DESCRIPTION', array('label' => $functions->T('description_c'), 'required' => false, 'size' => 50));
         $this->addElement('file', 'userfile1', array('label' => $functions->T('bestand_c') . "1", 'required' => true));
         $this->addElement('file', 'userfile2', array('label' => $functions->T('bestand_c') . "2", 'required' => false));
         $this->addElement('file', 'userfile3', array('label' => $functions->T('bestand_c') . "3", 'required' => false));

@@ -14,7 +14,7 @@ class Application_Form_FileEditDocument extends Zend_Form {
         $referenceObj = new Application_Model_FilesReferences();
 
         $references = $referenceObj->getAllReferencesByFileIdAsArray($this->fileId);
-        $this->addElement('text', 'DESCRIPTION', array('label' => $functions->T('description_c'), 'size' => 40));
+        //$this->addElement('text', 'DESCRIPTION', array('label' => $functions->T('description_c'), 'size' => 40));
         $this->addElement('select', 'REFERENCE_ID', array('label' => $functions->T('invoice_c'),
             'required' => false,
             'MultiOptions' => $functions->db2array($references)

@@ -11,7 +11,17 @@ class Application_Form_SendEmail extends Zend_Form {
 
     function init() {
         $functions = new Application_Model_CommonFunctions();
-        $this->addElement('text', 'TO', array('label' => $functions->T('email_to_c'), 'size' => 60, 'required' => true));
+        //$this->addElement('text', 'TO', array('label' => $functions->T('email_to_c'), 'size' => 60, 'required' => true));
+
+        $allowedMailsObj = new Application_Model_AllowedMails();
+
+        $emails = $allowedMailsObj->getFileAllowedMails($this->_fileId);
+        $this->addElement('select', 'TO', array(
+            'MultiOptions' => $emails,
+            'label' => $functions->T('email_to_c'),
+            'required' => false,
+        ));
+
 
         $clientObj = new Application_Model_Clients();
         $fileObj = new Application_Model_File();
@@ -32,12 +42,12 @@ class Application_Form_SendEmail extends Zend_Form {
         $this->addElement('radio', 'FROM', array('label' => $functions->T('email_from_c'), 'multiOptions' => array(
             'CLIENT' => $clientEmailLabel,
             'USER' => $userEmailLabel,
-            'CUSTOM' => $functions->T('custom_email_c'),
+            //'CUSTOM' => $functions->T('custom_email_c'),
         )));
 
         $this->addElement('text', 'CUSTOM_FROM', array('label' => $functions->T('email_custom_from_c'), 'size' => 50, 'required' => false));
         $this->addElement('text', 'SUBJECT', array('label' => $functions->T('subject_c'), 'size' => 60, 'required' => true));
-        $this->addElement('textarea', 'CONTENT', array('label' => $functions->T('content_c'), 'size' => 15, 'rows' => 30, 'cols' => 60, 'required' => true));
+        $this->addElement('textarea', 'CONTENT', array('label' => $functions->T('content_c'), 'size' => 15, 'rows' => 30, 'cols' => 110, 'required' => true));
         $this->addElement('submit', 'SUBMIT', array(
             'ignore' => true,
             'label' => $functions->T('send_c'),

@@ -27,6 +27,10 @@ class FileImportedMailsController extends BaseFileController {
         global $config;
 
         $form = new Application_Form_SendEmail($this->fileId);
+        $data['FROM']  = 'CLIENT';
+
+        $form->populate($data);
+
 
         if ($this->getRequest()->isPost()) {
 
@@ -47,6 +51,10 @@ class FileImportedMailsController extends BaseFileController {
         $emailId = $this->getParam("email-id");
 
         $form = new Application_Form_ForwardEmail($emailId);
+        $data['FROM']  = 'CLIENT';
+
+        $form->populate($data);
+
 
         if ($this->getRequest()->isPost()) {
 
@@ -104,16 +112,21 @@ class FileImportedMailsController extends BaseFileController {
         $fileObj = new Application_Model_File();
         $reference = $fileObj->getFileField($this->fileId, 'REFERENCE');
         $clientCode = $fileObj->getFileField($this->fileId, 'CLIENT_CODE');
+
+        $baseSubject = str_replace("{$clientCode}-{$reference}","",$baseSubject);
+        $baseSubject = str_replace("#","",$baseSubject);
+
         $subject = "{$baseSubject} #{$clientCode}-{$reference}#";
         $content = $form->getValue("CONTENT");
 
+
+
+
         $attachments = $this->addFileDocumentsAsAttachments($form, $config);
-
         $attachments = array_merge($attachments, $this->getActionDocumentsAsAttachments($form, $config));
-
         $attachments = array_merge($attachments, $this->getEmailDocumentsAsAttachments($form, $config));
+        $bcc = $config->addcc;
 
-        $bcc = Application_Model_MailFetch::$emailUser;
 
         try {
 
@@ -141,7 +154,7 @@ class FileImportedMailsController extends BaseFileController {
         if (count($filesDocuments) > 0) {
             foreach ($filesDocuments as $filesDocument) {
                 $filename = "{$config->rootFileDocuments}/{$filesDocument->FILENAME}";
-                $attachments[] = array('content' => file_get_contents($filename), 'filename' => basename($filename));
+                $attachments[] = array('content' => file_get_contents($filename), 'filename' => $filesDocument->DESCRIPTION);
             }
             return $attachments;
         }
