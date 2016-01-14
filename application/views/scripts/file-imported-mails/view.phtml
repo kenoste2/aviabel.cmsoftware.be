@@ -41,7 +41,7 @@ if(count($this->importedMails) > 0) {
                         <tr>
                             <td width="70%"><?php echo preg_replace("/\n/",'</br>', $importedMail['MAIL_BODY']) ?></td>
                             <td width="30%">
-                                <h3><? echo $this->T('attachments_c') ?></h3>
+                                <h3><?php echo $this->T('attachments_c') ?></h3>
                                 <?php if(count($importedMail['attachments']) > 0) {
                                     foreach($importedMail['attachments'] as $attachment) { ?>
                                         <div><a href="<?php echo $this->pageRootUrl ?>/imported-mail/download-attachment/index/<?php echo $attachment->IMPORTED_MAIL_ATTACHMENT_ID ?>"><?php echo $attachment->ORIGINAL_FILENAME ?></a></div>

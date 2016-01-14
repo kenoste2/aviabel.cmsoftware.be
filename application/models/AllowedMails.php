@@ -56,7 +56,7 @@ class Application_Model_AllowedMails extends Application_Model_Base
         $allowedMails = $this->getSettingsAllowedMails();
         if (!empty($allowedMails)) {
             foreach ($allowedMails as $mail) {
-                $list[] = $mail->EMAIL;
+                $list[$mail->EMAIL] = $mail->EMAIL;
             }
         }
 

@@ -30,10 +30,12 @@ class Application_Model_MailFetch extends Application_Model_Base
             $this->_mail = new Zend_Mail_Storage_Pop3(array(
                 'host' => $config->inboxHost,
                 'user' => $config->inboxAccount,
-                'password' => $config->inboxPass));
+                'password' => $config->inboxPass,
+                'ssl'      => 'SSL'
+            ));
         } catch (Exception $e) {
-
-            var_dump($e);
+           print "<pre>";
+            var_dump($e->getMessage());
             echo 'Mail Retrieval Failed...' . PHP_EOL;
 
             die();
@@ -112,7 +114,15 @@ class Application_Model_MailFetch extends Application_Model_Base
 
                 $from = utf8_encode($message->from);
 
+
+                if (!empty($message->subject)) {
                 $subject = utf8_encode($message->subject);
+                } else {
+                    $subject = "";
+                }
+
+
+                $subject = utf8_encode($subject);
 
                 $to = utf8_encode($message->to);
 
@@ -161,7 +171,8 @@ class Application_Model_MailFetch extends Application_Model_Base
 
                                     $fileNameHeader = $part->getHeader('content-disposition');
                                     $fileNameMatches = array();
-                                    preg_match("/filename=\"?(.+?)\"?$/", $fileNameHeader, $fileNameMatches);
+                                    //preg_match("/filename=\"?(.+?)\"?$/", $fileNameHeader, $fileNameMatches);
+                                    preg_match("/filename=\"?(.+?)\"/", $fileNameHeader, $fileNameMatches);
                                     $fileName = $fileNameHeader;
                                     if(count($fileNameMatches) > 1) {
                                         $fileName = $fileNameMatches[1];

@@ -263,6 +263,7 @@ class CronController extends BaseController
                         $fileSystem = new Application_Model_FileSystem();
                         $fileSystem->createFileFromContent($filePath, $attachment['content']);
 
+
                         $attachmentData = array(
                             'IMPORTED_MAIL_ID' => $importedMailId,
                             'ORIGINAL_FILENAME' => $attachment['file_name'],
@@ -295,6 +296,58 @@ class CronController extends BaseController
             return 'SMS';
         }
         return 'POST';
+    }
+
+    public function checkFeedbackMoAction() {
+
+        $this->_helper->layout->disableLayout();
+        $this->_helper->viewRenderer->setNoRender();
+
+        $filesActions = new Application_Model_FilesActions();
+
+
+        $moActionId = $this->db->get_var("SELECT ACTION_ID FROM FILES\$ACTIONS WHERE CODE = 'MO' ");
+        $moFeedbackActionId = $this->db->get_var("SELECT ACTION_ID FROM FILES\$ACTIONS WHERE CODE = 'AGENDA_MO_FEEDBACK' ");
+
+        if (empty($moActionId)) {
+            die ("action MO does not exists");
+        }
+
+
+        $sql = "SELECT A.FILE_ID,A.EMAIL,A.ACTION_DATE FROM  FILES\$FILE_ACTIONS A
+                    JOIN FILES\$FILES_ALL_INFO F ON A.FILE_ID = F.FILE_ID
+                        WHERE A.ACTION_ID  = $moActionId
+                        AND F.STATE_CODE =  'MO'
+                        AND A.ACTION_DATE < CURRENT_DATE-15
+                            ORDER BY A.FILE_ACTION_ID DESC";
+        $results = $this->db->get_results($sql);
+        if (!empty($results)) {
+            foreach ($results as $row) {
+
+                $sql = "SELECT COUNT(*) FROM IMPORTED_MAILS
+                    WHERE FROM_EMAIL CONTAINING ('{$row->EMAIL}')
+                    AND CREATION_DATE >= '{$row->ACTION_DATE}'
+                    AND FILE_ID = {$row->FILE_ID}";
+                $feedback = $this->db->get_var($sql);
+
+                if ($feedback) {
+                    $action = array(
+                        'FILE_ID' => $row->FILE_ID,
+                        'ACTION_ID' => $moFeedbackActionId,
+                        'PRINTED' => 0,
+                        'ACTION_DATE' => date("Y-m-d"),
+                        'TEMPLATE_ID' => 0,
+                    );
+                    /* 3. model Application_Model_FilesActions -> add */
+                    $filesActions->add($action, true);
+
+                }
+            }
+        }
+
+        die("checkFeedbackMoAction done");
+
+
     }
 
 
