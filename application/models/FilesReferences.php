@@ -176,6 +176,23 @@ class Application_Model_FilesReferences extends Application_Model_Base {
         return $results;
     }
 
+    public function getPauzedDelayed() {
+
+        $pauzedId = 435;
+
+        $sql = "select I.*,(I.AMOUNT+I.INTEREST+I.COSTS) as TOTAL,(I.SALDO_AMOUNT+I.SALDO_INTEREST+I.SALDO_COSTS) as SALDO, I.DISPUTE,I.STATE_ID, S.CODE AS STATE_CODE, I.TRAIN_TYPE, I.VALUTA, I.INVOICE_DOCCODE, I.INVOICE_DOCLINENUM, I.INVOICE_FROMDATE, I.INVOICE_TODATE from FILES\$REFERENCES I
+                 JOIN FILES\$STATES S ON S.STATE_ID = I.STATE_ID
+                 JOIN FILES\$FILES F ON F.FILE_ID = I.FILE_ID
+                 where I.START_DATE <=CURRENT_DATE-60
+                 AND F.STATE_ID = {$pauzedId}
+                 AND (I.SALDO_AMOUNT+I.SALDO_INTEREST+I.SALDO_COSTS) > 0
+                 order by START_DATE DESC ,REFERENCE_ID DESC";
+        $results = $this->db->get_results($sql);
+
+        return $results;
+
+    }
+
 
     public function getAllOpenReferencesByDebtorId($debtorId) {
 
