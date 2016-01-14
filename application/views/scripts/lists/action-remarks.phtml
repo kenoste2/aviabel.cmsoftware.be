@@ -1,0 +1,86 @@
+<script>
+    $(document).ready(function(){
+        $('tr.dossier').bind('click', function(){
+
+            var record_id   = $(this).attr('id');
+
+            var link        = '<?php echo $this->pageRootUrl ?>/file-actions/view/fileId/' + record_id;
+
+            $.fancybox({
+                'width'             : '100%',
+                'height'            : '100%',
+                'autoScale'         : false,
+                'transitionIn'      : 'none',
+                'transitionOut'     : 'none',
+                'type'              : 'iframe',
+                'href'              : link
+            });
+        });
+    });
+</script>
+<div class="aaa-theme-flex-row flex-content-row">
+    <div class="aaa-theme-content-widget white-bg col-1 text-center">
+        <?php  echo $this->form ?>
+    </div>
+</div>
+
+<?php if($this->results) { ?>
+
+    <div class="aaa-theme-flex-row flex-content-row">
+        <div class="col-1">
+            <div class="panel panel-default aaa-theme-content-widget white-bg no-padding aaa-theme-overflow-hidden">
+                <div class="panel-heading aaa-theme-position-relative"><h2 class="text-uppercase">&nbsp;</h2></div>
+                <div class="table-responsive">
+
+
+                    <table class="table table-striped table-bordered">
+                        <thead>
+                        <tr>
+                            <td><?php echo $this->T('date_c') ?></td>
+                            <td><?php echo $this->T('referenceclient_c') ?></td>
+                            <td><?php echo $this->T('debtor_c') ?></td>
+                            <td><?php echo $this->T('code_c') ?></td>
+                            <td><?php echo $this->T('remarks_c') ?></td>
+                            <td><?php echo $this->T('user_c') ?></td>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <?php foreach($this->results  as $row) { ?>
+                            <tr class="dossier" style="cursor: pointer" id="<?php echo $row->FILE_ID ?>">
+                                <td><?php echo $this->Date($row->ACTION_DATE) ?></td>
+                                <td><?php echo $row->REFERENCE ?></td>
+                                <td><?php echo $row->DEBTOR_NAME ?></td>
+                                <td><?php echo $row->ACTION_CODE ?></td>
+                                <td><?php echo $row->REMARKS ?></td>
+                                <td><?php echo $row->ACTION_USER ?></td>
+                        <?php } ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+<?php
+} else { ?>
+
+    <div class="aaa-theme-flex-row flex-content-row aaa-theme-overflow-hidden"> <!-- overflow hidden for iPad mini landscape view-->
+        <div class="col-1">
+            <div class="aaa-theme-content-widget white-bg col-1 text-center">
+                <?php echo $this->T('no_mails_found_c') ?>
+            </div>
+        </div>
+    </div>
+
+<?php } ?>
+<script type="text/javascript">
+    $(function() {
+        $("#TO_DATE").datepicker({dateFormat: 'dd/mm/yy'});
+        $("#FROM_DATE").datepicker({dateFormat: 'dd/mm/yy'});
+    });
+</script>
+<!-- Second row ends -->
+
+
+
+
+
