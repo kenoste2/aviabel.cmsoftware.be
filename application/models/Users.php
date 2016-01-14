@@ -45,6 +45,16 @@ class Application_Model_Users extends Application_Model_Base {
         return $this->db->get_row("SELECT * FROM SYSTEM\$USERS WHERE USER_ID = " . $user_id);
     }
 
+    public function getUserField($user_id, $field)
+    {
+        if (!empty($user_id)) {
+            return $this->db->get_var("SELECT {$field} FROM SYSTEM\$USERS WHERE USER_ID = " . $user_id);
+        } else {
+            return false;
+        }
+
+    }
+
     function getLoggedInUser() {
         $authNamespace = new Zend_Session_Namespace('Zend_Auth');
         return $this->getUser($authNamespace->online_user_id);
@@ -54,6 +64,13 @@ class Application_Model_Users extends Application_Model_Base {
     {
         return $this->db->get_results("SELECT * FROM SYSTEM\$USERS");
     }
+
+    public function getUsersForSelect()
+    {
+        return $this->db->get_results("SELECT USER_ID,CODE FROM SYSTEM\$USERS WHERE ACTIF = 'Y' AND VISIBLE= 'Y'", ARRAY_N);
+    }
+
+
 
     public function save($data, $id)
     {

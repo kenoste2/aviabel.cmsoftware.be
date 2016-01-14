@@ -497,6 +497,34 @@ class Application_Model_FilesActions extends Application_Model_Base
         return $results;
     }
 
+    public function getRemarkActions($fromDate = false, $toDate = false, $actionId = false, $userName = false )
+    {
+        $extraQuery = "";
+        if (!empty($actionId)) {
+            $extraQuery .= " AND A.ACTION_ID = {$actionId}";
+        }
+
+        if (!empty($fromDate)) {
+            $extraQuery .= " AND A.ACTION_DATE  >=  '{$fromDate}'";
+        }
+
+        if (!empty($toDate)) {
+            $extraQuery .= " AND A.ACTION_DATE  <=  '{$toDate}'";
+        }
+
+        if (!empty($userName)) {
+            $extraQuery .= " AND A.ACTION_USER  =  '{$userName}'";
+        }
+
+
+        $sql = "SELECT A.*, F.FILE_ID, F.REFERENCE, F.DEBTOR_NAME FROM FILES\$FILE_ACTIONS_ALL_INFO A
+                JOIN FILES\$FILES_ALL_INFO F ON F.FILE_ID = A.FILE_ID
+                WHERE  A.REMARKS!=''
+         {$extraQuery} ORDER BY A.ACTION_DATE DESC ";
+        $results = $this->db->get_results($sql);
+        return $results;
+    }
+
 
 
     public function getActionField($fileActionId,$field) {
