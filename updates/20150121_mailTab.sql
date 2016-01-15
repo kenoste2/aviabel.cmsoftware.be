@@ -26,3 +26,8 @@ INSERT INTO TEKSTEN (CODE,NAV,NL,FR,EN,SETTINGS) VALUES ('menu_imported-mail_ove
 INSERT INTO TEKSTEN (CODE,NAV,NL,FR,EN,SETTINGS) VALUES ('date_from_c','all','van','de','from',0);
 INSERT INTO TEKSTEN (CODE,NAV,NL,FR,EN,SETTINGS) VALUES ('date_till_c','all','tot', 'à','until',0);
 INSERT INTO TEKSTEN (CODE,NAV,NL,FR,EN,SETTINGS) VALUES ('attachments_c','all','Bijlagen', 'Fichiers joints','Attachments',0);
+
+create index IDX_FROM_EMAIL on IMPORTED_MAILS computed by (FROM_EMAIL)#
+create index IDX_MAILCREATED on IMPORTED_MAILS computed by (CREATION_DATE)#
+create index IDX_MAILFILEID on IMPORTED_MAILS computed by (FILE_ID)#
+
