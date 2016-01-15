@@ -193,7 +193,7 @@ class Application_Model_Files extends Application_Model_Base
         $oldRef = $refObj->getOldestReferenceFromFile($fileId);
         $currentStateId = $this->getFileStateId($fileId);
 
-        if ($oldRef->STATE_ID !=  $currentStateId) {
+        if ($oldRef->STATE_ID !=  $currentStateId && !empty($oldRef->STATE_ID)) {
             $sql = "UPDATE FILES\$FILES SET STATE_ID = {$oldRef->STATE_ID} WHERE FILE_ID = {$fileId}";
             $this->db->query($sql);
         }
