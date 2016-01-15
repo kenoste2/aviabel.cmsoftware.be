@@ -35,7 +35,7 @@
                 "legend": {
 					"position": "bottom",
 					"horizontalGap": 10,
-					"markerSize": 10,
+					"markerSize": 5,
 					"useGraphSettings": false,
 					"valueWidth": 0
 				},
@@ -82,43 +82,65 @@
 		</script>
         
         <!-- BETALINGSTERMIJN javascript code -->
-		<script language="JavaScript">
-			var gaugeChart = AmCharts.makeChart("paymentdelay", {
-				"type": "gauge",
-				"theme": "none",
-				"axes": [
-					{
-						"axisThickness": 3,
-						"axisAlpha": 0.5,
-						"tickAlpha": 0.5,
-						"valueInterval": 10,
-						"bands": [
-							{
-								"color": "#84b761",
-								"endValue": 90,
-								"startValue": 0
-							},
-							{
-								"color": "#cc4748",
-								"endValue": 200,
-								"innerRadius": "95%",
-								"startValue": 90
-							}
-						],
-						"bottomText": "",
-						"bottomTextYOffset": 20,
-						"endValue": 200
-					}
-				],
-				"arrows": [
-					{
-						"value" : <?php echo $this->paymentDelay; ?>
-					}
-				]
-			});
-		</script>
-        
-		<script type="text/javascript">
+        <script>
+            var paymentdelay;
+
+            var paymentdelayData = [
+                {
+                    "country": "ACT",
+                    "visits": <?php echo $this->paymentDelayACT ?>,
+                },
+                {
+                    "country": "DELTA",
+                    "visits": <?php echo $this->paymentDelayDelta ?>
+                },
+                {
+                    "country": "CPR",
+                    "visits": <?php echo $this->paymentDelayCPR ?>
+                }
+            ];
+
+
+            AmCharts.ready(function () {
+                // SERIAL CHART
+                chart = new AmCharts.AmSerialChart();
+                chart.dataProvider = paymentdelayData;
+                chart.categoryField = "country";
+                chart.startDuration = 1;
+
+                // AXES
+                // category
+                var categoryAxis = chart.categoryAxis;
+                categoryAxis.labelRotation = 90;
+                categoryAxis.gridPosition = "start";
+
+                // value
+                // in case you don't want to change default settings of value axis,
+                // you don't need to create it, as one value axis is created automatically.
+
+                // GRAPH
+                var graph = new AmCharts.AmGraph();
+                graph.valueField = "visits";
+                graph.balloonText = "[[category]]: <b>[[value]]</b>";
+                graph.type = "column";
+                graph.lineAlpha = 0;
+                graph.fillAlphas = 0.8;
+                chart.addGraph(graph);
+
+                // CURSOR
+                var chartCursor = new AmCharts.ChartCursor();
+                chartCursor.cursorAlpha = 0;
+                chartCursor.zoomable = false;
+                chartCursor.categoryBalloonEnabled = false;
+                chart.addChartCursor(chartCursor);
+
+                chart.creditsPosition = "top-right";
+
+                chart.write("paymentdelay");
+            });
+        </script>
+
+        <script type="text/javascript">
 			var paymentDelayForecastHistogram = AmCharts.makeChart("paymentDelayForecastHistogram", {
 				"type": "serial",
 				"pathToImages": "http://www.amcharts.com/lib/3/images/",
@@ -215,18 +237,24 @@
 	
 
           <div class="aaa-theme-flex-row flex-content-row">
-            <div class="aaa-theme-content-widget white-bg col-1 text-center">
-			<div class="panel-heading aaa-theme-position-relative"><h2 class="text-uppercase"><a href="<?php echo $this->Location() ?>/invoices/search"><?php $this->T("invoices_c") ?></a></h2></div>
-              <div id="vervallen" class="aaa-theme-chart"></div>	
+              <div class="col-1">
+              <div class="panel panel-default aaa-theme-content-widget white-bg no-padding aaa-theme-overflow-hidden">
+                  <div class="panel-heading aaa-theme-position-relative"><h2 class="text-uppercase"><a href="<?php echo $this->Location() ?>/invoices/search"><?php $this->T("invoices_c") ?></a></h2></div>
+              <div id="vervallen" class="aaa-theme-chart"></div>
             </div>
-            <div class="aaa-theme-content-widget white-bg col-1 text-center">
-              <div class="panel-heading aaa-theme-position-relative"><h2 class="text-uppercase"><a href="<?php echo $this->Location() ?>/report/realtime"><?php $this->T("menu_report_realtime") ?></a></h2></div>
+                  </div>
+              <div class="col-1">
+              <div class="panel panel-default aaa-theme-content-widget white-bg no-padding aaa-theme-overflow-hidden">
+                  <div class="panel-heading aaa-theme-position-relative"><h2 class="text-uppercase"><a href="<?php echo $this->Location() ?>/report/realtime"><?php $this->T("menu_report_realtime") ?></a></h2></div>
               <div id="realtime" class="aaa-theme-chart"></div>
             </div>
-            <div class="aaa-theme-content-widget white-bg col-1 text-center">
-              <div class="panel-heading aaa-theme-position-relative"><h2 class="text-uppercase"><a href="<?php echo $this->Location() ?>/report/aging"><?php $this->T("menu_report_aging") ?></a></h2></div>
+                  </div>
+              <div class="col-1">
+              <div class="panel panel-default aaa-theme-content-widget white-bg no-padding aaa-theme-overflow-hidden">
+                  <div class="panel-heading aaa-theme-position-relative"><h2 class="text-uppercase"><a href="<?php echo $this->Location() ?>/report/aging"><?php $this->T("menu_report_aging") ?></a></h2></div>
               <div id="aging" class="aaa-theme-chart"></div>
             </div>
+                  </div>
           </div>
           <div class="aaa-theme-flex-row flex-content-row">
             <div class="col-1">
@@ -264,10 +292,10 @@
                 </div>                          
               </div>
             </div>  
-            <div class="col-1">              
-              <div class="aaa-theme-content-widget white-bg col-1 text-center">
-              <h2 class="text-uppercase">ACT</h2>
-              <div id="paymentdelay" class="aaa-theme-chart"></div>	
+            <div class="col-1">
+                <div class="panel panel-default aaa-theme-content-widget white-bg no-padding aaa-theme-overflow-hidden">
+                    <div class="panel-heading aaa-theme-position-relative"><h2 class="text-uppercase">KPI (ACT & CPR)</div>
+              <div id="paymentdelay" class="aaa-theme-chart"></div>
             </div>        
             </div> 
             <div class="col-1">

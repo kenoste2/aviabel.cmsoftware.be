@@ -274,18 +274,18 @@ class Application_Model_Debtors extends Application_Model_Base {
         return $delay;
     }
 
-    function getMeanPaymentDelay($collectorId = false) {
+    function getMeanPaymentDelay($collectorId = false, $compareField = 'START_DATE') {
 
-        $extraQuery = "WHERE 1=1";
+        $extraQuery = "WHERE R.SALDO_AMOUNT <=0.00 AND R.AMOUNT > 0.00";
         if (!empty($collectorId)) {
             $extraQuery .= " AND F.COLLECTOR_ID = {$collectorId}";
         }
 
 
-        $total = $this->db->get_var("SELECT SUM(AMOUNT) FROM FILES\$REFERENCES");
+        $total = $this->db->get_var("SELECT SUM(AMOUNT) FROM FILES\$REFERENCES WHERE SALDO_AMOUNT <=0.00 AND AMOUNT > 0.00 ");
 
 
-        $sql = "SELECT SUM((COALESCE((SELECT PAYMENT_DATE FROM FILES\$PAYMENTS WHERE REFERENCE_ID = R.REFERENCE_ID),CURRENT_DATE)- R.START_DATE)*R.AMOUNT)  AS DELAY_PAYMENT
+        $sql = "SELECT SUM((COALESCE((SELECT PAYMENT_DATE FROM FILES\$PAYMENTS WHERE REFERENCE_ID = R.REFERENCE_ID),CURRENT_DATE)- R.{$compareField})*R.AMOUNT)  AS DELAY_PAYMENT
                 FROM FILES\$REFERENCES R
                     JOIN FILES\$FILES F ON F.FILE_ID = R.FILE_ID
                     $extraQuery";

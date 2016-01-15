@@ -55,9 +55,11 @@ class IndexController extends BaseController {
         $agendaStates = $agendaStatesObj->getList($selectedCollectorId);
         $this->view->agenda = $agendaStates;
 
-        $paymentDelay = $debtorsObj->getMeanPaymentDelay($selectedCollectorId);
-        $this->view->paymentDelay = $paymentDelay;
-
+        $paymentDelayCPR = $debtorsObj->getMeanPaymentDelay($selectedCollectorId);
+        $this->view->paymentDelayCPR = $paymentDelayCPR;
+        $paymentDelayACT = $debtorsObj->getMeanPaymentDelay($selectedCollectorId, 'CONTRACT_INCEPTIONDATE');
+        $this->view->paymentDelayACT = $paymentDelayACT;
+        $this->view->paymentDelayDelta = abs($paymentDelayACT - $paymentDelayCPR);
 
         $aging = $statisticsForClientModel->getGeneralAging($selectedCollectorId);
         $this->view->aging = $aging;
@@ -68,6 +70,5 @@ class IndexController extends BaseController {
         $disputesObj = new Application_Model_Disputes();
         $this->view->disputesToday = $disputesObj->countForToday($selectedCollectorId);
     }
-
 }
 
