@@ -258,7 +258,7 @@ class PrintController extends BaseController
 
         $this->pdf->Ln();
         $this->pdf->SetFont($this->lettertype, 'B', $this->sizeSmall);
-        $this->pdf->Cell(28, $letterSettings['LINE_HEIGHT'], $this->functions->T("factuurdatum_c", $lang, $config->decodeInPdf), 'TLRB', 0, 'L');
+        $this->pdf->Cell(35, $letterSettings['LINE_HEIGHT'], $this->functions->T("factuurdatum_c", $lang, $config->decodeInPdf), 'TLRB', 0, 'L');
         $this->pdf->Cell(28, $letterSettings['LINE_HEIGHT'], $this->functions->T("vervaldatum_c", $lang, $config->decodeInPdf), 'TLRB', 0, 'L');
         $this->pdf->Cell(28, $letterSettings['LINE_HEIGHT'], $this->functions->T("reference_c", $lang, $config->decodeInPdf), 'TLRB', 0, 'L');
         $this->pdf->Cell(21, $letterSettings['LINE_HEIGHT'], $this->functions->T("amount_c", $lang, $config->decodeInPdf), 'TLRB', 0, 'R');
@@ -277,7 +277,7 @@ class PrintController extends BaseController
             if (empty($invoice->INVOICE_DATE)) {
                 $invoice->INVOICE_DATE = $invoice->START_DATE;
             }
-            $this->pdf->Cell(28, $letterSettings['LINE_HEIGHT'], $this->functions->dateformat($invoice->INVOICE_DATE), 'LRB', 0, 'L');
+            $this->pdf->Cell(35, $letterSettings['LINE_HEIGHT'], $this->functions->dateformat($invoice->INVOICE_DATE), 'LRB', 0, 'L');
             $this->pdf->Cell(28, $letterSettings['LINE_HEIGHT'], $this->functions->dateformat($invoice->START_DATE), 'LRB', 0, 'L');
             $this->pdf->Cell(28, $letterSettings['LINE_HEIGHT'], utf8_decode($invoice->REFERENCE), 'LRB', 0, 'L');
             $this->pdf->Cell(21, $letterSettings['LINE_HEIGHT'], $this->functions->amount($invoice->AMOUNT), 'LRB', 0, 'R');
@@ -293,10 +293,10 @@ class PrintController extends BaseController
         }
         $this->pdf->SetFont($this->lettertype, 'B', $this->sizeSmall);
         if ($this->moduleAccess('intrestCosts')) {
-            $this->pdf->Cell(147, $letterSettings['LINE_HEIGHT'], $this->functions->T("total_c", $lang, $config->decodeInPdf), 'T', 0, 'R');
+            $this->pdf->Cell(154, $letterSettings['LINE_HEIGHT'], $this->functions->T("total_c", $lang, $config->decodeInPdf), 'T', 0, 'R');
             $this->pdf->Cell(25, $letterSettings['LINE_HEIGHT'], $this->functions->amount($total), 'LRB', 0, 'R');
         } else {
-            $this->pdf->Cell(84, $letterSettings['LINE_HEIGHT'], $this->functions->T("total_c", $lang, $config->decodeInPdf), 'T', 0, 'R');
+            $this->pdf->Cell(91, $letterSettings['LINE_HEIGHT'], $this->functions->T("total_c", $lang, $config->decodeInPdf), 'T', 0, 'R');
             $this->pdf->Cell(21, $letterSettings['LINE_HEIGHT'], $this->functions->amount($total), 'LRB', 0, 'R');
         }
         $this->pdf->SetFont($this->lettertype, '', $this->sizeSmall);

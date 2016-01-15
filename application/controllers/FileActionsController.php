@@ -97,8 +97,8 @@ class FileActionsController extends BaseFileController
                     $fileDocsobj->add($this->fileId, $form->ATTACHMENT, $update['DESCRIPTION'],1, $fileActionId);
                 }
 
-                $actionId = $obj->add($update);
-
+                $actionId = $obj->add($update, true);
+                
                 if (is_numeric($actionId) && $actionId!='NEED_CONFIRMATION') {
                     if ($update['PRINTED'] == '1' && $update['VIA'] == 'POST') {
                         $this->_redirect("/file-actions/view/added/1/pdf/{$actionId}/fileId/" . $this->fileId);
