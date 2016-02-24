@@ -23,7 +23,7 @@ class IndexController extends BaseController {
         $debtorsObj = new Application_Model_Debtors();
 
         $selectedCollectorId = false;
-        if ($this->auth->online_rights == 3 && !empty($this->auth->online_collector_id) && !$this->getParam('showall')) {
+        if (!empty($this->auth->online_collector_id) && !$this->getParam('showall')) {
             $selectedCollectorId  = $this->auth->online_collector_id;
             $this->view->showCollectorSelector = true;
             $this->view->bread .= " - " . $this->auth->online_collector_name . " <a href=" . $this->config->rootLocation. "/index/index/showall/1><li class='fa fa-search-minus fa-fw'></li></a>" ;
@@ -59,7 +59,8 @@ class IndexController extends BaseController {
         $this->view->paymentDelayCPR = $paymentDelayCPR;
         $paymentDelayACT = $debtorsObj->getMeanPaymentDelay($selectedCollectorId, 'CONTRACT_INCEPTIONDATE');
         $this->view->paymentDelayACT = $paymentDelayACT;
-        $this->view->paymentDelayDelta = abs($paymentDelayACT - $paymentDelayCPR);
+        $this->view->paymentDelayDelta = $paymentDelayACT - $paymentDelayCPR;
+
 
         $aging = $statisticsForClientModel->getGeneralAging($selectedCollectorId);
         $this->view->aging = $aging;
@@ -69,6 +70,10 @@ class IndexController extends BaseController {
 
         $disputesObj = new Application_Model_Disputes();
         $this->view->disputesToday = $disputesObj->countForToday($selectedCollectorId);
+
+        $emailsObj = new Application_Model_ImportedMails();
+        $this->view->emailsToday = $emailsObj->getTodayCount($selectedCollectorId);
+
     }
 }
 

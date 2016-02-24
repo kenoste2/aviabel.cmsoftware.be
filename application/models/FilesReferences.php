@@ -375,6 +375,7 @@ class Application_Model_FilesReferences extends Application_Model_Base {
 
     public function close($referenceId) {
 
+
         $paymentsObj = new Application_Model_FilesPayments();
         $accountsObj = new Application_Model_Accounts();
 
@@ -382,10 +383,12 @@ class Application_Model_FilesReferences extends Application_Model_Base {
 
         $internalAccount = $accountsObj->getRecieveAccount($valuta);
 
+        $internalAccount = $internalAccount->ACCOUNT_ID;
 
         $sql =  "SELECT FILE_ID,REFERENCE,(SALDO_AMOUNT + SALDO_INTEREST + SALDO_COSTS) AS SALDO FROM FILES\$REFERENCES WHERE REFERENCE_ID = {$referenceId}";
         $row = $this->db->get_row($sql);
         $paymentsObj->addPayment($row->FILE_ID,$row->SALDO,$internalAccount,false,$row->REFERENCE,$referenceId);
+
 
         $sql = "UPDATE FILES\$REFERENCES SET STATE_ID = 40 WHERE REFERENCE_ID = {$referenceId}";
         $this->db->query($sql);

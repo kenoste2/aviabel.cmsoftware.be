@@ -53,6 +53,7 @@ class CronController extends BaseController
         }
 
         $this->reopenFiles();
+        $this->removeFutureActions();
 
         die("train has run");
     }
@@ -237,6 +238,12 @@ class CronController extends BaseController
                 $remark = utf8_encode($remark);
 
 
+                $mailContent = $mail['plainContent'];
+                $htmlContent = $mail['htmlContent'];
+
+                if ($htmlContent && stripos($mailContent, " ") === false) {
+                    $mailContent = $htmlContent;
+                }
 
 
                 $data = array(
@@ -244,9 +251,10 @@ class CronController extends BaseController
                     'CREATION_DATE' => $mail['date'],
                     'FROM_EMAIL' => $mail['from'],
                     'TO_EMAIL' => $mail['to'],
-                    'MAIL_BODY' => $mail['plainContent'],
+                    'MAIL_BODY' => strip_tags($mailContent),
                     'MAIL_SUBJECT' => $mail['subject']
                 );
+
 
                 $importedMailId = $importedMails->add($data);
 
@@ -361,7 +369,7 @@ class CronController extends BaseController
             {
                 $data = array(
                     'ACTION_ID' => 4257852,
-                    'REMARKS' => 'NEW OPEN SALDO',
+                    'REMARKS' => '',
                     'PRINTED' => "Y",
                 );
                 $filesActionsObj->addAction($row->FILE_ID, $data, false);
@@ -382,12 +390,41 @@ class CronController extends BaseController
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender();
 
-        $mail->sendMail('software@aaa.be','Aviabel CronImport started','see subject',false,false);
+        //$mail->sendMail('software@aaa.be','Aviabel CronImport started','see subject',false,false);
 
         $importObj = new Application_Model_Custom_Aviabel();
         $result = $importObj->import();
         die("done importAction");
     }
+
+
+    public function testCloseAction() {
+
+
+        $this->_helper->layout->disableLayout();
+        $this->_helper->viewRenderer->setNoRender();
+
+        $referenceObj = new Application_Model_FilesReferences();
+        $referenceObj->close(6411688);
+
+        die("done testCloseAction ");
+
+    }
+
+    public function removeFutureActions()
+    {
+        $filesActionsObj = new Application_Model_FilesActions();
+        $sql = "SELECT  * FROM FILES\$FILES WHERE DATE_CLOSED >=CURRENT_DATE - 2";
+        $results = $this->db->get_results($sql);
+        if (!empty($results)) {
+            foreach ($results as $row)
+            {
+                $sql = "DELETE FROM FILES\$FILE_ACTIONS WHERE ACTION_DATE > CURRENT_DATE AND FILE_ID = $row->FILE_ID";
+                $this->db->query($sql);
+            }
+        }
+    }
+
 
 
     public function testMailAction()

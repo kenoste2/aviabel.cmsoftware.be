@@ -75,7 +75,7 @@ class FileInvoicesController extends BaseFileController
             return;
         }
 
-        if (!$this->hasAccess('changeFileReference')) {
+        if (!$this->hasAccess('manageInvoices')) {
             $form->removeElement('submit');
         }
 

@@ -18,10 +18,13 @@ class Application_Model_Debtors extends Application_Model_Base {
             'TELEPHONE' => $data['TELEPHONE'],
             'TELEFAX' => $data['TELEFAX'],
             'VATNR' => $data['VATNR'],
+            'TRAIN_TYPE' => $data['TRAIN_TYPE'],
             'CREATION_DATE' => date("Y-m-d"),
             'CREATION_USER' => $this->online_user,
             'PASS' => '',
         );
+
+
 
         if (!empty($data['BIRTH_DAY'])) {
             $createData['BIRTH_DAY'] = $data['BIRTH_DAY'];
@@ -285,9 +288,10 @@ class Application_Model_Debtors extends Application_Model_Base {
         $total = $this->db->get_var("SELECT SUM(AMOUNT) FROM FILES\$REFERENCES WHERE SALDO_AMOUNT <=0.00 AND AMOUNT > 0.00 ");
 
 
-        $sql = "SELECT SUM((COALESCE((SELECT PAYMENT_DATE FROM FILES\$PAYMENTS WHERE REFERENCE_ID = R.REFERENCE_ID),CURRENT_DATE)- R.{$compareField})*R.AMOUNT)  AS DELAY_PAYMENT
+        $sql = "SELECT SUM((P.PAYMENT_DATE - R.{$compareField})*R.AMOUNT) AS DELAY_PAYMENT
                 FROM FILES\$REFERENCES R
                     JOIN FILES\$FILES F ON F.FILE_ID = R.FILE_ID
+                    JOIN FILES\$PAYMENTS P ON P.REFERENCE_ID = R.REFERENCE_ID
                     $extraQuery";
 
         $value = $this->db->get_var($sql);

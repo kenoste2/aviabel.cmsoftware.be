@@ -56,13 +56,7 @@ class PrintController extends BaseController
         if (!empty($toBePrinted)) {
             $pdfDoc->_initPdf();
             foreach ($toBePrinted as $action) {
-                $pdfDoc->_loadContentToPdf($action->FILE_ACTION_ID);
-                /*
-                 *  TODO This does not work
-                 $url = "{$config->rootLocation}/print/template/fileActionId/{$action->FILE_ACTION_ID}";
-                print "<br>$url";
-                file_get_contents($url);
-                */
+                $pdfDoc->_loadContentToPdf($action->FILE_ACTION_ID, true);
             }
 
             $pdfDoc->pdf->Output();
@@ -77,7 +71,7 @@ class PrintController extends BaseController
 
 
         $selectedCollectorId = false;
-        if ($this->auth->online_rights == 3 && !empty($this->auth->online_collector_id) && !$this->getParam('showall')) {
+        if (!empty($this->auth->online_collector_id) && !$this->getParam('showall')) {
             $selectedCollectorId  = $this->auth->online_collector_id;
             $this->view->showCollectorSelector = true;
             $this->view->bread .= " - " . $this->auth->online_collector_name . " <a href=" . $this->config->rootLocation. "/print/documents/showall/1><li class='fa fa-search-minus fa-fw'></li></a>" ;

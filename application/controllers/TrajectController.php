@@ -16,7 +16,7 @@ class TrajectController extends BaseController {
         $followUp = $trainModel->getTrainFollowup();
 
         $selectedCollectorId = false;
-        if ($this->auth->online_rights == 3 && !empty($this->auth->online_collector_id) && !$this->getParam('showall')) {
+        if (!empty($this->auth->online_collector_id) && !$this->getParam('showall')) {
             $selectedCollectorId  = $this->auth->online_collector_id;
             $this->view->showCollectorSelector = true;
             $this->view->bread .= " - " . $this->auth->online_collector_name . " <a href=" . $this->config->rootLocation. "/traject/followup/showall/1><li class='fa fa-search-minus fa-fw'></li></a>" ;

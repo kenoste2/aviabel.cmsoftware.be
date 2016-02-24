@@ -445,7 +445,7 @@ class Application_Model_FilesActions extends Application_Model_Base
                   JOIN SYSTEM\$TEMPLATES B ON A.TEMPLATE_ID = B.TEMPLATE_ID
                   JOIN FILES\$FILES_ALL_INFO F ON A.FILE_ID = F.FILE_ID
                 WHERE A.TEMPLATE_ID > 0 AND A.TEMPLATE_CONTENT !='' AND A.PRINTED != 'Y' AND A.ADDRESS != ''
-                      AND B.VISIBLE = 'Y' AND A.ACTION_DATE <= CURRENT_DATE
+                      AND B.VISIBLE = 'Y' AND A.ACTION_DATE <= CURRENT_DATE AND F.DATE_CLOSED is null AND F.STATE_ID != 40
                       {$queryExtra}
                   GROUP BY F.COLLECTOR_NAME,F.COLLECTOR_ID,A.TEMPLATE_ID, B.DESCRIPTION
                   ORDER BY F.COLLECTOR_NAME ASC, B.DESCRIPTION";
@@ -465,6 +465,7 @@ class Application_Model_FilesActions extends Application_Model_Base
                   JOIN SYSTEM\$TEMPLATES B ON A.TEMPLATE_ID = B.TEMPLATE_ID
                   JOIN FILES\$FILES F ON F.FILE_ID = A.FILE_ID
                 WHERE A.TEMPLATE_ID > 0 AND A.TEMPLATE_CONTENT !='' AND A.PRINTED != 'Y' AND A.ADDRESS != ''
+                AND F.DATE_CLOSED is null AND F.STATE_ID != 40
                       AND B.VISIBLE = 'Y' $extraQuery";
         $count = $this->db->get_var($sql);
         return $count;
@@ -476,7 +477,8 @@ class Application_Model_FilesActions extends Application_Model_Base
                   JOIN SYSTEM\$TEMPLATES B ON A.TEMPLATE_ID = B.TEMPLATE_ID
                   JOIN FILES\$FILES_ALL_INFO F ON A.FILE_ID = F.FILE_ID
                 WHERE A.TEMPLATE_ID = {$templateId} AND A.TEMPLATE_CONTENT !='' AND A.PRINTED != 'Y' AND A.ADDRESS != ''
-                      AND B.VISIBLE = 'Y' AND ACTION_DATE<=CURRENT_DATE AND F.COLLECTOR_ID = {$collectorId} ORDER BY FILE_ACTION_ID";
+                      AND B.VISIBLE = 'Y' AND ACTION_DATE<=CURRENT_DATE AND F.COLLECTOR_ID = {$collectorId}
+                      AND F.DATE_CLOSED is null AND F.STATE_ID != 40 ORDER BY FILE_ACTION_ID";
         $results = $this->db->get_results($sql);
         return $results;
     }

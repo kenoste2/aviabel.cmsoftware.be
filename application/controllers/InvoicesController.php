@@ -70,6 +70,9 @@ class InvoicesController extends BaseController
             if (!empty($session->data['debtor_name'])) {
                 $query_extra .= " and F.DEBTOR_NAME CONTAINING '" . $session->data['debtor_name'] . "'";
             }
+            if (!empty($session->data['contract_insured'])) {
+                $query_extra .= " and I.CONTRACT_INSURED CONTAINING '" . $session->data['contract_insured'] . "'";
+            }
             if (!empty($session->data['invoice_type'])) {
                 $query_extra .= " and I.REFERENCE_TYPE CONTAINING '" . $session->data['invoice_type'] . "'";
             }
@@ -145,7 +148,7 @@ class InvoicesController extends BaseController
 
         $sql = "SELECT DISTINCT F.REFERENCE AS CLIENT_REFERENCE,I.REFERENCE_TYPE,F.FILE_ID,F.CLIENT_NAME,I.INVOICE_DATE,S.CODE AS STATE_CODE,I.REFERENCE AS INVOICE_REFERENCE,F.COLLECTOR_CODE,I.AMOUNT,I.INTEREST,I.COSTS,(I.AMOUNT + I.COSTS + I.INTEREST) AS TOTAL
               ,I.PAYED_AMOUNT,I.PAYED_INTEREST,I.PAYED_COSTS,(I.SALDO_AMOUNT + I.SALDO_INTEREST + I.SALDO_COSTS) AS PAYABLE,F.DEBTOR_NAME,F.DEBTOR_VAT_NR,F.DEBTOR_BIRTH_DAY,F.DEBTOR_ADDRESS,F.DEBTOR_ZIP_CODE,F.DEBTOR_CITY,
-              F.DEBTOR_LANGUAGE_CODE, I.START_DATE, I.DISPUTE, I.DISPUTE_DATE, I.DISPUTE_DUEDATE, I.DISPUTE_ENDED_DATE,I.INVOICE_DOCCODE, I.INVOICE_DOCLINENUM FROM FILES\$REFERENCES I
+              F.DEBTOR_LANGUAGE_CODE, I.START_DATE, I.DISPUTE, I.DISPUTE_DATE, I.DISPUTE_DUEDATE, I.DISPUTE_ENDED_DATE,I.INVOICE_DOCCODE, I.INVOICE_DOCLINENUM, I.CONTRACT_INSURED FROM FILES\$REFERENCES I
               JOIN  FILES\$FILES_ALL_INFO F ON F.FILE_ID=I.FILE_ID
               JOIN FILES\$STATES S ON S.STATE_ID = I.STATE_ID {$query_extra} order by {$session->orderby} {$session->order}";
 

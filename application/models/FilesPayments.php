@@ -31,6 +31,8 @@ class Application_Model_FilesPayments extends Application_Model_Base {
 
     public function addPayment($fileId, $amount, $accountId, $valutaDate = false, $description = false, $referenceId = false) {
 
+
+
         global $config;
 
         if (empty($valutaDate)) {
@@ -38,14 +40,22 @@ class Application_Model_FilesPayments extends Application_Model_Base {
         }
 
         $journalModel = new Application_Model_Journal();
-        $journalId = $journalModel->add(array(
+
+        $contentArray = array(
             "ACCOUNT_ID" => $accountId,
             "AMOUNT" => $amount,
             "FILE_ID" => $fileId,
             "VALUTA_DATE" => $valutaDate,
             "DESCRIPTION" => $description,
-        ));
+        );
+
+        $journalId = $journalModel->add($contentArray);
+
+
+
         $this->_transactionId = $journalModel->getTransactionId();
+
+
 
 
         $sql = "DELETE FROM FILES\$PAYMENTS WHERE JOURNAL_ID=$journalId";

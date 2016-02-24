@@ -7,6 +7,8 @@ class ConfirmController extends BaseController {
     public function viewAction()
     {
 
+        $session = new Zend_Session_Namespace('FILES');
+
         $this->checkAccessAndRedirect(array('confirm/view'));
         $this->view->bread = $this->functions->T("menu_traject") . "->" . $this->functions->T("menu_confirm_view")  ;
         $this->view->printButton = true;
@@ -26,6 +28,25 @@ class ConfirmController extends BaseController {
             $searchForm->isValid($this->getRequest()->getPost());
             $results = $obj->getUnConfirmedActions($searchForm->ACTION_ID->getValue());
             $this->view->results = $results;
+
+            if (!empty($results)) {
+                $fileList = array();
+                foreach ($results as $row) {
+                    $fileList[] = array(
+                        "FILE_ID" => $row->FILE_ID,
+                        "FILE_NR" => $row->FILE_NR,
+                        "DEBTOR_NAME" => $row->DEBTOR_NAME,
+                    );
+                }
+                $session->fileList = $fileList;
+                $this->view->results = $results;
+            } else {
+                $this->export->sql = "";
+                $this->view->exportButton = false;
+            }
+
+
+
         }
 
         $this->view->searchForm = $searchForm;

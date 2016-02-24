@@ -277,12 +277,10 @@
                         <td><?php $this->T("Total_payments_c") ?> <?php $this->T("vandaag_c") ?></td>
                         <td><?php echo $this->amount($this->payedToday)?></td>
                       </tr>
-                      <!--
                       <tr style="cursor: pointer" <?php echo $this->onclick("{$this->location()}/imported-mail/overview"); ?>>
                         <td>E-mails <?php $this->T("vandaag_c") ?></td>
                         <td><?php echo $this->emailsToday?></td>
                       </tr>
-                      -->
                       <tr style="cursor: pointer" <?php echo $this->onclick("{$this->location()}/disputes/search"); ?>>
                         <td><?php $this->T("disputes_today_c") ?></td>
                         <td><?php echo $this->disputesToday?></td>

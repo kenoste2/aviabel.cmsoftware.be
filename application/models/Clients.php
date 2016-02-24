@@ -11,6 +11,7 @@ class Application_Model_Clients extends Application_Model_Base {
         return $row;
     }
 
+
     public function getClientsQuery($data) {
         $query = "";
 
