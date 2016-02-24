@@ -39,7 +39,7 @@ class Application_Model_PdfDocument extends Application_Model_Base {
         $this->pdf->SetFont($this->lettertype, '', $this->size);
     }
 
-    public function _loadContentToPdf($fileActionId)
+    public function _loadContentToPdf($fileActionId, $reloadContent = false)
     {
         global $config;
         $fileActionsObj = new Application_Model_FilesActions();
@@ -100,7 +100,15 @@ class Application_Model_PdfDocument extends Application_Model_Base {
         }
 
         $this->pdf->SetXY($letterSettings['MARGIN_LEFT'], $config->templateTextPosition);
-        $templateContent = $fileActionsObj->getTemplateContent($fileActionId);
+
+        if (!empty($reloadContent)) {
+            $templateContentJson = $printObj->getTemplateContent($fileId, $templateId);
+            $templateContent = json_decode($templateContentJson);
+            $templateContent = $templateContent->CONTENT;
+        } else {
+            $templateContent = $fileActionsObj->getTemplateContent($fileActionId);
+        }
+
         $templateContent = str_replace("€", "EUR", $templateContent);
         if ($config->decodeInPdf == 'Y') {
             $templateContent = utf8_decode($templateContent);
@@ -154,22 +162,31 @@ class Application_Model_PdfDocument extends Application_Model_Base {
             $this->loadInvoices($fileActionId);
         }
 
+        //$this->pdf->setY(5);
+        //$this->pdf->setX(15);
+        //$this->pdf->Cell(0, 5, $this->pdf->PageNo() . "/{nb}", 0, 1);
+
+
         return true;
     }
 
-    public function setFooter($lang = 'NL')
+    public function setFooter($lang = 'NL', $width = 175, $height = false)
     {
         global $config;
 
         $printObj = new Application_Model_Print();
         $letterSettings = $printObj->getSettings();
 
+        if (empty($height)) {
+            $height = $letterSettings['FOOTER_Y'];
+        }
+
 
         $footer = $this->functions->getUserSetting("template_footer", $lang);
         if (!empty($footer)) {
-            $this->pdf->SetXY($letterSettings['MARGIN_LEFT'], $letterSettings['FOOTER_Y']);
+            $this->pdf->SetXY($letterSettings['MARGIN_LEFT'],$height);
             $this->pdf->SetFont($this->lettertype, '', $this->extraSmall);
-            $this->pdf->MultiCellTag(175, 3, utf8_decode($footer), $letterSettings['FOOTER_BORDER'], $letterSettings['FOOTER_ALIGN']);
+            $this->pdf->MultiCellTag($width, 3, utf8_decode($footer), $letterSettings['FOOTER_BORDER'], $letterSettings['FOOTER_ALIGN']);
             $this->pdf->SetFont($this->lettertype, '', $this->size);
         }
 
@@ -297,8 +314,20 @@ class Application_Model_PdfDocument extends Application_Model_Base {
             }
         }
 
+        $logoUrl = '././public/images/' . $letterSettings['LOGOFILE'] . '_' . $lang . '.jpg';
+        if (!file_exists($logoUrl)) {
+            $logoUrl = '././public/images/' . $letterSettings['LOGOFILE'] . '.jpg';
+            if (!file_exists($logoUrl)) {
+                $logoUrl = "";
+            }
+        }
+        if (!empty($logoUrl)) {
+            $this->pdf->Image($logoUrl, $letterSettings['LOGO_INVOICES_X'], $letterSettings['LOGO_INVOICES_Y'], $letterSettings['LOGO_H']);
+        }
+
+
         $this->setletterRemarks($lang);
-        $this->setFooter($lang);
+        $this->setFooter($lang,$letterSettings['FOOTER_INVOICES_WIDTH'],$letterSettings['FOOTER_INVOICES_Y'] );
     }
 
 

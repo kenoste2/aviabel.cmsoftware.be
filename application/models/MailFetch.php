@@ -155,7 +155,14 @@ class Application_Model_MailFetch extends Application_Model_Base
 
                                 case 'text/plain':
 
-                                    $plainContent = $this->_contentDecoder($part->getHeader('content-transfer-encoding'), $part->getContent());
+                                    if (in_array('content-transfer-encoding', $part->getHeaders())) {
+                                        $encoding = $part->getHeader('content-transfer-encoding');
+                                    } else {
+                                        $encoding = "quoted-printable";
+                                    }
+
+
+                                    $plainContent = $this->_contentDecoder($encoding, $part->getContent());
 
                                     break;
 
@@ -169,9 +176,19 @@ class Application_Model_MailFetch extends Application_Model_Base
 
                                     $type = strtok($part->contentType, ';');
 
+                                    $headersArray  = $part->getHeaders();
+
+                                    if (array_key_exists("content-disposition", $headersArray)) {
                                     $fileNameHeader = $part->getHeader('content-disposition');
+                                    } elseif (array_key_exists("content-type", $headersArray)) {
+                                        $fileNameHeader = $part->getHeader('content-type');
+                                    }
+
+                                    if (stripos($fileNameHeader, " name=") !== false) {
+                                        $fileNameHeader = str_replace(" name=", " filename=", $fileNameHeader);
+                                    }
+
                                     $fileNameMatches = array();
-                                    //preg_match("/filename=\"?(.+?)\"?$/", $fileNameHeader, $fileNameMatches);
                                     preg_match("/filename=\"?(.+?)\"/", $fileNameHeader, $fileNameMatches);
                                     $fileName = $fileNameHeader;
                                     if(count($fileNameMatches) > 1) {
@@ -189,7 +206,9 @@ class Application_Model_MailFetch extends Application_Model_Base
                             }
                         } catch (Zend_Mail_Exception $e) {
 
+                            print "<pre>";
                             echo "$e \n";
+                            print "</pre>";
                         }
                     }
                 } else {
@@ -197,6 +216,11 @@ class Application_Model_MailFetch extends Application_Model_Base
                     $plainContent = $message->getContent();
                 }
 
+
+                $to = str_replace("<"," ",$to);
+                $to = str_replace(">"," ",$to);
+                $from = str_replace("(","",$from);
+                $from = str_replace(")","",$from);
 
                 $this->_inbox[] = array('messageNumber' => $messageNum,
                     'rawMail' => $rawMail,
@@ -212,6 +236,7 @@ class Application_Model_MailFetch extends Application_Model_Base
                     'htmlContent' => $htmlContent,
                     'attachments' => $attachments,
                     'sender' => '');
+
 
                 $this->_mail->removeMessage($messageNum);
             }

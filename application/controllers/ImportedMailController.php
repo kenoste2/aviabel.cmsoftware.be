@@ -51,7 +51,8 @@ class ImportedMailController extends BaseController {
         $importedMailsModel = new Application_Model_ImportedMails();
         $fromDate = $form->getValue("FROM_DATE");
         $toDate = $form->getValue("TO_DATE");
-        $mails = $importedMailsModel->retrieveByDateRange($this->functions->date_dbformat($fromDate), $this->functions->date_dbformat($toDate));
+        $collectorId = $form->getValue("COLLECTOR_ID");
+        $mails = $importedMailsModel->retrieveByDateRange($this->functions->date_dbformat($fromDate), $this->functions->date_dbformat($toDate), $collectorId);
         $this->view->mails = $mails;
     }
 }

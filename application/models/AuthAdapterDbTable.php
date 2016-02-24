@@ -43,7 +43,7 @@ class Application_Model_AuthAdapterDbTable {
                         $authNamespace->online_subclients = array();
                     }
                 }
-                if ($authNamespace->online_rights == 6 or $authNamespace->online_rights == 3 ) {
+                if ($authNamespace->online_rights == 6 or $authNamespace->online_rights == 3 or $authNamespace->online_rights == 4  ) {
                     $authNamespace->online_collector_id = $this->db->get_var("select COLLECTOR_ID from SYSTEM\$USERS where CODE='{$this->username}'");
                     $authNamespace->online_collector_name = $this->db->get_var("select NAME from SYSTEM\$COLLECTORS where COLLECTOR_ID='{$authNamespace->online_collector_id}'");
                  }
