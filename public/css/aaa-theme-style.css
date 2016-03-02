@@ -115,7 +115,7 @@ footer { padding: 15px; }
 	font-size: 1.8em;
 	font-weight: 300;
 	letter-spacing: 1.5px;
-	margin: 0 5px;	
+	margin: 0 5px;
 	text-transform: uppercase;
 	vertical-align: middle;
 }
@@ -124,7 +124,7 @@ footer { padding: 15px; }
 /* Search form */
 .aaa-theme-search-form {
 	font-size: 1em;
-	margin: 50px 20px;		
+	margin: 50px 20px;
 }
 
 .aaa-theme-search-form .input-group { width: 100%; }
@@ -171,9 +171,9 @@ footer { padding: 15px; }
 	left: 0;
 	z-index: 100;
 }
-.mobile-menu-icon { 
+.mobile-menu-icon {
 	cursor:pointer;
-	display:none; 
+	display:none;
 }
 .aaa-theme-left-nav li { font-weight: 300; }
 .aaa-theme-left-nav a.active,
@@ -197,7 +197,7 @@ footer { padding: 15px; }
 	background-color: white;
 	padding: 28px 50px;
  	box-shadow: 0px 0px 2px 2px rgba(161, 159, 159, 0.18);
-	
+
 }
 
 .aaa-theme-top-nav li {
@@ -209,7 +209,7 @@ footer { padding: 15px; }
     display: block;
     padding: 0 30px;
     border-left: 2px solid #c5c5c5;
-	
+
 }
 .aaa-theme-top-nav li:last-child a { border-right: 2px solid #c5c5c5; }
 .aaa-theme-top-nav a:hover,
@@ -221,7 +221,7 @@ footer { padding: 15px; }
 .aaa-theme-content {
   margin-top: 0px;
   min-height: 600px;
-  padding: 0;  
+  padding: 0;
   overflow-x: hidden;
 }
 .aaa-theme-content-container {	padding: 10px 10px; }
@@ -244,7 +244,7 @@ footer { padding: 15px; }
 /* Content Widget */
 .aaa-theme-content-widget {
 	border-radius: 10px;
-	padding: 20px;	
+	padding: 20px;
 	position: relative;
 	margin: 10px;
  	box-shadow: 0px 0px 1px 1px rgba(161, 159, 159, 0.1);
@@ -294,15 +294,15 @@ footer { padding: 15px; }
 	border-color: #E9E8E8;
 	color: #a6a6a6;
 	margin: 2px;
-	padding: 10px;	
+	padding: 10px;
 }
 .pagination>li>a,
 .pagination>li:first-child>a,
 .pagination>li:last-child>a {
 	border-radius: 10px;
 }
-.pagination>.active>a, 
-.pagination>.active>a:focus, 
+.pagination>.active>a,
+.pagination>.active>a:focus,
 .pagination>.active>a:hover {
 	background-color: #39ADB4;
 	border-color: #E9E8E8;
@@ -365,11 +365,11 @@ footer { padding: 15px; }
 .btn-primary {
 	border-radius: 2px;
 	background-color: #39ADB4;
-	border: none;	
-	color: white;	
+	border: none;
+	color: white;
 }
 .btn-primary:hover { background-color: #2A858B; }
-.aaa-theme-blue-button, 
+.aaa-theme-blue-button,
 .aaa-theme-white-button,
 .aaa-theme-orange-button {
 	border-radius: 2px;
