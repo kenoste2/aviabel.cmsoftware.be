@@ -115,6 +115,13 @@ class FileDetailController extends BaseFileController {
         $data['REFERENCE'] = $this->file->REFERENCE;
         $data['STATE_ID'] = $this->file->STATE_ID;
         $data['COLLECTOR_ID'] = $this->file->COLLECTOR_ID;
+        if (!empty($this->file2->CONTRACT_DESCRIPTION) or !empty($this->file2->CONTRACT_DESCRIPTION)) {
+            $data['CONTRACT'] = $this->file2->CONTRACT_DESCRIPTION . " " . $this->file2->CONTRACT_REFERENCE;
+        } else {
+            $data['CONTRACT'] = "-";
+        }
+
+
 
         $generalForm->populate($data);
 

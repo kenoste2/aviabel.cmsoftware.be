@@ -81,12 +81,10 @@ if ($this->deleted) {
                     <label><?php print $this->T("relationCode_c") ?></label>
                     <?php echo $this->SearchBox->client_reference->renderViewHelper(); ?>                  
                 </div>
-				<?php if (!empty($this->showCollector)) { ?>
-                <div class="col-lg-6 col-md-6 form-group">                  
-                    <label><?php print $this->T("external_collector_c") ?></label>
-                    <?php echo $this->SearchBox->external_collector->renderViewHelper(); ?>                   
+                <div class="col-lg-6 col-md-6 form-group">
+                    <label><?php print $this->T("contractDetails_c") ?></label>
+                    <?php echo $this->SearchBox->contract_details->renderViewHelper(); ?>
                 </div>
-				<?php } ?>				
               </div>
               <div class="row form-group">
                 <div class="col-lg-6 col-md-6 form-group">                  
@@ -162,7 +160,7 @@ if ($this->deleted) {
                       <tr>
                         <td><a href="<?php echo $this->location() ?>/files/search/orderby/REFERENCE"><?php print $this->T("relationCode_c") ?></a></td>
                         <td><a href="<?php echo $this->location() ?>/files/search/orderby/DEBTOR_NAME"><?php print $this->T("debtor_c") ?></a></td>
-                        <td><a href="<?php echo $this->location() ?>/files/search/orderby/CLIENT_NAME"><?php print $this->T("client_c") ?></a></td>
+                        <td><a href="<?php echo $this->location() ?>/files/search/orderby/CONTRACT_DESCRIPTION"><?php print $this->T("contractDetails_c") ?></a></td>
                         <td><a href="<?php echo $this->location() ?>/files/search/orderby/STATE_CODE"><?php print $this->T("state_code_c") ?></a></td>
                         <td><a href="<?php echo $this->location() ?>/files/search/orderby/COLLECTOR_CODE"><?php print $this->T("collector_c") ?></a></td>
                         <td><a href="<?php echo $this->location() ?>/files/search/orderby/DEBTOR_SCORE"><?php print $this->T("debtor_score_c") ?></a></td>
@@ -181,7 +179,7 @@ if ($this->deleted) {
 						<tr class="dossier" style="cursor: pointer" id="<?php echo $row->FILE_ID ?>">
 							<td><?php echo $row->REFERENCE ?></td>
 							<td><?php echo $row->DEBTOR_NAME ?></td>
-							<td><?php echo $row->CLIENT_NAME ?></td>
+							<td><?php echo substr($row->CONTRACT_DESCRIPTION,0,30) ?> <?php echo substr($row->CONTRACT_REFERENCE,0,30) ?></td>
 							<td><?php echo $row->STATE_CODE ?></td>
 							<td><?php echo $row->COLLECTOR_CODE ?></td>
 							<td>

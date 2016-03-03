@@ -40,7 +40,6 @@ class Application_Model_Custom_Aviabel extends Application_Model_Base
             $this->handleInvoiceLine($data);
         }
 
-
         $this->log(date("Y-m-d H:i")." : csv loaded",'import');
 
         $checkCounter = $counter-1;
@@ -153,8 +152,11 @@ class Application_Model_Custom_Aviabel extends Application_Model_Base
             'CONTRACT_LINEOFBUSINESS' => trim($line[$columns['CONTRACT_LINEOFBUSINESS']]),
             'CONTRACT_LEAD' => trim($line[$columns['CONTRACT_LEAD']]),
             'LEDGER_ACCOUNT' => trim($line[$columns['LEDGER_ACCOUNT']]),
+            'CONTRACT_DESCRIPTION' => trim($line[$columns['CONTRACT_DESCRIPTION']]),
+            'CONTRACT_REFERENCE' => trim($line[$columns['CONTRACT_REFERENCE']]),
         );
         $this->addData("IMPORT\$INVOICES", $data);
+
         return true;
     }
 
@@ -267,8 +269,8 @@ class Application_Model_Custom_Aviabel extends Application_Model_Base
         $results = $this->db->get_results("SELECT CLIENT_NUMBER FROM IMPORT\$INVOICES GROUP BY CLIENT_NUMBER");
         foreach ($results as $row) {
             $fileId = $this->db->get_var("SELECT FILE_ID FROM FILES\$FILES WHERE REFERENCE = '{$row->CLIENT_NUMBER}'");
+            $dataRow = $this->db->get_row("SELECT FIRST 1 *  FROM IMPORT\$INVOICES WHERE CLIENT_NUMBER = '{$row->CLIENT_NUMBER}'");
             if (empty($fileId)) {
-                $dataRow = $this->db->get_row("SELECT FIRST 1 *  FROM IMPORT\$INVOICES WHERE CLIENT_NUMBER = '{$row->CLIENT_NUMBER}'");
                 $data = array(
                     'FILE_NR' => $filesObj->getNextFileNr(false),
                     'CLIENT_ID' => $dataRow->CLIENT_ID,
@@ -277,9 +279,15 @@ class Application_Model_Custom_Aviabel extends Application_Model_Base
                     'COLLECTOR_ID' => $dataRow->COLLECTOR_ID,
                     'STATE_ID' => $stateId,
                     'VALUTA' => $dataRow->VALUTA,
+                    'CONTRACT_REFERENCE' => $dataRow->CONTRACT_REFERENCE,
+                    'CONTRACT_DESCRIPTION' => $dataRow->CONTRACT_DESCRIPTION,
                 );
                 $filesObj = new Application_Model_Files();
                 $fileId = $filesObj->create($data);
+            } else {
+                $sql = "UPDATE FILES\$FILES SET CONTRACT_REFERENCE = '{$dataRow->CONTRACT_REFERENCE}',
+                    CONTRACT_DESCRIPTION = '{$dataRow->CONTRACT_DESCRIPTION}' WHERE FILE_ID = {$fileId}";
+                $this->db->query($sql);
             }
 
             $sql = "UPDATE IMPORT\$INVOICES SET FILE_ID = {$fileId} WHERE CLIENT_NUMBER = '{$row->CLIENT_NUMBER}'";
@@ -337,11 +345,11 @@ class Application_Model_Custom_Aviabel extends Application_Model_Base
                         'CONTRACT_LEAD' => $invoice->CONTRACT_LEAD,
                         'LEDGER_ACCOUNT' => $invoice->LEDGER_ACCOUNT,
                         'LAST_IMPORT' => 1,
-
                     );
                     $referencesObj->create($data);
                 } else {
-                    $sql = "UPDATE FILES\$REFERENCES SET LAST_IMPORT = 1 WHERE REFERENCE_ID = {$invoiceExists}";
+                    $sql = "UPDATE FILES\$REFERENCES SET LAST_IMPORT = 1
+                    WHERE REFERENCE_ID = {$invoiceExists}";
                     $this->db->query($sql);
                 }
             }

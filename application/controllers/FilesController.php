@@ -12,7 +12,7 @@ class FilesController extends BaseController
         $maxRecords = 500;
         $this->view->bread = $this->functions->T("menu_general") . "->" . $this->functions->T("menu_files_search");
 
-        $this->view->addButton = "/files/add";
+        //$this->view->addButton = "/files/add";
         $this->view->exportButton = true;
         $this->view->printButton = true;
 
@@ -109,6 +109,12 @@ class FilesController extends BaseController
                 $query_extra .= " and A.FILE_NR <='{$session->data['to_file_nr']}'";
             if ($session->data['client_reference'] != "")
                 $query_extra .= " and A.REFERENCE CONTAINING '{$session->data['client_reference']}' ";
+
+            if ($session->data['contract_details'] != "") {
+                $query_extra .= " and (CONTRACT_DESCRIPTION CONTAINING '{$session->data['contract_details']}' OR CONTRACT_REFERENCE CONTAINING '{$session->data['contract_details']}' ) ";
+            }
+
+
             if ($session->data['invoice'] != "") {
                 $query_extra .= " and (SELECT COUNT(*) FROM FILES\$REFERENCES R WHERE REFERENCE CONTAINING '{$session->data['invoice']}' AND A.FILE_ID = R.FILE_ID) >=1 ";
             }
@@ -173,7 +179,7 @@ class FilesController extends BaseController
         $totals = $this->db->get_row($sql);
         $this->view->totals = $totals;
 
-        $sql = "SELECT DISTINCT A.DATE_CLOSED,A.FILE_ID,A.CLIENT_NAME,A.CREATION_DATE,A.FILE_NR,A.STATE_CODE,A.REFERENCE,A.COLLECTOR_CODE,A.LAST_ACTION_DATE,A.AMOUNT,A.INTEREST,A.COSTS,(A.TOTAL+A.INCASSOKOST) AS TOTAL,
+        $sql = "SELECT DISTINCT A.DATE_CLOSED,A.FILE_ID,A.CLIENT_NAME,A.CREATION_DATE,A.FILE_NR,A.STATE_CODE,A.REFERENCE,B.CONTRACT_DESCRIPTION, B.CONTRACT_REFERENCE,A.COLLECTOR_CODE,A.LAST_ACTION_DATE,A.AMOUNT,A.INTEREST,A.COSTS,(A.TOTAL+A.INCASSOKOST) AS TOTAL,
               (A.PAYABLE+A.INCASSOKOST) AS PAYABLE,A.PAYED_AMOUNT,A.PAYED_INTEREST,A.PAYED_COSTS,A.PAYED_UNKNOWN,A.PAYED_TOTAL,(A.SALDO+A.INCASSOKOST) AS SALDO,A.DEBTOR_NAME,A.DEBTOR_VAT_NR,A.DEBTOR_BIRTH_DAY,A.DEBTOR_ADDRESS,A.DEBTOR_ZIP_CODE,A.DEBTOR_CITY,
               A.DEBTOR_LANGUAGE_CODE,A.DATE_CLOSED,A.CLOSE_STATE_DESCRIPTION,
               (SELECT FIRST 1 SCORE FROM DEBTOR_SCORE DS WHERE DS.DEBTOR_ID = A.DEBTOR_ID ORDER BY TIME_STAMP DESC) AS DEBTOR_SCORE

@@ -5,7 +5,7 @@ require_once 'application/models/Base.php';
 
 class Application_Model_Mail extends Application_Model_Base {
 
-    private $smtpServer = "aviabel-s17.aviabel.be";
+    private $smtpServer = "";
     private $tr;
     private $cc = "";
     private $bcc = "";
@@ -13,8 +13,11 @@ class Application_Model_Mail extends Application_Model_Base {
     private $fromEmail = '';
 
     function __construct() {
-        $this->tr = new Zend_Mail_Transport_Smtp($this->smtpServer);
         $config = Zend_Registry::get('config');
+
+        $this->smtpServer = $config->smtpServer;
+
+        $this->tr = new Zend_Mail_Transport_Smtp($this->smtpServer);
 
         if (!empty($config->fromEmail)) {
             $this->fromEmail = $config->fromEmail;
@@ -42,7 +45,7 @@ class Application_Model_Mail extends Application_Model_Base {
 
         global $config;
 
-        $to = "support@cmsoftware.be";
+        $to = "premium.collections@aviabel.com";
 
 
         if ($config->mailDecodeUtf8 == 'Y') {
