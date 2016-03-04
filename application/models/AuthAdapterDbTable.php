@@ -22,7 +22,7 @@ class Application_Model_AuthAdapterDbTable {
         $sql = "select * from SYSTEM\$USERS where CODE='{$this->username}'";
         $row = $this->db->get_row($sql);
         $userId = $row->USER_ID;
-        
+
         if (!empty($row)) {
             if ($row->PASS == $this->password) {
                 $authNamespace = new Zend_Session_Namespace('Zend_Auth');

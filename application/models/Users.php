@@ -4,16 +4,22 @@ require_once 'application/models/Base.php';
 
 class Application_Model_Users extends Application_Model_Base {
 
-    public function updatePassword($userId,$pasword) {
+    public function updatePassword($userName,$pasword) {
         $data = array(
-          "PASS" => sha1($pasword),  
+            "PASS" => sha1($pasword),
+            "RESET_PASSWORD" => 0
         );
-        $this->saveData('SYSTEM$USERS', $data, "USER_ID = {$userId}");
+        
+        $this->saveData('SYSTEM$USERS', $data, "CODE = '{$userName}'");
     }
     
     
     public function createUser($data) {
         $data['PASS'] = sha1($data['PASS']);
+
+        if (empty($data['RESET_PASSWORD'])){
+            $data['RESET_PASSWORD'] = '1';
+        }
 
         $data = $this->setDefaults($data);
 
@@ -140,6 +146,17 @@ class Application_Model_Users extends Application_Model_Base {
     public function getByCode($code)
     {
         return $this->db->get_row("select USER_ID,CODE from SYSTEM\$USERS where CODE = '{$code}'", ARRAY_A);
+    }
+
+
+    public function getPasswordReset($userName) {
+        $var =  $this->db->get_var("select RESET_PASSWORD from SYSTEM\$USERS where CODE = '{$userName}'");
+        if ($var) {
+            return true;
+        } else {
+            return false;
+        }
+
     }
 
 }
