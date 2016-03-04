@@ -118,6 +118,7 @@ class Application_Model_Custom_Aviabel extends Application_Model_Base
         }
 
 
+        $line[$columns['DEVISION_CODE']] = str_replace('"','', $line[$columns['DEVISION_CODE']]);
 
         $data = array(
             'DEVISION_CODE' => trim($line[$columns['DEVISION_CODE']]),
@@ -156,6 +157,8 @@ class Application_Model_Custom_Aviabel extends Application_Model_Base
             'CONTRACT_REFERENCE' => trim($line[$columns['CONTRACT_REFERENCE']]),
         );
         $this->addData("IMPORT\$INVOICES", $data);
+
+
 
         return true;
     }
