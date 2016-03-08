@@ -21,7 +21,7 @@ class Application_Model_StatisticsForClient extends Application_Model_Base
           from REPORTS\$STATISTICTS_FOR_CLIENT($client_id)");
     }
 
-    public function getAging($underwriter = false, $collectorId = false, $lob = false)
+    public function getAging($underwriter = false, $collectorId = false, $lob = false, $groupBy)
     {
 
         $refObj = new Application_Model_FilesReferences();
@@ -48,6 +48,20 @@ class Application_Model_StatisticsForClient extends Application_Model_Base
                     $lobExtra = "AND R.CONTRACT_LINEOFBUSINESS = '{$lob}'";
                 }
 
+                switch ($groupBy) {
+                    case 'CASEWORKERS':
+                        $groupByExtra = 'COLLECTOR_ID';
+                        break;
+                    case 'LINEOBUSINESS':
+                        $groupByExtra = 'CONTRACT_LINEOFBUSINESS';
+                        break;
+                    case 'UNDERWRITERS':
+                        $groupByExtra = 'CONTRACT_UNDERWRITER';
+                        break;
+                    default:
+                        $groupByExtra = 'REFERENCE_TYPE';
+                }
+
                 $aging[$type]['1Q'] = $this->db->get_row("select COUNT(*),SUM(R.AMOUNT)
                   from files\$references R
                   JOIN FILES\$FILES F ON F.FILE_ID = R.FILE_ID WHERE
@@ -56,7 +70,7 @@ class Application_Model_StatisticsForClient extends Application_Model_Base
                   {$underwriterExtra}
                   {$collectorExtra}
                   {$lobExtra}
-                  GROUP BY REFERENCE_TYPE");
+                  GROUP BY {$groupByExtra}");
 
 
                 $aging[$type]['2Q'] = $this->db->get_row("select COUNT(*),SUM(R.AMOUNT)
@@ -67,7 +81,7 @@ class Application_Model_StatisticsForClient extends Application_Model_Base
                   {$underwriterExtra}
                   {$collectorExtra}
                   {$lobExtra}
-                  GROUP BY REFERENCE_TYPE");
+                  GROUP BY {$groupByExtra}");
 
                 $aging[$type]['3Q'] = $this->db->get_row("select COUNT(*),SUM(R.AMOUNT)
                   from files\$references R
@@ -77,7 +91,7 @@ class Application_Model_StatisticsForClient extends Application_Model_Base
                   {$underwriterExtra}
                   {$collectorExtra}
                   {$lobExtra}
-                  GROUP BY REFERENCE_TYPE");
+                  GROUP BY {$groupByExtra}");
 
                 $aging[$type]['4Q'] = $this->db->get_row("select COUNT(*),SUM(R.AMOUNT)
                   from files\$references R
@@ -87,7 +101,7 @@ class Application_Model_StatisticsForClient extends Application_Model_Base
                   {$underwriterExtra}
                   {$collectorExtra}
                   {$lobExtra}
-                  GROUP BY REFERENCE_TYPE");
+                  GROUP BY {$groupByExtra}");
 
                 $aging[$type]['1Y'] = $this->db->get_row("select COUNT(*),SUM(R.AMOUNT)
                   from files\$references R
@@ -97,7 +111,7 @@ class Application_Model_StatisticsForClient extends Application_Model_Base
                   {$underwriterExtra}
                   {$collectorExtra}
                   {$lobExtra}
-                  GROUP BY REFERENCE_TYPE");
+                  GROUP BY {$groupByExtra}");
 
                 $aging[$type]['2Y'] = $this->db->get_row("select COUNT(*),SUM(R.AMOUNT)
                   from files\$references R
@@ -107,7 +121,7 @@ class Application_Model_StatisticsForClient extends Application_Model_Base
                   {$underwriterExtra}
                   {$collectorExtra}
                   {$lobExtra}
-                  GROUP BY REFERENCE_TYPE");
+                  GROUP BY {$groupByExtra}");
 
                 $aging[$type]['3Y'] = $this->db->get_row("select COUNT(*),SUM(R.AMOUNT)
                   from files\$references R
@@ -117,7 +131,7 @@ class Application_Model_StatisticsForClient extends Application_Model_Base
                   {$underwriterExtra}
                   {$collectorExtra}
                   {$lobExtra}
-                  GROUP BY REFERENCE_TYPE");
+                  GROUP BY {$groupByExtra}");
             }
             return $aging;
         }

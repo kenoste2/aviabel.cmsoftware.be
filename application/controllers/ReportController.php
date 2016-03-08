@@ -64,12 +64,13 @@ class ReportController extends BaseController
                 'CONTRACT_LINEOFBUSINESS' => $this->getRequest()->getParam('CONTRACT_LINEOFBUSINESS'),
                 'CONTRACT_UNDERWRITER' => $this->getRequest()->getParam('CONTRACT_UNDERWRITER'),
                 'COLLECTOR_ID' => $this->getRequest()->getParam('COLLECTOR_ID'),
+                'GROUP_BY' => $this->getRequest()->getParam('GROUP_BY'),
             );
             $form->populate($formArray);
             $this->view->form = $form;
         }
 
-        $aging = $statisticsForClientModel->getAging($this->getRequest()->getParam('CONTRACT_UNDERWRITER'),$this->getRequest()->getParam('COLLECTOR_ID'), $this->getRequest()->getParam('CONTRACT_LINEOFBUSINESS'));
+        $aging = $statisticsForClientModel->getAging($this->getRequest()->getParam('CONTRACT_UNDERWRITER'),$this->getRequest()->getParam('COLLECTOR_ID'), $this->getRequest()->getParam('CONTRACT_LINEOFBUSINESS'),$this->getRequest()->getParam('GROUP_BY'));
 
         $this->view->aging = $aging;
         $this->view->isClient = $this->isClient();
