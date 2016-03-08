@@ -64,6 +64,7 @@ class Application_Form_FileGeneral extends Zend_Form
 
         $this->addElement('note', 'NEXT_ACTION', array('label' => $functions->T('next_action_c'), 'size' => 15, 'disabled' => true));
         $this->addElement('text', 'REFERENCE', array('label' => $functions->T('referenceclient_c'), 'size' => 25, 'disabled' => true, 'required' => false));
+        $this->addElement('note', 'CONTRACT', array('label' => $functions->T('contractDetails_c'), 'size' => 15, 'disabled' => true));
         $this->addElement('text', 'PARTNER', array('label' => $functions->T('partner_c'), 'size' => 25, 'disabled' => true, 'required' => true));
         //$closeStates = $db->get_results("select CLOSE_STATE_ID,DESCRIPTION from FILES\$CLOSE_STATES order by DESCRIPTION", ARRAY_N);
         //$this->addElement('select', 'CLOSE_STATE_ID', array(

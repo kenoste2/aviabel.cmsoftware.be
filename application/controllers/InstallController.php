@@ -104,11 +104,40 @@ class InstallController extends BaseController
             $this->db->query("DELETE FROM TODOS");
             $this->db->query("DELETE FROM FILE_DOCUMENTS");
             $this->db->query("DELETE FROM FILES\$FILES");
+            $this->db->query("DELETE FROM LOGGING");
+            $this->db->query("DELETE FROM IBE\$LOG_KEYS");
+            $this->db->query("DELETE FROM IBE\$LOG_TABLES");
+            $this->db->query("DELETE FROM CLIENTS\$POINTS");
+            $this->db->query("DELETE FROM IMPORT\$INVOICES ");
+            $this->db->query("DELETE FROM FILES\$TIME_REGISTRATION ");
+            $this->db->query("DELETE FROM DEBTORS\$PAYMENT_DELAY ");
+            $this->db->query("DELETE FROM BINFO ");
+            $this->db->query("DELETE FROM BINFO ");
+            $this->db->query("DELETE FROM SUPPORT\$POPULATION_PLACES ");
+
+
             die("All files deleted");
         } else {
             die("No pass provided");
         }
     }
+
+    public function testdbAction(){
+        $sql = "select rdb\$relation_name AS TABLENAME
+                from rdb\$relations
+                where rdb\$view_blr is null";
+        $results = $this->db->get_results($sql);
+        if (!empty($results)) {
+            foreach ($results as $row) {
+                $count = $this->db->get_var("SELECT COUNT(*) as counter FROM {$row->TABLENAME}");
+                print "<br>$row->TABLENAME : {$count}";
+            }
+        }
+
+        die ("done testdbAction ");
+
+    }
+
 
     public function deleteEmptyZipCodesAction()
     {

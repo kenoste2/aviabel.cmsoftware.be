@@ -32,6 +32,11 @@ class Application_Form_Files extends Zend_Form
             'class' => 'form-control',
         ));
 
+        $this->addElement('text', 'contract_details', array(
+            'required' => false,
+            'class' => 'form-control',
+        ));
+
         $this->addElement('text', 'from_file_nr', array(
             'required' => false,
             'class' => 'form-control',
