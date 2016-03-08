@@ -15,7 +15,7 @@ class Application_Form_SearchReport extends Zend_Form
 
         $this->addElement('select', 'COLLECTOR_ID', array(
             'required' => false,
-            'MultiOptions' => $functions->db2array($collectors),
+            'MultiOptions' => array('' => 'Select caseworker')+$functions->db2array($collectors),
             'class' => 'form-control'
         ));
 
@@ -23,7 +23,7 @@ class Application_Form_SearchReport extends Zend_Form
 
         $this->addElement('select', 'CONTRACT_LINEOFBUSINESS', array(
             'required' => false,
-            'MultiOptions' => $functions->db2array($lob),
+            'MultiOptions' => array('' => 'Select line of business')+$functions->db2array($lob),
             'class' => 'form-control'
         ));
 
@@ -32,7 +32,7 @@ class Application_Form_SearchReport extends Zend_Form
 
         $this->addElement('select', 'CONTRACT_UNDERWRITER', array(
             'required' => false,
-            'MultiOptions' => $functions->db2array($underwriters),
+            'MultiOptions' => array('' => 'Select underwriter')+$functions->db2array($underwriters),
             'class' => 'form-control'
         ));
 
@@ -40,9 +40,9 @@ class Application_Form_SearchReport extends Zend_Form
             'required' => true,
             'MultiOptions' => array(
                                     'DEFAULT' => 'Group by',
-                                    'CASEWORKERS' => 'Caseworkers',
+                                    'CASEWORKERS' => 'Caseworker',
                                     'LINEOBUSINESS' => 'Line of business',
-                                    'UNDERWRITERS' => 'Underwriters'),
+                                    'UNDERWRITERS' => 'Underwriter'),
             'class' => 'form-control'
         ));
 
