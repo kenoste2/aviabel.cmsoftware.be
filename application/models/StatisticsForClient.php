@@ -21,7 +21,7 @@ class Application_Model_StatisticsForClient extends Application_Model_Base
           from REPORTS\$STATISTICTS_FOR_CLIENT($client_id)");
     }
 
-    public function getAging($underwriter = false, $collectorId = false, $lob = false)
+    public function getAging($underwriter = false, $collectorId = false, $lob = false, $groupBy = false )
     {
 
         $refObj = new Application_Model_FilesReferences();
@@ -30,12 +30,30 @@ class Application_Model_StatisticsForClient extends Application_Model_Base
         $refTypes = $refObj->getReferenceTypes(false,$underwriter, $lob);
 
 
+        switch ($groupBy) {
+            default:
+            case 'CASEWORKERS':
+                $types = $this->db->get_results("SELECT COLLECTOR_ID AS GROUPCODE,CODE FROM SYSTEM\$COLLECTORS WHERE ACTIF='Y' ORDER BY CODE ");
+                $groupField = 'F.COLLECTOR_ID';
+                break;
+            case 'LINEOBUSINESS':
+                $types = $this->db->get_results("SELECT CONTRACT_LINEOFBUSINESS AS GROUPCODE, CONTRACT_LINEOFBUSINESS AS CODE FROM FILES\$REFERENCES GROUP BY CONTRACT_LINEOFBUSINESS ORDER BY CONTRACT_LINEOFBUSINESS");
+                $groupField = 'R.CONTRACT_LINEOFBUSINESS';
+                break;
+            case 'UNDERWRITERS':
+                $types = $this->db->get_results("SELECT CONTRACT_UNDERWRITER AS GROUPCODE, CONTRACT_UNDERWRITER AS CODE FROM FILES\$REFERENCES GROUP BY CONTRACT_UNDERWRITER ORDER BY CONTRACT_UNDERWRITER");
+                $groupField = 'R.CONTRACT_UNDERWRITER';
+                break;
+        }
+
         $aging = array();
 
-        if (!empty($refTypes)) {
-            foreach ($refTypes as $row) {
+        if (!empty($types)) {
+            foreach ($types as $type) {
 
-                $type = $row->REFERENCE_TYPE;
+                if (empty($type->CODE)) {
+                    continue;
+                }
 
                 if ($underwriter) {
                     $underwriterExtra = "AND R.CONTRACT_UNDERWRITER = '{$underwriter}'";
@@ -43,81 +61,73 @@ class Application_Model_StatisticsForClient extends Application_Model_Base
                 if ($collectorId) {
                     $collectorExtra = "AND F.COLLECTOR_ID = {$collectorId}";
                 }
-
                 if ($lob) {
                     $lobExtra = "AND R.CONTRACT_LINEOFBUSINESS = '{$lob}'";
                 }
 
-                $aging[$type]['1Q'] = $this->db->get_row("select COUNT(*),SUM(R.AMOUNT)
+
+                $aging[$type->CODE]['1Q'] = $this->db->get_row("select COUNT(*),SUM(R.AMOUNT)
                   from files\$references R
                   JOIN FILES\$FILES F ON F.FILE_ID = R.FILE_ID WHERE
                   (CURRENT_DATE - R.START_DATE) <=90
-                  AND REFERENCE_TYPE = '{$type}'
+                  AND $groupField =  '{$type->GROUPCODE}'
                   {$underwriterExtra}
                   {$collectorExtra}
-                  {$lobExtra}
-                  GROUP BY REFERENCE_TYPE");
+                  {$lobExtra}");
 
-
-                $aging[$type]['2Q'] = $this->db->get_row("select COUNT(*),SUM(R.AMOUNT)
+                $aging[$type->CODE]['2Q'] = $this->db->get_row("select COUNT(*),SUM(R.AMOUNT)
                   from files\$references R
                   JOIN FILES\$FILES F ON F.FILE_ID = R.FILE_ID WHERE
                   (CURRENT_DATE - R.START_DATE) >90 AND (CURRENT_DATE - R.START_DATE) <=180
-                  AND REFERENCE_TYPE = '{$type}'
+                   AND $groupField =  '{$type->GROUPCODE}'
                   {$underwriterExtra}
                   {$collectorExtra}
-                  {$lobExtra}
-                  GROUP BY REFERENCE_TYPE");
+                  {$lobExtra}");
 
-                $aging[$type]['3Q'] = $this->db->get_row("select COUNT(*),SUM(R.AMOUNT)
+                $aging[$type->CODE]['3Q'] = $this->db->get_row("select COUNT(*),SUM(R.AMOUNT)
                   from files\$references R
                   JOIN FILES\$FILES F ON F.FILE_ID = R.FILE_ID WHERE
                   (CURRENT_DATE - R.START_DATE) >180 AND (CURRENT_DATE - R.START_DATE) <=270
-                  AND REFERENCE_TYPE = '{$type}'
+                   AND $groupField =  '{$type->GROUPCODE}'
                   {$underwriterExtra}
                   {$collectorExtra}
-                  {$lobExtra}
-                  GROUP BY REFERENCE_TYPE");
+                  {$lobExtra}");
 
-                $aging[$type]['4Q'] = $this->db->get_row("select COUNT(*),SUM(R.AMOUNT)
+                $aging[$type->CODE]['4Q'] = $this->db->get_row("select COUNT(*),SUM(R.AMOUNT)
                   from files\$references R
                   JOIN FILES\$FILES F ON F.FILE_ID = R.FILE_ID WHERE
                   (CURRENT_DATE - R.START_DATE) >270 AND (CURRENT_DATE - R.START_DATE) <= 360
-                  AND REFERENCE_TYPE = '{$type}'
+                   AND $groupField =  '{$type->GROUPCODE}'
                   {$underwriterExtra}
                   {$collectorExtra}
-                  {$lobExtra}
-                  GROUP BY REFERENCE_TYPE");
+                  {$lobExtra}");
 
-                $aging[$type]['1Y'] = $this->db->get_row("select COUNT(*),SUM(R.AMOUNT)
+                $aging[$type->CODE]['1Y'] = $this->db->get_row("select COUNT(*),SUM(R.AMOUNT)
                   from files\$references R
                   JOIN FILES\$FILES F ON F.FILE_ID = R.FILE_ID WHERE
                   (CURRENT_DATE - R.START_DATE) >360 AND (CURRENT_DATE - R.START_DATE) <= 730
-                  AND REFERENCE_TYPE = '{$type}'
+                   AND $groupField = '{$type->GROUPCODE}'
                   {$underwriterExtra}
                   {$collectorExtra}
-                  {$lobExtra}
-                  GROUP BY REFERENCE_TYPE");
+                  {$lobExtra}");
 
-                $aging[$type]['2Y'] = $this->db->get_row("select COUNT(*),SUM(R.AMOUNT)
+                $aging[$type->CODE]['2Y'] = $this->db->get_row("select COUNT(*),SUM(R.AMOUNT)
                   from files\$references R
                   JOIN FILES\$FILES F ON F.FILE_ID = R.FILE_ID WHERE
                   (CURRENT_DATE - R.START_DATE) >730 AND (CURRENT_DATE - R.START_DATE) <= 1095
-                  AND REFERENCE_TYPE = '{$type}'
+                   AND $groupField =  {$type->GROUPCODE}
                   {$underwriterExtra}
                   {$collectorExtra}
-                  {$lobExtra}
-                  GROUP BY REFERENCE_TYPE");
+                  {$lobExtra}");
 
-                $aging[$type]['3Y'] = $this->db->get_row("select COUNT(*),SUM(R.AMOUNT)
+                $aging[$type->CODE]['3Y'] = $this->db->get_row("select COUNT(*),SUM(R.AMOUNT)
                   from files\$references R
                   JOIN FILES\$FILES F ON F.FILE_ID = R.FILE_ID WHERE
                   (CURRENT_DATE - R.START_DATE) >1095
-                  AND REFERENCE_TYPE = '{$type}'
+                   AND $groupField =  '{$type->GROUPCODE}'
                   {$underwriterExtra}
                   {$collectorExtra}
-                  {$lobExtra}
-                  GROUP BY REFERENCE_TYPE");
+                  {$lobExtra}");
             }
             return $aging;
         }
