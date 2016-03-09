@@ -43,7 +43,7 @@ class Application_Model_Train extends Application_Model_Base
             LEFT JOIN FILES\$ACTIONS A ON T.SETACTION = A.ACTION_ID
             LEFT JOIN FILES\$STATES S ON T.STATE_ID = S.STATE_ID
             LEFT JOIN SYSTEM\$TEMPLATES T2 ON T.TEMPLATE_ID = T2.TEMPLATE_ID
-            where T.VISIBLE='Y' order by TRAIN_TYPE,CODE");
+            where T.VISIBLE='Y' order by TRAIN_TYPE,ORDER_CYCLE");
     }
 
     public function getTrain($train_id)
