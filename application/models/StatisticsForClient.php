@@ -65,69 +65,27 @@ class Application_Model_StatisticsForClient extends Application_Model_Base
                     $lobExtra = "AND R.CONTRACT_LINEOFBUSINESS = '{$lob}'";
                 }
 
+                $dateExtra = "(CURRENT_DATE - R.START_DATE) <=90";
+                $aging[$type->CODE]['1Q'] = $this->getSumByValuta($dateExtra, $groupField, $type->GROUPCODE, $underwriterExtra, $collectorExtra, $lobExtra);
 
-                $aging[$type->CODE]['1Q'] = $this->db->get_row("select COUNT(*),SUM(R.AMOUNT)
-                  from files\$references R
-                  JOIN FILES\$FILES F ON F.FILE_ID = R.FILE_ID WHERE
-                  (CURRENT_DATE - R.START_DATE) <=90
-                  AND $groupField =  '{$type->GROUPCODE}'
-                  {$underwriterExtra}
-                  {$collectorExtra}
-                  {$lobExtra}");
+                $dateExtra = "(CURRENT_DATE - R.START_DATE) >90 AND (CURRENT_DATE - R.START_DATE) <=180";
+                $aging[$type->CODE]['2Q'] = $this->getSumByValuta($dateExtra, $groupField, $type->GROUPCODE, $underwriterExtra, $collectorExtra, $lobExtra);
 
-                $aging[$type->CODE]['2Q'] = $this->db->get_row("select COUNT(*),SUM(R.AMOUNT)
-                  from files\$references R
-                  JOIN FILES\$FILES F ON F.FILE_ID = R.FILE_ID WHERE
-                  (CURRENT_DATE - R.START_DATE) >90 AND (CURRENT_DATE - R.START_DATE) <=180
-                   AND $groupField =  '{$type->GROUPCODE}'
-                  {$underwriterExtra}
-                  {$collectorExtra}
-                  {$lobExtra}");
+                $dateExtra = "(CURRENT_DATE - R.START_DATE) >180 AND (CURRENT_DATE - R.START_DATE) <=270";
+                $aging[$type->CODE]['3Q'] = $this->getSumByValuta($dateExtra, $groupField, $type->GROUPCODE, $underwriterExtra, $collectorExtra, $lobExtra);
 
-                $aging[$type->CODE]['3Q'] = $this->db->get_row("select COUNT(*),SUM(R.AMOUNT)
-                  from files\$references R
-                  JOIN FILES\$FILES F ON F.FILE_ID = R.FILE_ID WHERE
-                  (CURRENT_DATE - R.START_DATE) >180 AND (CURRENT_DATE - R.START_DATE) <=270
-                   AND $groupField =  '{$type->GROUPCODE}'
-                  {$underwriterExtra}
-                  {$collectorExtra}
-                  {$lobExtra}");
+                $dateExtra = "(CURRENT_DATE - R.START_DATE) >270 AND (CURRENT_DATE - R.START_DATE) <= 360";
+                $aging[$type->CODE]['4Q'] = $this->getSumByValuta($dateExtra, $groupField, $type->GROUPCODE, $underwriterExtra, $collectorExtra, $lobExtra);
 
-                $aging[$type->CODE]['4Q'] = $this->db->get_row("select COUNT(*),SUM(R.AMOUNT)
-                  from files\$references R
-                  JOIN FILES\$FILES F ON F.FILE_ID = R.FILE_ID WHERE
-                  (CURRENT_DATE - R.START_DATE) >270 AND (CURRENT_DATE - R.START_DATE) <= 360
-                   AND $groupField =  '{$type->GROUPCODE}'
-                  {$underwriterExtra}
-                  {$collectorExtra}
-                  {$lobExtra}");
+                $dateExtra = "(CURRENT_DATE - R.START_DATE) >360 AND (CURRENT_DATE - R.START_DATE) <= 730";
+                $aging[$type->CODE]['1Y'] = $this->getSumByValuta($dateExtra, $groupField, $type->GROUPCODE, $underwriterExtra, $collectorExtra, $lobExtra);
 
-                $aging[$type->CODE]['1Y'] = $this->db->get_row("select COUNT(*),SUM(R.AMOUNT)
-                  from files\$references R
-                  JOIN FILES\$FILES F ON F.FILE_ID = R.FILE_ID WHERE
-                  (CURRENT_DATE - R.START_DATE) >360 AND (CURRENT_DATE - R.START_DATE) <= 730
-                   AND $groupField = '{$type->GROUPCODE}'
-                  {$underwriterExtra}
-                  {$collectorExtra}
-                  {$lobExtra}");
+                $dateExtra = "(CURRENT_DATE - R.START_DATE) >730 AND (CURRENT_DATE - R.START_DATE) <= 1095";
+                $aging[$type->CODE]['2Y'] = $this->getSumByValuta($dateExtra, $groupField, $type->GROUPCODE, $underwriterExtra, $collectorExtra, $lobExtra);
 
-                $aging[$type->CODE]['2Y'] = $this->db->get_row("select COUNT(*),SUM(R.AMOUNT)
-                  from files\$references R
-                  JOIN FILES\$FILES F ON F.FILE_ID = R.FILE_ID WHERE
-                  (CURRENT_DATE - R.START_DATE) >730 AND (CURRENT_DATE - R.START_DATE) <= 1095
-                   AND $groupField =  {$type->GROUPCODE}
-                  {$underwriterExtra}
-                  {$collectorExtra}
-                  {$lobExtra}");
+                $dateExtra = "(CURRENT_DATE - R.START_DATE) >1095";
+                $aging[$type->CODE]['3Y'] = $this->getSumByValuta($dateExtra, $groupField, $type->GROUPCODE, $underwriterExtra, $collectorExtra, $lobExtra);
 
-                $aging[$type->CODE]['3Y'] = $this->db->get_row("select COUNT(*),SUM(R.AMOUNT)
-                  from files\$references R
-                  JOIN FILES\$FILES F ON F.FILE_ID = R.FILE_ID WHERE
-                  (CURRENT_DATE - R.START_DATE) >1095
-                   AND $groupField =  '{$type->GROUPCODE}'
-                  {$underwriterExtra}
-                  {$collectorExtra}
-                  {$lobExtra}");
             }
             return $aging;
         }
@@ -181,6 +139,42 @@ class Application_Model_StatisticsForClient extends Application_Model_Base
                   (CURRENT_DATE - R.START_DATE) >1095 $collectorExtra");
         return $aging;
 
+    }
+
+    public function getSumByValuta($dateExtra, $groupField, $groupCode, $underwriterExtra = false, $collectorExtra = false, $lobExtra = false)
+    {
+        // CONVERSION RATES in array, kan in tweede fase uit db komen //
+        $conversionRates = array ('EUR' => '1', 'GBP' => '1.29242342', 'USD' => '0.909008272');
+
+        $sumValutaTotal = 0;
+        $sumCount = 0;
+
+        $valutaSums = $this->db->get_results("select R.VALUTA, COUNT(*),SUM(R.AMOUNT)
+                  from files\$references R
+                  JOIN FILES\$FILES F ON F.FILE_ID = R.FILE_ID WHERE
+                  {$dateExtra}
+                  AND {$groupField} =  '{$groupCode}'
+                  {$underwriterExtra}
+                  {$collectorExtra}
+                  {$lobExtra}
+		GROUP BY R.VALUTA");
+
+
+        foreach ($valutaSums as $valutaTotal)
+        {
+            $valuta = $valutaTotal->VALUTA;
+            $sumValutaTotal += $valutaTotal->SUM * $conversionRates["{$valuta}"];
+            $sumCount += $valutaTotal->COUNT;
+        }
+
+        $roundSumTotal = round($sumValutaTotal, 2);
+
+        $return = (object)[
+            'COUNT' => $sumCount,
+            'SUM' => $roundSumTotal,
+        ];
+
+        return $return;
     }
 }
 
