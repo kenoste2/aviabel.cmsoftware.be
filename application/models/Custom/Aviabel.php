@@ -120,6 +120,10 @@ class Application_Model_Custom_Aviabel extends Application_Model_Base
 
         $line[$columns['DEVISION_CODE']] = str_replace('"','', $line[$columns['DEVISION_CODE']]);
 
+        if ($line[$columns['DEVISION_CODE']] == 'AMS') {
+            return true;
+        }
+
         $data = array(
             'DEVISION_CODE' => trim($line[$columns['DEVISION_CODE']]),
             'CLIENT_NUMBER' => $reference,
@@ -222,21 +226,22 @@ class Application_Model_Custom_Aviabel extends Application_Model_Base
             if (stripos($reference,"/")!== false) {
                 list($reference,$contractNumber) = explode("/",$reference);
             }
+            $languagesObj = new Application_Model_Languages();
+            $countryObj = new Application_Model_Countries();
 
 
             $debtorId = $this->db->get_var("SELECT DEBTOR_ID FROM FILES\$FILES WHERE REFERENCE like  ''");
             if (empty($debtorId)) {
                 $dataRow = $this->db->get_row("SELECT FIRST 1 *  FROM IMPORT\$INVOICES WHERE CLIENT_NUMBER like '{$reference}%'");
 
-                $countryObj = new Application_Model_Countries();
                 $countryId = $countryObj->getCountryByCode($dataRow->CLIENT_COUNTRY);
                 if (empty($countryId)) {
                     $countryId = 4;
                 }
 
-                $languagesObj = new Application_Model_Languages();
 
-                $trainType = $this->db->get_var("select TRAIN_TYPE  from CLIENTS\$CLIENTS WHERE CLIENT_ID = '{$dataRow->CLIENT_ID}'");
+                $trainType = $this->getTrainType($dataRow->LEDGER_ACCOUNT);
+
                 if (empty($trainType)) {
                     $trainType = $this->functions->getUserSetting('BASE_TRAIN_TYPE');
                 }
@@ -256,7 +261,27 @@ class Application_Model_Custom_Aviabel extends Application_Model_Base
                     'TRAIN_TYPE' => $trainType,
                 );
                 $debtorId = $debtorsObj->create($data);
+            } else {
+                $dataRow = $this->db->get_row("SELECT FIRST 1 *  FROM IMPORT\$INVOICES WHERE CLIENT_NUMBER like '{$reference}%'");
+                $countryId = $countryObj->getCountryByCode($dataRow->CLIENT_COUNTRY);
+                if (empty($countryId)) {
+                    $countryId = 4;
+                }
+                $data = array(
+                    'NAME' => $dataRow->CLIENT_NAME,
+                    'ADDRESS' => $dataRow->CLIENT_ADDRESS,
+                    'ZIP_CODE' => $dataRow->CLIENT_ZIPCODE,
+                    'CITY' => $dataRow->CLIENT_PLACE,
+                    'COUNTRY_ID' => $countryId,
+                    'LANGUAGE_ID' => $languagesObj->getIdByCode($dataRow->CLIENT_LANGUAGE),
+                    'E_MAIL' => $dataRow->CLIENT_EMAIL,
+                    'TELEPHONE' => $dataRow->CLIENT_TEL,
+                    'TELEFAX' => "",
+                    'VATNR' => $dataRow->CLIENT_VAT,
+                );
+                $debtorsObj->save($data, $debtorId);
             }
+
             $sql = "UPDATE IMPORT\$INVOICES SET DEBTOR_ID = $debtorId WHERE CLIENT_NUMBER = '{$row->CLIENT_NUMBER}' ";
             $this->db->query($sql);
         }
@@ -403,5 +428,29 @@ class Application_Model_Custom_Aviabel extends Application_Model_Base
 
     }
 
+
+
+    public function getTrainType($ledgerAccount) {
+
+
+        $type = "";
+
+        switch ($ledgerAccount) {
+            case '400000':
+                $type = "INSURED";
+                break;
+            case '400100':
+                $type = "BROKER";
+                break;
+            case '401000':
+                $type = "CEDENT";
+                break;
+            case '400008':
+            case '400108':
+                $type = "LAWYER";
+                break;
+        }
+        return $type;
+    }
 
 }
