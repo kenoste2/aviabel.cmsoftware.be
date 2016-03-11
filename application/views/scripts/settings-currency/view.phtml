@@ -1,0 +1,48 @@
+<?php print $this->form ?>
+
+<?php
+if ($this->formError) {
+    print $this->Error($this->G("not_all_fields_c"));
+}
+?>
+
+    <div class="aaa-theme-flex-row flex-content-row">
+        <div class="col-1">
+            <div class="panel panel-default aaa-theme-content-widget white-bg no-padding aaa-theme-overflow-hidden">
+                <div class="panel-heading aaa-theme-position-relative"><h2 class="text-uppercase"><?php $this->T("recent_rate_c") ?></h2></div>
+                <div class="table-responsive">
+
+                    <table class="table table-striped table-bordered">
+                        <thead>
+                        <tr>
+                            <td><?php $this->T("valuta_c"); ?></td>
+                            <td><?php $this->T("exchengerate_c"); ?></td>
+                            <td><?php $this->T("date_c"); ?></td>
+                            <td><?php $this->T("by_c"); ?></td>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <?php foreach ($this->currencyRates as $currency => $attributes): ?>
+                            <?php if($currency == 'EUR'){continue; } ?>
+                            <tr>
+                                <td><?php echo $currency; ?></td>
+                                <td><?php echo $attributes['RATE']; ?></td>
+                                <td><?php echo $attributes['CREATION_DATE']; ?></td>
+                                <td><?php echo $attributes['CREATION_USER']; ?></td>
+                            </tr>
+                            <?php endforeach; ?>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <p style="color: #777777; margin-top: 10px; text-align: center;"><?php $this->T("exchange_foreign_eur_c"); ?></p>
+
+        </div>
+    </div>
+
+<script>
+    $(function() {
+        $("#CREATION_DATE").datepicker({dateFormat: 'yy/mm/dd'});
+    });
+</script>

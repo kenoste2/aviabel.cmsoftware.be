@@ -179,6 +179,29 @@ class Application_Model_CommonFunctions
         return $tekst;
     }
 
+    public function getCurrencyRates($date = false)
+    {
+        global $db;
+
+        $query = "SELECT VALUTA FROM CURRENCY_RATES group by VALUTA";
+        $currencys = $db->get_results($query);
+
+        $currencyRates = array();
+
+        foreach ($currencys as $currency){
+            if(!empty($date)) {
+                $dateExtra = "AND CREATION_DATE <= '{$date}'";
+            }
+            $query = "SELECT first 1 RATE, CREATION_DATE, CREATION_USER FROM CURRENCY_RATES where  VALUTA='{$currency->VALUTA}'
+                      {$dateExtra}
+                      order by CREATION_DATE DESC";
+            $rate = $db->get_row($query);
+
+            $attributes = array('RATE' => $rate->RATE, 'CREATION_DATE' => $rate->CREATION_DATE, 'CREATION_USER' => $rate->CREATION_USER);
+            $currencyRates[$currency->VALUTA] = $attributes;
+        }
+        return $currencyRates;
+    }
 
     function saveData($tableName, $data, $where = false, $returnField = false, $escapeSql = false)
     {

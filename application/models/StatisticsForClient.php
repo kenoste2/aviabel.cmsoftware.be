@@ -143,9 +143,6 @@ class Application_Model_StatisticsForClient extends Application_Model_Base
 
     public function getSumByValuta($dateExtra, $groupField, $groupCode, $underwriterExtra = false, $collectorExtra = false, $lobExtra = false)
     {
-        // CONVERSION RATES in array, kan in tweede fase uit db komen //
-        $conversionRates = array ('EUR' => '1', 'GBP' => '1.29242342', 'USD' => '0.909008272');
-
         $sumValutaTotal = 0;
         $sumCount = 0;
 
@@ -159,11 +156,12 @@ class Application_Model_StatisticsForClient extends Application_Model_Base
                   {$lobExtra}
 		GROUP BY R.VALUTA");
 
-
         foreach ($valutaSums as $valutaTotal)
         {
             $valuta = $valutaTotal->VALUTA;
-            $sumValutaTotal += $valutaTotal->SUM * $conversionRates["{$valuta}"];
+            $conversionRates = $this->functions->getCurrencyRates($date = false);
+
+            $sumValutaTotal += $valutaTotal->SUM / $conversionRates[$valuta]['RATE'];
             $sumCount += $valutaTotal->COUNT;
         }
 

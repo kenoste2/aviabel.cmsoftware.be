@@ -72,6 +72,9 @@ class ReportController extends BaseController
 
         $aging = $statisticsForClientModel->getAging($this->getRequest()->getParam('CONTRACT_UNDERWRITER'),$this->getRequest()->getParam('COLLECTOR_ID'), $this->getRequest()->getParam('CONTRACT_LINEOFBUSINESS'),$this->getRequest()->getParam('GROUP_BY'));
 
+        $getCurrencyRatings = new Application_Model_CommonFunctions();
+        $ratings = $getCurrencyRatings->getCurrencyRates();
+        $this->view->ratings = $ratings;
 
         $this->view->aging = $aging;
         $this->view->isClient = $this->isClient();

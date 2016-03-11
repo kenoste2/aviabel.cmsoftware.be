@@ -95,7 +95,14 @@
                 </tfoot>
                 </tbody>
             </table>
-
+            <p style="color: #777777; margin-top: 10px;">
+                (*) <?php echo $this->T('exchengerate_c') ?>:
+                <?php foreach ($this->ratings as $currency => $attributes): ?>
+                    <?php if($currency == 'EUR'){continue; } ?>
+                    EUR x
+                    <?php echo $currency; ?> = <?php echo $attributes['RATE']; ?> &nbsp;&nbsp;&nbsp;
+                <?php endforeach; ?>
+            </p>
 	                </div>
               </div>
             </div>
