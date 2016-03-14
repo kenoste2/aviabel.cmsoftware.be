@@ -33,7 +33,15 @@ class Application_Model_Files extends Application_Model_Base
         if (empty($data['TYPE_ID'])) {
             $data['TYPE_ID'] = $this->db->get_var("SELECT TYPE_ID FROM CLIENTS\$FILE_TYPES WHERE CLIENT_ID = {$data['CLIENT_ID']}");
         }
+
         $fileId = $this->addData('FILES$FILES', $data, 'FILE_ID');
+
+
+        print "<pre>";
+        print_r($data);
+        print "</pre>";
+        die("fileId : {$fileId}");
+
 
         if (!empty($invoices)) {
             foreach ($invoices as $invoice) {
