@@ -195,6 +195,48 @@ class CronController extends BaseController
         die("mails fetched");
     }
 
+    public function importCurrencyCsvAction()
+    {
+        $filePath = "/home/aaa/files/rates.csv";
+
+        $import = new Application_Model_Import();
+        $getNewRates = $import->importRatesCsv($filePath);
+
+        $getDbRates = new Application_Model_CommonFunctions();
+        $latestDbRates = $getDbRates->getCurrencyRates();
+
+        $save = new Application_Model_CommonFunctions();
+
+        $dbRates = array();
+        foreach ($latestDbRates as $currency => $info)
+        {
+            if ($currency == 'EUR'){ continue; }
+            $dbRates[$currency] = $info['CREATION_DATE'];
+        }
+
+        $counter = 0;
+        foreach ($getNewRates as $line => $rate)
+        {
+            $counter++;
+
+            $valuta = $rate['code'];
+            $date = $rate['date'];
+
+            if($date <= $dbRates[$valuta]) { continue; }
+
+            $data = array('RATE' => $rate['rate'], 'CREATION_DATE' => $date, 'CREATION_USER' => 'Import', 'VALUTA' => $valuta);
+            $save->saveData('CURRENCY_RATES', $data);
+
+        }
+
+        if ($counter == 0)
+        {
+            die("No new currency data was imported.");
+        } else {
+            die("{$counter} new rating(s) imported successfully!");
+        }
+    }
+
     private function saveMailsFromMailbox()
     {
         $obj = new Application_Model_MailFetch();

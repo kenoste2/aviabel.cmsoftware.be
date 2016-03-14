@@ -85,6 +85,24 @@ class Application_Model_Import extends Application_Model_Base
         return $counter;
     }
 
+    public function importRatesCsv($filePath)
+    {
+        $file = fopen($filePath, 'r');
+        $importedRates = array();
+
+        $header = null;
+        while ($row = fgetcsv($file)) {
+            if ($header === null) {
+                $header = $row;
+                continue;
+            }
+            $importedRates[] = array_combine($header, $row);
+        }
+        fclose($file);
+
+        return $importedRates;
+    }
+
 
     protected function truncate()
     {
