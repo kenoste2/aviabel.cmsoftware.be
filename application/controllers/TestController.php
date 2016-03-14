@@ -25,4 +25,33 @@ class TestController extends BaseController
         $standBelgian =  $filesActionsObj->standardizePhoneNumber($belgian);
         echo "<br>{$belgian} => {$standBelgian}";
     }
+
+    public function importAction() {
+
+        $filesObj = new Application_Model_Files();
+
+        $stateId = $this->functions->getUserSetting('factuur_aanmaak_status');
+
+        $dataRow = $this->db->get_row("SELECT FIRST 1 *  FROM IMPORT\$INVOICES WHERE CLIENT_NUMBER = '003634/14010018/EUR'");
+        if (empty($fileId)) {
+            $data = array(
+                'FILE_NR' => $filesObj->getNextFileNr(false),
+                'CLIENT_ID' => $dataRow->CLIENT_ID,
+                'DEBTOR_ID' => $dataRow->DEBTOR_ID,
+                'REFERENCE' => '003634/14010018/EUR',
+                'COLLECTOR_ID' => $dataRow->COLLECTOR_ID,
+                'STATE_ID' => $stateId,
+                'VALUTA' => $dataRow->VALUTA,
+                'CONTRACT_REFERENCE' => $dataRow->CONTRACT_REFERENCE,
+                'CONTRACT_DESCRIPTION' => $dataRow->CONTRACT_DESCRIPTION,
+            );
+            $filesObj = new Application_Model_Files();
+            $fileId = $filesObj->create($data);
+
+            die ("fileid : {$fileId} ");
+
+        }
+    }
+
+
 }
