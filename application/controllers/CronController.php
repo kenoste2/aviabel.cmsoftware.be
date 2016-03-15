@@ -202,19 +202,8 @@ class CronController extends BaseController
         $import = new Application_Model_Import();
         $getNewRates = $import->importRatesCsv($filePath);
 
-        $getDbRates = new Application_Model_CommonFunctions();
-        $latestDbRates = $getDbRates->getCurrencyRates();
-
         $save = new Application_Model_CommonFunctions();
 
-        $dbRates = array();
-        foreach ($latestDbRates as $currency => $info)
-        {
-            if ($currency == 'EUR'){ continue; }
-            $dbRates[$currency] = $info['CREATION_DATE'];
-        }
-
-        $counter = 0;
         foreach ($getNewRates as $line => $rate)
         {
             $counter++;
@@ -222,19 +211,19 @@ class CronController extends BaseController
             $valuta = $rate['code'];
             $date = $rate['date'];
 
-            if($date <= $dbRates[$valuta]) { continue; }
+            $query = "SELECT first 1 ID FROM CURRENCY_RATES WHERE CREATION_DATE = '{$date}' AND VALUTA = '{$valuta}'";
+            $result = $this->db->get_var($query);
+
+            $whereExtra = false;
+            if (!empty($result)){
+                $whereExtra = "ID = '{$result}'";
+            }
 
             $data = array('RATE' => $rate['rate'], 'CREATION_DATE' => $date, 'CREATION_USER' => 'Import', 'VALUTA' => $valuta);
-            $save->saveData('CURRENCY_RATES', $data);
+            $save->saveData('CURRENCY_RATES', $data, $whereExtra);
 
         }
-
-        if ($counter == 0)
-        {
-            die("No new currency data was imported.");
-        } else {
-            die("{$counter} new rating(s) imported successfully!");
-        }
+            die("Done importCurrencyCsvAction");
     }
 
     private function saveMailsFromMailbox()
