@@ -159,6 +159,8 @@ class Application_Model_Custom_Aviabel extends Application_Model_Base
             'LEDGER_ACCOUNT' => trim($line[$columns['LEDGER_ACCOUNT']]),
             'CONTRACT_DESCRIPTION' => trim($line[$columns['CONTRACT_DESCRIPTION']]),
             'CONTRACT_REFERENCE' => trim($line[$columns['CONTRACT_REFERENCE']]),
+            'ULTIMATE_DUE_DATE' => trim($line[$columns['ULTIMATE_DUE_DATE']]),
+
         );
         $this->addData("IMPORT\$INVOICES", $data);
 
@@ -314,7 +316,7 @@ class Application_Model_Custom_Aviabel extends Application_Model_Base
                 $fileId = $filesObj->create($data);
             } else {
                 $sql = "UPDATE FILES\$FILES SET CONTRACT_REFERENCE = '{$dataRow->CONTRACT_REFERENCE}',
-                    CONTRACT_DESCRIPTION = '{$dataRow->CONTRACT_DESCRIPTION}' WHERE FILE_ID = {$fileId}";
+                    CONTRACT_DESCRIPTION = '{$dataRow->CONTRACT_DESCRIPTION}', COLLECTOR_ID = $dataRow->COLLECTOR_ID   WHERE FILE_ID = {$fileId}";
                 $this->db->query($sql);
             }
 
@@ -372,6 +374,7 @@ class Application_Model_Custom_Aviabel extends Application_Model_Base
                         'CONTRACT_LINEOFBUSINESS' => $invoice->CONTRACT_LINEOFBUSINESS,
                         'CONTRACT_LEAD' => $invoice->CONTRACT_LEAD,
                         'LEDGER_ACCOUNT' => $invoice->LEDGER_ACCOUNT,
+                        'ULTIMATE_DUE_DATE' => $invoice->ULTIMATE_DUE_DATE,
                         'LAST_IMPORT' => 1,
                     );
                     $referencesObj->create($data);
