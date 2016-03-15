@@ -37,12 +37,6 @@ class Application_Model_Files extends Application_Model_Base
         $fileId = $this->addData('FILES$FILES', $data, 'FILE_ID');
 
 
-        print "<pre>";
-        print_r($data);
-        print "</pre>";
-        die("fileId : {$fileId}");
-
-
         if (!empty($invoices)) {
             foreach ($invoices as $invoice) {
                 $invoice['FILE_ID'] = $fileId;

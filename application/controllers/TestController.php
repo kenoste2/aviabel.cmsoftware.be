@@ -32,13 +32,13 @@ class TestController extends BaseController
 
         $stateId = $this->functions->getUserSetting('factuur_aanmaak_status');
 
-        $dataRow = $this->db->get_row("SELECT FIRST 1 *  FROM IMPORT\$INVOICES WHERE CLIENT_NUMBER = '003634/14010018/EUR'");
+        $dataRow = $this->db->get_row("SELECT FIRST 1 *  FROM IMPORT\$INVOICES WHERE CLIENT_NUMBER = '177562/14008367/EUR'");
         if (empty($fileId)) {
             $data = array(
                 'FILE_NR' => $filesObj->getNextFileNr(false),
                 'CLIENT_ID' => $dataRow->CLIENT_ID,
                 'DEBTOR_ID' => $dataRow->DEBTOR_ID,
-                'REFERENCE' => '003634/14010018/EUR',
+                'REFERENCE' => '177562/14008367/EUR',
                 'COLLECTOR_ID' => $dataRow->COLLECTOR_ID,
                 'STATE_ID' => $stateId,
                 'VALUTA' => $dataRow->VALUTA,
