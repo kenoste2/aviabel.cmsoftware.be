@@ -65,25 +65,25 @@ class Application_Model_StatisticsForClient extends Application_Model_Base
                     $lobExtra = "AND R.CONTRACT_LINEOFBUSINESS = '{$lob}'";
                 }
 
-                $dateExtra = "(CURRENT_DATE - R.START_DATE) <=90";
+                $dateExtra = "(CURRENT_DATE - R.ULTIMATE_DUE_DATE) <=90";
                 $aging[$type->CODE]['1Q'] = $this->getSumByValuta($dateExtra, $groupField, $type->GROUPCODE, $underwriterExtra, $collectorExtra, $lobExtra);
 
-                $dateExtra = "(CURRENT_DATE - R.START_DATE) >90 AND (CURRENT_DATE - R.START_DATE) <=180";
+                $dateExtra = "(CURRENT_DATE - R.ULTIMATE_DUE_DATE) >90 AND (CURRENT_DATE - R.ULTIMATE_DUE_DATE) <=180";
                 $aging[$type->CODE]['2Q'] = $this->getSumByValuta($dateExtra, $groupField, $type->GROUPCODE, $underwriterExtra, $collectorExtra, $lobExtra);
 
-                $dateExtra = "(CURRENT_DATE - R.START_DATE) >180 AND (CURRENT_DATE - R.START_DATE) <=270";
+                $dateExtra = "(CURRENT_DATE - R.ULTIMATE_DUE_DATE) >180 AND (CURRENT_DATE - R.ULTIMATE_DUE_DATE) <=270";
                 $aging[$type->CODE]['3Q'] = $this->getSumByValuta($dateExtra, $groupField, $type->GROUPCODE, $underwriterExtra, $collectorExtra, $lobExtra);
 
-                $dateExtra = "(CURRENT_DATE - R.START_DATE) >270 AND (CURRENT_DATE - R.START_DATE) <= 360";
+                $dateExtra = "(CURRENT_DATE - R.ULTIMATE_DUE_DATE) >270 AND (CURRENT_DATE - R.ULTIMATE_DUE_DATE) <= 360";
                 $aging[$type->CODE]['4Q'] = $this->getSumByValuta($dateExtra, $groupField, $type->GROUPCODE, $underwriterExtra, $collectorExtra, $lobExtra);
 
-                $dateExtra = "(CURRENT_DATE - R.START_DATE) >360 AND (CURRENT_DATE - R.START_DATE) <= 730";
+                $dateExtra = "(CURRENT_DATE - R.ULTIMATE_DUE_DATE) >360 AND (CURRENT_DATE - R.ULTIMATE_DUE_DATE) <= 730";
                 $aging[$type->CODE]['1Y'] = $this->getSumByValuta($dateExtra, $groupField, $type->GROUPCODE, $underwriterExtra, $collectorExtra, $lobExtra);
 
-                $dateExtra = "(CURRENT_DATE - R.START_DATE) >730 AND (CURRENT_DATE - R.START_DATE) <= 1095";
+                $dateExtra = "(CURRENT_DATE - R.ULTIMATE_DUE_DATE) >730 AND (CURRENT_DATE - R.ULTIMATE_DUE_DATE) <= 1095";
                 $aging[$type->CODE]['2Y'] = $this->getSumByValuta($dateExtra, $groupField, $type->GROUPCODE, $underwriterExtra, $collectorExtra, $lobExtra);
 
-                $dateExtra = "(CURRENT_DATE - R.START_DATE) >1095";
+                $dateExtra = "(CURRENT_DATE - R.ULTIMATE_DUE_DATE) >1095";
                 $aging[$type->CODE]['3Y'] = $this->getSumByValuta($dateExtra, $groupField, $type->GROUPCODE, $underwriterExtra, $collectorExtra, $lobExtra);
 
             }
@@ -105,38 +105,38 @@ class Application_Model_StatisticsForClient extends Application_Model_Base
         $aging['1Q'] = $this->db->get_row("select COUNT(*),SUM(R.AMOUNT)
                   from files\$references R
                   JOIN FILES\$FILES F ON F.FILE_ID = R.FILE_ID WHERE
-                  (CURRENT_DATE - R.START_DATE) <=90 $collectorExtra");
+                  (CURRENT_DATE - R.ULTIMATE_DUE_DATE) <=90 $collectorExtra");
 
 
         $aging['2Q'] = $this->db->get_row("select COUNT(*),SUM(R.AMOUNT)
                   from files\$references R
                   JOIN FILES\$FILES F ON F.FILE_ID = R.FILE_ID WHERE
-                  (CURRENT_DATE - R.START_DATE) >90 AND (CURRENT_DATE - R.START_DATE) <=180 $collectorExtra");
+                  (CURRENT_DATE - R.ULTIMATE_DUE_DATE) >90 AND (CURRENT_DATE - R.ULTIMATE_DUE_DATE) <=180 $collectorExtra");
 
         $aging['3Q'] = $this->db->get_row("select COUNT(*),SUM(R.AMOUNT)
                   from files\$references R
                   JOIN FILES\$FILES F ON F.FILE_ID = R.FILE_ID WHERE
-                  (CURRENT_DATE - R.START_DATE) >180 AND (CURRENT_DATE - R.START_DATE) <=270 $collectorExtra");
+                  (CURRENT_DATE - R.ULTIMATE_DUE_DATE) >180 AND (CURRENT_DATE - R.ULTIMATE_DUE_DATE) <=270 $collectorExtra");
 
         $aging['4Q'] = $this->db->get_row("select COUNT(*),SUM(R.AMOUNT)
                   from files\$references R
                   JOIN FILES\$FILES F ON F.FILE_ID = R.FILE_ID WHERE
-                  (CURRENT_DATE - R.START_DATE) >270 AND (CURRENT_DATE - R.START_DATE) <= 360 $collectorExtra");
+                  (CURRENT_DATE - R.ULTIMATE_DUE_DATE) >270 AND (CURRENT_DATE - R.ULTIMATE_DUE_DATE) <= 360 $collectorExtra");
 
         $aging['1Y'] = $this->db->get_row("select COUNT(*),SUM(R.AMOUNT)
                   from files\$references R
                   JOIN FILES\$FILES F ON F.FILE_ID = R.FILE_ID WHERE
-                  (CURRENT_DATE - R.START_DATE) >360 AND (CURRENT_DATE - R.START_DATE) <= 730 $collectorExtra");
+                  (CURRENT_DATE - R.ULTIMATE_DUE_DATE) >360 AND (CURRENT_DATE - R.ULTIMATE_DUE_DATE) <= 730 $collectorExtra");
 
         $aging['2Y'] = $this->db->get_row("select COUNT(*),SUM(R.AMOUNT)
                   from files\$references R
                   JOIN FILES\$FILES F ON F.FILE_ID = R.FILE_ID WHERE
-                  (CURRENT_DATE - R.START_DATE) >730 AND (CURRENT_DATE - R.START_DATE) <= 1095 $collectorExtra");
+                  (CURRENT_DATE - R.ULTIMATE_DUE_DATE) >730 AND (CURRENT_DATE - R.ULTIMATE_DUE_DATE) <= 1095 $collectorExtra");
 
         $aging['3Y'] = $this->db->get_row("select COUNT(*),SUM(R.AMOUNT)
                   from files\$references R
                   JOIN FILES\$FILES F ON F.FILE_ID = R.FILE_ID WHERE
-                  (CURRENT_DATE - R.START_DATE) >1095 $collectorExtra");
+                  (CURRENT_DATE - R.ULTIMATE_DUE_DATE) >1095 $collectorExtra");
         return $aging;
 
     }

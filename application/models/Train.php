@@ -56,9 +56,13 @@ class Application_Model_Train extends Application_Model_Base
         return $this->db->get_results("select CODE,TRAIN_TYPE,DESCRIPTION,SQL,DAYS from TRAIN where ACTIEF=1 order by DESCRIPTION");
     }
 
-    public function getTrainByType($type)
+    public function getTrainByType($type, $trainType = false)
     {
-        return $this->db->get_row("select * from TRAIN where CODE='$type' AND VISIBLE='Y'");
+        if (!empty($trainType)) {
+            return $this->db->get_row("select * from TRAIN where CODE='$type' AND VISIBLE='Y' AND TRAIN_TYPE = '{$trainType}' ");
+        } else {
+            return $this->db->get_row("select * from TRAIN where CODE='$type' AND VISIBLE='Y'");
+        }
     }
 
     //TODO: extremely similar to performTrainSql. Consider merging the 2 methods.
@@ -144,7 +148,9 @@ class Application_Model_Train extends Application_Model_Base
                     $sql = str_replace("WHERE", "WHERE F.COLLECTOR_ID = {$collectorId} AND ", $sql);
                 }
 
+
                 $counter = $this->db->get_var($sql);
+
                 if (!$counter) {
                     $counter = 0;
                 }
@@ -155,7 +161,7 @@ class Application_Model_Train extends Application_Model_Base
                     }
                 }
 
-                $counters[$row->CODE][$i] = $counter;
+                $counters[$row->TRAIN_TYPE .'_'. $row->CODE][$i] = $counter;
             }
         }
 

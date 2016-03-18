@@ -20,10 +20,10 @@
 							<tr>
 								<?php $rowTotal = 0; ?>
 								<td><?php echo $followUp->TRAIN_TYPE ?> : <?php echo $followUp->DESCRIPTION ?></td>
-								<?php foreach ($this->counters[$followUp->CODE] as $j => $counter): ?>
+								<?php foreach ($this->counters[$followUp->TRAIN_TYPE.'_'.$followUp->CODE] as $j => $counter): ?>
 									<td>
 										<?php if ($counter > 0) : ?>
-											<a href="<?php echo $this->location() ?>/traject/list/i/<?php echo $j ?>/serie/1/type/<?php echo $followUp->CODE ?>/collector/<?php echo $this->selectedCollector ?>"><?php echo $counter; ?></a>
+											<a href="<?php echo $this->location() ?>/traject/list/i/<?php echo $j ?>/serie/1/type/<?php echo $followUp->CODE ?>/collector/<?php echo $this->selectedCollector?>/train_type/<?php echo  $followUp->TRAIN_TYPE?>"><?php echo $counter; ?></a>
 										<?php else: ?>
 											<?php echo $counter; ?>
 										<?php endif; ?>

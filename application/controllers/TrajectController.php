@@ -36,11 +36,12 @@ class TrajectController extends BaseController {
         $i = $this->getRequest()->getParam('i', 0);
         $serie = $this->getRequest()->getParam('serie', 1);
         $collector = $this->getRequest()->getParam('collector');
+        $trainType = $this->getRequest()->getParam('train_type');
         $type = $this->getRequest()->getParam('type', '');
         $session = new Zend_Session_Namespace('FILES');
 
         $trainModel = new Application_Model_Train();
-        $results = $trainModel->performTrainSql($trainModel->getTrainByType($type), $i, $collector);
+        $results = $trainModel->performTrainSql($trainModel->getTrainByType($type, $trainType), $i, $collector);
 
         $session->fileList = array();
         foreach ($results as $index => $result) {
