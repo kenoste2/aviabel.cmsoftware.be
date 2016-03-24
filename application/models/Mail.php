@@ -45,7 +45,7 @@ class Application_Model_Mail extends Application_Model_Base {
 
         global $config;
 
-        $to = "premium.collections@aviabel.com";
+        //$to = "premium.collections@aviabel.com";
 
 
         if ($config->mailDecodeUtf8 == 'Y') {

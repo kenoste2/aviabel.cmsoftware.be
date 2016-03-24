@@ -7,6 +7,9 @@ class CronController extends BaseController
 
     public function trainAction()
     {
+
+        die("temporary disabled");
+
         global $config;
 
         $this->_helper->layout->disableLayout();

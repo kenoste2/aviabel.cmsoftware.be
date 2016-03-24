@@ -69,17 +69,6 @@ class Application_Model_Train extends Application_Model_Base
     private function getTrainSql($trainModule)
     {
         $rootSql = "select DISTINCT I.FILE_ID $trainModule->SQL";
-        $extraEndClause = " AND CLIENT_ID IN (SELECT CLIENT_ID FROM CLIENTS\$CLIENTS WHERE TRAIN_TYPE = '{$trainModule->TRAIN_TYPE}')";
-
-        //WARNING: because most of the query syntax is fetched from the train-table, it is
-        //         a bit hard to know for sure whether the query will be correct.
-        if (preg_match("/\bwhere\b/i", $rootSql) && preg_match("/\bfiles\\\$files_all_info\b/i", $rootSql)) {
-            $rootSql .= $extraEndClause;
-        }
-
-        $rootSql = str_replace("`","'",$rootSql);
-
-
         return $rootSql;
     }
 
