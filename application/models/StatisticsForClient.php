@@ -5,7 +5,7 @@ require_once 'application/models/Base.php';
 class Application_Model_StatisticsForClient extends Application_Model_Base
 {
     public function getAgingPeriods($period){
-        $periodsExtra = array('1Q' => '(CURRENT_DATE - R.ULTIMATE_DUE_DATE) <=90',
+        $periodsExtra = array('1Q' => '(CURRENT_DATE - R.ULTIMATE_DUE_DATE) <=90 AND (CURRENT_DATE - R.ULTIMATE_DUE_DATE) > 0',
                                 '2Q' => '(CURRENT_DATE - R.ULTIMATE_DUE_DATE) >90 AND (CURRENT_DATE - R.ULTIMATE_DUE_DATE) <=180',
                                 '3Q' => '(CURRENT_DATE - R.ULTIMATE_DUE_DATE) >180 AND (CURRENT_DATE - R.ULTIMATE_DUE_DATE) <=270',
                                 '4Q' => '(CURRENT_DATE - R.ULTIMATE_DUE_DATE) >270 AND (CURRENT_DATE - R.ULTIMATE_DUE_DATE) <= 360',
