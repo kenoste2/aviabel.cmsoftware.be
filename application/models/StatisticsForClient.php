@@ -213,7 +213,7 @@ class Application_Model_StatisticsForClient extends Application_Model_Base
         }
 
 
-        if (empty($groupby) OR $groupby == 'CASEWORKERS') {
+        if (empty($groupby) OR $groupby == 'CASEWORKERS' OR $groupby == 'DEFAULT') {
             $typeAdd ="F.COLLECTOR_CODE";
         }
         if ($groupby == 'LINEOBUSINESS') {
