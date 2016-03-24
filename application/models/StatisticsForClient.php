@@ -4,6 +4,18 @@ require_once 'application/models/Base.php';
 
 class Application_Model_StatisticsForClient extends Application_Model_Base
 {
+    public function getAgingPeriods($period){
+        $periodsExtra = array('1Q' => '(CURRENT_DATE - R.ULTIMATE_DUE_DATE) <=90 AND (CURRENT_DATE - R.ULTIMATE_DUE_DATE) > 0',
+                                '2Q' => '(CURRENT_DATE - R.ULTIMATE_DUE_DATE) >90 AND (CURRENT_DATE - R.ULTIMATE_DUE_DATE) <=180',
+                                '3Q' => '(CURRENT_DATE - R.ULTIMATE_DUE_DATE) >180 AND (CURRENT_DATE - R.ULTIMATE_DUE_DATE) <=270',
+                                '4Q' => '(CURRENT_DATE - R.ULTIMATE_DUE_DATE) >270 AND (CURRENT_DATE - R.ULTIMATE_DUE_DATE) <= 360',
+                                '1Y' => '(CURRENT_DATE - R.ULTIMATE_DUE_DATE) >360 AND (CURRENT_DATE - R.ULTIMATE_DUE_DATE) <= 730',
+                                '2Y' => '(CURRENT_DATE - R.ULTIMATE_DUE_DATE) >730 AND (CURRENT_DATE - R.ULTIMATE_DUE_DATE) <= 1095',
+                                '3Y' => '(CURRENT_DATE - R.ULTIMATE_DUE_DATE) >1095');
+        return $periodsExtra[$period];
+    }
+
+
     public function getStats($client_id)
     {
         return $this->db->get_results("select CREATION_YEAR,CREATION_MONTH,NUMBER_OF_FILES,AMOUNT,COSTS,INTERESTS,MISSED_FILES,
@@ -36,7 +48,7 @@ class Application_Model_StatisticsForClient extends Application_Model_Base
                 $types = $this->db->get_results("SELECT COLLECTOR_ID AS GROUPCODE,CODE FROM SYSTEM\$COLLECTORS WHERE ACTIF='Y' ORDER BY CODE ");
                 $groupField = 'F.COLLECTOR_ID';
                 break;
-            case 'LINEOBUSINESS':
+                case 'LINEOBUSINESS':
                 $types = $this->db->get_results("SELECT CONTRACT_LINEOFBUSINESS AS GROUPCODE, CONTRACT_LINEOFBUSINESS AS CODE FROM FILES\$REFERENCES GROUP BY CONTRACT_LINEOFBUSINESS ORDER BY CONTRACT_LINEOFBUSINESS");
                 $groupField = 'R.CONTRACT_LINEOFBUSINESS';
                 break;
@@ -46,44 +58,44 @@ class Application_Model_StatisticsForClient extends Application_Model_Base
                 break;
         }
 
-        $aging = array();
+                $aging = array();
 
-        if (!empty($types)) {
-            foreach ($types as $type) {
+                if (!empty($types)) {
+                    foreach ($types as $type) {
 
-                if (empty($type->CODE)) {
-                    continue;
+                        if (empty($type->CODE)) {
+                            continue;
+                        }
+
+                        if ($underwriter) {
+                            $underwriterExtra = "AND R.CONTRACT_UNDERWRITER = '{$underwriter}'";
+                        }
+                        if ($collectorId) {
+                            $collectorExtra = "AND F.COLLECTOR_ID = {$collectorId}";
+                        }
+                        if ($lob) {
+                            $lobExtra = "AND R.CONTRACT_LINEOFBUSINESS = '{$lob}'";
                 }
 
-                if ($underwriter) {
-                    $underwriterExtra = "AND R.CONTRACT_UNDERWRITER = '{$underwriter}'";
-                }
-                if ($collectorId) {
-                    $collectorExtra = "AND F.COLLECTOR_ID = {$collectorId}";
-                }
-                if ($lob) {
-                    $lobExtra = "AND R.CONTRACT_LINEOFBUSINESS = '{$lob}'";
-                }
-
-                $dateExtra = "(CURRENT_DATE - R.ULTIMATE_DUE_DATE) <=90";
+                $dateExtra = $this->getAgingPeriods('1Q');
                 $aging[$type->CODE]['1Q'] = $this->getSumByValuta($dateExtra, $groupField, $type->GROUPCODE, $underwriterExtra, $collectorExtra, $lobExtra);
 
-                $dateExtra = "(CURRENT_DATE - R.ULTIMATE_DUE_DATE) >90 AND (CURRENT_DATE - R.ULTIMATE_DUE_DATE) <=180";
+                $dateExtra = $this->getAgingPeriods('2Q');
                 $aging[$type->CODE]['2Q'] = $this->getSumByValuta($dateExtra, $groupField, $type->GROUPCODE, $underwriterExtra, $collectorExtra, $lobExtra);
 
-                $dateExtra = "(CURRENT_DATE - R.ULTIMATE_DUE_DATE) >180 AND (CURRENT_DATE - R.ULTIMATE_DUE_DATE) <=270";
+                $dateExtra = $this->getAgingPeriods('3Q');
                 $aging[$type->CODE]['3Q'] = $this->getSumByValuta($dateExtra, $groupField, $type->GROUPCODE, $underwriterExtra, $collectorExtra, $lobExtra);
 
-                $dateExtra = "(CURRENT_DATE - R.ULTIMATE_DUE_DATE) >270 AND (CURRENT_DATE - R.ULTIMATE_DUE_DATE) <= 360";
+                $dateExtra = $this->getAgingPeriods('4Q');
                 $aging[$type->CODE]['4Q'] = $this->getSumByValuta($dateExtra, $groupField, $type->GROUPCODE, $underwriterExtra, $collectorExtra, $lobExtra);
 
-                $dateExtra = "(CURRENT_DATE - R.ULTIMATE_DUE_DATE) >360 AND (CURRENT_DATE - R.ULTIMATE_DUE_DATE) <= 730";
+                $dateExtra = $this->getAgingPeriods('1Y');
                 $aging[$type->CODE]['1Y'] = $this->getSumByValuta($dateExtra, $groupField, $type->GROUPCODE, $underwriterExtra, $collectorExtra, $lobExtra);
 
-                $dateExtra = "(CURRENT_DATE - R.ULTIMATE_DUE_DATE) >730 AND (CURRENT_DATE - R.ULTIMATE_DUE_DATE) <= 1095";
+                $dateExtra = $this->getAgingPeriods('2Y');
                 $aging[$type->CODE]['2Y'] = $this->getSumByValuta($dateExtra, $groupField, $type->GROUPCODE, $underwriterExtra, $collectorExtra, $lobExtra);
 
-                $dateExtra = "(CURRENT_DATE - R.ULTIMATE_DUE_DATE) >1095";
+                $dateExtra = $this->getAgingPeriods('3Y');
                 $aging[$type->CODE]['3Y'] = $this->getSumByValuta($dateExtra, $groupField, $type->GROUPCODE, $underwriterExtra, $collectorExtra, $lobExtra);
 
             }
@@ -174,6 +186,112 @@ class Application_Model_StatisticsForClient extends Application_Model_Base
 
         return $return;
     }
+
+    public function getAgingExport($period, $limitResults, $type = false, $groupby = false, $collector = false, $underwriter = false, $lob = false, $xls = false) {
+
+        $dateExtra = "";
+        if ($period == '1q'){
+            $dateExtra = $this->getAgingPeriods('1Q');
+        }
+        if ($period == '2q'){
+            $dateExtra = $this->getAgingPeriods('2Q');
+        }
+        if ($period == '3q'){
+            $dateExtra = $this->getAgingPeriods('3Q');
+        }
+        if ($period == '4q'){
+            $dateExtra = $this->getAgingPeriods('4Q');
+        }
+        if ($period == '1y'){
+            $dateExtra = $this->getAgingPeriods('1Y');
+        }
+        if ($period == '2y'){
+            $dateExtra = $this->getAgingPeriods('2Y');
+        }
+        if ($period == '3y'){
+            $dateExtra = $this->getAgingPeriods('3Y');
+        }
+
+
+        if (empty($groupby) OR $groupby == 'CASEWORKERS' OR $groupby == 'DEFAULT') {
+            $typeAdd ="F.COLLECTOR_CODE";
+        }
+        if ($groupby == 'LINEOBUSINESS') {
+            $typeAdd ="R.CONTRACT_LINEOFBUSINESS";
+        }
+        if ($groupby == 'UNDERWRITERS') {
+            $typeAdd ="R.CONTRACT_UNDERWRITER";
+        }
+
+        $typeExtra= "";
+        if (!empty($type)) {
+            $typeExtra = "AND ".$typeAdd." = '".$type."'";
+        }
+
+        $limitExtra = "";
+        if (!empty($xls)) {
+            $limitExtra = "first ".$limitResults;
+        }
+
+        $query = "SELECT {$limitExtra} SUM(R.SALDO_AMOUNT) AS AMOUNT,
+                    F.REFERENCE,
+                    F.DEBTOR_NAME,
+                    F.COLLECTOR_CODE,
+                    R.VALUTA,
+                    R.LEDGER_ACCOUNT,
+                    F.LAST_ACTION_DATE,
+                    F.STATE_CODE,
+                    F.STATE_DESCRIPTION,
+                    R.CONTRACT_UNDERWRITER,
+                    F.FILE_ID
+                  FROM files\$references R 
+                  JOIN files\$files_all_info F ON F.FILE_ID = R.FILE_ID
+                  WHERE {$dateExtra}
+                  {$typeExtra}
+                  AND R.SALDO_AMOUNT > 0.00
+                  GROUP BY F.REFERENCE,
+                    F.DEBTOR_NAME,
+                    F.DEBTOR_NAME,
+                    F.COLLECTOR_CODE,
+                    R.VALUTA,
+                    R.LEDGER_ACCOUNT,
+                    F.LAST_ACTION_DATE,
+                    F.STATE_CODE,
+                    F.STATE_DESCRIPTION,
+                    R.CONTRACT_UNDERWRITER,
+                    F.FILE_ID";
+
+        $results = $this->db->get_results($query);
+
+        $returnArray = array();
+        $brokerArray = array();
+
+        foreach ($results as $row) {
+            $currentBroker = substr($row->REFERENCE, 0,6);
+
+            if (empty($brokerArray[$currentBroker])) {
+                $brokerArray[$currentBroker] = $this->db->get_var("SELECT SUM(SALDO_AMOUNT) FROM FILES\$FILES WHERE REFERENCE LIKE '$currentBroker%'");
+            }
+
+            $sql = "SELECT first 5 REMARK from files\$remarks WHERE FILE_ID = '{$row->FILE_ID}' ORDER BY REMARK_ID DESC";
+            $getRemarks = $this->db->get_results($sql);
+            $remarksArray = array();
+            foreach ($getRemarks as $remark) {
+                $remarksArray[] = $remark->REMARK;
+            }
+            $remarksString = implode(" | ",$remarksArray);
+
+            $row->BROKER_AMOUNT = $brokerArray[$currentBroker];
+            $row->REMARKS = $remarksString;
+            $row->STATUS = "Open";
+            $row->PERIOD = $period;
+            $returnArray[] = $row;
+        }
+
+        return $returnArray;
+    }
+
+
 }
 
 ?>

@@ -24,8 +24,7 @@
             font-size: 11px;
             position: relative;
         }
-    </style>
-    <style>
+
         #legenddiv {
             width: 100%;
             font-size: 11px;
@@ -36,7 +35,28 @@
             font-size: 11px;
             position: relative;
         }
+
+        a.thead:link, a.thead:visited {
+            text-decoration: none;
+            color: #000000;
+        }
+
+        a.thead:hover, a.thead:active {
+            text-decoration: none;
+            color: #e75a21;
+        }
+
+        a.tbody:link, a.tbody:visited {
+            text-decoration: none;
+            color: #000000;
+        }
+
+        a.tbody:hover, a.tbody:active {
+            text-decoration: none;
+            color: #ffffff;
+        }
     </style>
+
     <script type="text/javascript" src="<?php echo $this->location() ?>/public/amcharts/amcharts.js"></script>
     <script type="text/javascript" src="<?php echo $this->location() ?>/public/amcharts/pie.js"></script>
 
@@ -47,28 +67,79 @@
                 <thead>
                 <tr>
                     <td><?php echo $this->T('type_c') ?></td>
-                    <td>1Q</td>
-                    <td>2Q</td>
-                    <td>3Q</td>
-                    <td>4Q</td>
-                    <td>1Y</td>
-                    <td>2Y</td>
-                    <td>3Y</td>
+                    <td><a class="thead" href="export-aging/period/1q">1Q</a></td>
+                    <td><a class="thead" href="export-aging/period/2q">2Q</a></td>
+                    <td><a class="thead" href="export-aging/period/3q">3Q</a></td>
+                    <td><a class="thead" href="export-aging/period/4q">4Q</a></td>
+                    <td><a class="thead" href="export-aging/period/1y">1Y</a></td>
+                    <td><a class="thead" href="export-aging/period/2y">2Y</a></td>
+                    <td><a class="thead" href="export-aging/period/3y">3Y</a></td>
                     <td><?php echo $this->T('Total_c') ?></td>
                 </tr>
                 </thead>
                 <tbody>
+
+                <?php
+                if (!empty($this->selectionData['GROUP_BY'])){
+                    $groupBy = "/groupby/".$this->selectionData['GROUP_BY'];
+                } else { $groupBy = "";}
+
+                if (!empty($this->selectionData['COLLECTOR_ID'])){
+                    $collectorId = "/collector/".$this->selectionData['COLLECTOR_ID'];
+                } else { $collectorId = "";}
+
+                if (!empty($this->selectionData['CONTRACT_UNDERWRITER'])){
+                    $underWriter = "/underwriter/".$this->selectionData['CONTRACT_UNDERWRITER'];
+                } else { $underWriter = "";}
+
+                if (!empty($this->selectionData['CONTRACT_LINEOFBUSINESS'])){
+                    $lob = "/lob/".$this->selectionData['CONTRACT_LINEOFBUSINESS'];
+                } else { $lob = "";}
+
+                ?>
+
                 <?php foreach ($this->aging as $type => $row): ?>
-                    <tr>
+
+                    <tr class="table_aging_row">
                         <td><?php echo $type ?></td>
-                        <td align="right"><?php echo $this->amount($row['1Q']->SUM); ?></td>
-                        <td align="right"><?php echo $this->amount($row['2Q']->SUM); ?></td>
-                        <td align="right"><?php echo $this->amount($row['3Q']->SUM); ?></td>
-                        <td align="right"><?php echo $this->amount($row['4Q']->SUM); ?></td>
-                        <td align="right"><?php echo $this->amount($row['1Y']->SUM); ?></td>
-                        <td align="right"><?php echo $this->amount($row['2Y']->SUM); ?></td>
-                        <td align="right"><?php echo $this->amount($row['3Y']->SUM); ?></td>
-                        <td align="right"	><?php echo $this->amount($row['1Q']->SUM + $row['2Q']->SUM + $row['3Q']->SUM + $row['4Q']->SUM + $row['1Y']->SUM + $row['2Y']->SUM + $row['3Y']->SUM); ?></td>
+                        <td align="right">
+                            <a class="tbody" href="export-aging/period/1q/type/<?php echo $type; ?><?php echo $groupBy; ?><?php echo $collectorId; ?><?php echo $underWriter; ?><?php echo $lob; ?>">
+                            <?php echo $this->amount($row['1Q']->SUM); ?>
+                            </a>
+                        </td>
+                        <td align="right">
+                            <a class="tbody" href="export-aging/period/2q/type/<?php echo $type; ?><?php echo $groupBy; ?><?php echo $collectorId; ?><?php echo $underWriter; ?><?php echo $lob; ?>">
+                            <?php echo $this->amount($row['2Q']->SUM); ?>
+                            </a>
+                        </td>
+                        <td align="right">
+                            <a class="tbody" href="export-aging/period/3q/type/<?php echo $type; ?><?php echo $groupBy; ?><?php echo $collectorId; ?><?php echo $underWriter; ?><?php echo $lob; ?>">
+                            <?php echo $this->amount($row['3Q']->SUM); ?>
+                            </a>
+                        </td>
+                        <td align="right">
+                            <a class="tbody" href="export-aging/period/4q/type/<?php echo $type; ?><?php echo $groupBy; ?><?php echo $collectorId; ?><?php echo $underWriter; ?><?php echo $lob; ?>">
+                            <?php echo $this->amount($row['4Q']->SUM); ?>
+                            </a>
+                        </td>
+                        <td align="right">
+                            <a class="tbody" href="export-aging/period/1y/type/<?php echo $type; ?><?php echo $groupBy; ?><?php echo $collectorId; ?><?php echo $underWriter; ?><?php echo $lob; ?>">
+                            <?php echo $this->amount($row['1Y']->SUM); ?>
+                            </a>
+                        </td>
+                        <td align="right">
+                            <a class="tbody" href="export-aging/period/2y/type/<?php echo $type; ?><?php echo $groupBy; ?><?php echo $collectorId; ?><?php echo $underWriter; ?><?php echo $lob; ?>">
+                            <?php echo $this->amount($row['2Y']->SUM); ?>
+                            </a>
+                        </td>
+                        <td align="right">
+                            <a class="tbody" href="export-aging/period/3y/type/<?php echo $type; ?><?php echo $groupBy; ?><?php echo $collectorId; ?><?php echo $underWriter; ?><?php echo $lob; ?>">
+                            <?php echo $this->amount($row['3Y']->SUM); ?>
+                            </a>
+                        </td>
+                        <td align="right">
+                            <?php echo $this->amount($row['1Q']->SUM + $row['2Q']->SUM + $row['3Q']->SUM + $row['4Q']->SUM + $row['1Y']->SUM + $row['2Y']->SUM + $row['3Y']->SUM); ?>
+                        </td>
                     </tr>
                     <?php
                     $total['Q1'] += $row['1Q']->SUM;

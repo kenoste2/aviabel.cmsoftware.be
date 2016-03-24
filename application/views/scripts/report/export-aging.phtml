@@ -1,0 +1,68 @@
+<?php if(empty($this->xls)): ?>
+
+<div class="panel panel-default aaa-theme-content-widget white-bg no-padding aaa-theme-overflow-hidden">
+
+
+
+    <?php if(count($this->data) >= $this->limitResults): ?>
+    <div class="panel-heading aaa-theme-position-relative">
+        <h2 class="text-uppercase">
+            <?php $this->T("only_first_c", $this->limitResults) ?>
+        </h2>
+    </div>
+    <?php endif; ?>
+
+
+    <div class="table-responsive">
+
+                <table class="table table-striped table-bordered">
+                    <thead>
+                    <tr>
+
+<?php endif; ?>
+
+<?php if($this->xls == 1): ?>
+                <table border="1">
+                    <thead>
+                    <tr style="font-weight: bold; background-color: #efefef; color: #e75a21;">
+<?php endif; ?>
+
+                            <td>Relation</td>
+                            <td>Relation name</td>
+                            <td>Account Manager</td>
+                            <td>Currency</td>
+                            <td>Ledger Nr</td>
+                            <td>Overdue</td>
+                            <td>Overdue <?php echo $this->data[0]->PERIOD; ?></td>
+                            <td>Underwriter</td>
+                            <td>Last Action date</td>
+                            <td>Action Code</td>
+                            <td>Action Description</td>
+                            <td>Comments</td>
+                            <td>Status</td>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                    <?php foreach($this->data as $key => $value): ?>
+                    <tr>
+                        <td><?php echo $value->REFERENCE; ?></td>
+                        <td><?php echo $value->DEBTOR_NAME; ?></td>
+                        <td><?php echo $value->COLLECTOR_CODE; ?></td>
+                        <td><?php echo $value->VALUTA; ?></td>
+                        <td><?php echo $value->LEDGER_ACCOUNT; ?></td>
+                        <td><?php echo $this->amount($value->BROKER_AMOUNT); ?></td>
+                        <td><?php echo $this->amount($value->AMOUNT); ?></td>
+                        <td><?php echo $value->CONTRACT_UNDERWRITER; ?></td>
+                        <td><?php echo $value->LAST_ACTION_DATE; ?></td>
+                        <td><?php echo $value->STATE_CODE; ?></td>
+                        <td><?php echo $value->STATE_DESCRIPTION; ?></td>
+                        <td><?php echo $value->REMARKS; ?></td>
+                        <td><?php echo $value->STATUS; ?></td>
+                    </tr>
+                    <?php endforeach; ?>
+                    </tbody>
+                </table>
+    </div>
+</div>

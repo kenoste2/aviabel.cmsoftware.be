@@ -66,6 +66,9 @@ class ReportController extends BaseController
                 'COLLECTOR_ID' => $this->getRequest()->getParam('COLLECTOR_ID'),
                 'GROUP_BY' => $this->getRequest()->getParam('GROUP_BY'),
             );
+
+            $this->view->selectionData = $formArray;
+
             $form->populate($formArray);
             $this->view->form = $form;
         }
@@ -78,6 +81,56 @@ class ReportController extends BaseController
 
         $this->view->aging = $aging;
         $this->view->isClient = $this->isClient();
+    }
+
+    public function exportAgingAction() {
+
+        $limitResults = 500;
+
+        $period = $this->getParam('period');
+        $url = "/period/".$period;
+
+        if ($this->getParam("XLS")) {
+            $xls = $this->getParam("XLS");
+            $date = date("Ymd");
+            $fileName = $date."_export_aging_".$period.".xls";
+            header('Content-type: application/octet-stream');
+            header('Content-Disposition: attachment; filename="' . $fileName . '"');
+            $this->_helper->layout->disableLayout();
+        } else { $xls = false; }
+        
+        if (!empty($this->getParam('type'))) {
+            $type = $this->getParam('type');
+            $url.="/type/".$type;
+        } else { $type = false; }
+
+        if (!empty($this->getParam('groupby'))) {
+            $groupby = $this->getParam('groupby');
+            $url.= "/groupby/".$groupby;
+        } else { $groupby = false; }
+
+        if (!empty($this->getParam('collector'))) {
+            $collector = $this->getParam('collector');
+            $url.= "/collector/".$collector;
+        } else { $collector = false; }
+
+        if (!empty($this->getParam('underwriter'))) {
+            $underwriter = $this->getParam('underwriter');
+            $url.="/underwriter/".$underwriter;
+        } else { $underwriter = false; }
+
+        if (!empty($this->getParam('lob'))) {
+            $lob = $this->getParam('lob');
+            $url.="/lob/".$lob;
+        } else { $lob = false; }
+
+        $ExportData = new Application_Model_StatisticsForClient();
+        $getExportData = $ExportData->getAgingExport($period, $limitResults, $type, $groupby, $collector, $underwriter, $lob, $xls);
+
+        $this->view->exportUrl = "/report/export-aging".$url."/XLS/1";
+        $this->view->data = $getExportData;
+        $this->view->xls = $xls;
+        $this->view->limitResults = $limitResults;
     }
 
     public function dsoAction() {

@@ -118,7 +118,8 @@
 							<?php if ($this->addButtonParent) { ?><a style="cursor: pointer" href="<?php echo $this->Location() ?><?php echo $this->addButtonParent ?>" title="<?php $this->T("add_c") ?>"><li class="fa fa-plus-square-o fa-fw"></li></a><?php } ?>
 							<?php if ($this->exportButton) { ?><a style="cursor: pointer" onClick=location.href="<?php echo $this->Location() ?>/export/csv" title="<?php $this->T("export_csv_c") ?>"><li class="fa fa-floppy-o fa-fw"></li></a><?php } ?>
 							<?php if ($this->printButton) { ?><a style="cursor: pointer" onClick="window.print()" title="<?php $this->T("print_content_c") ?>"><li class="fa fa-print fa-fw"></li></a><?php } ?>
-						
+                            <?php if ($this->exportUrl) { ?><a style="cursor: pointer" onClick=location.href="<?php echo $this->Location() ?><?php echo $this->exportUrl?>" title="<?php $this->T("export_csv_c") ?>"><li class="fa fa-floppy-o fa-fw"></li></a><?php } ?>
+
 						</td>
 					  </tr>
 					  </table>					   
