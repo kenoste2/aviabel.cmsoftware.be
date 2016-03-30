@@ -244,7 +244,7 @@ class Application_Model_StatisticsForClient extends Application_Model_Base
                     F.STATE_DESCRIPTION,
                     R.CONTRACT_UNDERWRITER,
                     F.FILE_ID,
-                    R.DISPUTE,
+                    SUM(R.DISPUTE) AS DISPUTE,
                     R.DISPUTE_STATUS
                   FROM files\$references R 
                   JOIN files\$files_all_info F ON F.FILE_ID = R.FILE_ID
@@ -262,7 +262,6 @@ class Application_Model_StatisticsForClient extends Application_Model_Base
                     F.STATE_DESCRIPTION,
                     R.CONTRACT_UNDERWRITER,
                     F.FILE_ID,
-                    R.DISPUTE,
                     R.DISPUTE_STATUS";
 
         $results = $this->db->get_results($query);
