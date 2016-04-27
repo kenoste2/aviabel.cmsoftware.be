@@ -4,15 +4,84 @@ require_once 'application/models/Base.php';
 
 class Application_Model_StatisticsForClient extends Application_Model_Base
 {
-    public function getAgingPeriods($period){
+    public function getAgingPeriodsOld($period){
         $periodsExtra = array('1Q' => '(CURRENT_DATE - R.ULTIMATE_DUE_DATE) <=90 AND (CURRENT_DATE - R.ULTIMATE_DUE_DATE) > 0',
                                 '2Q' => '(CURRENT_DATE - R.ULTIMATE_DUE_DATE) >90 AND (CURRENT_DATE - R.ULTIMATE_DUE_DATE) <=180',
                                 '3Q' => '(CURRENT_DATE - R.ULTIMATE_DUE_DATE) >180 AND (CURRENT_DATE - R.ULTIMATE_DUE_DATE) <=270',
                                 '4Q' => '(CURRENT_DATE - R.ULTIMATE_DUE_DATE) >270 AND (CURRENT_DATE - R.ULTIMATE_DUE_DATE) <= 360',
                                 '1Y' => '(CURRENT_DATE - R.ULTIMATE_DUE_DATE) >360 AND (CURRENT_DATE - R.ULTIMATE_DUE_DATE) <= 730',
                                 '2Y' => '(CURRENT_DATE - R.ULTIMATE_DUE_DATE) >730 AND (CURRENT_DATE - R.ULTIMATE_DUE_DATE) <= 1095',
-                                '3Y' => '(CURRENT_DATE - R.ULTIMATE_DUE_DATE) >1095');
+                                '3Y' => '(CURRENT_DATE - R.ULTIMATE_DUE_DATE) >1095',
+                                'all' => '(CURRENT_DATE - R.ULTIMATE_DUE_DATE) > 0');
         return $periodsExtra[$period];
+    }
+
+    public function getAgingPeriods($period)
+    {
+        $today = date(("Y-m-d"));
+
+        $min = "1900-01-01";
+        $max = $today;
+
+        if ($period == '1Q') {
+            $min = date('Y-m-d',strtotime($today . "+1 days"));
+            $min = date('Y-m-d',strtotime($min . "-3 months"));
+        }
+
+        if ($period == '2Q') {
+            $min = date('Y-m-d',strtotime($today . "+1 days"));
+            $min = date('Y-m-d',strtotime($min . "-6 months"));
+                
+            $max = date('Y-m-d',strtotime($today . "+1 days"));
+            $max = date('Y-m-d',strtotime($max . "-3 months"));
+            $max = date('Y-m-d',strtotime($max . "-1 days"));
+        }
+
+        if ($period == '3Q') {
+            $min = date('Y-m-d',strtotime($today . "+1 days"));
+            $min = date('Y-m-d',strtotime($min . "-9 months"));
+    
+            $max = date('Y-m-d',strtotime($today . "+1 days"));
+            $max = date('Y-m-d',strtotime($max . "-6 months"));
+            $max = date('Y-m-d',strtotime($max . "-1 days"));
+        }
+
+        if ($period == '4Q') {
+            $min = date('Y-m-d',strtotime($today . "+1 days"));
+            $min = date('Y-m-d',strtotime($min . "-12 months"));
+    
+            $max = date('Y-m-d',strtotime($today . "+1 days"));
+            $max = date('Y-m-d',strtotime($max . "-9 months"));
+            $max = date('Y-m-d',strtotime($max . "-1 days"));
+         }
+
+        if ($period == '1Y') {
+            $min = date('Y-m-d',strtotime($today . "+1 days"));
+            $min = date('Y-m-d',strtotime($min . "-24 months"));
+    
+            $max = date('Y-m-d',strtotime($today . "+1 days"));
+            $max = date('Y-m-d',strtotime($max . "-12 months"));
+            $max = date('Y-m-d',strtotime($max . "-1 days"));
+        }
+        
+        if ($period == '2Y') {
+            $min = date('Y-m-d',strtotime($today . "+1 days"));
+            $min = date('Y-m-d',strtotime($min . "-36 months"));
+    
+            $max = date('Y-m-d',strtotime($today . "+1 days"));
+            $max = date('Y-m-d',strtotime($max . "-24 months"));
+            $max = date('Y-m-d',strtotime($max . "-1 days"));
+        }
+
+        if ($period == '3Y') {
+            $max = date('Y-m-d',strtotime($today . "+1 days"));
+            $max = date('Y-m-d',strtotime($max . "-36 months"));
+            $max = date('Y-m-d',strtotime($max . "-1 days"));
+        }
+        
+        $extra ="(R.ULTIMATE_DUE_DATE <= '{$max}') AND (R.ULTIMATE_DUE_DATE >= '{$min}')";
+
+        return $extra;
     }
 
 
@@ -211,6 +280,9 @@ class Application_Model_StatisticsForClient extends Application_Model_Base
         if ($period == '3y'){
             $dateExtra = $this->getAgingPeriods('3Y');
         }
+        if ($period == 'all'){
+            $dateExtra = $this->getAgingPeriods('all');
+        }
 
 
         if (empty($groupby) OR $groupby == 'CASEWORKERS' OR $groupby == 'DEFAULT') {
@@ -250,7 +322,6 @@ class Application_Model_StatisticsForClient extends Application_Model_Base
                   JOIN files\$files_all_info F ON F.FILE_ID = R.FILE_ID
                   WHERE {$dateExtra}
                   {$typeExtra}
-                  AND R.SALDO_AMOUNT > 0.00
                   GROUP BY F.REFERENCE,
                     F.DEBTOR_NAME,
                     F.DEBTOR_NAME,
@@ -293,6 +364,17 @@ class Application_Model_StatisticsForClient extends Application_Model_Base
 
             $row->PERIOD = $period;
             $returnArray[] = $row;
+
+            $valuta = $row->VALUTA;
+            $row->AMOUNT_EUR = "";
+            $row->BROKER_AMOUNT_EUR = "";
+            if ($valuta != 'EUR') {
+                $conversionRates = $this->functions->getCurrencyRates($date = false);
+                $amount = $row->AMOUNT / $conversionRates[$valuta]['RATE'];
+                $row->AMOUNT_EUR = round($amount, 2);
+                $brokerAmount = $row->BROKER_AMOUNT / $conversionRates[$valuta]['RATE'];
+                $row->BROKER_AMOUNT_EUR = round($brokerAmount, 2);
+            }
         }
 
         return $returnArray;

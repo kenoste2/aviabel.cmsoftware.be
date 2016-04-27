@@ -1,6 +1,1 @@
-ALTER TABLE FILES$REFERENCES ADD ULTIMATE_DUE_DATE DOM_DATE#
-ALTER TABLE IMPORT$INVOICES ADD ULTIMATE_DUE_DATE DOM_DATE#
-
-UPDATE FILES$REFERENCES SET ULTIMATE_DUE_DATE = START_DATE#
-
-create index IDX_UDD  on FILES$REFERENCES computed by (ULTIMATE_DUE_DATE)#
+update teksten set NL='Relatie Code / Contract', FR='Code Relation / Contrat', EN='Relation Code / Contract' where teksten_id=2238#
