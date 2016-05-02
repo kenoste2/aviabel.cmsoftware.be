@@ -55,31 +55,40 @@
 		</script>
 				
         <!-- AGING javascript code -->
-		<script>
-			var chart = AmCharts.makeChart("aging", {
-				"type": "pie",
-				"theme": "none",
+        <script>
+            var chartData = [
+                <?php foreach ($this->aging as $type => $value): ?>
+                {
+                    "titel": "<?php echo $type ?>",
+                    "waarde": <?php echo ($value->SUM) ? $value->SUM : 0;  ?>
+                },
+                <?php endforeach ?>
+            ];
+
+            for (var i in chartData) {
+                chartData[i].absValue = Math.abs(chartData[i].waarde);
+            }
+
+            var chart = AmCharts.makeChart("aging", {
+                "type": "pie",
+                "theme": "none",
                 "colors": ["#598CB4","#C0605D","#9DB370", "#8B74A0", "#4CACBD", "#E69A5F", "#A5BBD6", "#FF0000", "#FF0000"],
-				"legend": {
-					"position": "bottom",
-					"horizontalGap": 10,
-					"markerSize": 10,
-					"useGraphSettings": false,
-					"valueWidth": 0
-				},
-				"dataProvider": [
-					<?php foreach ($this->aging as $type => $value): ?>
-					{
-						"titel": "<?php echo $type ?>",
-						"waarde": <?php echo ($value->SUM) ? $value->SUM : 0;  ?>
-					},
-					<?php endforeach ?>
-				],
-				"valueField": "waarde",
-				"titleField": "titel"
-			});
-			var legend = new AmCharts.AmLegend();
-		</script>
+                "legend": {
+                    "position": "bottom",
+                    "horizontalGap": 10,
+                    "markerSize": 10,
+                    "useGraphSettings": false,
+                    "valueWidth": 0
+                },
+                "dataProvider": chartData,
+                "valueField": "absValue",
+                "titleField": "titel",
+                "balloonText": "[[title]]: [[percents]]% ([[waarde]])",
+                "labelText": "[[title]]: [[percents]]% ([[waarde]])"
+            });
+            var legend = new AmCharts.AmLegend();
+        </script>
+
         
         <!-- BETALINGSTERMIJN javascript code -->
         <script>

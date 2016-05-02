@@ -102,7 +102,7 @@
                     <?php if (!empty($this->ratios)) { foreach ($this->ratios as $ratio) {  $ratio = $this->report->financial_data->fiscal_year->$ratio;?>
                         <tr>
                             <th><?php echo (string) $ratio['label'] ?></th>
-                            <td align="right"> <?php  if ($ratio['currency'] == 'EUR') { ?> <?php   echo $this->amount((string) $ratio['amount']) ?> <?php } else { ?>
+                            <td align="right"> <?php  if ($ratio['settings-currency'] == 'EUR') { ?> <?php   echo $this->amount((string) $ratio['amount']) ?> <?php } else { ?>
                             <?php  ?> <?php   echo (string) $ratio['amount']; ?> <?php  } ?></td>
                         </tr>
                     <?php } ?>
