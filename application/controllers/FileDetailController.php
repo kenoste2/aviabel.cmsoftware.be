@@ -51,6 +51,16 @@ class FileDetailController extends BaseFileController {
         if ($this->hasAccess('changeFileReference')) {
             $generalForm->REFERENCE->setAttrib('disabled', null);
         }
+
+
+
+        if ($this->auth->online_rights == 9) {
+            $generalForm->removeElement('submit');
+            $creditlimiteForm->removeElement('submit');
+            $debtorForm->removeElement('submit');
+
+        }
+
         if ($this->hasAccess('changeUseAddress')) {
             $this->view->showUseAddress = true;
         }

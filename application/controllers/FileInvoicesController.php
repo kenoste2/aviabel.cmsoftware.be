@@ -79,6 +79,18 @@ class FileInvoicesController extends BaseFileController
             $form->removeElement('submit');
         }
 
+        if ($this->auth->online_rights == 9) {
+            $form->removeElement('submit');
+            $form->DISPUTE->setAttrib('disabled', true);
+            $form->DISPUTE_COMMENT->setAttrib('disabled', true);
+            $form->DISPUTE_ASSIGNEE->setAttrib('disabled', true);
+            $form->DISPUTE_STATUS->setAttrib('disabled', true);
+            $form->DISPUTE_DATE->setAttrib('disabled', true);
+            $form->DISPUTE_DUEDATE->setAttrib('disabled', true);
+            $form->DISPUTE_ENDED_DATE->setAttrib('disabled', true);
+            $form->DISPUTE_AMOUNT->setAttrib('disabled', true);
+        }
+
         $referenceId = $this->getParam('id');
         $reference = $this->db->get_row("SELECT * FROM FILES\$REFERENCES WHERE REFERENCE_ID = {$referenceId}");
 

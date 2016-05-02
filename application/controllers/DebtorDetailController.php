@@ -48,6 +48,11 @@ class DebtorDetailController extends BaseDebtorController {
             $data = $this->loadInfoIntoFormFromDb($obj);
         }
 
+        if ($this->auth->online_rights == 9) {
+            $generalForm->removeElement('submit');
+        }
+
+
 
         $generalForm->populate($data);
         $this->view->openAmount = $obj->getOpenAmount($this->debtorId);

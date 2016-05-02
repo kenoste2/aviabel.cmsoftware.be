@@ -6,7 +6,7 @@ class DebtorContactsController extends BaseDebtorController {
 
     public function viewAction()
     {
-        if ($this->auth->online_rights != 5) {
+        if ($this->auth->online_rights != 5 && $this->auth->online_rights != 9 ) {
             $this->view->addButton = "/debtor-contacts/add/index/" . $this->getParam("index");
         }
         $this->view->printButton = true;
@@ -75,6 +75,11 @@ class DebtorContactsController extends BaseDebtorController {
         }
         // Populating form
         $form->populate($data);
+
+        if ($this->auth->online_rights == 9) {
+            $form->removeElement('submit');
+        }
+
 
         $this->view->form = $form;
     }
