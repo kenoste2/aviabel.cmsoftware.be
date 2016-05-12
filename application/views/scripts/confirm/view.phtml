@@ -38,7 +38,9 @@
                 <table class="table table-striped table-bordered">
                     <thead>
                     <tr>
-                        <td><?php $this->T("reference_c"); ?></td>
+                        <td><?php $this->T("debtor_c"); ?></td>
+                        <td><?php $this->T("train_type_c"); ?></td>
+                        <td><?php $this->T("relationCode_c"); ?></td>
                         <td><?php $this->T("action_date_c"); ?></td>
                         <td><?php $this->T("created_c"); ?></td>
                         <td><?php $this->T("code_c"); ?></td>
@@ -52,6 +54,8 @@
                     <tbody>
                     <?php foreach ($this->results as $row): ?>
                         <tr>
+                            <td class="list" id="<?php echo $row->FILE_ID ?>" ><?php echo $row->DEBTOR_NAME ?></td>
+                            <td class="list" id="<?php echo $row->FILE_ID ?>" ><?php echo $row->TRAIN_TYPE ?></td>
                             <td class="list" id="<?php echo $row->FILE_ID ?>" ><?php echo $row->REFERENCE ?></td>
                             <td class="list" id="<?php echo $row->FILE_ID ?>" ><?php echo $this->Date($row->ACTION_DATE) ?></td>
                             <td class="list" id="<?php echo $row->FILE_ID ?>" ><?php echo $this->Date($row->CREATION_DATE) ?></td>
@@ -59,7 +63,7 @@
                             <td class="list" id="<?php echo $row->FILE_ID ?>" ><?php echo $row->VIA ?></td>
                             <td class="list" id="<?php echo $row->FILE_ID ?>" ><?php echo $row->ACTION_DESCRIPTION ?></td>
                             <td class="list" id="<?php echo $row->FILE_ID ?>" ><?php echo $row->REMARKS ?></td>
-                            <td class="list" id="<?php echo $row->FILE_ID ?>" ><?php echo $row->CREATION_USER ?></td>
+                            <td class="list" id="<?php echo $row->FILE_ID ?>" ><?php echo $row->ACTION_USER ?></td>
                             <td><input type = checkbox name="confirmSelection[]" value="<?php echo $row->FILE_AGENDA_ID ?>"></td>
                         </tr>
                     <?php endforeach; ?>
