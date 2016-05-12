@@ -102,6 +102,9 @@ class Application_Model_Train extends Application_Model_Base
 
             $sql = $this->getTrainSql($module);
 
+            $sql = str_replace("‘","'",$sql);
+            $sql = str_replace("`","'",$sql);
+
             if ($actualModules = $this->db->get_results($sql)) {
                 foreach ($actualModules as $actualModule) {
                     $mappedModule = new MappedTrainModule();

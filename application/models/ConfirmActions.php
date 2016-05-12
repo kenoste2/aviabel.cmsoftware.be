@@ -16,10 +16,11 @@ class Application_Model_ConfirmActions extends Application_Model_Base
         }
 
 
-        $this->exportSql = "SELECT A.*,B.CODE AS ACTION_CODE,B.DESCRIPTION AS ACTION_DESCRIPTION,F.REFERENCE,F.DEBTOR_NAME
+        $this->exportSql = "SELECT A.*,B.CODE AS ACTION_CODE,B.DESCRIPTION AS ACTION_DESCRIPTION,F.REFERENCE,F.DEBTOR_NAME,D.TRAIN_TYPE
             FROM FILES\$FILE_AGENDA A
             JOIN  FILES\$ACTIONS B ON A.ACTION_ID = B.ACTION_ID
             JOIN  FILES\$FILES_ALL_INFO F ON F.FILE_ID = A.FILE_ID
+            JOIN FILES\$DEBTORS D ON D.DEBTOR_ID = F.DEBTOR_ID
             WHERE A.CONFIRMED = 0  {$extraQuery}";
         $results = $this->db->get_results($this->exportSql);
         return $results;

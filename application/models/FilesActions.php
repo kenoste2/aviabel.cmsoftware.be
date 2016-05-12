@@ -114,15 +114,26 @@ class Application_Model_FilesActions extends Application_Model_Base
                 $this->setInvoicesOrderCycle($fileId, $orderCycleAfter);
             }
 
+            $this->deleteAgendaForFile($fileId);
+
             return $actionId;
 
         } else {
             $data['CREATION_DATE'] = date("Y-m-d");
+            $this->deleteAgendaForFile($fileId);
             $agendaId = $this->addData('FILES$FILE_AGENDA', $data, 'FILE_AGENDA_ID');
             return "NEED_CONFIRMATION";
         }
 
     }
+
+
+    public function deleteAgendaForFile($fileId) {
+
+        $sql = "DELETE FROM FILES\$FILE_AGENDA WHERE FILE_ID = {$fileId}";
+        $this->db->query($sql);
+    }
+
 
     public function getOrderCycle($fileId)
     {
