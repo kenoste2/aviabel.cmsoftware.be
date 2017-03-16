@@ -12,9 +12,16 @@ class Application_Model_TemplatesContent extends Application_Model_Base
 
         $templateObj = new Application_Model_Templates();
         $excludeDisputes = $templateObj->excludeDispute($templateId);
-
-
-
+        
+        //SALDO DUE
+        $getSaldoDue = "SELECT SUM(SALDO_AMOUNT)
+                        FROM files\$references
+                        WHERE FILE_ID = {$fileId}
+                        AND DISPUTE != 1
+                        AND START_DATE <= CURRENT_DATE
+                        ";
+        $fileContent->SALDO_DUE = $this->db->get_var($getSaldoDue);
+        
         $fields = array();
 
         if (!empty($fileContent)) {

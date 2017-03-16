@@ -7,7 +7,7 @@ class Application_Form_Query extends Zend_Form {
         $functions = new Application_Model_CommonFunctions();
 
         $this->addElement('textarea', 'QUERY', array('label' => 'query', 'size'=> 30, 'required' => true, 'rows' => 10, 'cols' => 60));
-        $this->addElement('password', 'VERIFICATION', array('label' => 'verification', 'size'=> 30 , 'required' => true));
+        $this->addElement('text', 'VERIFICATION', array('label' => 'verification', 'size'=> 30 , 'required' => true));
 
         $this->addElement('submit', 'submit', array(
             'ignore' => true,

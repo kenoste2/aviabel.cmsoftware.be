@@ -145,12 +145,14 @@ class Application_Model_FilesReferences extends Application_Model_Base {
         return $this->db->get_results($sql, "ARRAY_N");
     }
 
-    public function getReferencesByFileId($fileId, $excludeDisputes = false , $due = 'A', $valuta = false)
+    public function getReferencesByFileId($fileId, $excludeDisputes = false , $due = 'A', $valuta = false, $excludePaid = false)
     {
+        //   ($fileId, false,'A', 'EUR') 
+        
         $disputeExtra = $excludeDisputes ? "AND DISPUTE = 0" : "";
 
         switch ($due) {
-            case 'A':
+            default:
                 $dueExtra = "";
                 break;
             case 'N':
@@ -160,19 +162,44 @@ class Application_Model_FilesReferences extends Application_Model_Base {
                 $dueExtra = "AND START_DATE <= CURRENT_DATE";
                 break;
         }
-
+        
         if (!empty($valuta)) {
             $valutaExtra = " AND VALUTA = '{$valuta}'";
         } else {
             $valutaExtra = "";
         }
 
-        $sql = "select I.*,(AMOUNT+INTEREST+COSTS) as TOTAL,(SALDO_AMOUNT+SALDO_INTEREST+SALDO_COSTS) as SALDO, DISPUTE,I.STATE_ID, S.CODE AS STATE_CODE, I.TRAIN_TYPE, I.VALUTA, I.INVOICE_DOCCODE, I.INVOICE_DOCLINENUM, I.INVOICE_FROMDATE, I.INVOICE_TODATE from FILES\$REFERENCES I
+        $paidExtra = "";
+        if ($excludePaid)
+        {
+            $paidExtra = " AND I.SALDO_AMOUNT > 0.00 ";
+        }
+
+        $sql = "SELECT
+                  I.*,
+                  (AMOUNT+INTEREST+COSTS) as TOTAL,
+                  (SALDO_AMOUNT+SALDO_INTEREST+SALDO_COSTS) as SALDO, 
+                  DISPUTE,
+                  I.STATE_ID, 
+                  S.CODE AS STATE_CODE, 
+                  I.TRAIN_TYPE, 
+                  I.VALUTA, 
+                  I.INVOICE_DOCCODE, 
+                  I.INVOICE_DOCLINENUM, 
+                  I.INVOICE_FROMDATE, 
+                  I.INVOICE_TODATE 
+                 FROM FILES\$REFERENCES I
                  JOIN FILES\$STATES S ON S.STATE_ID = I.STATE_ID
-                 where FILE_ID='{$fileId}' {$disputeExtra} {$dueExtra} {$valutaExtra}
-                 order by START_DATE DESC ,REFERENCE_ID DESC";
+                 WHERE FILE_ID='{$fileId}' 
+                 {$disputeExtra} 
+                 {$dueExtra} 
+                 {$valutaExtra}
+                 {$paidExtra}
+                 ORDER BY START_DATE DESC ,REFERENCE_ID DESC
+                 ";
 
         $results = $this->db->get_results($sql);
+
         return $results;
     }
 
