@@ -147,8 +147,6 @@ class Application_Model_FilesReferences extends Application_Model_Base {
 
     public function getReferencesByFileId($fileId, $excludeDisputes = false , $due = 'A', $valuta = false, $excludePaid = false)
     {
-        //   ($fileId, false,'A', 'EUR') 
-        
         $disputeExtra = $excludeDisputes ? "AND DISPUTE = 0" : "";
 
         switch ($due) {
@@ -172,7 +170,7 @@ class Application_Model_FilesReferences extends Application_Model_Base {
         $paidExtra = "";
         if ($excludePaid)
         {
-            $paidExtra = " AND I.SALDO_AMOUNT > 0.00 ";
+            $paidExtra = " AND I.SALDO_AMOUNT != 0.00 ";
         }
 
         $sql = "SELECT

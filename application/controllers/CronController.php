@@ -472,5 +472,21 @@ class CronController extends BaseController
     }
 
 
+    public function testAction()
+    {
+        $fileReferencesObj = new Application_Model_FilesReferences();
+
+        $fileId = 7385253;
+
+        $invoices = $fileReferencesObj->getReferencesByFileId($fileId, false,'A', 'EUR');
+        
+        echo "<pre>";
+        print_r($invoices);
+        echo "</pre>";
+
+
+        die('test');
+    }
+
 }
 
